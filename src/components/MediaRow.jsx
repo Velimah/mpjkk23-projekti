@@ -1,18 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {mediaUrl} from '../utils/variables';
 
 const MediaRow = ({file}) => {
   return (
     <tr>
       <td>
-        <img src={file.thumbnails.w160} alt={file.title} />
+        <img src={mediaUrl + file.thumbnails.w320} alt={file.title} />
       </td>
       <td>
         <h3>{file.title}</h3>
         <p>{file.description}</p>
+        <p>{Date(file.time_added)}</p>
+        <p>User ID: {file.user_id}</p>
       </td>
       <td>
-        <a href={file.filename}>View</a>
+        <a href={mediaUrl + file.filename}>View</a>
       </td>
     </tr>
   );
