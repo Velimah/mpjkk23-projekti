@@ -1,3 +1,3 @@
-# Week 1: AJAX + state
+# Week 2: Routes
 
-Open [https://users.metropolia.fi/~velimah/mediapalvelut23/week2](https://users.metropolia.fi/~velimah/mediapalvelut23/week2) to view it in the browser.
+Open [https://users.metropolia.fi/~velimah/mediapalvelut23/navigation](https://users.metropolia.fi/~velimah/mediapalvelut23/navigation) to view it in the browser.
