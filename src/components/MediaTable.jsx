@@ -1,7 +1,4 @@
-import PropTypes from 'prop-types';
-import {useEffect, useState} from 'react';
 import {useMedia} from '../hooks/apiHooks';
-import {baseUrl} from '../utils/variables';
 import MediaRow from './MediaRow';
 
 const MediaTable = () => {

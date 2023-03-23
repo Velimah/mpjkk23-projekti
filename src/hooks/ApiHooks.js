@@ -17,7 +17,6 @@ const useMedia = () => {
   const [mediaArray, setMediaArray] = useState([]);
   const getMedia = async () => {
     try {
-      console.log('hello');
       const files = await doFetch(baseUrl + 'media');
       const filesWithThumbnail = await Promise.all(
         files.map(async (file) => {
