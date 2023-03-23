@@ -1,33 +1,11 @@
-import MediaRow from './MediaRow';
-import {useState, useEffect} from 'react';
+import PropTypes from 'prop-types';
+import {useEffect, useState} from 'react';
+import {useMedia} from '../hooks/apiHooks';
 import {baseUrl} from '../utils/variables';
+import MediaRow from './MediaRow';
 
 const MediaTable = () => {
-  const [mediaArray, setData] = useState([]);
-
-  const fetchData = async () => {
-    try {
-      const response = await fetch(baseUrl + 'media');
-      const data = await response.json();
-      console.log(data);
-
-      const thumbs = await Promise.all(
-        data.map(async (file) => {
-          const response = await fetch(baseUrl + 'media/' + file.file_id);
-          return await response.json();
-        })
-      );
-
-      setData(thumbs);
-      console.log(thumbs);
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
+  const {mediaArray} = useMedia();
 
   return (
     <table>
@@ -39,5 +17,7 @@ const MediaTable = () => {
     </table>
   );
 };
+
+MediaTable.propTypes = {};
 
 export default MediaTable;
