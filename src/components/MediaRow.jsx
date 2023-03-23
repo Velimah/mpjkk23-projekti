@@ -11,7 +11,7 @@ const MediaRow = ({file}) => {
       <td>
         <h3>{file.title}</h3>
         <p>{file.description}</p>
-        <p>{Date(file.time_added)}</p>
+        <p>{file.time_added}</p>
         <p>User ID: {file.user_id}</p>
       </td>
       <td>
