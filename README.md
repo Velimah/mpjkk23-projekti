@@ -1,3 +1,3 @@
-# Week 2: Routes
+# Week 2: Forms
 
-Open [https://users.metropolia.fi/~velimah/mediapalvelut23/navigation](https://users.metropolia.fi/~velimah/mediapalvelut23/navigation) to view it in the browser.
+Open [https://users.metropolia.fi/~velimah/mediapalvelut23/forms](https://users.metropolia.fi/~velimah/mediapalvelut23/forms) to view it in the browser.
