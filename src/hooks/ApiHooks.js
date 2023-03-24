@@ -40,4 +40,50 @@ const useMedia = () => {
   return {mediaArray};
 };
 
-export {useMedia};
+const useUser = () => {
+  const postUser = async (inputs) => {
+    const options = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(inputs),
+    };
+    return await doFetch(baseUrl + 'users', options);
+  };
+
+  const getUserByToken = async (token) => {
+    const options = {
+      method: 'GET',
+      headers: {
+        'x-access-token': token,
+      },
+    };
+    return await doFetch(baseUrl + 'users/user', options);
+  };
+
+  const getCheckUser = async (username) => {
+    const options = {
+      method: 'GET',
+    };
+    return await doFetch(baseUrl + 'users/username/' + username, options);
+  };
+
+  return {postUser, getUserByToken, getCheckUser};
+};
+
+const useAuthentication = () => {
+  const postLogin = async (inputs) => {
+    const options = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(inputs),
+    };
+    return await doFetch(baseUrl + 'login', options);
+  };
+  return {postLogin};
+};
+
+export {useMedia, useUser, useAuthentication};

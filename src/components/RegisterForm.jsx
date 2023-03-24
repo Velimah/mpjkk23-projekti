@@ -1,7 +1,10 @@
 import PropTypes from 'prop-types';
 import useForm from '../hooks/FormHooks';
+import {useUser} from '../hooks/ApiHooks';
 
 const RegisterForm = (props) => {
+  const {postUser, getCheckUser} = useUser();
+
   const initValues = {
     username: '',
     password: '',
@@ -9,8 +12,23 @@ const RegisterForm = (props) => {
     full_name: '',
   };
 
-  const doRegister = () => {
-    console.log('submitted', inputs);
+  const doRegister = async () => {
+    try {
+      const userResult = await postUser(inputs);
+      alert(userResult.message);
+    } catch (e) {
+      alert(e.message);
+    }
+  };
+
+  const handleUsername = async () => {
+    try {
+      const userNameResult = await getCheckUser(inputs.username);
+      console.log(userNameResult);
+      userNameResult.available || alert('Username already exists');
+    } catch (e) {
+      alert(e.message);
+    }
   };
 
   const {inputs, handleInputChange, handleSubmit} = useForm(
@@ -26,6 +44,7 @@ const RegisterForm = (props) => {
           placeholder="Username"
           onChange={handleInputChange}
           value={inputs.username}
+          onBlur={handleUsername}
         />
         <input
           name="password"
