@@ -5,6 +5,7 @@ import {useEffect} from 'react';
 const Layout = () => {
   const {getUserByToken} = useUser();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const getUserInfo = async () => {
     const userToken = localStorage.getItem('token');
