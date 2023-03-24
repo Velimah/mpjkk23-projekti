@@ -1,13 +1,38 @@
 import PropTypes from 'prop-types';
+import useForm from '../hooks/FormHooks';
 
 const LoginForm = (props) => {
+  const initValues = {
+    username: '',
+    password: '',
+  };
+
+  const doLogin = () => {
+    console.log('submitted', inputs);
+  };
+
+  const {inputs, handleInputChange, handleSubmit} = useForm(
+    doLogin,
+    initValues
+  );
+
   return (
     <>
-      <form>
-        <input name="username" placeholder="Username" />
-        <input name="password" type="password" placeholder="Password" />
-        <input name="email" type="email" placeholder="Email" />
-        <input name="full_name" placeholder="Full name" />
+      <form onSubmit={handleSubmit}>
+        <input
+          name="username"
+          placeholder="Username"
+          onChange={handleInputChange}
+          value={inputs.username}
+        />
+        <input
+          name="password"
+          type="password"
+          placeholder="Password"
+          onChange={handleInputChange}
+          value={inputs.password}
+        />
+        <button type="submit">Login</button>
       </form>
     </>
   );
