@@ -4,7 +4,7 @@ import {useContext, useEffect} from 'react';
 import {MediaContext} from '../contexts/MediaContext';
 
 const Layout = () => {
-  const [user, setUser] = useContext(MediaContext);
+  const {setUser} = useContext(MediaContext);
   const {getUserByToken} = useUser();
   const navigate = useNavigate();
   const location = useLocation();
