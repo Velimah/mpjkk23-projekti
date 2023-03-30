@@ -6,7 +6,7 @@ import {useContext} from 'react';
 import {MediaContext} from '../contexts/MediaContext';
 
 const LoginForm = (props) => {
-  const [user, setUser] = useContext(MediaContext);
+  const {setUser} = useContext(MediaContext);
   const {postLogin} = useAuthentication();
   const navigate = useNavigate();
 

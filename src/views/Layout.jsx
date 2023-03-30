@@ -4,7 +4,7 @@ import {useContext, useEffect} from 'react';
 import {MediaContext} from '../contexts/MediaContext';
 
 const Layout = () => {
-  const {setUser} = useContext(MediaContext);
+  const {user, setUser} = useContext(MediaContext);
   const {getUserByToken} = useUser();
   const navigate = useNavigate();
   const location = useLocation();
@@ -35,9 +35,20 @@ const Layout = () => {
           <li>
             <Link to="/home">Home</Link>
           </li>
-          <li>
-            <Link to="/profile">Profile</Link>
-          </li>
+          {user ? (
+            <>
+              <li>
+                <Link to="/profile">Profile</Link>
+              </li>
+              <li>
+                <Link to="/logout">Logout</Link>
+              </li>
+            </>
+          ) : (
+            <li>
+              <Link to="/">Login</Link>
+            </li>
+          )}
         </ul>
       </nav>
       <main>
