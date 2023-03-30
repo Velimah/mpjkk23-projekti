@@ -1,4 +1,4 @@
-import {Card, CardMedia, Typography} from '@mui/material';
+import {Card, CardMedia, Typography, Box} from '@mui/material';
 import {useLocation} from 'react-router-dom';
 import {mediaUrl} from '../utils/variables';
 
@@ -9,16 +9,18 @@ const Single = () => {
 
   return (
     <>
-      <Typography component="h1" variant="h2">
+    <Box sx={{maxWidth:'lg', margin:'auto', mt:10}}>
+      <Card>
+      <Typography component="h1" variant="h3">
         {file.title}
       </Typography>
-      <Card>
         <CardMedia
           component={'img'}
           src={mediaUrl + file.filename}
           title={file.title}
         />
       </Card>
+      </Box>
     </>
   );
 };

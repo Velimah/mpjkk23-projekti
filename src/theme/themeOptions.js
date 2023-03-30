@@ -12,13 +12,31 @@ const themeOptions = {
     },
   },
   typography: {
-    fontFamily: 'Roboto, sans-serif',
-  },
-  body1: {
-    fontFamily: 'Nunito, sans-serif',
-  },
-  body2: {
-    fontFamily: 'Nunito, sans-serif',
+    fontFamily: 'Roboto',
+    body1: {
+      fontFamily: 'Nunito',
+    },
+    body2: {
+      fontFamily: 'Nunito',
+    },
+    h1: {
+      fontFamily: 'Roboto',
+    },
+    h2: {
+      fontFamily: 'Roboto',
+    },
+    h3: {
+      fontFamily: 'Nunito',
+    },
+    h3: {
+      fontFamily: 'Nunito',
+    },
+    h4: {
+      fontFamily: 'Nunito',
+    },
+    h6: {
+      fontFamily: 'Nunito',
+    },
   },
 };
 
