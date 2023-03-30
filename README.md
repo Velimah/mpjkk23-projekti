@@ -1,3 +1,3 @@
-# Week 3: Login/context
+# Week 3: Material UI
 
-Open [https://users.metropolia.fi/~velimah/mediapalvelut23/login-context](https://users.metropolia.fi/~velimah/mediapalvelut23/login-context) to view it in the browser.
+Open [https://users.metropolia.fi/~velimah/mediapalvelut23/mui](https://users.metropolia.fi/~velimah/mediapalvelut23/mui) to view it in the browser.
