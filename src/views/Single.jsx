@@ -11,7 +11,7 @@ const Single = () => {
     <>
     <Box sx={{maxWidth:'lg', margin:'auto', mt:10}}>
       <Card>
-      <Typography component="h1" variant="h3">
+      <Typography component="h1" variant="h2" sx={{p:2}}>
         {file.title}
       </Typography>
         <CardMedia
