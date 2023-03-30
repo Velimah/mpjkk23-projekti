@@ -41,6 +41,8 @@ const RegisterForm = (props) => {
     <>
       <form onSubmit={handleSubmit}>
         <TextField
+          fullWidth
+          margin="dense"
           name="username"
           placeholder="Username"
           onChange={handleInputChange}
@@ -48,6 +50,8 @@ const RegisterForm = (props) => {
           onBlur={handleUsername}
         />
         <TextField
+          fullWidth
+          margin="dense"
           name="password"
           type="password"
           placeholder="Password"
@@ -55,6 +59,8 @@ const RegisterForm = (props) => {
           value={inputs.password}
         />
         <TextField
+          fullWidth
+          margin="dense"
           name="email"
           type="email"
           placeholder="Email"
@@ -62,12 +68,16 @@ const RegisterForm = (props) => {
           value={inputs.email}
         />
         <TextField
+          fullWidth
+          margin="dense"
           name="full_name"
           placeholder="Full name"
           onChange={handleInputChange}
           value={inputs.full_name}
         />
-        <Button type="submit">Register</Button>
+        <Button fullWidth variant="contained" sx={{mt: 1, mb: 1}} type="submit">
+          Register
+        </Button>
       </form>
     </>
   );

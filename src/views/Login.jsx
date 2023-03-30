@@ -15,11 +15,14 @@ const Login = (props) => {
     <Grid container direction="column" alignItems="center">
       <Grid item xs={6}>
         <Typography component="h1" variant="h2">
-          Login / Register
+          {formToggle ? 'Login' : 'Register'}
         </Typography>
       </Grid>
       <Grid item xs={6}>
         {formToggle ? <LoginForm /> : <RegisterForm />}
+      </Grid>
+      <Grid item xs={6} sx={{mt: 1, mb: 1}}>
+        {formToggle ? 'Need to register?' : 'Want to log in?'}
       </Grid>
       <Grid item xs={6}>
         <Button variant="contained" onClick={toggle}>
