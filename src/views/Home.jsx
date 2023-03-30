@@ -1,9 +1,12 @@
+import {Typography} from '@mui/material';
 import MediaTable from '../components/MediaTable';
 
 const Home = () => {
   return (
     <>
-      <h1>Home</h1>
+      <Typography component="h1" variant="h1">
+        Home
+      </Typography>
       <MediaTable />
     </>
   );
