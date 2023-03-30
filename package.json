@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build --base /~velimah/mediapalvelut23/forms/",
+    "build": "vite build --base /~velimah/mediapalvelut23/mui/",
     "preview": "vite preview"
   },
   "dependencies": {
