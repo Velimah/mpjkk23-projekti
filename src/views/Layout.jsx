@@ -13,9 +13,9 @@ const Layout = () => {
     const userToken = localStorage.getItem('token');
     if (userToken) {
       console.log(userToken);
-      const user = await getUserByToken(userToken);
-      if (user) {
-        setUser(user);
+      const userData = await getUserByToken(userToken);
+      if (userData) {
+        setUser(userData);
         const target = location.pathname === '/' ? '/home' : location.pathname;
         navigate(target);
         return;
