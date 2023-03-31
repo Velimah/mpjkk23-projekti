@@ -84,6 +84,29 @@ const useAuthentication = () => {
   return {postLogin};
 };
 
-// TODO: usetag
+const useTag = () => {
+  const getTag = async (tag) => {
+    const tagResult = await doFetch(baseUrl + 'tags/' + tag);
+    if (tagResult.length > 0) {
+      return tagResult;
+    } else {
+      throw new Error('Tag not found');
+    }
+  };
 
-export {useMedia, useUser, useAuthentication};
+  const postTag = async (data, token) => {
+    const fetchOptions = {
+      method: 'POST',
+      headers: {
+        'x-access-token': token,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    };
+    return await doFetch(baseUrl + 'tags', fetchOptions);
+  };
+
+  return {getTag, postTag};
+};
+
+export {useMedia, useUser, useAuthentication, useTag};
