@@ -44,16 +44,46 @@ const Layout = () => {
       <Box component="nav" sx={{maxWidth: 'sm', margin: 'auto'}}>
         <Grid container justifyContent="center" sx={{mt: 2}}>
           <Grid item xs={4} textAlign="center">
-            <Button component={Link} to="/home" size="large">
-              Home
-            </Button>
+            {location.pathname === '/home' ? (
+              <>
+                <Button
+                  variant="outlined"
+                  component={Link}
+                  to="/home"
+                  size="large"
+                >
+                  Home
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button component={Link} to="/home" size="large">
+                  Home
+                </Button>
+              </>
+            )}
           </Grid>
           {user ? (
             <>
               <Grid item xs={4} textAlign="center">
-                <Button component={Link} to="/profile" size="large">
-                  Profile
-                </Button>
+                {location.pathname === '/profile' ? (
+                  <>
+                    <Button
+                      variant="outlined"
+                      component={Link}
+                      to="/profile"
+                      size="large"
+                    >
+                      Profile
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Button component={Link} to="/profile" size="large">
+                      Profile
+                    </Button>
+                  </>
+                )}
               </Grid>
               <Grid item xs={4} textAlign="center">
                 <Button component={Link} to="/logout" size="large">

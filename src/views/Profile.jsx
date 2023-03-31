@@ -49,12 +49,12 @@ const Profile = () => {
                 />
               </Grid>
               <Grid item sx={{px: 3}}>
-                <Typography component="h1" variant="h3" sx={{mt: 6}}>
+                <Typography component="h1" variant="h3" sx={{mt: 4}}>
                   <strong>{user.username}</strong>
                 </Typography>
                 <Typography component="div" variant="h6" sx={{mt: 3}}>
                   <strong>Full name : </strong>{' '}
-                  {user.full_name ? user.full_name : 'not found'}
+                  {user.full_name ? user.full_name : 'Has not set a full name'}
                 </Typography>
                 <Typography component="div" variant="h6" sx={{mt: 3}}>
                   <strong>Email : </strong> {user.email}
