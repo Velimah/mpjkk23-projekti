@@ -11,11 +11,11 @@ const MediaRow = ({file}) => {
         title={file.title}
         subtitle={file.description}
         sx={{
-          '& .MuiImageListItemBar-title': {color: 'White', typography: 'h6'}, //styles for title
+          '& .MuiImageListItemBar-title': {color: 'White', typography: 'h6'}, // styles for title
           '& .MuiImageListItemBar-subtitle': {
             color: 'White',
             typography: 'body2',
-          }, //styles for subtitle
+          }, // styles for subtitle
         }}
         actionIcon={
           <Button
