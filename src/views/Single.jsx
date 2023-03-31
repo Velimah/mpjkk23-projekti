@@ -9,17 +9,17 @@ const Single = () => {
 
   return (
     <>
-    <Box sx={{maxWidth:'lg', margin:'auto', mt:10}}>
-      <Card>
-      <Typography component="h1" variant="h2" sx={{p:2}}>
-        {file.title}
-      </Typography>
-        <CardMedia
-          component={'img'}
-          src={mediaUrl + file.filename}
-          title={file.title}
-        />
-      </Card>
+      <Box sx={{maxWidth: 'lg', margin: 'auto', mt: 10}}>
+        <Card>
+          <Typography component="h1" variant="h2" sx={{p: 2}}>
+            {file.title}
+          </Typography>
+          <CardMedia
+            component={'img'}
+            src={mediaUrl + file.filename}
+            title={file.title}
+          />
+        </Card>
       </Box>
     </>
   );

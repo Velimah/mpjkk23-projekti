@@ -11,12 +11,15 @@ const MediaRow = ({file}) => {
         title={file.title}
         subtitle={file.description}
         sx={{
-          "& .MuiImageListItemBar-title": { color: "White", typography: 'h6' }, //styles for title
-          "& .MuiImageListItemBar-subtitle": { color: "White", typography: 'body2'}, //styles for subtitle
+          '& .MuiImageListItemBar-title': {color: 'White', typography: 'h6'}, //styles for title
+          '& .MuiImageListItemBar-subtitle': {
+            color: 'White',
+            typography: 'body2',
+          }, //styles for subtitle
         }}
         actionIcon={
           <Button
-            sx={{p:1, m:1}}
+            sx={{p: 1, m: 1}}
             component={Link}
             variant="contained"
             to="/single"

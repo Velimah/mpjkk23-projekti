@@ -6,7 +6,7 @@ const MediaTable = () => {
   const {mediaArray} = useMedia();
 
   return (
-    <ImageList cols={3}gap={5}>
+    <ImageList cols={3} gap={5}>
       {mediaArray.map((item, index) => {
         return <MediaRow key={index} file={item} />;
       })}
