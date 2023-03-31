@@ -21,7 +21,7 @@ const Login = (props) => {
           </Typography>
         </Grid>
         <Grid item xs={12}>
-          {formToggle ? <LoginForm /> : <RegisterForm />}
+          {formToggle ? <LoginForm /> : <RegisterForm toggle={toggle} />}
         </Grid>
         <Grid
           item
@@ -32,9 +32,7 @@ const Login = (props) => {
           {formToggle ? 'Need to register?' : 'Want to log in?'}
         </Grid>
         <Grid item xs={12} textAlign="center">
-          <Button variant="contained" onClick={toggle}>
-            {formToggle ? 'Register' : 'Login'}
-          </Button>
+          <Button onClick={toggle}>{formToggle ? 'Register' : 'Login'}</Button>
         </Grid>
       </Grid>
     </Box>

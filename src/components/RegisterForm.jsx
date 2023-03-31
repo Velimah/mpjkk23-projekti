@@ -1,32 +1,30 @@
 import PropTypes from 'prop-types';
 import useForm from '../hooks/FormHooks';
 import {useUser} from '../hooks/ApiHooks';
-import {Button, TextField} from '@mui/material';
+import {Button} from '@mui/material';
+import {ValidatorForm, TextValidator} from 'react-material-ui-form-validator';
+import {registerErrorMessages} from '../utils/errorMessages';
+import {registerValidators} from '../utils/validator';
+import {useEffect} from 'react';
 
-const RegisterForm = (props) => {
+const RegisterForm = ({toggle}) => {
   const {postUser, getCheckUser} = useUser();
 
   const initValues = {
     username: '',
     password: '',
+    confirm: '',
     email: '',
     full_name: '',
   };
 
   const doRegister = async () => {
     try {
-      const userResult = await postUser(inputs);
+      const withoutConfirm = {...inputs};
+      delete withoutConfirm.confirm;
+      const userResult = await postUser(withoutConfirm);
       alert(userResult.message);
-    } catch (e) {
-      alert(e.message);
-    }
-  };
-
-  const handleUsername = async () => {
-    try {
-      const userNameResult = await getCheckUser(inputs.username);
-      console.log(userNameResult);
-      userNameResult.available || alert('Username already exists');
+      toggle();
     } catch (e) {
       alert(e.message);
     }
@@ -37,19 +35,34 @@ const RegisterForm = (props) => {
     initValues
   );
 
+  useEffect(() => {
+    ValidatorForm.addValidationRule('isPasswordMatch', (value) => {
+      return value === inputs.password;
+    });
+
+    ValidatorForm.addValidationRule('isUsernameAvailable', async (value) => {
+      try {
+        return await getCheckUser(inputs.username);
+      } catch (e) {
+        alert(e.message);
+      }
+    });
+  }, [inputs]);
+
   return (
     <>
-      <form onSubmit={handleSubmit}>
-        <TextField
+      <ValidatorForm onSubmit={handleSubmit} noValidate>
+        <TextValidator
           fullWidth
           margin="dense"
           name="username"
           placeholder="Username"
           onChange={handleInputChange}
           value={inputs.username}
-          onBlur={handleUsername}
+          validators={registerValidators.username}
+          errorMessages={registerErrorMessages.username}
         />
-        <TextField
+        <TextValidator
           fullWidth
           margin="dense"
           name="password"
@@ -57,8 +70,21 @@ const RegisterForm = (props) => {
           placeholder="Password"
           onChange={handleInputChange}
           value={inputs.password}
+          validators={registerValidators.password}
+          errorMessages={registerErrorMessages.password}
         />
-        <TextField
+        <TextValidator
+          fullWidth
+          margin="dense"
+          name="confirm"
+          type="password"
+          placeholder="Confirm password"
+          onChange={handleInputChange}
+          value={inputs.confirm}
+          validators={registerValidators.confirmPassword}
+          errorMessages={registerErrorMessages.confirmPassword}
+        />
+        <TextValidator
           fullWidth
           margin="dense"
           name="email"
@@ -66,23 +92,29 @@ const RegisterForm = (props) => {
           placeholder="Email"
           onChange={handleInputChange}
           value={inputs.email}
+          validators={registerValidators.email}
+          errorMessages={registerErrorMessages.email}
         />
-        <TextField
+        <TextValidator
           fullWidth
           margin="dense"
           name="full_name"
           placeholder="Full name"
           onChange={handleInputChange}
           value={inputs.full_name}
+          validators={registerValidators.fullName}
+          errorMessages={registerErrorMessages.fullName}
         />
         <Button fullWidth variant="contained" sx={{mt: 1, mb: 1}} type="submit">
           Register
         </Button>
-      </form>
+      </ValidatorForm>
     </>
   );
 };
 
-RegisterForm.propTypes = {};
+RegisterForm.propTypes = {
+  toggle: PropTypes.func,
+};
 
 export default RegisterForm;
