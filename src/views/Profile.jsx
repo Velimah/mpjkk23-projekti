@@ -1,4 +1,4 @@
-import {Box, Grid, Typography} from '@mui/material';
+import {Avatar, Box, Grid, Typography} from '@mui/material';
 import {useContext} from 'react';
 import {MediaContext} from '../contexts/MediaContext';
 import {useState, useEffect} from 'react';
@@ -37,14 +37,20 @@ const Profile = () => {
           <Box sx={{maxWidth: 'md', margin: 'auto', mt: 10}}>
             <Grid container direction={'row'} justifyContent="center">
               <Grid item sx={{px: 3}}>
-                <img src={avatar.filename} alt="Logo" />
+                <Avatar
+                  src={avatar.filename}
+                  alt="Logo"
+                  sx={{
+                    borderRadius: 10,
+                    boxShadow: 3,
+                    width: 320,
+                    height: 320,
+                  }}
+                />
               </Grid>
               <Grid item sx={{px: 3}}>
-                <Typography component="h1" variant="h3" sx={{mt: 2}}>
-                  <strong>Profile</strong>
-                </Typography>
-                <Typography component="div" variant="h6" sx={{mt: 3}}>
-                  <strong>Username : </strong> {user.username}
+                <Typography component="h1" variant="h3" sx={{mt: 6}}>
+                  <strong>{user.username}</strong>
                 </Typography>
                 <Typography component="div" variant="h6" sx={{mt: 3}}>
                   <strong>Full name : </strong>{' '}
