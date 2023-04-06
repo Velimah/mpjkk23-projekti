@@ -1,4 +1,4 @@
-import {Box, Button, Grid} from '@mui/material';
+import {Box, Button, Grid, Slider} from '@mui/material';
 import PropTypes from 'prop-types';
 import useForm from '../hooks/FormHooks';
 import {useState} from 'react';
@@ -48,7 +48,6 @@ const Upload = (props) => {
     const reader = new FileReader();
     reader.addEventListener('load', () => {
       setSelectedImage(reader.result);
-      reader.readAsDataURL(file);
     });
     reader.readAsDataURL(file);
   };
@@ -81,6 +80,38 @@ const Upload = (props) => {
         ></input>
         <Button type="submit">Upload</Button>
       </form>
+      <Slider
+        name="brightness"
+        defaultValue={50}
+        min={0}
+        max={100}
+        step={5}
+        valueLabelDisplay="auto"
+      />
+      <Slider
+        name="contrast"
+        defaultValue={50}
+        min={0}
+        max={100}
+        step={5}
+        valueLabelDisplay="auto"
+      />
+      <Slider
+        name="saturation"
+        defaultValue={50}
+        min={0}
+        max={100}
+        step={5}
+        valueLabelDisplay="auto"
+      />
+      <Slider
+        name="sepia"
+        defaultValue={50}
+        min={0}
+        max={100}
+        step={5}
+        valueLabelDisplay="auto"
+      />
     </Box>
   );
 };
