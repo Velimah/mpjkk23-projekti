@@ -1,5 +1,6 @@
 import {useState, useEffect} from 'react';
 import {baseUrl} from '../utils/variables';
+import {appId} from '../utils/variables';
 
 const doFetch = async (url, options) => {
   const response = await fetch(url, options);
@@ -15,8 +16,10 @@ const doFetch = async (url, options) => {
 
 const useMedia = () => {
   const [mediaArray, setMediaArray] = useState([]);
+
   const getMedia = async () => {
     try {
+      // const files = await useTag().getTag(appId);
       const files = await doFetch(baseUrl + 'media');
       const filesWithThumbnail = await Promise.all(
         files.map(async (file) => {
@@ -37,7 +40,18 @@ const useMedia = () => {
     }
   }, []);
 
-  return {mediaArray};
+  const postMedia = async (data, token) => {
+    const options = {
+      method: 'POST',
+      headers: {
+        'x-access-token': token,
+      },
+      body: data,
+    };
+    return await doFetch(baseUrl + 'media', options);
+  };
+
+  return {mediaArray, postMedia};
 };
 
 const useUser = () => {
