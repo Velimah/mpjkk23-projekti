@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build --base /~velimah/mediapalvelut23/validation/",
+    "build": "vite build --base /~velimah/mediapalvelut23/upload/",
     "preview": "vite preview"
   },
   "dependencies": {

@@ -19,11 +19,23 @@ const Upload = (props) => {
     title: '',
     description: '',
   };
+
+  const filterInitValues = {
+    brightness: 100,
+    contrast: 100,
+    saturation: 100,
+    sepia: 0,
+  };
+
   const doUpload = async () => {
     try {
       const data = new FormData();
       data.append('title', inputs.title);
-      data.append('description', inputs.description);
+      const allData = {
+        desc: inputs.description,
+        filters: filterInputs,
+      };
+      data.append('description', JSON.stringify(allData));
       data.append('file', file);
       const token = localStorage.getItem('token');
       const uploadResult = await postMedia(data, token);
@@ -35,6 +47,7 @@ const Upload = (props) => {
         token
       );
       console.log(uploadResult);
+      console.log(tagResult);
       navigate('/home');
     } catch (error) {
       alert(error.message);
@@ -57,9 +70,25 @@ const Upload = (props) => {
     initValues
   );
 
+  const {inputs: filterInputs, handleInputChange: handleFilterChange} = useForm(
+    null,
+    filterInitValues
+  );
+
   return (
     <Box>
-      <img src={selectedImage} alt="preview"></img>
+      <img
+        src={selectedImage}
+        alt="preview"
+        style={{
+          width: '300px',
+          height: '300px',
+          filter: `brightness(${filterInputs.brightness}%)
+                   contrast(${filterInputs.contrast}%)
+                   saturate(${filterInputs.saturation}%)
+                   sepia(${filterInputs.sepia}%)`,
+        }}
+      ></img>
       <form onSubmit={handleSubmit}>
         <input
           onChange={handleInputChange}
@@ -82,35 +111,39 @@ const Upload = (props) => {
       </form>
       <Slider
         name="brightness"
-        defaultValue={50}
         min={0}
-        max={100}
+        max={200}
         step={5}
         valueLabelDisplay="auto"
+        onChange={handleFilterChange}
+        value={filterInputs.brightness}
       />
       <Slider
         name="contrast"
-        defaultValue={50}
         min={0}
-        max={100}
+        max={200}
         step={5}
         valueLabelDisplay="auto"
+        onChange={handleFilterChange}
+        value={filterInputs.contrast}
       />
       <Slider
         name="saturation"
-        defaultValue={50}
         min={0}
-        max={100}
+        max={200}
         step={5}
         valueLabelDisplay="auto"
+        onChange={handleFilterChange}
+        value={filterInputs.saturation}
       />
       <Slider
         name="sepia"
-        defaultValue={50}
         min={0}
         max={100}
         step={5}
         valueLabelDisplay="auto"
+        onChange={handleFilterChange}
+        value={filterInputs.sepia}
       />
     </Box>
   );
