@@ -15,4 +15,9 @@ const loginErrorMessages = {
   password: ['this field is required', 'minimum 5 characters'],
 };
 
-export {registerErrorMessages, loginErrorMessages};
+const uploadErrorMessages = {
+  title: ['this field is required', 'minimum 3 characters'],
+  description: ['minimum 3 characters'],
+};
+
+export {registerErrorMessages, loginErrorMessages, uploadErrorMessages};

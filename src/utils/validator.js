@@ -11,4 +11,9 @@ const loginValidators = {
   password: ['required'],
 };
 
-export {registerValidators, loginValidators};
+const uploadValidators = {
+  title: ['required', 'minStringLength:2'],
+  description: ['minStringLength:2'],
+};
+
+export {registerValidators, loginValidators, uploadValidators};

@@ -1,9 +1,10 @@
-import {Avatar, Box, Grid, Typography} from '@mui/material';
+import {Avatar, Box, Button, Grid, Typography} from '@mui/material';
 import {useContext} from 'react';
 import {MediaContext} from '../contexts/MediaContext';
 import {useState, useEffect} from 'react';
 import {useTag} from '../hooks/ApiHooks';
 import {mediaUrl} from '../utils/variables';
+import {useNavigate} from 'react-router-dom';
 
 const Profile = () => {
   const {user} = useContext(MediaContext);
@@ -12,6 +13,7 @@ const Profile = () => {
     filename: 'https://placekitten.com/320',
   });
   const {getTag} = useTag();
+  const navigate = useNavigate();
 
   const fetchAvatar = async () => {
     try {
@@ -35,7 +37,7 @@ const Profile = () => {
       {user && (
         <>
           <Box sx={{maxWidth: 'md', margin: 'auto', mt: 10}}>
-            <Grid container direction={'row'} justifyContent="center">
+            <Grid container justifyContent="center">
               <Grid item sx={{px: 3}}>
                 <Avatar
                   src={avatar.filename}
@@ -62,6 +64,18 @@ const Profile = () => {
                 <Typography component="div" variant="h6" sx={{mt: 3}}>
                   <strong> User ID : </strong> {user.user_id}
                 </Typography>
+              </Grid>
+            </Grid>
+            <Grid container justifyContent="center">
+              <Grid item xs={6}>
+                <Button
+                  variant="contained"
+                  fullWidth
+                  sx={{mt: 5}}
+                  onClick={() => navigate(-1)}
+                >
+                  Back
+                </Button>
               </Grid>
             </Grid>
           </Box>

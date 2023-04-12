@@ -1,8 +1,10 @@
-import {Card, CardMedia, Typography, Box} from '@mui/material';
+import {Card, CardMedia, Typography, Box, Grid, Button} from '@mui/material';
 import {useLocation} from 'react-router-dom';
 import {mediaUrl} from '../utils/variables';
+import {useNavigate} from 'react-router-dom';
 
 const Single = () => {
+  const navigate = useNavigate();
   const {state} = useLocation();
   const file = state.file;
   console.log(file);
@@ -40,6 +42,18 @@ const Single = () => {
             }}
           />
         </Card>
+        <Grid container justifyContent="center">
+          <Grid item xs={6} sx={{mb: 5}}>
+            <Button
+              variant="contained"
+              fullWidth
+              sx={{mt: 5}}
+              onClick={() => navigate(-1)}
+            >
+              Back
+            </Button>
+          </Grid>
+        </Grid>
       </Box>
     </>
   );
