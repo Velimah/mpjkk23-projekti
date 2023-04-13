@@ -90,6 +90,12 @@ const Single = () => {
               {allData.desc}
             </Typography>
             <Typography component="h2" variant="h6" sx={{p: 2}}>
+              Brightness:{allData.filters.brightness + ' '}
+              Contrast:{allData.filters.contrast + ' '}
+              Saturation:{allData.filters.saturation + ' '}
+              Sepia:{allData.filters.sepia}
+            </Typography>
+            <Typography component="h2" variant="h6" sx={{p: 2}}>
               {owner.username}
             </Typography>
           </CardContent>
