@@ -134,8 +134,6 @@ const Upload = (props) => {
                 type="file"
                 name="file"
                 accept="image/*, video/*, audio/*"
-                validators={uploadValidators.file}
-                errorMessages={uploadErrorMessages.file}
               />
               <Button variant="contained" fullWidth type="submit">
                 Upload
@@ -151,7 +149,7 @@ const Upload = (props) => {
         sx={{mt: 2, ml: 9}}
       >
         <Grid item xs={5} sx={{mt: 2}}>
-          <Typography id="input-slider">Brightness</Typography>
+          <Typography>Brightness</Typography>
           <Slider
             name="brightness"
             min={0}
@@ -162,7 +160,7 @@ const Upload = (props) => {
             onChange={handleFilterChange}
             value={filterInputs.brightness}
           />
-          <Typography id="input-slider">Contrast</Typography>
+          <Typography>Contrast</Typography>
           <Slider
             name="contrast"
             min={0}
@@ -173,7 +171,7 @@ const Upload = (props) => {
             onChange={handleFilterChange}
             value={filterInputs.contrast}
           />
-          <Typography id="input-slider">Saturation</Typography>
+          <Typography>Saturation</Typography>
           <Slider
             name="saturation"
             min={0}
@@ -184,7 +182,7 @@ const Upload = (props) => {
             onChange={handleFilterChange}
             value={filterInputs.saturation}
           />
-          <Typography id="input-slider">Sepia</Typography>
+          <Typography>Sepia</Typography>
           <Slider
             name="sepia"
             min={0}

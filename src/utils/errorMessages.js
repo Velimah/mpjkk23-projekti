@@ -16,8 +16,8 @@ const loginErrorMessages = {
 };
 
 const uploadErrorMessages = {
-  title: ['this field is required', 'minimum 3 characters'],
-  description: ['minimum 3 characters'],
+  title: ['this field is required', 'minimum 2 characters'],
+  description: ['minimum 2 characters'],
 };
 
 export {registerErrorMessages, loginErrorMessages, uploadErrorMessages};
