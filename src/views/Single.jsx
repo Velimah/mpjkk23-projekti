@@ -23,6 +23,16 @@ const Single = () => {
     console.log(allData);
   }
 
+  let componentType = 'img';
+  switch (file.media_type) {
+    case 'video':
+      componentType = 'video';
+      break;
+    case 'audio':
+      componentType = 'audio';
+      break;
+  }
+
   return (
     <>
       <Box sx={{maxWidth: 'lg', margin: 'auto', mt: 10}}>
@@ -31,7 +41,7 @@ const Single = () => {
             {file.title}
           </Typography>
           <CardMedia
-            component={'img'}
+            component={componentType}
             src={mediaUrl + file.filename}
             title={file.title}
             style={{
