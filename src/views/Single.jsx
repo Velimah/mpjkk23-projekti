@@ -10,8 +10,28 @@ import {
 import {useLocation} from 'react-router-dom';
 import {mediaUrl} from '../utils/variables';
 import {useNavigate} from 'react-router-dom';
+import {useUser} from '../hooks/ApiHooks';
+import {useEffect, useState} from 'react';
 
 const Single = () => {
+  const [owner, setOwner] = useState({username: ''});
+
+  const {getUser} = useUser();
+
+  const fetchUser = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const ownerInfo = await getUser(file.user_id, token);
+      setOwner(ownerInfo);
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchUser();
+  }, []);
+
   const navigate = useNavigate();
   const {state} = useLocation();
   const file = state.file;
@@ -68,6 +88,9 @@ const Single = () => {
           <CardContent>
             <Typography component="h2" variant="h6" sx={{p: 2}}>
               {allData.desc}
+            </Typography>
+            <Typography component="h2" variant="h6" sx={{p: 2}}>
+              {owner.username}
             </Typography>
           </CardContent>
         </Card>

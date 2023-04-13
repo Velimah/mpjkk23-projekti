@@ -1,9 +1,29 @@
-import {Button, ImageListItem, ImageListItemBar} from '@mui/material';
+import {
+  Button,
+  ButtonGroup,
+  ImageListItem,
+  ImageListItemBar,
+} from '@mui/material';
 import PropTypes from 'prop-types';
 import {Link} from 'react-router-dom';
 import {mediaUrl} from '../utils/variables';
+import {useMedia} from '../hooks/ApiHooks';
+import {useContext} from 'react';
+import {MediaContext} from '../contexts/MediaContext';
 
 const MediaRow = ({file}) => {
+  const {deleteMedia} = useMedia();
+  const {user} = useContext(MediaContext);
+
+  const doDelete = async () => {
+    const sure = confirm('Are you sure?');
+    if (sure) {
+      const token = localStorage.getItem('token');
+      const deleteResult = await deleteMedia(file.file_id, token);
+      console.log(deleteResult);
+    }
+  };
+
   return (
     <ImageListItem>
       <img
@@ -25,15 +45,38 @@ const MediaRow = ({file}) => {
           }, // styles for subtitle
         }}
         actionIcon={
-          <Button
-            sx={{p: 1, m: 1}}
-            component={Link}
-            variant="contained"
-            to="/single"
-            state={{file}}
-          >
-            View
-          </Button>
+          <ButtonGroup>
+            <Button
+              sx={{p: 1, m: 1}}
+              component={Link}
+              variant="contained"
+              to="/single"
+              state={{file}}
+            >
+              View
+            </Button>
+            {file.user_id === user.user_id && (
+              <>
+                <Button
+                  sx={{p: 1, m: 1}}
+                  component={Link}
+                  variant="contained"
+                  to="/modify"
+                  state={{file}}
+                >
+                  Update
+                </Button>
+                <Button
+                  sx={{p: 1, m: 1}}
+                  component={Link}
+                  variant="contained"
+                  onClick={doDelete}
+                >
+                  Delete
+                </Button>
+              </>
+            )}
+          </ButtonGroup>
         }
       />
     </ImageListItem>

@@ -43,7 +43,7 @@ const Layout = () => {
     <ThemeProvider theme={theme}>
       <Box component="nav" sx={{maxWidth: 'sm', margin: 'auto'}}>
         <Grid container justifyContent="center" sx={{mt: 2}}>
-          <Grid item xs={3} textAlign="center">
+          <Grid item xs={2} textAlign="center">
             {location.pathname === '/home' ? (
               <>
                 <Button
@@ -65,7 +65,7 @@ const Layout = () => {
           </Grid>
           {user ? (
             <>
-              <Grid item xs={3} textAlign="center">
+              <Grid item xs={2} textAlign="center">
                 {location.pathname === '/profile' ? (
                   <>
                     <Button
@@ -85,7 +85,7 @@ const Layout = () => {
                   </>
                 )}
               </Grid>
-              <Grid item xs={3} textAlign="center">
+              <Grid item xs={2} textAlign="center">
                 {location.pathname === '/upload' ? (
                   <>
                     <Button
@@ -106,13 +106,33 @@ const Layout = () => {
                 )}
               </Grid>
               <Grid item xs={3} textAlign="center">
+                {location.pathname === '/myfiles' ? (
+                  <>
+                    <Button
+                      variant="outlined"
+                      component={Link}
+                      to="/myfiles"
+                      size="large"
+                    >
+                      My Files
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Button component={Link} to="/myfiles" size="large">
+                      My Files
+                    </Button>
+                  </>
+                )}
+              </Grid>
+              <Grid item xs={2} textAlign="center">
                 <Button component={Link} to="/logout" size="large">
                   Logout
                 </Button>
               </Grid>
             </>
           ) : (
-            <Grid item xs={3} textAlign="center">
+            <Grid item xs={2} textAlign="center">
               <Button component={Link} to="/" size="large">
                 Login
               </Button>

@@ -8,6 +8,8 @@ import Login from './views/Login';
 import Logout from './views/Logout';
 import Upload from './views/Upload';
 import {MediaProvider} from './contexts/MediaContext';
+import MyFiles from './views/MyFiles';
+import Modify from './views/Modify';
 
 const App = () => {
   return (
@@ -20,6 +22,8 @@ const App = () => {
             <Route path="/single" element={<Single />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/upload" element={<Upload />} />
+            <Route path="/myfiles" element={<MyFiles />} />
+            <Route path="/modify" element={<Modify />} />
             <Route path="/logout" element={<Logout />} />
           </Route>
         </Routes>

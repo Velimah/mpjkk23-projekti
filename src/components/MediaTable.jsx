@@ -1,9 +1,10 @@
 import {ImageList} from '@mui/material';
 import {useMedia} from '../hooks/ApiHooks';
 import MediaRow from './MediaRow';
+import PropTypes from 'prop-types';
 
-const MediaTable = () => {
-  const {mediaArray} = useMedia();
+const MediaTable = ({myFilesOnly = false}) => {
+  const {mediaArray} = useMedia(myFilesOnly);
 
   return (
     <ImageList
@@ -19,6 +20,8 @@ const MediaTable = () => {
   );
 };
 
-MediaTable.propTypes = {};
+MediaTable.propTypes = {
+  myFilesOnly: PropTypes.bool,
+};
 
 export default MediaTable;
