@@ -12,6 +12,7 @@ const Profile = () => {
   const [avatar, setAvatar] = useState({
     filename: 'https://placekitten.com/320',
   });
+
   const {getTag} = useTag();
   const navigate = useNavigate();
 

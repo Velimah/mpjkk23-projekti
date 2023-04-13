@@ -6,10 +6,17 @@ import {mediaUrl} from '../utils/variables';
 const MediaRow = ({file}) => {
   return (
     <ImageListItem>
-      <img src={mediaUrl + file.thumbnails.w320} alt={file.title} />
+      <img
+        src={
+          file.media_type !== 'audio'
+            ? mediaUrl + file.thumbnails.w320
+            : '/vite.svg'
+        }
+        alt={file.title}
+      />
       <ImageListItemBar
         title={file.title}
-        subtitle={file.description}
+        subtitle={file.description.desc}
         sx={{
           '& .MuiImageListItemBar-title': {color: 'White', typography: 'h6'}, // styles for title
           '& .MuiImageListItemBar-subtitle': {

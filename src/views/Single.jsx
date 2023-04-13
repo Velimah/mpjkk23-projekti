@@ -1,4 +1,12 @@
-import {Card, CardMedia, Typography, Box, Grid, Button} from '@mui/material';
+import {
+  Card,
+  CardMedia,
+  Typography,
+  Box,
+  Grid,
+  Button,
+  CardContent,
+} from '@mui/material';
 import {useLocation} from 'react-router-dom';
 import {mediaUrl} from '../utils/variables';
 import {useNavigate} from 'react-router-dom';
@@ -41,16 +49,27 @@ const Single = () => {
             {file.title}
           </Typography>
           <CardMedia
+            controls={true}
+            poster={mediaUrl + file.screenshot}
             component={componentType}
             src={mediaUrl + file.filename}
             title={file.title}
             style={{
+              // height: file.media_type === 'audio' && 600,
+              // width: file.media_type === 'audio' && 600,
               filter: `brightness(${allData.filters.brightness}%)
                        contrast(${allData.filters.contrast}%)
                        saturate(${allData.filters.saturation}%)
                        sepia(${allData.filters.sepia}%)`,
+              backgroundImage:
+                file.media_type === 'audio' && `url('/vite.svg')`,
             }}
           />
+          <CardContent>
+            <Typography component="h2" variant="h6" sx={{p: 2}}>
+              {allData.desc}
+            </Typography>
+          </CardContent>
         </Card>
         <Grid container justifyContent="center">
           <Grid item xs={6} sx={{mb: 5}}>
