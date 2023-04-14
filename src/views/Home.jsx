@@ -6,12 +6,7 @@ const Home = () => {
   return (
     <>
       <Box sx={{maxWidth: 'lg', margin: 'auto'}}>
-        <Typography
-          component="h1"
-          variant="h2"
-          textAlign="center"
-          sx={{mt: 10}}
-        >
+        <Typography component="h1" variant="h2" textAlign="center" sx={{my: 6}}>
           Home
         </Typography>
         <MediaTable />

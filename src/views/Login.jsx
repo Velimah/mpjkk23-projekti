@@ -12,9 +12,9 @@ const Login = () => {
   };
 
   return (
-    <Box sx={{maxWidth: 'sm', margin: 'auto', mt: 10}}>
+    <Box sx={{maxWidth: 'sm', margin: 'auto'}}>
       <Grid container justifyContent="center">
-        <Grid item xs={12} textAlign="center">
+        <Grid item xs={12} textAlign="center" sx={{my: 6}}>
           <Typography component="h1" variant="h2">
             {formToggle ? 'Login' : 'Register'}
           </Typography>

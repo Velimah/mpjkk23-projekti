@@ -78,7 +78,10 @@ const Upload = () => {
   );
 
   return (
-    <Box sx={{maxWidth: 'md', margin: 'auto', mt: 10}}>
+    <Box sx={{maxWidth: 'md', margin: 'auto'}}>
+      <Typography component="h1" variant="h2" textAlign="center" sx={{my: 6}}>
+        Upload
+      </Typography>
       <Grid container direction={'row'} justifyContent="center" sx={{mt: 2}}>
         <Grid item xs={5} sx={{mt: 0}}>
           <img
@@ -192,10 +195,14 @@ const Upload = () => {
             onChange={handleFilterChange}
             value={filterInputs.sepia}
           />
+        </Grid>
+      </Grid>
+      <Grid container justifyContent="center">
+        <Grid item xs={4}>
           <Button
             variant="contained"
             fullWidth
-            sx={{my: 5}}
+            sx={{mt: 5}}
             onClick={() => navigate(-1)}
           >
             Back

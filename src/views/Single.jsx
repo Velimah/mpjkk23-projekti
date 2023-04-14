@@ -110,7 +110,7 @@ const Single = () => {
 
   return (
     <>
-      <Box sx={{maxWidth: 'lg', margin: 'auto', mt: 10}}>
+      <Box sx={{maxWidth: 'lg', margin: 'auto', my: 6}}>
         <Card>
           <Typography component="h1" variant="h2" sx={{p: 2}}>
             {file.title}
@@ -174,7 +174,7 @@ const Single = () => {
           </CardContent>
         </Card>
         <Grid container justifyContent="center">
-          <Grid item xs={6} sx={{mb: 5}}>
+          <Grid item xs={4} sx={{mb: 5}}>
             <Button
               variant="contained"
               fullWidth

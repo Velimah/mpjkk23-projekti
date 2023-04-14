@@ -37,7 +37,15 @@ const Profile = () => {
     <>
       {user && (
         <>
-          <Box sx={{maxWidth: 'md', margin: 'auto', mt: 10}}>
+          <Box sx={{maxWidth: 'md', margin: 'auto'}}>
+            <Typography
+              component="h1"
+              variant="h2"
+              textAlign="center"
+              sx={{my: 6}}
+            >
+              Profile
+            </Typography>
             <Grid container justifyContent="center">
               <Grid item sx={{px: 3}}>
                 <Avatar
@@ -68,7 +76,7 @@ const Profile = () => {
               </Grid>
             </Grid>
             <Grid container justifyContent="center">
-              <Grid item xs={6}>
+              <Grid item xs={4}>
                 <Button
                   variant="contained"
                   fullWidth

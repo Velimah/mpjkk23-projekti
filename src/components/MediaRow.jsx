@@ -29,7 +29,7 @@ const MediaRow = ({file, deleteMedia}) => {
       <img
         src={
           file.media_type !== 'audio'
-            ? mediaUrl + file.thumbnails.w320
+            ? mediaUrl + file.thumbnails.w640
             : '/vite.svg'
         }
         alt={file.title}
@@ -64,7 +64,7 @@ const MediaRow = ({file, deleteMedia}) => {
                   to="/modify"
                   state={{file}}
                 >
-                  Update
+                  Modify
                 </Button>
                 <Button
                   sx={{
