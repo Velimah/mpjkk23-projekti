@@ -11,13 +11,17 @@ import {useLocation} from 'react-router-dom';
 import {mediaUrl} from '../utils/variables';
 import {useNavigate} from 'react-router-dom';
 import {useFavourite, useUser} from '../hooks/ApiHooks';
-import {useEffect, useState} from 'react';
+import {useContext, useEffect, useState} from 'react';
+import {MediaContext} from '../contexts/MediaContext';
 
 const Single = () => {
   const [owner, setOwner] = useState({username: ''});
+  const [likes, setLikes] = useState(0);
+  const [userLike, setUserLike] = useState(false);
+  const {user} = useContext(MediaContext);
 
   const {getUser} = useUser();
-  const {getFavourites} = useFavourite();
+  const {getFavourites, postFavourite, deleteFavourite} = useFavourite();
 
   const navigate = useNavigate();
   const {state} = useLocation();
@@ -61,6 +65,35 @@ const Single = () => {
     try {
       const likeInfo = await getFavourites(file.file_id);
       console.log(likeInfo);
+      setLikes(likeInfo.length);
+      likeInfo.forEach((like) => {
+        if (like.user_id === user.user_id) {
+          setUserLike(true);
+        }
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const doLike = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const data = {file_id: file.file_id};
+      const likeInfo = await postFavourite(data, token);
+      console.log(likeInfo);
+      setUserLike(true);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const deleteLike = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const likeInfo = await deleteFavourite(file.file_id, token);
+      console.log(likeInfo);
+      setUserLike(false);
     } catch (error) {
       console.log(error.message);
     }
@@ -70,6 +103,10 @@ const Single = () => {
     fetchUser();
     fetchLikes();
   }, []);
+
+  useEffect(() => {
+    fetchLikes();
+  }, [userLike]);
 
   return (
     <>
@@ -108,15 +145,30 @@ const Single = () => {
             <Typography component="h2" variant="h6" sx={{p: 2}}>
               User: {owner.username}
             </Typography>
-            <Typography component="h2" variant="h6" sx={{p: 2}}>
-              Likes: 34
-            </Typography>
-            <Button variant="contained" sx={{mt: 5, mr: 2}}>
+            <Button
+              onClick={doLike}
+              disabled={userLike}
+              variant="contained"
+              sx={{mt: 5, mr: 2}}
+            >
               Like
             </Button>
-            <Button disabled={true} variant="contained" sx={{mt: 5}}>
+            <Button
+              onClick={deleteLike}
+              disabled={!userLike}
+              variant="contained"
+              sx={{mt: 5}}
+            >
               Dislike
             </Button>
+            <Typography
+              display={'inline'}
+              component="h2"
+              variant="h6"
+              sx={{mt: 5}}
+            >
+              Likes: {likes}
+            </Typography>
           </CardContent>
         </Card>
         <Grid container justifyContent="center">
