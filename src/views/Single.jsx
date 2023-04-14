@@ -96,7 +96,7 @@ const Single = () => {
               Sepia:{allData.filters.sepia}
             </Typography>
             <Typography component="h2" variant="h6" sx={{p: 2}}>
-              {owner.username}
+              User: {owner.username}
             </Typography>
           </CardContent>
         </Card>

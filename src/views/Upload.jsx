@@ -1,5 +1,4 @@
 import {Box, Button, Grid, Slider, Typography} from '@mui/material';
-import PropTypes from 'prop-types';
 import useForm from '../hooks/FormHooks';
 import {useState} from 'react';
 import {useMedia, useTag} from '../hooks/ApiHooks';
@@ -9,7 +8,7 @@ import {ValidatorForm, TextValidator} from 'react-material-ui-form-validator';
 import {uploadErrorMessages} from '../utils/errorMessages';
 import {uploadValidators} from '../utils/validator';
 
-const Upload = (props) => {
+const Upload = () => {
   const [file, setFile] = useState(null);
   const [selectedImage, setSelectedImage] = useState(
     'https://placehold.co/300x300?text=Choose-media'

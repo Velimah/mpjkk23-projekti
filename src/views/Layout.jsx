@@ -2,13 +2,7 @@ import {Link, Outlet, useNavigate, useLocation} from 'react-router-dom';
 import {useUser} from '../hooks/ApiHooks';
 import {useContext, useEffect} from 'react';
 import {MediaContext} from '../contexts/MediaContext';
-import {
-  Button,
-  createTheme,
-  Grid,
-  ThemeProvider,
-  Typography,
-} from '@mui/material';
+import {Button, createTheme, Grid, ThemeProvider} from '@mui/material';
 import {themeOptions} from '../theme/themeOptions';
 import {Box} from '@mui/system';
 
