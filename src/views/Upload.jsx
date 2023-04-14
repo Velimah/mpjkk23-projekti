@@ -206,6 +206,4 @@ const Upload = () => {
   );
 };
 
-Upload.propTypes = {};
-
 export default Upload;
