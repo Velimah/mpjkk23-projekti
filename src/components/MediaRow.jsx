@@ -12,6 +12,7 @@ import {MediaContext} from '../contexts/MediaContext';
 
 const MediaRow = ({file, deleteMedia}) => {
   const {user, update, setUpdate} = useContext(MediaContext);
+  const description = JSON.parse(file.description);
 
   const doDelete = async () => {
     const sure = confirm('Are you sure?');
@@ -35,13 +36,13 @@ const MediaRow = ({file, deleteMedia}) => {
       />
       <ImageListItemBar
         title={file.title}
-        subtitle={file.description}
+        subtitle={description.desc}
         sx={{
-          '& .MuiImageListItemBar-title': {color: 'White', typography: 'body1'}, // styles for title
+          '& .MuiImageListItemBar-title': {color: 'White', typography: 'h6'},
           '& .MuiImageListItemBar-subtitle': {
             color: 'White',
             typography: 'body2',
-          }, // styles for subtitle
+          },
         }}
         actionIcon={
           <ButtonGroup>
