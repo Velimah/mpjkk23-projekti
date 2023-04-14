@@ -1,7 +1,7 @@
 import {Box, Typography} from '@mui/material';
 import MediaTable from '../components/MediaTable';
 
-const MyFiles = (props) => {
+const MyFiles = () => {
   return (
     <>
       <Box sx={{maxWidth: 'lg', margin: 'auto'}}>

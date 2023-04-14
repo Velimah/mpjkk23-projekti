@@ -1,5 +1,4 @@
 import {Box, Button, Grid, Slider, Typography} from '@mui/material';
-import PropTypes from 'prop-types';
 import useForm from '../hooks/FormHooks';
 import {useMedia} from '../hooks/ApiHooks';
 import {useLocation, useNavigate} from 'react-router-dom';
@@ -8,7 +7,7 @@ import {ValidatorForm, TextValidator} from 'react-material-ui-form-validator';
 import {uploadErrorMessages} from '../utils/errorMessages';
 import {uploadValidators} from '../utils/validator';
 
-const Modify = (props) => {
+const Modify = () => {
   const {putMedia} = useMedia();
   const navigate = useNavigate();
   const {state} = useLocation();
@@ -16,7 +15,7 @@ const Modify = (props) => {
 
   const selectedImage = mediaUrl + file.filename;
 
-  const allData = {
+  let allData = {
     desc: file.description,
     filters: {
       brightness: 100,
@@ -25,6 +24,11 @@ const Modify = (props) => {
       sepia: 0,
     },
   };
+  try {
+    allData = JSON.parse(file.description);
+  } catch (error) {
+    console.log(allData);
+  }
 
   const initValues = {
     title: file.title,
@@ -41,7 +45,7 @@ const Modify = (props) => {
       };
       const data = {
         title: inputs.title,
-        description: allData.desc,
+        description: allData,
       };
       const token = localStorage.getItem('token');
       const modifyResult = await putMedia(file.file_id, data, token);
@@ -183,7 +187,5 @@ const Modify = (props) => {
     </Box>
   );
 };
-
-Modify.propTypes = {};
 
 export default Modify;

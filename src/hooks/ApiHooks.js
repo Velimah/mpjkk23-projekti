@@ -15,7 +15,7 @@ const doFetch = async (url, options) => {
   return json;
 };
 
-const useMedia = (myFilesOnly) => {
+const useMedia = (myFilesOnly = false) => {
   const [mediaArray, setMediaArray] = useState([]);
   const {user} = useContext(MediaContext);
 

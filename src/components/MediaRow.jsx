@@ -7,13 +7,13 @@ import {
 import PropTypes from 'prop-types';
 import {Link} from 'react-router-dom';
 import {mediaUrl} from '../utils/variables';
-import {useMedia} from '../hooks/ApiHooks';
 import {useContext} from 'react';
 import {MediaContext} from '../contexts/MediaContext';
+import {useNavigate} from 'react-router-dom';
 
-const MediaRow = ({file}) => {
-  const {deleteMedia} = useMedia();
+const MediaRow = ({file, deleteMedia}) => {
   const {user} = useContext(MediaContext);
+  const navigate = useNavigate();
 
   const doDelete = async () => {
     const sure = confirm('Are you sure?');
@@ -21,6 +21,7 @@ const MediaRow = ({file}) => {
       const token = localStorage.getItem('token');
       const deleteResult = await deleteMedia(file.file_id, token);
       console.log(deleteResult);
+      navigate(0);
     }
   };
 
@@ -85,6 +86,7 @@ const MediaRow = ({file}) => {
 
 MediaRow.propTypes = {
   file: PropTypes.object.isRequired,
+  deleteMedia: PropTypes.func.isRequired,
 };
 
 export default MediaRow;

@@ -4,7 +4,7 @@ import MediaRow from './MediaRow';
 import PropTypes from 'prop-types';
 
 const MediaTable = ({myFilesOnly = false}) => {
-  const {mediaArray} = useMedia(myFilesOnly);
+  const {mediaArray, deleteMedia} = useMedia(myFilesOnly);
 
   return (
     <ImageList
@@ -14,7 +14,7 @@ const MediaTable = ({myFilesOnly = false}) => {
       gap={5}
     >
       {mediaArray.map((item, index) => {
-        return <MediaRow key={index} file={item} />;
+        return <MediaRow key={index} file={item} deleteMedia={deleteMedia} />;
       })}
     </ImageList>
   );
