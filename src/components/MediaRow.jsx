@@ -71,7 +71,7 @@ const MediaRow = ({file, deleteMedia}) => {
                     m: 1,
                     backgroundColor: 'red',
                     '&:hover': {
-                      backgroundColor: 'red !important',
+                      backgroundColor: '#C41E3A !important',
                     },
                   }}
                   component={Link}
