@@ -9,7 +9,7 @@ const MediaTable = ({myFilesOnly = false}) => {
   return (
     <ImageList
       sx={{
-        gridTemplateColumns: 'repeat(auto-fill,minmax(280px, 1fr))!important',
+        gridTemplateColumns: 'repeat(auto-fill,minmax(310px, 1fr))!important',
       }}
       gap={5}
     >
