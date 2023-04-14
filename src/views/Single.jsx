@@ -10,32 +10,18 @@ import {
 import {useLocation} from 'react-router-dom';
 import {mediaUrl} from '../utils/variables';
 import {useNavigate} from 'react-router-dom';
-import {useUser} from '../hooks/ApiHooks';
+import {useFavourite, useUser} from '../hooks/ApiHooks';
 import {useEffect, useState} from 'react';
 
 const Single = () => {
   const [owner, setOwner] = useState({username: ''});
 
   const {getUser} = useUser();
-
-  const fetchUser = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      const ownerInfo = await getUser(file.user_id, token);
-      setOwner(ownerInfo);
-    } catch (error) {
-      console.error(error.message);
-    }
-  };
-
-  useEffect(() => {
-    fetchUser();
-  }, []);
+  const {getFavourites} = useFavourite();
 
   const navigate = useNavigate();
   const {state} = useLocation();
   const file = state.file;
-  console.log(file);
   let allData = {
     desc: file.description,
     filters: {
@@ -60,6 +46,30 @@ const Single = () => {
       componentType = 'audio';
       break;
   }
+
+  const fetchUser = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const ownerInfo = await getUser(file.user_id, token);
+      setOwner(ownerInfo);
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+
+  const fetchLikes = async () => {
+    try {
+      const likeInfo = await getFavourites(file.file_id);
+      console.log(likeInfo);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchUser();
+    fetchLikes();
+  }, []);
 
   return (
     <>
@@ -98,6 +108,15 @@ const Single = () => {
             <Typography component="h2" variant="h6" sx={{p: 2}}>
               User: {owner.username}
             </Typography>
+            <Typography component="h2" variant="h6" sx={{p: 2}}>
+              Likes: 34
+            </Typography>
+            <Button variant="contained" sx={{mt: 5, mr: 2}}>
+              Like
+            </Button>
+            <Button disabled={true} variant="contained" sx={{mt: 5}}>
+              Dislike
+            </Button>
           </CardContent>
         </Card>
         <Grid container justifyContent="center">

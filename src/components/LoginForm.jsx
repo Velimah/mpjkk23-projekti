@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import useForm from '../hooks/FormHooks';
 import {useAuthentication} from '../hooks/ApiHooks';
 import {useNavigate} from 'react-router-dom';
@@ -9,7 +8,7 @@ import {loginValidators} from '../utils/validator';
 import {loginErrorMessages} from '../utils/errorMessages';
 import {TextValidator, ValidatorForm} from 'react-material-ui-form-validator';
 
-const LoginForm = (props) => {
+const LoginForm = () => {
   const {setUser} = useContext(MediaContext);
   const {postLogin} = useAuthentication();
   const navigate = useNavigate();
@@ -66,7 +65,5 @@ const LoginForm = (props) => {
     </>
   );
 };
-
-LoginForm.propTypes = {};
 
 export default LoginForm;

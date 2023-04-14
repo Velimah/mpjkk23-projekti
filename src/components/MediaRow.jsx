@@ -9,11 +9,9 @@ import {Link} from 'react-router-dom';
 import {mediaUrl} from '../utils/variables';
 import {useContext} from 'react';
 import {MediaContext} from '../contexts/MediaContext';
-import {useNavigate} from 'react-router-dom';
 
 const MediaRow = ({file, deleteMedia}) => {
-  const {user} = useContext(MediaContext);
-  const navigate = useNavigate();
+  const {user, update, setUpdate} = useContext(MediaContext);
 
   const doDelete = async () => {
     const sure = confirm('Are you sure?');
@@ -21,7 +19,7 @@ const MediaRow = ({file, deleteMedia}) => {
       const token = localStorage.getItem('token');
       const deleteResult = await deleteMedia(file.file_id, token);
       console.log(deleteResult);
-      navigate(0);
+      setUpdate(!update);
     }
   };
 
@@ -37,9 +35,9 @@ const MediaRow = ({file, deleteMedia}) => {
       />
       <ImageListItemBar
         title={file.title}
-        subtitle={file.description.desc}
+        subtitle={file.description}
         sx={{
-          '& .MuiImageListItemBar-title': {color: 'White', typography: 'h6'}, // styles for title
+          '& .MuiImageListItemBar-title': {color: 'White', typography: 'body1'}, // styles for title
           '& .MuiImageListItemBar-subtitle': {
             color: 'White',
             typography: 'body2',

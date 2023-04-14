@@ -15,7 +15,6 @@ const Layout = () => {
   const getUserInfo = async () => {
     const userToken = localStorage.getItem('token');
     if (userToken) {
-      console.log(userToken);
       const userData = await getUserByToken(userToken);
       if (userData) {
         setUser(userData);
