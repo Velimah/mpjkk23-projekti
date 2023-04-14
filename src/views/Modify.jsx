@@ -13,7 +13,10 @@ const Modify = () => {
   const {state} = useLocation();
   const file = state.file;
 
-  const selectedImage = mediaUrl + file.filename;
+  let selectedImage = mediaUrl + file.filename;
+  if (file.media_type === 'video' || file.media_type === 'audio') {
+    selectedImage = 'https://placehold.co/300x300?text=No image preview';
+  }
 
   let allData = {
     desc: file.description,

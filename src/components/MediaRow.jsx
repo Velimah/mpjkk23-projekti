@@ -66,7 +66,14 @@ const MediaRow = ({file, deleteMedia}) => {
                   Update
                 </Button>
                 <Button
-                  sx={{p: 1, m: 1}}
+                  sx={{
+                    p: 1,
+                    m: 1,
+                    backgroundColor: 'red',
+                    '&:hover': {
+                      backgroundColor: 'red !important',
+                    },
+                  }}
                   component={Link}
                   variant="contained"
                   onClick={doDelete}

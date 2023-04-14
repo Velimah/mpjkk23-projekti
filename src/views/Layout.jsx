@@ -40,6 +40,13 @@ const Layout = () => {
             {location.pathname === '/home' ? (
               <>
                 <Button
+                  sx={{
+                    color: 'blue',
+                    borderColor: 'blue',
+                    '&:hover': {
+                      borderColor: 'blue !important',
+                    },
+                  }}
                   variant="outlined"
                   component={Link}
                   to="/home"
@@ -62,6 +69,13 @@ const Layout = () => {
                 {location.pathname === '/profile' ? (
                   <>
                     <Button
+                      sx={{
+                        color: 'blue',
+                        borderColor: 'blue',
+                        '&:hover': {
+                          borderColor: 'blue !important',
+                        },
+                      }}
                       variant="outlined"
                       component={Link}
                       to="/profile"
@@ -82,6 +96,13 @@ const Layout = () => {
                 {location.pathname === '/upload' ? (
                   <>
                     <Button
+                      sx={{
+                        color: 'blue',
+                        borderColor: 'blue',
+                        '&:hover': {
+                          borderColor: 'blue !important',
+                        },
+                      }}
                       variant="outlined"
                       component={Link}
                       to="/upload"
@@ -102,6 +123,13 @@ const Layout = () => {
                 {location.pathname === '/myfiles' ? (
                   <>
                     <Button
+                      sx={{
+                        color: 'blue',
+                        borderColor: 'blue',
+                        '&:hover': {
+                          borderColor: 'blue !important',
+                        },
+                      }}
                       variant="outlined"
                       component={Link}
                       to="/myfiles"

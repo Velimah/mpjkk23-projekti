@@ -145,11 +145,14 @@ const Single = () => {
             <Typography component="h2" variant="h6" sx={{p: 2}}>
               User: {owner.username}
             </Typography>
+            <Typography component="h2" variant="h6" sx={{mt: 5}}>
+              Likes: {likes}
+            </Typography>
             <Button
               onClick={doLike}
               disabled={userLike}
               variant="contained"
-              sx={{mt: 5, mr: 2}}
+              sx={{mt: 1, mr: 2}}
             >
               Like
             </Button>
@@ -157,18 +160,17 @@ const Single = () => {
               onClick={deleteLike}
               disabled={!userLike}
               variant="contained"
-              sx={{mt: 5}}
+              sx={{
+                mt: 1,
+                mr: 2,
+                backgroundColor: 'red',
+                '&:hover': {
+                  backgroundColor: 'red !important',
+                },
+              }}
             >
               Dislike
             </Button>
-            <Typography
-              display={'inline'}
-              component="h2"
-              variant="h6"
-              sx={{mt: 5}}
-            >
-              Likes: {likes}
-            </Typography>
           </CardContent>
         </Card>
         <Grid container justifyContent="center">
