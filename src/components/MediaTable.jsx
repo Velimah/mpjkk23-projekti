@@ -2,36 +2,35 @@ import {Button, ImageList} from '@mui/material';
 import {useMedia} from '../hooks/ApiHooks';
 import MediaRow from './MediaRow';
 import PropTypes from 'prop-types';
-import {useEffect, useState} from 'react';
-import {Navigate, useNavigate} from 'react-router-dom';
+import {useState} from 'react';
 
 const MediaTable = ({myFilesOnly = false}) => {
   const {mediaArray, deleteMedia} = useMedia(myFilesOnly);
 
   const [style, setStyle] = useState(true);
-  const changeStyle = () => {
+  const changeToGrid = () => {
     setStyle(true);
   };
 
-  const changeStyle2 = () => {
+  const changeToList = () => {
     setStyle(false);
   };
 
   return (
     <>
       {style === true ? (
-        <Button variant="contained" onClick={changeStyle}>
+        <Button variant="contained" onClick={changeToGrid}>
           Grid
         </Button>
       ) : (
-        <Button onClick={changeStyle}>Grid</Button>
+        <Button onClick={changeToGrid}>Grid</Button>
       )}
       {style === false ? (
-        <Button variant="contained" onClick={changeStyle2}>
+        <Button variant="contained" onClick={changeToList}>
           List
         </Button>
       ) : (
-        <Button onClick={changeStyle2}>Grid</Button>
+        <Button onClick={changeToList}>Grid</Button>
       )}
       <ImageList
         sx={{
