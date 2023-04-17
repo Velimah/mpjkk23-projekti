@@ -30,7 +30,7 @@ const MediaTable = ({myFilesOnly = false}) => {
           List
         </Button>
       ) : (
-        <Button onClick={changeToList}>Grid</Button>
+        <Button onClick={changeToList}>List</Button>
       )}
       <ImageList
         sx={{
