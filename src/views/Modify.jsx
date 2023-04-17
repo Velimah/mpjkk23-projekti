@@ -48,7 +48,7 @@ const Modify = () => {
       };
       const data = {
         title: inputs.title,
-        description: allData,
+        description: JSON.stringify(allData),
       };
       const token = localStorage.getItem('token');
       const modifyResult = await putMedia(file.file_id, data, token);

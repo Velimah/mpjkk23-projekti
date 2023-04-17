@@ -28,9 +28,6 @@ const themeOptions = {
     h3: {
       fontFamily: 'Nunito',
     },
-    h3: {
-      fontFamily: 'Nunito',
-    },
     h4: {
       fontFamily: 'Nunito',
     },
