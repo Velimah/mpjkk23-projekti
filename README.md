@@ -1,3 +1,3 @@
-# Viikko 1: first app
+# Week 5: Player/Likes/Delete/ui fixes
 
-Open [https://users.metropolia.fi/~velimah/mediapalvelut23/week1](https://users.metropolia.fi/~velimah/mediapalvelut23/week1) to view it in the browser.
+Open [https://users.metropolia.fi/~velimah/mediapalvelut23/player](https://users.metropolia.fi/~velimah/mediapalvelut23/player) to view it in the browser.

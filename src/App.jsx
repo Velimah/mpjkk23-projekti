@@ -1,38 +1,35 @@
 import './App.css';
-import MediaTable from './components/MediaTable';
-
-const mediaArray = [
-  {
-    title: 'Title 1',
-    description:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sodales enim eget leo condimentum vulputate. Sed lacinia consectetur fermentum. Vestibulum lobortis purus id nisi mattis posuere. Praesent sagittis justo quis nibh ullamcorper, eget elementum lorem consectetur. Pellentesque eu consequat justo, eu sodales eros.',
-    thumbnails: {
-      w160: 'http://placekitten.com/160/161',
-    },
-    filename: 'http://placekitten.com/2048/1920',
-  },
-  {
-    title: 'Title 2',
-    description:
-      'Donec dignissim tincidunt nisl, non scelerisque massa pharetra ut. Sed vel velit ante. Aenean quis viverra magna. Praesent eget cursus urna. Ut rhoncus interdum dolor non tincidunt. Sed vehicula consequat facilisis. Pellentesque pulvinar sem nisl, ac vestibulum erat rhoncus id. Vestibulum tincidunt sapien eu ipsum tincidunt pulvinar. ',
-    thumbnails: {
-      w160: 'http://placekitten.com/160/162',
-    },
-    filename: 'http://placekitten.com/2041/1922',
-  },
-  {
-    title: 'Title 3',
-    description:
-      'Phasellus imperdiet nunc tincidunt molestie vestibulum. Donec dictum suscipit nibh. Sed vel velit ante. Aenean quis viverra magna. Praesent eget cursus urna. Ut rhoncus interdum dolor non tincidunt. Sed vehicula consequat facilisis. Pellentesque pulvinar sem nisl, ac vestibulum erat rhoncus id. ',
-    thumbnails: {
-      w160: 'http://placekitten.com/160/163',
-    },
-    filename: 'http://placekitten.com/2039/1920',
-  },
-];
+import Home from './views/Home';
+import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
+import Layout from './views/Layout';
+import Single from './views/Single';
+import Profile from './views/Profile';
+import Login from './views/Login';
+import Logout from './views/Logout';
+import Upload from './views/Upload';
+import {MediaProvider} from './contexts/MediaContext';
+import MyFiles from './views/MyFiles';
+import Modify from './views/Modify';
 
 const App = () => {
-  return <MediaTable mediaArray={mediaArray} />;
+  return (
+    <Router basename={import.meta.env.BASE_URL}>
+      <MediaProvider>
+        <Routes>
+          <Route element={<Layout />}>
+            <Route path="/" element={<Login />} />
+            <Route path="/home" element={<Home />} />
+            <Route path="/single" element={<Single />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/upload" element={<Upload />} />
+            <Route path="/myfiles" element={<MyFiles />} />
+            <Route path="/modify" element={<Modify />} />
+            <Route path="/logout" element={<Logout />} />
+          </Route>
+        </Routes>
+      </MediaProvider>
+    </Router>
+  );
 };
 
 export default App;
