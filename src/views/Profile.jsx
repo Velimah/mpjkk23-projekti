@@ -5,6 +5,7 @@ import {useState, useEffect} from 'react';
 import {useTag} from '../hooks/ApiHooks';
 import {mediaUrl} from '../utils/variables';
 import {useNavigate} from 'react-router-dom';
+import ModifyUserForm from '../components/ModifyUserForm';
 
 const Profile = () => {
   const {user} = useContext(MediaContext);
@@ -21,6 +22,7 @@ const Profile = () => {
       if (user) {
         const avatars = await getTag('avatar_' + user.user_id);
         const ava = avatars.pop();
+        console.log(ava);
         ava.filename = mediaUrl + ava.filename;
         setAvatar(ava);
       }
@@ -88,6 +90,7 @@ const Profile = () => {
               </Grid>
             </Grid>
           </Box>
+          <ModifyUserForm />
         </>
       )}
     </>

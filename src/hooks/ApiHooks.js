@@ -83,6 +83,7 @@ const useMedia = (myFilesOnly = false) => {
 };
 
 const useUser = () => {
+
   const postUser = async (inputs) => {
     const options = {
       method: 'POST',
@@ -92,6 +93,19 @@ const useUser = () => {
       body: JSON.stringify(inputs),
     };
     return await doFetch(baseUrl + 'users', options);
+  };
+  
+  const putUser = async (data, token) => {
+    console.log(data);
+    const options = {
+      method: 'PUT',
+      headers: {
+        'x-access-token': token,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    };
+    return await doFetch(baseUrl + 'users/', options);
   };
 
   const getUserByToken = async (token) => {
@@ -119,7 +133,7 @@ const useUser = () => {
     return available;
   };
 
-  return {postUser, getUserByToken, getCheckUser, getUser};
+  return {postUser, getUserByToken, getCheckUser, getUser, putUser};
 };
 
 const useAuthentication = () => {
