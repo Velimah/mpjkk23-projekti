@@ -1,18 +1,17 @@
-import '@fontsource/roboto';
 import '@fontsource/nunito';
 
 const themeOptions = {
   palette: {
     type: 'light',
     primary: {
-      main: '#006300',
+      main: '#7047A6',
     },
     secondary: {
-      main: '#d60202',
+      main: '#ACCC7F',
     },
   },
   typography: {
-    fontFamily: 'Roboto',
+    fontFamily: 'Nunito',
     body1: {
       fontFamily: 'Nunito',
     },
@@ -20,10 +19,10 @@ const themeOptions = {
       fontFamily: 'Nunito',
     },
     h1: {
-      fontFamily: 'Roboto',
+      fontFamily: 'Nunito',
     },
     h2: {
-      fontFamily: 'Roboto',
+      fontFamily: 'Nunito',
     },
     h3: {
       fontFamily: 'Nunito',
