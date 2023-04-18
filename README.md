@@ -6,3 +6,5 @@ Members: Catrina Koskinen, Kerttu Kamula, Veli-Matti Heino
 Instagram style media sharing application
 
 React.js, Material UI
+
+branch for modifying user information
