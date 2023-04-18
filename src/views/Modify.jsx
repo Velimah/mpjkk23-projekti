@@ -11,6 +11,7 @@ const Modify = () => {
   const {putMedia} = useMedia();
   const navigate = useNavigate();
   const {state} = useLocation();
+  console.log('state',state);
   const file = state.file;
 
   let selectedImage = mediaUrl + file.filename;

@@ -25,7 +25,6 @@ const Profile = () => {
       if (user) {
         const profilePictures = await getTag(appId + '_profilepicture_' + user.user_id);
         const profilePicture = profilePictures.pop();
-        console.log(profilePicture);
         profilePicture.filename = mediaUrl + profilePicture.filename;
         SetProfilePic(profilePicture);
       }
@@ -66,13 +65,13 @@ const Profile = () => {
             >
               Profile
             </Typography>
-            <img
+            <Avatar
                   src={backgroundPic.filename}
                   alt="Logo"
                   sx={{
-                    borderRadius: 10,
+                    borderRadius: 0,
                     boxShadow: 3,
-                    width: 320,
+                    width: 1000,
                     height: 320,
                   }}
                 />
@@ -82,10 +81,11 @@ const Profile = () => {
                   src={profilePic.filename}
                   alt="Logo"
                   sx={{
-                    borderRadius: 10,
+                    top: -100,
+                    left: -100,
                     boxShadow: 3,
-                    width: 320,
-                    height: 320,
+                    width: 200,
+                    height: 200,
                   }}
                 />
               </Grid>
@@ -105,8 +105,8 @@ const Profile = () => {
                 </Typography>
               </Grid>
             </Grid>
-            <Grid container justifyContent="center">
-            <Grid item xs={4}>
+            <Grid container justifyContent="center" gap={5}>
+              <Grid item xs={4}>
                 <Button
                   variant="contained"
                   fullWidth

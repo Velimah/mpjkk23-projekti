@@ -1,21 +1,37 @@
 import {Box, Button, Grid, Slider, Typography} from '@mui/material';
 import useForm from '../hooks/FormHooks';
-import {useContext, useState} from 'react';
+import {useContext, useEffect, useState} from 'react';
 import {useMedia, useTag} from '../hooks/ApiHooks';
 import {useNavigate} from 'react-router-dom';
-import {appId} from '../utils/variables';
+import {appId, mediaUrl} from '../utils/variables';
 import {ValidatorForm, TextValidator} from 'react-material-ui-form-validator';
 import {MediaContext} from '../contexts/MediaContext';
 
 const UploadProfilePicture = () => {
   const {user} = useContext(MediaContext);
-  const [file, setFile] = useState(null);
-  const [selectedImage, setSelectedImage] = useState(
-    'https://placehold.co/300x300?text=Choose-Profile Picture'
-  );
+  const {getTag, postTag} = useTag();
   const {postMedia} = useMedia();
-  const {postTag} = useTag();
   const navigate = useNavigate();
+
+  const [file, setFile] = useState(null);
+  const [selectedImage, setSelectedImage] = useState('https://placehold.co/300x300?text=Choose-Profile Picture');
+
+  const fetchProfilePicture = async () => {
+    try {
+      if (user) {
+        const profilePictures = await getTag(appId + '_profilepicture_' + user.user_id);
+        const profilePicture = profilePictures.pop();
+        profilePicture.filename = mediaUrl + profilePicture.filename;
+        setSelectedImage(profilePicture.filename);
+      }
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchProfilePicture();
+  }, [user]);
 
   const doUpload = async () => {
     try {
@@ -31,8 +47,6 @@ const UploadProfilePicture = () => {
         },
         token
       );
-      console.log(uploadResult);
-      console.log(tagResult);
       navigate(0);
     } catch (error) {
       alert(error.message);
@@ -42,7 +56,6 @@ const UploadProfilePicture = () => {
   const handleFileChange = (event) => {
     event.persist();
     setFile(event.target.files[0]);
-    console.log(event.target.files[0]);
     const reader = new FileReader();
     reader.addEventListener('load', () => {
       setSelectedImage(reader.result);

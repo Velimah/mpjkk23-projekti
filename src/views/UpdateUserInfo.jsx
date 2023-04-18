@@ -24,7 +24,6 @@ const UpdateUserInfo = () => {
       if (user) {
         const avatars = await getTag(appId + '_profilepicture_' + user.user_id);
         const ava = avatars.pop();
-        console.log(ava);
         ava.filename = mediaUrl + ava.filename;
         setAvatar(ava);
       }
@@ -55,6 +54,14 @@ const UpdateUserInfo = () => {
               <UploadProfileBackgroundPicture/>
               <ModifyUserForm />
             </Grid>
+            <Button
+                  variant="contained"
+                  fullWidth
+                  sx={{mt: 5}}
+                  onClick={() => navigate('/profile')}
+                >
+                  Back
+                </Button>
           </Box>
 
         </>
