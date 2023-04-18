@@ -3,28 +3,45 @@ import {useContext} from 'react';
 import {MediaContext} from '../contexts/MediaContext';
 import {useState, useEffect} from 'react';
 import {useTag} from '../hooks/ApiHooks';
-import {mediaUrl} from '../utils/variables';
+import {appId, mediaUrl} from '../utils/variables';
 import {useNavigate} from 'react-router-dom';
-import ModifyUserForm from '../components/ModifyUserForm';
 
 const Profile = () => {
   const {user} = useContext(MediaContext);
 
-  const [avatar, setAvatar] = useState({
+  const [profilePic, SetProfilePic] = useState({
+    filename: 'https://placekitten.com/320',
+  });
+
+  const [backgroundPic, SetBackgroundPic] = useState({
     filename: 'https://placekitten.com/320',
   });
 
   const {getTag} = useTag();
   const navigate = useNavigate();
 
-  const fetchAvatar = async () => {
+  const fetchProfilePicture = async () => {
     try {
       if (user) {
-        const avatars = await getTag('avatar_' + user.user_id);
-        const ava = avatars.pop();
-        console.log(ava);
-        ava.filename = mediaUrl + ava.filename;
-        setAvatar(ava);
+        const profilePictures = await getTag(appId + '_profilepicture_' + user.user_id);
+        const profilePicture = profilePictures.pop();
+        console.log(profilePicture);
+        profilePicture.filename = mediaUrl + profilePicture.filename;
+        SetProfilePic(profilePicture);
+      }
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+
+  const fetchBackgroundPicture = async () => {
+    try {
+      if (user) {
+        const backgroundPictures = await getTag(appId + '_backgroundpicture_' + user.user_id);
+        const backgroundPicture = backgroundPictures.pop();
+        console.log(backgroundPicture);
+        backgroundPicture.filename = mediaUrl + backgroundPicture.filename;
+        SetBackgroundPic(backgroundPicture);
       }
     } catch (error) {
       console.error(error.message);
@@ -32,7 +49,8 @@ const Profile = () => {
   };
 
   useEffect(() => {
-    fetchAvatar();
+    fetchProfilePicture();
+    fetchBackgroundPicture();
   }, [user]);
 
   return (
@@ -48,10 +66,20 @@ const Profile = () => {
             >
               Profile
             </Typography>
+            <img
+                  src={backgroundPic.filename}
+                  alt="Logo"
+                  sx={{
+                    borderRadius: 10,
+                    boxShadow: 3,
+                    width: 320,
+                    height: 320,
+                  }}
+                />
             <Grid container justifyContent="center">
               <Grid item sx={{px: 3}}>
                 <Avatar
-                  src={avatar.filename}
+                  src={profilePic.filename}
                   alt="Logo"
                   sx={{
                     borderRadius: 10,
@@ -78,6 +106,16 @@ const Profile = () => {
               </Grid>
             </Grid>
             <Grid container justifyContent="center">
+            <Grid item xs={4}>
+                <Button
+                  variant="contained"
+                  fullWidth
+                  sx={{mt: 5}}
+                  onClick={() => navigate('/profile/update')}
+                >
+                  Update User Info
+                </Button>
+              </Grid>
               <Grid item xs={4}>
                 <Button
                   variant="contained"
@@ -90,7 +128,6 @@ const Profile = () => {
               </Grid>
             </Grid>
           </Box>
-          <ModifyUserForm />
         </>
       )}
     </>

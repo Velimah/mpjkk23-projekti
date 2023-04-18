@@ -152,6 +152,7 @@ const useAuthentication = () => {
 };
 
 const useTag = () => {
+
   const getTag = async (tag) => {
     const tagResult = await doFetch(baseUrl + 'tags/' + tag);
     if (tagResult.length > 0) {
@@ -173,7 +174,17 @@ const useTag = () => {
     return await doFetch(baseUrl + 'tags', fetchOptions);
   };
 
-  return {getTag, postTag};
+  const deleteTag = async (tagId, token) => {
+    const fetchOptions = {
+      method: 'DELETE',
+      headers: {
+        'x-access-token': token,
+      },
+    };
+    return await doFetch(baseUrl + 'tags/' + tagId, fetchOptions);
+  };
+
+  return {getTag, postTag, deleteTag};
 };
 
 const useFavourite = () => {
