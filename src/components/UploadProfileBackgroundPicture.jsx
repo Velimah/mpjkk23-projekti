@@ -71,27 +71,21 @@ const UploadProfileBackgroundPicture = () => {
 
   return (
     <Box sx={{maxWidth: 'md', margin: 'auto'}}>
-      <Grid container direction={'row'} justifyContent="center" sx={{mt: 2}}>
+      <Grid container direction={'column'} justifyContent="center" sx={{mt: 2}}>
         <Grid item xs={5} sx={{mt: 0}}>
           <img
             src={selectedImage}
             alt="preview"
             style={{
-              width: '100%',
+              width: '400px',
               height: '100%',
             }}
           ></img>
         </Grid>
-        <Grid item xs={5} sx={{pl: 2}}>
-          <Grid
-            container
-            direction={'column'}
-            alignItems={'center'}
-            justifyContent={'center'}
-            sx={{mt: 0}}
-          >
+        <Grid item xs={5} sx={{}}>
             <ValidatorForm onSubmit={handleSubmit} noValidate>
               <TextValidator
+              fullWidth
                 sx={{mb: 1}}
                 onChange={handleFileChange}
                 type="file"
@@ -102,7 +96,6 @@ const UploadProfileBackgroundPicture = () => {
                 Update Background Picture
               </Button>
             </ValidatorForm>
-          </Grid>
         </Grid>
       </Grid>
     </Box>

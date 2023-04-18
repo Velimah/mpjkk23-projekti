@@ -11,30 +11,7 @@ import UploadProfileBackgroundPicture from '../components/UploadProfileBackgroun
 
 const UpdateUserInfo = () => {
   const {user} = useContext(MediaContext);
-
-  const [avatar, setAvatar] = useState({
-    filename: 'https://placekitten.com/320',
-  });
-
-  const {getTag} = useTag();
   const navigate = useNavigate();
-
-  const fetchAvatar = async () => {
-    try {
-      if (user) {
-        const avatars = await getTag(appId + '_profilepicture_' + user.user_id);
-        const ava = avatars.pop();
-        ava.filename = mediaUrl + ava.filename;
-        setAvatar(ava);
-      }
-    } catch (error) {
-      console.error(error.message);
-    }
-  };
-
-  useEffect(() => {
-    fetchAvatar();
-  }, [user]);
 
   return (
     <>
@@ -54,7 +31,9 @@ const UpdateUserInfo = () => {
               <UploadProfileBackgroundPicture/>
               <ModifyUserForm />
             </Grid>
-            <Button
+            <Grid container justifyContent="center" gap={5}>
+              <Grid item xs={4}>
+                <Button
                   variant="contained"
                   fullWidth
                   sx={{mt: 5}}
@@ -62,6 +41,8 @@ const UpdateUserInfo = () => {
                 >
                   Back
                 </Button>
+              </Grid>
+            </Grid>
           </Box>
 
         </>

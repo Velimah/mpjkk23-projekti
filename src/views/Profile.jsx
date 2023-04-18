@@ -38,7 +38,6 @@ const Profile = () => {
       if (user) {
         const backgroundPictures = await getTag(appId + '_backgroundpicture_' + user.user_id);
         const backgroundPicture = backgroundPictures.pop();
-        console.log(backgroundPicture);
         backgroundPicture.filename = mediaUrl + backgroundPicture.filename;
         SetBackgroundPic(backgroundPicture);
       }
@@ -92,7 +91,7 @@ const Profile = () => {
               <Grid item sx={{px: 3}}>
                 <Typography component="h1" variant="h3" sx={{mt: 4}}>
                   <strong>{user.username}</strong>
-                </Typography>
+                </Typography>          
                 <Typography component="div" variant="h6" sx={{mt: 3}}>
                   <strong>Full name : </strong>{' '}
                   {user.full_name ? user.full_name : 'Has not set a full name'}
@@ -103,10 +102,6 @@ const Profile = () => {
                 <Typography component="div" variant="h6" sx={{mt: 3}}>
                   <strong> User ID : </strong> {user.user_id}
                 </Typography>
-              </Grid>
-            </Grid>
-            <Grid container justifyContent="center" gap={5}>
-              <Grid item xs={4}>
                 <Button
                   variant="contained"
                   fullWidth
@@ -116,12 +111,14 @@ const Profile = () => {
                   Update User Info
                 </Button>
               </Grid>
+            </Grid>
+            <Grid container justifyContent="center" gap={5}>
               <Grid item xs={4}>
                 <Button
                   variant="contained"
                   fullWidth
                   sx={{mt: 5}}
-                  onClick={() => navigate(-1)}
+                  onClick={() => navigate('/home')}
                 >
                   Back
                 </Button>

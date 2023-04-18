@@ -1,12 +1,11 @@
-import PropTypes from 'prop-types';
 import useForm from '../hooks/FormHooks';
 import {useUser} from '../hooks/ApiHooks';
-import {Button} from '@mui/material';
+import {Button, Grid} from '@mui/material';
 import {ValidatorForm, TextValidator} from 'react-material-ui-form-validator';
 import {mofidyUserErrorMessages} from '../utils/errorMessages';
 import {updateUserValidators} from '../utils/validator';
 import {useEffect} from 'react';
-import { useNavigate } from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 
 const ModifyUserForm = () => {
   const {putUser, getCheckUser} = useUser();
@@ -46,7 +45,6 @@ const ModifyUserForm = () => {
 
     ValidatorForm.addValidationRule('isUsernameAvailable', async (value) => {
       try {
-        console.log(inputs.username);
         return await getCheckUser(inputs.username);
       } catch (e) {
         alert(e.message);
@@ -56,6 +54,7 @@ const ModifyUserForm = () => {
 
   return (
     <>
+    <Grid container direction={'column'} xs={5} sx={{mt:5 }}>
       <ValidatorForm onSubmit={handleSubmit} noValidate>
         <TextValidator
           fullWidth
@@ -114,6 +113,7 @@ const ModifyUserForm = () => {
           Update user info
         </Button>
       </ValidatorForm>
+      </Grid>
     </>
   );
 };
