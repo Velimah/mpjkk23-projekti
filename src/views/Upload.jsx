@@ -48,7 +48,6 @@ const Upload = () => {
         },
         token
       );
-      console.log(uploadResult);
       console.log(tagResult);
       navigate('/home');
     } catch (error) {
@@ -59,7 +58,6 @@ const Upload = () => {
   const handleFileChange = (event) => {
     event.persist();
     setFile(event.target.files[0]);
-    console.log(event.target.files[0]);
     const reader = new FileReader();
     reader.addEventListener('load', () => {
       setSelectedImage(reader.result);

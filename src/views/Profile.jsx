@@ -61,7 +61,6 @@ const Profile = () => {
           appId + '_profilepicture_' + user.user_id
         );
         const profileText = profilePictures.pop();
-        console.log('profiiliteksti', profileText);
         setprofileDescription(profileText.description);
       }
     } catch (error) {

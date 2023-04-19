@@ -7,8 +7,6 @@ import {Link} from 'react-router-dom';
 import {MediaContext} from '../contexts/MediaContext';
 
 const CommentRow = ({file, fetchComments}) => {
-  // console.log(file);
-
   const {user} = useContext(MediaContext);
   const {getUser} = useUser();
   const {getTag} = useTag();
