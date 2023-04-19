@@ -9,6 +9,12 @@ const themeOptions = {
     secondary: {
       main: '#ACCC7F',
     },
+    black: {
+      main: '#232020',
+    },
+    white: {
+      main: '#FDF7F4',
+    },
   },
   typography: {
     fontFamily: 'Nunito',
