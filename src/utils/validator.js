@@ -3,15 +3,15 @@ const registerValidators = {
   password: ['required', 'minStringLength:5'],
   confirmPassword: ['required', 'isPasswordMatch'],
   email: ['required', 'isEmail'],
-  fullName: ['matchRegexp:^(.{2,})?$'],
+  fullName: ['isEmptyOrMin2', 'matchRegexp:^(.{2,})?$'],
 };
 
 const updateUserValidators = {
-  username: ['minStringLength:3', 'isUsernameAvailable'],
-  password: ['minStringLength:5'],
+  username: ['isEmptyOrMin3', 'isUsernameAvailable'],
+  password: ['isEmptyOrMin5'],
   confirmPassword: ['isPasswordMatch'],
   email: ['isEmail'],
-  fullName: ['matchRegexp:^(.{2,})?$'],
+  fullName: ['isEmptyOrMin2', 'matchRegexp:^(.{2,})?$'],
 };
 
 const loginValidators = {
@@ -21,7 +21,7 @@ const loginValidators = {
 
 const uploadValidators = {
   title: ['required', 'minStringLength:2'],
-  description: ['minStringLength:2'],
+  description: ['isEmptyOrMin2'],
 };
 
 export {registerValidators, updateUserValidators, loginValidators, uploadValidators};

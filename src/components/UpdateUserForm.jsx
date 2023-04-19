@@ -2,12 +2,12 @@ import useForm from '../hooks/FormHooks';
 import {useUser} from '../hooks/ApiHooks';
 import {Button, Grid} from '@mui/material';
 import {ValidatorForm, TextValidator} from 'react-material-ui-form-validator';
-import {mofidyUserErrorMessages} from '../utils/errorMessages';
+import {updateUserErrorMessages} from '../utils/errorMessages';
 import {updateUserValidators} from '../utils/validator';
 import {useEffect} from 'react';
 import {useNavigate} from 'react-router-dom';
 
-const ModifyUserForm = () => {
+const UpdateUserForm = () => {
   const {putUser, getCheckUser} = useUser();
   const navigate = useNavigate();
 
@@ -24,10 +24,23 @@ const ModifyUserForm = () => {
       const token = localStorage.getItem('token');
       const withoutConfirm = {...inputs};
       delete withoutConfirm.confirm;
-      console.log(withoutConfirm);
+        if (withoutConfirm.username === '') {
+          delete withoutConfirm.username;
+        }
+        if (withoutConfirm.password === '') {
+          delete withoutConfirm.password;
+        }
+        if (withoutConfirm.email === '') {
+          delete withoutConfirm.email;
+        }
+        if (withoutConfirm.full_name === '') {
+          delete withoutConfirm.full_name;
+        }
+      
+      console.log('testimodify', withoutConfirm);
       const userResult = await putUser(withoutConfirm, token);
       alert(userResult.message);
-      navigate(0);
+     // navigate(0);
     } catch (e) {
       alert(e.message);
     }
@@ -42,19 +55,28 @@ const ModifyUserForm = () => {
     ValidatorForm.addValidationRule('isPasswordMatch', (value) => {
       return value === inputs.password;
     });
-
     ValidatorForm.addValidationRule('isUsernameAvailable', async (value) => {
+      if (value === '') return true;
       try {
         return await getCheckUser(inputs.username);
       } catch (e) {
         alert(e.message);
       }
     });
+    ValidatorForm.addValidationRule('isEmptyOrMin5', (value) => {
+      return value === '' || value.length >= 5;
+    });
+    ValidatorForm.addValidationRule('isEmptyOrMin3', (value) => {
+      return value === '' || value.length >= 3;
+    });
+    ValidatorForm.addValidationRule('isEmptyOrMin2', (value) => {
+      return value === '' || value.length >= 2;
+    });
   }, [inputs]);
 
   return (
     <>
-    <Grid container direction={'column'} xs={5} sx={{mt:5 }}>
+    <Grid container direction={'column'} sx={{maxWidth:'sm', mt:5 }}>
       <ValidatorForm onSubmit={handleSubmit} noValidate>
         <TextValidator
           fullWidth
@@ -64,7 +86,7 @@ const ModifyUserForm = () => {
           onChange={handleInputChange}
           value={inputs.username}
           validators={updateUserValidators.username}
-          errorMessages={mofidyUserErrorMessages.username}
+          errorMessages={updateUserErrorMessages.username}
         />
         <TextValidator
           fullWidth
@@ -75,7 +97,7 @@ const ModifyUserForm = () => {
           onChange={handleInputChange}
           value={inputs.password}
           validators={updateUserValidators.password}
-          errorMessages={mofidyUserErrorMessages.password}
+          errorMessages={updateUserErrorMessages.password}
         />
         <TextValidator
           fullWidth
@@ -86,7 +108,7 @@ const ModifyUserForm = () => {
           onChange={handleInputChange}
           value={inputs.confirm}
           validators={updateUserValidators.confirmPassword}
-          errorMessages={mofidyUserErrorMessages.confirmPassword}
+          errorMessages={updateUserErrorMessages.confirmPassword}
         />
         <TextValidator
           fullWidth
@@ -97,7 +119,7 @@ const ModifyUserForm = () => {
           onChange={handleInputChange}
           value={inputs.email}
           validators={updateUserValidators.email}
-          errorMessages={mofidyUserErrorMessages.email}
+          errorMessages={updateUserErrorMessages.email}
         />
         <TextValidator
           fullWidth
@@ -107,7 +129,7 @@ const ModifyUserForm = () => {
           onChange={handleInputChange}
           value={inputs.full_name}
           validators={updateUserValidators.fullName}
-          errorMessages={mofidyUserErrorMessages.fullName}
+          errorMessages={updateUserErrorMessages.fullName}
         />
         <Button fullWidth variant="contained" sx={{mt: 1, mb: 1}} type="submit">
           Update user info
@@ -118,4 +140,4 @@ const ModifyUserForm = () => {
   );
 };
 
-export default ModifyUserForm;
+export default UpdateUserForm;

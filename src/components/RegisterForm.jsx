@@ -47,6 +47,9 @@ const RegisterForm = ({toggle}) => {
         alert(e.message);
       }
     });
+    ValidatorForm.addValidationRule('isEmptyOrMin2', (value) => {
+      return value === '' || value.length >= 2;
+    });
   }, [inputs]);
 
   return (

@@ -1,4 +1,4 @@
-import {Box, Button, Grid, Slider, Typography} from '@mui/material';
+import {Box, Button, Grid} from '@mui/material';
 import useForm from '../hooks/FormHooks';
 import {useContext, useEffect, useState} from 'react';
 import {useMedia, useTag} from '../hooks/ApiHooks';

@@ -1,6 +1,6 @@
 import {Box, Button, Grid, Slider, Typography} from '@mui/material';
 import useForm from '../hooks/FormHooks';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {useMedia, useTag} from '../hooks/ApiHooks';
 import {useNavigate} from 'react-router-dom';
 import {appId} from '../utils/variables';
@@ -76,6 +76,12 @@ const Upload = () => {
     null,
     filterInitValues
   );
+
+  useEffect(() => {
+    ValidatorForm.addValidationRule('isEmptyOrMin2', (value) => {
+      return value === '' || value.length >= 2;
+    });
+  }, [inputs]);
 
   return (
     <Box sx={{maxWidth: 'md', margin: 'auto'}}>

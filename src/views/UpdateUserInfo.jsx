@@ -1,11 +1,8 @@
-import {Avatar, Box, Button, Grid, Typography} from '@mui/material';
+import {Box, Button, Grid, Typography} from '@mui/material';
 import {useContext} from 'react';
 import {MediaContext} from '../contexts/MediaContext';
-import {useState, useEffect} from 'react';
-import {useTag} from '../hooks/ApiHooks';
-import {appId, mediaUrl} from '../utils/variables';
 import {useNavigate} from 'react-router-dom';
-import ModifyUserForm from '../components/ModifyUserForm';
+import UpdateUserForm from '../components/UpdateUserForm';
 import UploadProfilePicture from '../components/UploadProfilePicture';
 import UploadProfileBackgroundPicture from '../components/UploadProfileBackgroundPicture';
 
@@ -29,7 +26,7 @@ const UpdateUserInfo = () => {
             <Grid container justifyContent="center">
               <UploadProfilePicture/>
               <UploadProfileBackgroundPicture/>
-              <ModifyUserForm />
+              <UpdateUserForm />
             </Grid>
             <Grid container justifyContent="center" gap={5}>
               <Grid item xs={4}>

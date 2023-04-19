@@ -10,7 +10,7 @@ const registerErrorMessages = {
   fullName: ['minimum 2 characters'],
 };
 
-const mofidyUserErrorMessages = {
+const updateUserErrorMessages = {
   username: [
     'minimum 3 characters',
     'username not available',
@@ -18,7 +18,7 @@ const mofidyUserErrorMessages = {
   password: ['minimum 5 characters'],
   confirmPassword: ['passwords do not match'],
   email: ['email is not valid'],
-  fullName: ['minimum 2 characters'],
+  fullName: ['minimum 2 characters', 'incorrect symbols'],
 };
 
 const loginErrorMessages = {
@@ -31,4 +31,4 @@ const uploadErrorMessages = {
   description: ['minimum 2 characters'],
 };
 
-export {registerErrorMessages, mofidyUserErrorMessages, loginErrorMessages, uploadErrorMessages};
+export {registerErrorMessages, updateUserErrorMessages, loginErrorMessages, uploadErrorMessages};
