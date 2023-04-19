@@ -5,15 +5,15 @@ const formatTime = (mediaInfo) => {
 
   const elapsedMilliseconds = Date.now() - milliseconds;
   const elapsedSeconds = Math.floor(elapsedMilliseconds / 1000);
-  const elapsedMinutes = Math.floor(elapsedSeconds / 60);
-  const elapsedHours = Math.floor(elapsedMinutes / 60);
 
   if (elapsedSeconds < 60) {
     return elapsedSeconds + 's';
   }
+  const elapsedMinutes = Math.floor(elapsedSeconds / 60);
   if (elapsedMinutes < 60) {
     return elapsedMinutes + 'm';
   }
+  const elapsedHours = Math.floor(elapsedMinutes / 60);
   if (elapsedHours < 24) {
     return elapsedHours + 'h';
   }
