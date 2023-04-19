@@ -1,12 +1,12 @@
 import { Avatar, Box, Typography, Button } from '@mui/material';
 import PropTypes from 'prop-types';
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import { useComment, useTag, useUser } from '../hooks/ApiHooks';
 import { appId, mediaUrl } from '../utils/variables';
 import { Link } from 'react-router-dom';
 import { MediaContext } from '../contexts/MediaContext';
 
-const CommentRow = ({file}) => {
+const CommentRow = ({file, fetchComments}) => {
   // console.log(file);
 
   const {user} = useContext(MediaContext);
@@ -17,6 +17,7 @@ const CommentRow = ({file}) => {
     filename: 'https://placekitten.com/50/50',
   });
   const [userInfo, SetUserInfo] = useState('');
+  const [refreshData, setRefreshData] = useState(false);
 
 
   const fetchProfilePicture = async () => {
@@ -64,12 +65,17 @@ const CommentRow = ({file}) => {
       try {
         const token = localStorage.getItem('token');
         const commentInfo = await deleteComment(file.comment_id, token);
-        console.log(commentInfo);
+        alert(commentInfo.message);
+        setRefreshData(!refreshData);
       } catch (error) {
         console.log(error.message);
       }
     }
   };
+
+  useEffect(()=>{
+    fetchComments();
+   },[refreshData])
 
   return (
     <>
@@ -84,11 +90,11 @@ const CommentRow = ({file}) => {
             height: 50,
           }}
         />
-        <Typography sx={{mb:1 }}>user_name: {userInfo.username}</Typography>
-        <div>time added: {commentTimeFormat(file)}</div>
-        <div>comment: {file.comment}</div>
-        <div>user_id: {file.user_id}</div>
-        <div>comment_id: {file.comment_id}</div>
+        <Typography sx={{mb:2 }}>user_name: {userInfo.username}</Typography>
+        <Typography sx={{mb:1 }}>time added: {commentTimeFormat(file)}</Typography>
+        <Typography sx={{mb:1 }}>comment: {file.comment}</Typography>
+        <Typography sx={{mb:1 }}>user_id: {file.user_id}</Typography>
+        <Typography sx={{mb:1 }}>comment_id: {file.comment_id}</Typography>
         {file.user_id === user.user_id && (
         <Button
                   sx={{
@@ -113,6 +119,7 @@ const CommentRow = ({file}) => {
 
 CommentRow.propTypes = {
   file: PropTypes.object.isRequired,
+  fetchComments: PropTypes.func.isRequired,
 };
 
 export default CommentRow;

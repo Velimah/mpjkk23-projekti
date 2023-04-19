@@ -4,7 +4,7 @@ import {MediaContext} from '../contexts/MediaContext';
 import {useState, useEffect} from 'react';
 import {useTag} from '../hooks/ApiHooks';
 import {appId, mediaUrl} from '../utils/variables';
-import {useNavigate, Link} from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 
 const Profile = () => {
   const {user} = useContext(MediaContext);
@@ -47,7 +47,6 @@ const Profile = () => {
   };
 
   useEffect(() => {
-    console.log('testo')
     fetchProfilePicture();
     fetchBackgroundPicture();
   }, [user]);

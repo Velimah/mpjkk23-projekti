@@ -38,7 +38,6 @@ const UpdateUserForm = () => {
         }
       const userResult = await putUser(withoutConfirm, token);
       alert(userResult.message);
-      navigate(0);
     } catch (e) {
       alert(e.message);
     }

@@ -47,7 +47,7 @@ const UploadProfilePicture = () => {
         },
         token
       );
-      navigate(0);
+      alert('Profile picture updated!');
     } catch (error) {
       alert(error.message);
     }

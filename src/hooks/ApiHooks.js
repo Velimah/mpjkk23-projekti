@@ -217,7 +217,7 @@ const useFavourite = () => {
   return {postFavourite, getFavourites, deleteFavourite};
 };
 
-const useComment = (myFilesOnly = false) => {
+const useComment = () => {
   const postComment = async (data, token) => {
     const fetchOptions = {
       method: 'POST',
@@ -243,7 +243,6 @@ const useComment = (myFilesOnly = false) => {
   const getCommentsById = async (id) => {
     return await doFetch(baseUrl + 'comments/file/' + id);
   };
-
 
   return {postComment, deleteComment, getCommentsById};
 };

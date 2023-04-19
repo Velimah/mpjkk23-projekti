@@ -49,7 +49,7 @@ const UploadProfileBackgroundPicture = () => {
         },
         token
       );
-      navigate(0);
+      alert('Background picture updated!');
     } catch (error) {
       alert(error.message);
     }

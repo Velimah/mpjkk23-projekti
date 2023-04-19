@@ -18,19 +18,22 @@ import {TextValidator, ValidatorForm} from 'react-material-ui-form-validator';
 import useForm from '../hooks/FormHooks';
 import {commentErrorMessages} from '../utils/errorMessages';
 import {commentValidators} from '../utils/validator';
-import PropTypes from 'prop-types';
 
-const Single = ({myFilesOnly = false}) => {
+const Single = () => {
   const [owner, setOwner] = useState({username: ''});
+
   const [likes, setLikes] = useState(0);
   const [userLike, setUserLike] = useState(false);
+
   const {user} = useContext(MediaContext);
 
   const [commentArray, setCommentArray] = useState([]);
+  const [commentCount, setCommentCount] = useState(0);
+  const [refreshData, setRefreshData] = useState(false);
 
   const {getUser} = useUser();
   const {getFavourites, postFavourite, deleteFavourite} = useFavourite();
-  const {postComment, getCommentsById} = useComment(myFilesOnly);
+  const {postComment, getCommentsById} = useComment();
 
   const navigate = useNavigate();
   const {state} = useLocation();
@@ -119,6 +122,7 @@ const Single = ({myFilesOnly = false}) => {
   const fetchComments = async () => {
     try {
       const commentInfo = await getCommentsById(file.file_id);
+      setCommentCount(commentInfo.length);
       return setCommentArray(commentInfo);
     } catch (error) {
       console.log(error.message);
@@ -130,12 +134,16 @@ const Single = ({myFilesOnly = false}) => {
       const token = localStorage.getItem('token');
       const data = {file_id: file.file_id, comment: inputs.comment};
       const commentInfo = await postComment(data, token);
-      console.log('commentinfo', commentInfo);
-      navigate(0);
+      alert(commentInfo.message);
+      setRefreshData(!refreshData);
     } catch (error) {
       console.log(error.message);
     }
   };
+
+  useEffect(()=>{
+    fetchComments();
+   },[refreshData])
 
   useEffect(() => {
     fetchUser();
@@ -195,27 +203,25 @@ const Single = ({myFilesOnly = false}) => {
               Likes: {likes}
             </Typography>
             <Button
-              onClick={doLike}
-              disabled={userLike}
+              onClick={userLike ? deleteLike : doLike}
               variant="contained"
-              sx={{mt: 1, mr: 2}}
-            >
-              Like
-            </Button>
-            <Button
-              onClick={deleteLike}
-              disabled={!userLike}
-              variant="contained"
-              sx={{
+              sx={userLike ? {
                 mt: 1,
                 mr: 2,
                 backgroundColor: 'red',
                 '&:hover': {
                   backgroundColor: 'red !important',
                 },
+              } : {
+                mt: 1,
+                mr: 2,
+                backgroundColor: 'green',
+                '&:hover': {
+                  backgroundColor: 'green !important',
+                },
               }}
             >
-              Dislike
+              {userLike ? "Dislike" : "Like"}
             </Button>
           </CardContent>
         </Card>
@@ -243,7 +249,7 @@ const Single = ({myFilesOnly = false}) => {
           validators={commentValidators.comment}
           errorMessages={commentErrorMessages.comment}
           />
-         <Button
+          <Button
               variant="contained"
               sx={{my: 2}}
               type="submit"
@@ -251,9 +257,10 @@ const Single = ({myFilesOnly = false}) => {
               Comment
           </Button>
         </ValidatorForm>
+        <Typography>Comments ({commentCount})</Typography>
 
         <div>{commentArray.map((item, index) => {
-          return <CommentRow key={index} file={item} />;
+          return <CommentRow key={index} file={item} fetchComments={fetchComments}/>;
         }).reverse()}</div>
       </Box>
     </>
@@ -261,7 +268,6 @@ const Single = ({myFilesOnly = false}) => {
 };
 
 Single.propTypes = {
-  myFilesOnly: PropTypes.bool,
 };
 
 export default Single;
