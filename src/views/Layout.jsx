@@ -12,7 +12,6 @@ import {themeOptions} from '../theme/themeOptions';
 import {
   FavoriteRounded,
   HomeRounded,
-  InsertDriveFileRounded,
   LoginRounded,
   LogoutRounded,
   PersonRounded,
@@ -61,7 +60,6 @@ const Layout = () => {
     {page: 'Search', to: 'search', icon: <SearchRounded />},
     {page: 'Upload', to: 'upload', icon: <AddCircleOutlineRounded />},
     {page: 'Liked', to: 'liked', icon: <FavoriteRounded />},
-    {page: 'My files', to: 'myfiles', icon: <InsertDriveFileRounded />},
     {page: 'Profile', to: 'profile', icon: <PersonRounded />},
     {page: 'Logout', to: 'logout', icon: <LogoutRounded />},
   ];
