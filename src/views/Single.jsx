@@ -229,7 +229,7 @@ const Single = () => {
               variant="contained"
               fullWidth
               sx={{mt: 5}}
-              onClick={() => navigate(-1)}
+              onClick={() => navigate('/home')}
             >
               Back
             </Button>
@@ -237,7 +237,7 @@ const Single = () => {
         </Grid>
         <div>{commentArray.map((item, index) => {
           return <CommentRow key={index} file={item} />;
-        })}</div>
+        }).reverse()}</div>
       </Box>
     </>
   );
