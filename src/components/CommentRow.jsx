@@ -43,16 +43,16 @@ const CommentRow = ({file}) => {
 
   return (
     <>
-    <Avatar
-                  src={profilePic.filename}
-                  alt="Logo"
-                  sx={{
-                    borderRadius: 0,
-                    boxShadow: 3,
-                    width: 50,
-                    height: 50,
-                  }}
-                />
+      <Avatar
+      src={profilePic.filename}
+      alt="Logo"
+      sx={{
+            borderRadius: 0,
+            boxShadow: 3,
+            width: 50,
+            height: 50,
+          }}
+      />
       <div>user_name: {userInfo.username}</div>
       <div>time added: {file.time_added}</div>
       <div>comment: {file.comment}</div>

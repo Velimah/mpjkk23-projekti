@@ -29,7 +29,16 @@ const Single = () => {
 
   const navigate = useNavigate();
   const {state} = useLocation();
-  const file = state.file;
+
+  const [data, setData] = useState(() => {
+    return state?.file || JSON.parse(window.localStorage.getItem("details")) || {};
+  });
+  
+  useEffect(() => {
+    window.localStorage.setItem("details", JSON.stringify(data));
+  }, [data]);
+
+  const file = data;
   let allData = {
     desc: file.description,
     filters: {
