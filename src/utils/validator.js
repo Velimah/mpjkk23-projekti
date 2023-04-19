@@ -24,4 +24,8 @@ const uploadValidators = {
   description: ['isEmptyOrMin2'],
 };
 
-export {registerValidators, updateUserValidators, loginValidators, uploadValidators};
+const commentValidators = {
+  comment: ['required', 'minStringLength:1', 'maxStringLength: 1000'],
+};
+
+export {registerValidators, updateUserValidators, loginValidators, uploadValidators, commentValidators};

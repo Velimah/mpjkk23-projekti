@@ -47,6 +47,7 @@ const Profile = () => {
   };
 
   useEffect(() => {
+    console.log('testo')
     fetchProfilePicture();
     fetchBackgroundPicture();
   }, [user]);

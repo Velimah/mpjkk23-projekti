@@ -31,4 +31,8 @@ const uploadErrorMessages = {
   description: ['minimum 2 characters'],
 };
 
-export {registerErrorMessages, updateUserErrorMessages, loginErrorMessages, uploadErrorMessages};
+const commentErrorMessages = {
+  comment: ['Comment required', 'minimum 1 character', 'maximum 1000 characters'],
+};
+
+export {registerErrorMessages, updateUserErrorMessages, loginErrorMessages, uploadErrorMessages, commentErrorMessages};

@@ -1,14 +1,18 @@
-import { Avatar } from '@mui/material';
+import { Avatar, Box, Typography, Button } from '@mui/material';
 import PropTypes from 'prop-types';
-import { useState } from 'react';
-import { useTag, useUser } from '../hooks/ApiHooks';
+import { useContext, useState } from 'react';
+import { useComment, useTag, useUser } from '../hooks/ApiHooks';
 import { appId, mediaUrl } from '../utils/variables';
+import { Link } from 'react-router-dom';
+import { MediaContext } from '../contexts/MediaContext';
 
 const CommentRow = ({file}) => {
   // console.log(file);
 
+  const {user} = useContext(MediaContext);
   const {getUser} = useUser();
   const {getTag} = useTag();
+  const {deleteComment} = useComment();
   const [profilePic, SetProfilePic] = useState({
     filename: 'https://placekitten.com/50/50',
   });
@@ -41,23 +45,68 @@ const CommentRow = ({file}) => {
     fetchUserInfo();
   }, []);
 
+  const commentTimeFormat = (file) => {
+    const dateObj = new Date(file.time_added);
+    const options = {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      second: 'numeric',
+    };
+    return dateObj.toLocaleString('en-US', options);
+  };
+
+  const doDeleteComment = async () => {
+    const sure = confirm('Are you sure?');
+    if(sure) {
+      try {
+        const token = localStorage.getItem('token');
+        const commentInfo = await deleteComment(file.comment_id, token);
+        console.log(commentInfo);
+      } catch (error) {
+        console.log(error.message);
+      }
+    }
+  };
+
   return (
     <>
-      <Avatar
-      src={profilePic.filename}
-      alt="Logo"
-      sx={{
+      <Box sx={{maxWidth: 'lg', margin: 'auto', p: 2, my:2, borderWidth: '1px', borderColor: 'black', borderStyle: 'solid'}}>
+        <Avatar
+          src={profilePic.filename}
+          alt="Logo"
+          sx={{
             borderRadius: 0,
             boxShadow: 3,
             width: 50,
             height: 50,
           }}
-      />
-      <div>user_name: {userInfo.username}</div>
-      <div>time added: {file.time_added}</div>
-      <div>comment: {file.comment}</div>
-      <div>user_id: {file.user_id}</div>
-      <div>comment_id: {file.comment_id}</div>
+        />
+        <Typography sx={{mb:1 }}>user_name: {userInfo.username}</Typography>
+        <div>time added: {commentTimeFormat(file)}</div>
+        <div>comment: {file.comment}</div>
+        <div>user_id: {file.user_id}</div>
+        <div>comment_id: {file.comment_id}</div>
+        {file.user_id === user.user_id && (
+        <Button
+                  sx={{
+                    p: 1,
+                    m: 1,
+                    backgroundColor: 'red',
+                    '&:hover': {
+                      backgroundColor: '#C41E3A !important',
+                    },
+                  }}
+                  component={Link}
+                  variant="contained"
+                  onClick={doDeleteComment}
+                >
+                  Delete
+                </Button>
+        )}
+      </Box>
     </>
   );
 };

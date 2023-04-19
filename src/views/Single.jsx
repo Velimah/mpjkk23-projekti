@@ -14,8 +14,13 @@ import {useFavourite, useUser, useComment} from '../hooks/ApiHooks';
 import {useContext, useEffect, useState} from 'react';
 import {MediaContext} from '../contexts/MediaContext';
 import CommentRow from '../components/CommentRow';
+import {TextValidator, ValidatorForm} from 'react-material-ui-form-validator';
+import useForm from '../hooks/FormHooks';
+import {commentErrorMessages} from '../utils/errorMessages';
+import {commentValidators} from '../utils/validator';
+import PropTypes from 'prop-types';
 
-const Single = () => {
+const Single = ({myFilesOnly = false}) => {
   const [owner, setOwner] = useState({username: ''});
   const [likes, setLikes] = useState(0);
   const [userLike, setUserLike] = useState(false);
@@ -25,7 +30,7 @@ const Single = () => {
 
   const {getUser} = useUser();
   const {getFavourites, postFavourite, deleteFavourite} = useFavourite();
-  const {postComment, getCommentsById, deleteComment} = useComment();
+  const {postComment, getCommentsById} = useComment(myFilesOnly);
 
   const navigate = useNavigate();
   const {state} = useLocation();
@@ -77,7 +82,6 @@ const Single = () => {
   const fetchLikes = async () => {
     try {
       const likeInfo = await getFavourites(file.file_id);
-      console.log(likeInfo);
       setLikes(likeInfo.length);
       likeInfo.forEach((like) => {
         if (like.user_id === user.user_id) {
@@ -124,20 +128,10 @@ const Single = () => {
   const doComment = async () => {
     try {
       const token = localStorage.getItem('token');
-      const data = {file_id: file.file_id, comment: "testi"};
+      const data = {file_id: file.file_id, comment: inputs.comment};
       const commentInfo = await postComment(data, token);
-      console.log(commentInfo);
+      console.log('commentinfo', commentInfo);
       navigate(0);
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
-
-  const doDeleteComment = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      const commentInfo = await deleteComment(file.file_id, token);
-      console.log(commentInfo);
     } catch (error) {
       console.log(error.message);
     }
@@ -152,6 +146,15 @@ const Single = () => {
   useEffect(() => {
     fetchLikes();
   }, [userLike]);
+
+  const initValues = {
+    comment: '',
+  };
+
+  const {inputs, handleInputChange, handleSubmit} = useForm(
+    doComment,
+    initValues
+  );
 
   return (
     <>
@@ -214,13 +217,6 @@ const Single = () => {
             >
               Dislike
             </Button>
-            <Button
-              onClick={doComment}
-              variant="contained"
-              sx={{mt: 1, mr: 2}}
-            >
-              Testcomment
-            </Button>
           </CardContent>
         </Card>
         <Grid container justifyContent="center">
@@ -235,6 +231,27 @@ const Single = () => {
             </Button>
           </Grid>
         </Grid>
+
+        <ValidatorForm onSubmit={handleSubmit}>
+          <TextValidator
+          fullWidth
+          margin="dense"
+          name="comment"
+          placeholder="Comment"
+          onChange={handleInputChange}
+          value={inputs.comment}
+          validators={commentValidators.comment}
+          errorMessages={commentErrorMessages.comment}
+          />
+         <Button
+              variant="contained"
+              sx={{my: 2}}
+              type="submit"
+              >
+              Comment
+          </Button>
+        </ValidatorForm>
+
         <div>{commentArray.map((item, index) => {
           return <CommentRow key={index} file={item} />;
         }).reverse()}</div>
@@ -243,6 +260,8 @@ const Single = () => {
   );
 };
 
-// TODO in the next task: add propType for location
+Single.propTypes = {
+  myFilesOnly: PropTypes.bool,
+};
 
 export default Single;

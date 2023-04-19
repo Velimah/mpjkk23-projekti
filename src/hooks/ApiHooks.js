@@ -217,7 +217,7 @@ const useFavourite = () => {
   return {postFavourite, getFavourites, deleteFavourite};
 };
 
-const useComment = () => {
+const useComment = (myFilesOnly = false) => {
   const postComment = async (data, token) => {
     const fetchOptions = {
       method: 'POST',
