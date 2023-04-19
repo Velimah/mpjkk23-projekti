@@ -6,12 +6,12 @@ import {mediaUrl} from '../utils/variables';
 import {ValidatorForm, TextValidator} from 'react-material-ui-form-validator';
 import {uploadErrorMessages} from '../utils/errorMessages';
 import {uploadValidators} from '../utils/validator';
+import {useEffect} from 'react';
 
 const Modify = () => {
   const {putMedia} = useMedia();
   const navigate = useNavigate();
   const {state} = useLocation();
-  console.log('state',state);
   const file = state.file;
 
   let selectedImage = mediaUrl + file.filename;
