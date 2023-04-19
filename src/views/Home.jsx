@@ -2,8 +2,11 @@ import {Grid, Button, Typography} from '@mui/material';
 import {Box} from '@mui/system';
 import MediaTable from '../components/MediaTable';
 import {Link} from 'react-router-dom';
+import {useState} from 'react';
 
 const Home = () => {
+  const [loggedIn] = useState(true);
+
   return (
     <>
       <Grid
@@ -40,28 +43,34 @@ const Home = () => {
               textAlign="center"
               sx={{mb: 5}}
             >
-              Share and discover cat photos on OnlyCats.
+              {loggedIn
+                ? 'Ready to show off your cat friend?'
+                : 'Share and discover cat photos on OnlyCats.'}
             </Typography>
             <Typography component="p" textAlign="center" sx={{mb: 5}}>
-              Join our community and connect with fellow cat lovers.
+              {loggedIn
+                ? 'Share your favorite cat moments with our community of cat lovers by uploading your photos.'
+                : 'Join our community and connect with fellow cat lovers.'}
             </Typography>
             <Box textAlign="center">
               <Button
                 variant="contained"
                 size="large"
                 component={Link}
-                to="/login"
+                to={loggedIn ? '/upload' : '/login'}
                 sx={{mb: 1}}
               >
-                Register
+                {loggedIn ? 'Upload photo' : 'Register'}
               </Button>
             </Box>
-            <Typography component="p" textAlign="center">
-              Already have an account?{' '}
-              <Button variant="text" component={Link} to="/login">
-                Log in
-              </Button>
-            </Typography>
+            {!loggedIn && (
+              <Typography component="p" textAlign="center">
+                Already have an account?{' '}
+                <Button variant="text" component={Link} to="/login">
+                  Log in
+                </Button>
+              </Typography>
+            )}
           </Box>
         </Grid>
       </Grid>
