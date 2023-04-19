@@ -10,9 +10,10 @@ import {
 import {useLocation} from 'react-router-dom';
 import {mediaUrl} from '../utils/variables';
 import {useNavigate} from 'react-router-dom';
-import {useFavourite, useUser} from '../hooks/ApiHooks';
+import {useFavourite, useUser, useComment} from '../hooks/ApiHooks';
 import {useContext, useEffect, useState} from 'react';
 import {MediaContext} from '../contexts/MediaContext';
+import CommentRow from '../components/CommentRow';
 
 const Single = () => {
   const [owner, setOwner] = useState({username: ''});
@@ -20,8 +21,11 @@ const Single = () => {
   const [userLike, setUserLike] = useState(false);
   const {user} = useContext(MediaContext);
 
+  const [commentArray, setCommentArray] = useState([]);
+
   const {getUser} = useUser();
   const {getFavourites, postFavourite, deleteFavourite} = useFavourite();
+  const {postComment, getCommentsById, deleteComment} = useComment();
 
   const navigate = useNavigate();
   const {state} = useLocation();
@@ -99,9 +103,41 @@ const Single = () => {
     }
   };
 
+  const fetchComments = async () => {
+    try {
+      const commentInfo = await getCommentsById(file.file_id);
+      return setCommentArray(commentInfo);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const doComment = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const data = {file_id: file.file_id, comment: "testi"};
+      const commentInfo = await postComment(data, token);
+      console.log(commentInfo);
+      navigate(0);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const doDeleteComment = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const commentInfo = await deleteComment(file.file_id, token);
+      console.log(commentInfo);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   useEffect(() => {
     fetchUser();
     fetchLikes();
+    fetchComments();
   }, []);
 
   useEffect(() => {
@@ -122,8 +158,6 @@ const Single = () => {
             src={mediaUrl + file.filename}
             title={file.title}
             style={{
-              // height: file.media_type === 'audio' && 600,
-              // width: file.media_type === 'audio' && 600,
               filter: `brightness(${allData.filters.brightness}%)
                        contrast(${allData.filters.contrast}%)
                        saturate(${allData.filters.saturation}%)
@@ -171,6 +205,13 @@ const Single = () => {
             >
               Dislike
             </Button>
+            <Button
+              onClick={doComment}
+              variant="contained"
+              sx={{mt: 1, mr: 2}}
+            >
+              Testcomment
+            </Button>
           </CardContent>
         </Card>
         <Grid container justifyContent="center">
@@ -185,6 +226,9 @@ const Single = () => {
             </Button>
           </Grid>
         </Grid>
+        <div>{commentArray.map((item, index) => {
+          return <CommentRow key={index} file={item} />;
+        })}</div>
       </Box>
     </>
   );

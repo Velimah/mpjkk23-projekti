@@ -10,11 +10,11 @@ const Profile = () => {
   const {user} = useContext(MediaContext);
 
   const [profilePic, SetProfilePic] = useState({
-    filename: 'https://placekitten.com/320',
+    filename: 'https://placekitten.com/200/200',
   });
 
   const [backgroundPic, SetBackgroundPic] = useState({
-    filename: 'https://placekitten.com/320',
+    filename: 'https://placekitten.com/800/300',
   });
 
   const {getTag} = useTag();
@@ -70,7 +70,7 @@ const Profile = () => {
                   sx={{
                     borderRadius: 0,
                     boxShadow: 3,
-                    width: 1000,
+                    width: 800,
                     height: 320,
                   }}
                 />
