@@ -45,17 +45,27 @@ const CommentRow = ({file, fetchComments}) => {
     fetchUserInfo();
   }, []);
 
-  const commentTimeFormat = (file) => {
-    const dateObj = new Date(file.time_added);
-    const options = {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: 'numeric',
-      minute: 'numeric',
-      second: 'numeric',
-    };
-    return dateObj.toLocaleString('en-US', options);
+  const formatCommentTime = (file) => {
+    const timestamp = file;
+    const date = new Date(timestamp);
+    const milliseconds = date.getTime();
+
+    const elapsedMilliseconds = Date.now() - milliseconds;
+    const elapsedSeconds = Math.floor(elapsedMilliseconds / 1000);
+    const elapsedMinutes = Math.floor(elapsedSeconds / 60);
+    const elapsedHours = Math.floor(elapsedMinutes / 60);
+
+    if (elapsedSeconds < 60) {
+      return elapsedSeconds + 's';
+    }
+    if (elapsedMinutes < 60) {
+      return elapsedMinutes + 'm';
+    }
+    if (elapsedHours < 24) {
+      return elapsedHours + 'h';
+    }
+    const options = {day: 'numeric', month: 'short'};
+    return date.toLocaleDateString('en-US', options);
   };
 
   const doDeleteComment = async () => {
@@ -101,7 +111,7 @@ const CommentRow = ({file, fetchComments}) => {
         />
         <Typography sx={{mb: 2}}>user_name: {userInfo.username}</Typography>
         <Typography sx={{mb: 1}}>
-          time added: {commentTimeFormat(file)}
+          time added: {formatCommentTime(file.time_added)}
         </Typography>
         <Typography sx={{mb: 1}}>comment: {file.comment}</Typography>
         <Typography sx={{mb: 1}}>user_id: {file.user_id}</Typography>
