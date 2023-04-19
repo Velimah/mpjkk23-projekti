@@ -208,20 +208,16 @@ const Single = () => {
               sx={userLike ? {
                 mt: 1,
                 mr: 2,
-                backgroundColor: 'red',
-                '&:hover': {
-                  backgroundColor: 'red !important',
-                },
               } : {
                 mt: 1,
                 mr: 2,
-                backgroundColor: 'green',
+                backgroundColor: 'grey',
                 '&:hover': {
-                  backgroundColor: 'green !important',
+                  backgroundColor: 'grey !important',
                 },
               }}
             >
-              {userLike ? "Dislike" : "Like"}
+              {userLike ? "Liked" : "Like"}
             </Button>
           </CardContent>
         </Card>
