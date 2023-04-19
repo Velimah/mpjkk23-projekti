@@ -2,7 +2,6 @@ import {useContext} from 'react';
 import PropTypes from 'prop-types';
 import {Link, useLocation} from 'react-router-dom';
 import {MediaContext} from '../contexts/MediaContext';
-import {PetsRounded} from '@mui/icons-material';
 import {useWindowSize} from '../hooks/WindowHooks';
 import {
   AppBar,
@@ -20,21 +19,32 @@ const Header = ({navUnLogged, navLogged}) => {
   return (
     <AppBar
       position={windowSize.width > 658 ? 'sticky' : 'absolute'}
+      elevation={windowSize.width > 658 ? 6 : 0}
       color="white"
     >
       <Container maxWidth="lg">
-        <Toolbar sx={{justifyContent: 'space-between'}} disableGutters>
+        <Toolbar
+          sx={
+            windowSize.width > 658
+              ? {justifyContent: 'space-between'}
+              : {justifyContent: 'center'}
+          }
+          disableGutters
+        >
           <Box sx={{display: 'flex', alignItems: 'center'}}>
-            <PetsRounded sx={{display: 'flex', mr: 1}} />
+            <img
+              src="./public/onlycats_logo.png"
+              style={{display: 'flex', marginRight: 8, width: 45}}
+              alt="OnlyCats logo"
+            />
             <Typography
-              variant="h5"
+              variant="h4"
               noWrap
               component={Link}
               to="/home"
               sx={{
                 mr: 2,
                 display: 'flex',
-                fontWeight: 700,
                 color: 'inherit',
                 textDecoration: 'none',
               }}

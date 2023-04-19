@@ -8,7 +8,7 @@ const MobileNavigation = ({navUnLogged, navLogged}) => {
   const {user} = useContext(MediaContext);
   const [value, setValue] = useState(0);
   return (
-    <Paper sx={{position: 'fixed', bottom: 0, left: 0, right: 0}}>
+    <Paper sx={{position: 'fixed', bottom: 0, left: 0, right: 0}} elevation={4}>
       <BottomNavigation
         showLabels
         as="nav"

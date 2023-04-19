@@ -3,6 +3,9 @@ import '@fontsource/nunito';
 const themeOptions = {
   palette: {
     type: 'light',
+    background: {
+      default: '#FDF7F4',
+    },
     primary: {
       main: '#7047A6',
     },
@@ -26,18 +29,23 @@ const themeOptions = {
     },
     h1: {
       fontFamily: 'Nunito',
+      fontWeight: 700,
     },
     h2: {
       fontFamily: 'Nunito',
+      fontWeight: 700,
     },
     h3: {
       fontFamily: 'Nunito',
+      fontWeight: 700,
     },
     h4: {
       fontFamily: 'Nunito',
+      fontWeight: 700,
     },
     h6: {
       fontFamily: 'Nunito',
+      fontWeight: 700,
     },
   },
 };
