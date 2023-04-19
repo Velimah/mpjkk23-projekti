@@ -79,7 +79,14 @@ const useMedia = (myFilesOnly = false) => {
     return await doFetch(baseUrl + 'media/' + id, fetchOptions);
   };
 
-  return {mediaArray, postMedia, deleteMedia, putMedia};
+  const getMediaById = async (id) => {
+    const fetchOptions = {
+      method: 'GET',
+    };
+    return await doFetch(baseUrl + 'media/' + id, fetchOptions);
+  };
+
+  return {mediaArray, postMedia, deleteMedia, putMedia, getMediaById};
 };
 
 const useUser = () => {
@@ -95,7 +102,6 @@ const useUser = () => {
   };
 
   const putUser = async (data, token) => {
-    console.log(data);
     const fetchOptions = {
       method: 'PUT',
       headers: {

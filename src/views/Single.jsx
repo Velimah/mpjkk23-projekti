@@ -10,7 +10,7 @@ import {
 import {useLocation} from 'react-router-dom';
 import {mediaUrl} from '../utils/variables';
 import {useNavigate} from 'react-router-dom';
-import {useFavourite, useUser, useComment} from '../hooks/ApiHooks';
+import {useFavourite, useUser, useComment, useMedia} from '../hooks/ApiHooks';
 import {useContext, useEffect, useState} from 'react';
 import {MediaContext} from '../contexts/MediaContext';
 import CommentRow from '../components/CommentRow';
@@ -29,8 +29,10 @@ const Single = () => {
 
   const [commentArray, setCommentArray] = useState([]);
   const [commentCount, setCommentCount] = useState(0);
+  const [mediaInfo, setMediaInfo] = useState({});
   const [refreshData, setRefreshData] = useState(false);
 
+  const {getMediaById} = useMedia();
   const {getUser} = useUser();
   const {getFavourites, postFavourite, deleteFavourite} = useFavourite();
   const {postComment, getCommentsById} = useComment();
@@ -151,6 +153,7 @@ const Single = () => {
     fetchUser();
     fetchLikes();
     fetchComments();
+    getMediaInfo();
   }, []);
 
   useEffect(() => {
@@ -165,6 +168,39 @@ const Single = () => {
     doComment,
     initValues
   );
+
+  const getMediaInfo = async () => {
+    try {
+      const mediaInfo = await getMediaById(data.file_id);
+      console.log('mediainfo', mediaInfo);
+      setMediaInfo(mediaInfo);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const formatCommentTime = (mediaInfo) => {
+    const timestamp = mediaInfo;
+    const date = new Date(timestamp);
+    const milliseconds = date.getTime();
+
+    const elapsedMilliseconds = Date.now() - milliseconds;
+    const elapsedSeconds = Math.floor(elapsedMilliseconds / 1000);
+    const elapsedMinutes = Math.floor(elapsedSeconds / 60);
+    const elapsedHours = Math.floor(elapsedMinutes / 60);
+
+    if (elapsedSeconds < 60) {
+      return elapsedSeconds + 's';
+    }
+    if (elapsedMinutes < 60) {
+      return elapsedMinutes + 'm';
+    }
+    if (elapsedHours < 24) {
+      return elapsedHours + 'h';
+    }
+    const options = {day: 'numeric', month: 'short'};
+    return date.toLocaleDateString('en-US', options);
+  };
 
   return (
     <>
@@ -190,13 +226,14 @@ const Single = () => {
           />
           <CardContent>
             <Typography component="h2" variant="h6" sx={{p: 2}}>
-              {allData.desc}
+              Description: {allData.desc}
             </Typography>
             <Typography component="h2" variant="h6" sx={{p: 2}}>
-              Brightness:{allData.filters.brightness + ' '}
-              Contrast:{allData.filters.contrast + ' '}
-              Saturation:{allData.filters.saturation + ' '}
-              Sepia:{allData.filters.sepia}
+              Time added: {formatCommentTime(mediaInfo.time_added)}
+            </Typography>
+            <Typography component="h2" variant="h6" sx={{p: 2}}>
+              filesize: {(mediaInfo.filesize / (1024 * 1024)).toFixed(2)}Mb
+              Mediatype: {mediaInfo.media_type} mimetype: {mediaInfo.mime_type}
             </Typography>
             <Typography component="h2" variant="h6" sx={{p: 2}}>
               User: {owner.username}
