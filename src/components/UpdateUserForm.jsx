@@ -36,11 +36,9 @@ const UpdateUserForm = () => {
         if (withoutConfirm.full_name === '') {
           delete withoutConfirm.full_name;
         }
-      
-      console.log('testimodify', withoutConfirm);
       const userResult = await putUser(withoutConfirm, token);
       alert(userResult.message);
-     // navigate(0);
+      navigate(0);
     } catch (e) {
       alert(e.message);
     }

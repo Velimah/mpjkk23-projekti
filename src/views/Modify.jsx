@@ -70,6 +70,12 @@ const Modify = () => {
     filterInitValues
   );
 
+  useEffect(() => {
+    ValidatorForm.addValidationRule('isEmptyOrMin2', (value) => {
+      return value === '' || value.length >= 2;
+    });
+  }, [inputs]);
+
   return (
     <Box sx={{maxWidth: 'md', margin: 'auto'}}>
       <Typography component="h1" variant="h2" textAlign="center" sx={{my: 6}}>
