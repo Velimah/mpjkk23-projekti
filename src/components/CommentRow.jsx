@@ -5,6 +5,7 @@ import {useComment, useTag, useUser} from '../hooks/ApiHooks';
 import {appId, mediaUrl} from '../utils/variables';
 import {Link} from 'react-router-dom';
 import {MediaContext} from '../contexts/MediaContext';
+import {formatTime} from '../hooks/UnitHooks';
 
 const CommentRow = ({file, fetchComments}) => {
   const {user} = useContext(MediaContext);
@@ -44,29 +45,6 @@ const CommentRow = ({file, fetchComments}) => {
     fetchProfilePicture();
     fetchUserInfo();
   }, []);
-
-  const formatCommentTime = (file) => {
-    const timestamp = file;
-    const date = new Date(timestamp);
-    const milliseconds = date.getTime();
-
-    const elapsedMilliseconds = Date.now() - milliseconds;
-    const elapsedSeconds = Math.floor(elapsedMilliseconds / 1000);
-    const elapsedMinutes = Math.floor(elapsedSeconds / 60);
-    const elapsedHours = Math.floor(elapsedMinutes / 60);
-
-    if (elapsedSeconds < 60) {
-      return elapsedSeconds + 's';
-    }
-    if (elapsedMinutes < 60) {
-      return elapsedMinutes + 'm';
-    }
-    if (elapsedHours < 24) {
-      return elapsedHours + 'h';
-    }
-    const options = {day: 'numeric', month: 'short'};
-    return date.toLocaleDateString('en-US', options);
-  };
 
   const doDeleteComment = async () => {
     const sure = confirm('Are you sure?');
@@ -111,7 +89,7 @@ const CommentRow = ({file, fetchComments}) => {
         />
         <Typography sx={{mb: 2}}>user_name: {userInfo.username}</Typography>
         <Typography sx={{mb: 1}}>
-          time added: {formatCommentTime(file.time_added)}
+          time added: {formatTime(file.time_added)}
         </Typography>
         <Typography sx={{mb: 1}}>comment: {file.comment}</Typography>
         <Typography sx={{mb: 1}}>user_id: {file.user_id}</Typography>

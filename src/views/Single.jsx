@@ -18,6 +18,7 @@ import {TextValidator, ValidatorForm} from 'react-material-ui-form-validator';
 import useForm from '../hooks/FormHooks';
 import {commentErrorMessages} from '../utils/errorMessages';
 import {commentValidators} from '../utils/validator';
+import {formatTime, formatSize} from '../hooks/UnitHooks';
 
 const Single = () => {
   const [owner, setOwner] = useState({username: ''});
@@ -179,29 +180,6 @@ const Single = () => {
     }
   };
 
-  const formatCommentTime = (mediaInfo) => {
-    const timestamp = mediaInfo;
-    const date = new Date(timestamp);
-    const milliseconds = date.getTime();
-
-    const elapsedMilliseconds = Date.now() - milliseconds;
-    const elapsedSeconds = Math.floor(elapsedMilliseconds / 1000);
-    const elapsedMinutes = Math.floor(elapsedSeconds / 60);
-    const elapsedHours = Math.floor(elapsedMinutes / 60);
-
-    if (elapsedSeconds < 60) {
-      return elapsedSeconds + 's';
-    }
-    if (elapsedMinutes < 60) {
-      return elapsedMinutes + 'm';
-    }
-    if (elapsedHours < 24) {
-      return elapsedHours + 'h';
-    }
-    const options = {day: 'numeric', month: 'short'};
-    return date.toLocaleDateString('en-US', options);
-  };
-
   return (
     <>
       <Box sx={{maxWidth: 'lg', margin: 'auto', my: 6}}>
@@ -229,11 +207,11 @@ const Single = () => {
               Description: {allData.desc}
             </Typography>
             <Typography component="h2" variant="h6" sx={{p: 2}}>
-              Time added: {formatCommentTime(mediaInfo.time_added)}
+              Time added: {formatTime(mediaInfo.time_added)}
             </Typography>
             <Typography component="h2" variant="h6" sx={{p: 2}}>
-              filesize: {(mediaInfo.filesize / (1024 * 1024)).toFixed(2)}Mb
-              Mediatype: {mediaInfo.media_type} mimetype: {mediaInfo.mime_type}
+              filesize: {formatSize(mediaInfo.filesize)} Mediatype:{' '}
+              {mediaInfo.media_type} mimetype: {mediaInfo.mime_type}
             </Typography>
             <Typography component="h2" variant="h6" sx={{p: 2}}>
               User: {owner.username}
