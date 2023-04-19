@@ -83,7 +83,6 @@ const useMedia = (myFilesOnly = false) => {
 };
 
 const useUser = () => {
-
   const postUser = async (inputs) => {
     const fetchOptions = {
       method: 'POST',
@@ -94,7 +93,7 @@ const useUser = () => {
     };
     return await doFetch(baseUrl + 'users', fetchOptions);
   };
-  
+
   const putUser = async (data, token) => {
     console.log(data);
     const fetchOptions = {
@@ -152,7 +151,6 @@ const useAuthentication = () => {
 };
 
 const useTag = () => {
-
   const getTag = async (tag) => {
     const tagResult = await doFetch(baseUrl + 'tags/' + tag);
     if (tagResult.length > 0) {

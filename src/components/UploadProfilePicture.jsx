@@ -2,7 +2,6 @@ import {Box, Button, Grid} from '@mui/material';
 import useForm from '../hooks/FormHooks';
 import {useContext, useEffect, useState} from 'react';
 import {useMedia, useTag} from '../hooks/ApiHooks';
-import {useNavigate} from 'react-router-dom';
 import {appId, mediaUrl} from '../utils/variables';
 import {ValidatorForm, TextValidator} from 'react-material-ui-form-validator';
 import {MediaContext} from '../contexts/MediaContext';
@@ -11,15 +10,18 @@ const UploadProfilePicture = () => {
   const {user} = useContext(MediaContext);
   const {getTag, postTag} = useTag();
   const {postMedia} = useMedia();
-  const navigate = useNavigate();
 
   const [file, setFile] = useState(null);
-  const [selectedImage, setSelectedImage] = useState('https://placehold.co/300x300?text=Choose-Profile Picture');
+  const [selectedImage, setSelectedImage] = useState(
+    'https://placehold.co/300x300?text=Choose-Profile Picture'
+  );
 
   const fetchProfilePicture = async () => {
     try {
       if (user) {
-        const profilePictures = await getTag(appId + '_profilepicture_' + user.user_id);
+        const profilePictures = await getTag(
+          appId + '_profilepicture_' + user.user_id
+        );
         const profilePicture = profilePictures.pop();
         profilePicture.filename = mediaUrl + profilePicture.filename;
         setSelectedImage(profilePicture.filename);
@@ -47,6 +49,7 @@ const UploadProfilePicture = () => {
         },
         token
       );
+      console.log(tagResult);
       alert('Profile picture updated!');
     } catch (error) {
       alert(error.message);
@@ -63,9 +66,7 @@ const UploadProfilePicture = () => {
     reader.readAsDataURL(event.target.files[0]);
   };
 
-  const {handleSubmit} = useForm(
-    doUpload,
-  );
+  const {handleSubmit} = useForm(doUpload);
 
   return (
     <Box sx={{maxWidth: 'md', margin: 'auto'}}>
@@ -81,19 +82,19 @@ const UploadProfilePicture = () => {
           ></img>
         </Grid>
         <Grid item xs={5} sx={{}}>
-            <ValidatorForm onSubmit={handleSubmit} noValidate>
-              <TextValidator
+          <ValidatorForm onSubmit={handleSubmit} noValidate>
+            <TextValidator
               fullWidth
-                sx={{mb: 1}}
-                onChange={handleFileChange}
-                type="file"
-                name="file"
-                accept="image/*, video/*, audio/*"
-              />
-              <Button variant="contained" fullWidth type="submit">
-                Update Profile Picture
-              </Button>
-            </ValidatorForm>
+              sx={{mb: 1}}
+              onChange={handleFileChange}
+              type="file"
+              name="file"
+              accept="image/*, video/*, audio/*"
+            />
+            <Button variant="contained" fullWidth type="submit">
+              Update Profile Picture
+            </Button>
+          </ValidatorForm>
         </Grid>
       </Grid>
     </Box>

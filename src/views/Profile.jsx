@@ -9,11 +9,11 @@ import {useNavigate} from 'react-router-dom';
 const Profile = () => {
   const {user} = useContext(MediaContext);
 
-  const [profilePic, SetProfilePic] = useState({
+  const [profilePic, setProfilePic] = useState({
     filename: 'https://placekitten.com/200/200',
   });
 
-  const [backgroundPic, SetBackgroundPic] = useState({
+  const [backgroundPic, setBackgroundPic] = useState({
     filename: 'https://placekitten.com/800/300',
   });
 
@@ -23,10 +23,12 @@ const Profile = () => {
   const fetchProfilePicture = async () => {
     try {
       if (user) {
-        const profilePictures = await getTag(appId + '_profilepicture_' + user.user_id);
+        const profilePictures = await getTag(
+          appId + '_profilepicture_' + user.user_id
+        );
         const profilePicture = profilePictures.pop();
         profilePicture.filename = mediaUrl + profilePicture.filename;
-        SetProfilePic(profilePicture);
+        setProfilePic(profilePicture);
       }
     } catch (error) {
       console.error(error.message);
@@ -36,10 +38,12 @@ const Profile = () => {
   const fetchBackgroundPicture = async () => {
     try {
       if (user) {
-        const backgroundPictures = await getTag(appId + '_backgroundpicture_' + user.user_id);
+        const backgroundPictures = await getTag(
+          appId + '_backgroundpicture_' + user.user_id
+        );
         const backgroundPicture = backgroundPictures.pop();
         backgroundPicture.filename = mediaUrl + backgroundPicture.filename;
-        SetBackgroundPic(backgroundPicture);
+        setBackgroundPic(backgroundPicture);
       }
     } catch (error) {
       console.error(error.message);
@@ -65,15 +69,15 @@ const Profile = () => {
               Profile
             </Typography>
             <Avatar
-                  src={backgroundPic.filename}
-                  alt="Logo"
-                  sx={{
-                    borderRadius: 0,
-                    boxShadow: 3,
-                    width: 800,
-                    height: 320,
-                  }}
-                />
+              src={backgroundPic.filename}
+              alt="Logo"
+              sx={{
+                borderRadius: 0,
+                boxShadow: 3,
+                width: 800,
+                height: 320,
+              }}
+            />
             <Grid container justifyContent="center">
               <Grid item sx={{px: 3}}>
                 <Avatar
@@ -91,7 +95,7 @@ const Profile = () => {
               <Grid item sx={{px: 3}}>
                 <Typography component="h1" variant="h3" sx={{mt: 4}}>
                   <strong>{user.username}</strong>
-                </Typography>          
+                </Typography>
                 <Typography component="div" variant="h6" sx={{mt: 3}}>
                   <strong>Full name : </strong>{' '}
                   {user.full_name ? user.full_name : 'Has not set a full name'}
@@ -110,12 +114,13 @@ const Profile = () => {
                 >
                   Update User Info
                 </Button>
-                <Button variant="contained"
+                <Button
+                  variant="contained"
                   fullWidth
                   sx={{mt: 5}}
                   onClick={() => navigate('/logout')}
-                  >
-                    Logout
+                >
+                  Logout
                 </Button>
               </Grid>
             </Grid>

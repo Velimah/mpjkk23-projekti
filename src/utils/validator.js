@@ -28,4 +28,10 @@ const commentValidators = {
   comment: ['required', 'minStringLength:1', 'maxStringLength: 1000'],
 };
 
-export {registerValidators, updateUserValidators, loginValidators, uploadValidators, commentValidators};
+export {
+  registerValidators,
+  updateUserValidators,
+  loginValidators,
+  uploadValidators,
+  commentValidators,
+};

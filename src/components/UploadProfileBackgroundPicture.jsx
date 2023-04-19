@@ -2,7 +2,6 @@ import {Box, Button, Grid} from '@mui/material';
 import useForm from '../hooks/FormHooks';
 import {useContext, useState, useEffect} from 'react';
 import {useMedia, useTag} from '../hooks/ApiHooks';
-import {useNavigate} from 'react-router-dom';
 import {appId, mediaUrl} from '../utils/variables';
 import {ValidatorForm, TextValidator} from 'react-material-ui-form-validator';
 import {MediaContext} from '../contexts/MediaContext';
@@ -11,7 +10,6 @@ const UploadProfileBackgroundPicture = () => {
   const {user} = useContext(MediaContext);
   const {postMedia} = useMedia();
   const {postTag, getTag} = useTag();
-  const navigate = useNavigate();
 
   const [file, setFile] = useState(null);
   const [selectedImage, setSelectedImage] = useState(
@@ -21,7 +19,9 @@ const UploadProfileBackgroundPicture = () => {
   const fetchBackgroundPicture = async () => {
     try {
       if (user) {
-        const backgroundPictures = await getTag(appId + '_backgroundpicture_' + user.user_id);
+        const backgroundPictures = await getTag(
+          appId + '_backgroundpicture_' + user.user_id
+        );
         const backGroundPicture = backgroundPictures.pop();
         backGroundPicture.filename = mediaUrl + backGroundPicture.filename;
         setSelectedImage(backGroundPicture.filename);
@@ -49,6 +49,7 @@ const UploadProfileBackgroundPicture = () => {
         },
         token
       );
+      console.log(tagResult);
       alert('Background picture updated!');
     } catch (error) {
       alert(error.message);
@@ -65,9 +66,7 @@ const UploadProfileBackgroundPicture = () => {
     reader.readAsDataURL(event.target.files[0]);
   };
 
-  const {handleSubmit} = useForm(
-    doUpload,
-  );
+  const {handleSubmit} = useForm(doUpload);
 
   return (
     <Box sx={{maxWidth: 'md', margin: 'auto'}}>
@@ -83,19 +82,19 @@ const UploadProfileBackgroundPicture = () => {
           ></img>
         </Grid>
         <Grid item xs={5} sx={{}}>
-            <ValidatorForm onSubmit={handleSubmit} noValidate>
-              <TextValidator
+          <ValidatorForm onSubmit={handleSubmit} noValidate>
+            <TextValidator
               fullWidth
-                sx={{mb: 1}}
-                onChange={handleFileChange}
-                type="file"
-                name="file"
-                accept="image/*, video/*, audio/*"
-              />
-              <Button variant="contained" fullWidth type="submit">
-                Update Background Picture
-              </Button>
-            </ValidatorForm>
+              sx={{mb: 1}}
+              onChange={handleFileChange}
+              type="file"
+              name="file"
+              accept="image/*, video/*, audio/*"
+            />
+            <Button variant="contained" fullWidth type="submit">
+              Update Background Picture
+            </Button>
+          </ValidatorForm>
         </Grid>
       </Grid>
     </Box>

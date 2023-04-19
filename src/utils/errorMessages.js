@@ -11,10 +11,7 @@ const registerErrorMessages = {
 };
 
 const updateUserErrorMessages = {
-  username: [
-    'minimum 3 characters',
-    'username not available',
-  ],
+  username: ['minimum 3 characters', 'username not available'],
   password: ['minimum 5 characters'],
   confirmPassword: ['passwords do not match'],
   email: ['email is not valid'],
@@ -32,7 +29,17 @@ const uploadErrorMessages = {
 };
 
 const commentErrorMessages = {
-  comment: ['Comment required', 'minimum 1 character', 'maximum 1000 characters'],
+  comment: [
+    'Comment required',
+    'minimum 1 character',
+    'maximum 1000 characters',
+  ],
 };
 
-export {registerErrorMessages, updateUserErrorMessages, loginErrorMessages, uploadErrorMessages, commentErrorMessages};
+export {
+  registerErrorMessages,
+  updateUserErrorMessages,
+  loginErrorMessages,
+  uploadErrorMessages,
+  commentErrorMessages,
+};

@@ -39,11 +39,13 @@ const Single = () => {
   const {state} = useLocation();
 
   const [data, setData] = useState(() => {
-    return state?.file || JSON.parse(window.localStorage.getItem("details")) || {};
+    return (
+      state?.file || JSON.parse(window.localStorage.getItem('details')) || {}
+    );
   });
-  
+
   useEffect(() => {
-    window.localStorage.setItem("details", JSON.stringify(data));
+    window.localStorage.setItem('details', JSON.stringify(data));
   }, [data]);
 
   const file = data;
@@ -141,9 +143,9 @@ const Single = () => {
     }
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     fetchComments();
-   },[refreshData])
+  }, [refreshData]);
 
   useEffect(() => {
     fetchUser();
@@ -205,19 +207,23 @@ const Single = () => {
             <Button
               onClick={userLike ? deleteLike : doLike}
               variant="contained"
-              sx={userLike ? {
-                mt: 1,
-                mr: 2,
-              } : {
-                mt: 1,
-                mr: 2,
-                backgroundColor: 'grey',
-                '&:hover': {
-                  backgroundColor: 'grey !important',
-                },
-              }}
+              sx={
+                userLike
+                  ? {
+                      mt: 1,
+                      mr: 2,
+                    }
+                  : {
+                      mt: 1,
+                      mr: 2,
+                      backgroundColor: 'grey',
+                      '&:hover': {
+                        backgroundColor: 'grey !important',
+                      },
+                    }
+              }
             >
-              {userLike ? "Liked" : "Like"}
+              {userLike ? 'Liked' : 'Like'}
             </Button>
           </CardContent>
         </Card>
@@ -236,34 +242,39 @@ const Single = () => {
 
         <ValidatorForm onSubmit={handleSubmit}>
           <TextValidator
-          fullWidth
-          margin="dense"
-          name="comment"
-          placeholder="Comment"
-          onChange={handleInputChange}
-          value={inputs.comment}
-          validators={commentValidators.comment}
-          errorMessages={commentErrorMessages.comment}
+            fullWidth
+            margin="dense"
+            name="comment"
+            placeholder="Comment"
+            onChange={handleInputChange}
+            value={inputs.comment}
+            validators={commentValidators.comment}
+            errorMessages={commentErrorMessages.comment}
           />
-          <Button
-              variant="contained"
-              sx={{my: 2}}
-              type="submit"
-              >
-              Comment
+          <Button variant="contained" sx={{my: 2}} type="submit">
+            Comment
           </Button>
         </ValidatorForm>
         <Typography>Comments ({commentCount})</Typography>
 
-        <div>{commentArray.map((item, index) => {
-          return <CommentRow key={index} file={item} fetchComments={fetchComments}/>;
-        }).reverse()}</div>
+        <div>
+          {commentArray
+            .map((item, index) => {
+              return (
+                <CommentRow
+                  key={index}
+                  file={item}
+                  fetchComments={fetchComments}
+                />
+              );
+            })
+            .reverse()}
+        </div>
       </Box>
     </>
   );
 };
 
-Single.propTypes = {
-};
+Single.propTypes = {};
 
 export default Single;
