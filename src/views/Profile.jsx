@@ -17,6 +17,10 @@ const Profile = () => {
     filename: 'https://placekitten.com/800/300',
   });
 
+  const [profileDescription, setprofileDescription] = useState(
+    'No profile text yet!'
+  );
+
   const {getTag} = useTag();
   const navigate = useNavigate();
 
@@ -50,9 +54,25 @@ const Profile = () => {
     }
   };
 
+  const fetchProfileDescription = async () => {
+    try {
+      if (user) {
+        const profilePictures = await getTag(
+          appId + '_profilepicture_' + user.user_id
+        );
+        const profileText = profilePictures.pop();
+        console.log('profiiliteksti', profileText);
+        setprofileDescription(profileText.description);
+      }
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+
   useEffect(() => {
     fetchProfilePicture();
     fetchBackgroundPicture();
+    fetchProfileDescription();
   }, [user]);
 
   return (
@@ -89,6 +109,9 @@ const Profile = () => {
                     boxShadow: 3,
                     width: 200,
                     height: 200,
+                    borderStyle: 'solid',
+                    borderWidth: 3,
+                    borderColor: 'white',
                   }}
                 />
               </Grid>
@@ -105,6 +128,9 @@ const Profile = () => {
                 </Typography>
                 <Typography component="div" variant="h6" sx={{mt: 3}}>
                   <strong> User ID : </strong> {user.user_id}
+                </Typography>
+                <Typography component="div" variant="h6" sx={{mt: 3}}>
+                  <strong> Description : </strong> {profileDescription}
                 </Typography>
                 <Button
                   variant="contained"

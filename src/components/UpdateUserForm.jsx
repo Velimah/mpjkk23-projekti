@@ -35,6 +35,7 @@ const UpdateUserForm = () => {
         delete withoutConfirm.full_name;
       }
       const userResult = await putUser(withoutConfirm, token);
+
       alert(userResult.message);
     } catch (e) {
       alert(e.message);

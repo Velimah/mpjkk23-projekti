@@ -15,6 +15,11 @@ const UploadProfilePicture = () => {
   const [selectedImage, setSelectedImage] = useState(
     'https://placehold.co/300x300?text=Choose-Profile Picture'
   );
+  const [description, setDescription] = useState('');
+
+  const initValues = {
+    description: description,
+  };
 
   const fetchProfilePicture = async () => {
     try {
@@ -24,6 +29,7 @@ const UploadProfilePicture = () => {
         );
         const profilePicture = profilePictures.pop();
         profilePicture.filename = mediaUrl + profilePicture.filename;
+        setDescription(profilePicture.description);
         setSelectedImage(profilePicture.filename);
       }
     } catch (error) {
@@ -38,8 +44,13 @@ const UploadProfilePicture = () => {
   const doUpload = async () => {
     try {
       const data = new FormData();
-      data.append('title', 'Profile Picture');
       data.append('file', file);
+      data.append('title', 'Profile Picture');
+      if (inputs.description === '') {
+        data.append('description', description);
+      } else {
+        data.append('description', inputs.description);
+      }
       const token = localStorage.getItem('token');
       const uploadResult = await postMedia(data, token);
       const tagResult = await postTag(
@@ -66,7 +77,10 @@ const UploadProfilePicture = () => {
     reader.readAsDataURL(event.target.files[0]);
   };
 
-  const {handleSubmit} = useForm(doUpload);
+  const {inputs, handleInputChange, handleSubmit} = useForm(
+    doUpload,
+    initValues
+  );
 
   return (
     <Box sx={{maxWidth: 'md', margin: 'auto'}}>
@@ -91,8 +105,20 @@ const UploadProfilePicture = () => {
               name="file"
               accept="image/*, video/*, audio/*"
             />
+            <TextValidator
+              multiline
+              maxRows={4}
+              fullWidth
+              margin="dense"
+              name="description"
+              placeholder="description text"
+              onChange={handleInputChange}
+              value={inputs.description}
+              // validators={updateUserValidators.fullName}
+              // errorMessages={updateUserErrorMessages.fullName}
+            />
             <Button variant="contained" fullWidth type="submit">
-              Update Profile Picture
+              Update Profile Picture and Description
             </Button>
           </ValidatorForm>
         </Grid>

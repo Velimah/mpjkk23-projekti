@@ -49,6 +49,7 @@ const UploadProfileBackgroundPicture = () => {
         },
         token
       );
+      console.log(uploadResult);
       console.log(tagResult);
       alert('Background picture updated!');
     } catch (error) {
