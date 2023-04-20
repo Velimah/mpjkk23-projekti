@@ -241,7 +241,7 @@ const Single = () => {
       setRatingCount(ratingInfo.length);
 
       ratingInfo.forEach((rating) => {
-        sum += rating.rating;
+        sum += parseInt(rating.rating);
         if (rating.user_id === user.user_id) {
           setRefreshRating(true);
         }
@@ -277,7 +277,7 @@ const Single = () => {
             component={componentType}
             src={mediaUrl + file.filename}
             title={file.title}
-            style={{
+            sx={{
               filter: `brightness(${allData.filters.brightness}%)
                        contrast(${allData.filters.contrast}%)
                        saturate(${allData.filters.saturation}%)
@@ -326,7 +326,7 @@ const Single = () => {
                     <Rating
                       name="read-only"
                       size="large"
-                      precision={0.01}
+                      precision={0.1}
                       defaultValue={rating}
                       value={rating}
                       readOnly

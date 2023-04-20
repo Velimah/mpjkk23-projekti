@@ -86,7 +86,7 @@ const Profile = () => {
         const ratings = await getRatingsById(file.file_id);
         if (ratings.length !== 0) {
           for (const rating of ratings) {
-            sum = sum + rating.rating;
+            sum += parseInt(rating.rating);
             count++;
           }
         }
@@ -146,7 +146,7 @@ const Profile = () => {
                   <Rating
                     name="read-only"
                     size="large"
-                    precision={0.1}
+                    precision={0.5}
                     value={averageRating}
                     readOnly
                   />
