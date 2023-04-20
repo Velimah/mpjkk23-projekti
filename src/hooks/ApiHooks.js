@@ -47,28 +47,28 @@ const useMedia = (myFilesOnly = false) => {
   }, [update]);
 
   const postMedia = async (data, token) => {
-    const options = {
+    const fetchOptions = {
       method: 'POST',
       headers: {
         'x-access-token': token,
       },
       body: data,
     };
-    return await doFetch(baseUrl + 'media', options);
+    return await doFetch(baseUrl + 'media', fetchOptions);
   };
 
   const deleteMedia = async (id, token) => {
-    const options = {
+    const fetchOptions = {
       method: 'DELETE',
       headers: {
         'x-access-token': token,
       },
     };
-    return await doFetch(baseUrl + 'media/' + id, options);
+    return await doFetch(baseUrl + 'media/' + id, fetchOptions);
   };
 
   const putMedia = async (id, data, token) => {
-    const options = {
+    const fetchOptions = {
       method: 'PUT',
       headers: {
         'x-access-token': token,
@@ -76,42 +76,61 @@ const useMedia = (myFilesOnly = false) => {
       },
       body: JSON.stringify(data),
     };
-    return await doFetch(baseUrl + 'media/' + id, options);
+    return await doFetch(baseUrl + 'media/' + id, fetchOptions);
   };
 
-  return {mediaArray, postMedia, deleteMedia, putMedia};
+  const getMediaById = async (id) => {
+    const fetchOptions = {
+      method: 'GET',
+    };
+    return await doFetch(baseUrl + 'media/' + id, fetchOptions);
+  };
+
+  return {mediaArray, postMedia, deleteMedia, putMedia, getMediaById};
 };
 
 const useUser = () => {
   const postUser = async (inputs) => {
-    const options = {
+    const fetchOptions = {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(inputs),
     };
-    return await doFetch(baseUrl + 'users', options);
+    return await doFetch(baseUrl + 'users', fetchOptions);
+  };
+
+  const putUser = async (data, token) => {
+    const fetchOptions = {
+      method: 'PUT',
+      headers: {
+        'x-access-token': token,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    };
+    return await doFetch(baseUrl + 'users/', fetchOptions);
   };
 
   const getUserByToken = async (token) => {
-    const options = {
+    const fetchOptions = {
       method: 'GET',
       headers: {
         'x-access-token': token,
       },
     };
-    return await doFetch(baseUrl + 'users/user', options);
+    return await doFetch(baseUrl + 'users/user', fetchOptions);
   };
 
   const getUser = async (id, token) => {
-    const options = {
+    const fetchOptions = {
       method: 'GET',
       headers: {
         'x-access-token': token,
       },
     };
-    return await doFetch(baseUrl + 'users/' + id, options);
+    return await doFetch(baseUrl + 'users/' + id, fetchOptions);
   };
 
   const getCheckUser = async (username) => {
@@ -119,19 +138,19 @@ const useUser = () => {
     return available;
   };
 
-  return {postUser, getUserByToken, getCheckUser, getUser};
+  return {postUser, getUserByToken, getCheckUser, getUser, putUser};
 };
 
 const useAuthentication = () => {
   const postLogin = async (inputs) => {
-    const options = {
+    const fetchOptions = {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(inputs),
     };
-    return await doFetch(baseUrl + 'login', options);
+    return await doFetch(baseUrl + 'login', fetchOptions);
   };
 
   return {postLogin};
@@ -159,7 +178,17 @@ const useTag = () => {
     return await doFetch(baseUrl + 'tags', fetchOptions);
   };
 
-  return {getTag, postTag};
+  const deleteTag = async (tagId, token) => {
+    const fetchOptions = {
+      method: 'DELETE',
+      headers: {
+        'x-access-token': token,
+      },
+    };
+    return await doFetch(baseUrl + 'tags/' + tagId, fetchOptions);
+  };
+
+  return {getTag, postTag, deleteTag};
 };
 
 const useFavourite = () => {
@@ -180,16 +209,46 @@ const useFavourite = () => {
   };
 
   const deleteFavourite = async (id, token) => {
-    const options = {
+    const fetchOptions = {
       method: 'DELETE',
       headers: {
         'x-access-token': token,
       },
     };
-    return await doFetch(baseUrl + 'favourites/file/' + id, options);
+    return await doFetch(baseUrl + 'favourites/file/' + id, fetchOptions);
   };
 
   return {postFavourite, getFavourites, deleteFavourite};
 };
 
-export {useMedia, useUser, useAuthentication, useTag, useFavourite};
+const useComment = () => {
+  const postComment = async (data, token) => {
+    const fetchOptions = {
+      method: 'POST',
+      headers: {
+        'x-access-token': token,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    };
+    return await doFetch(baseUrl + 'comments', fetchOptions);
+  };
+
+  const deleteComment = async (id, token) => {
+    const fetchOptions = {
+      method: 'DELETE',
+      headers: {
+        'x-access-token': token,
+      },
+    };
+    return await doFetch(baseUrl + 'comments/' + id, fetchOptions);
+  };
+
+  const getCommentsById = async (id) => {
+    return await doFetch(baseUrl + 'comments/file/' + id);
+  };
+
+  return {postComment, deleteComment, getCommentsById};
+};
+
+export {useMedia, useUser, useAuthentication, useTag, useFavourite, useComment};

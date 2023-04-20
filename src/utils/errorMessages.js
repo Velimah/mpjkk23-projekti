@@ -10,6 +10,18 @@ const registerErrorMessages = {
   fullName: ['minimum 2 characters'],
 };
 
+const updateUserErrorMessages = {
+  username: ['minimum 3 characters', 'username not available'],
+  password: ['minimum 5 characters'],
+  confirmPassword: ['passwords do not match'],
+  email: ['email is not valid'],
+  fullName: ['minimum 2 characters', 'incorrect symbols'],
+};
+
+const updateProfilePictureErrorMessages = {
+  description: ['minimum 2 characters', 'maximum 500 characters'],
+};
+
 const loginErrorMessages = {
   username: ['this field is required', 'minimum 3 characters'],
   password: ['this field is required', 'minimum 5 characters'],
@@ -20,4 +32,19 @@ const uploadErrorMessages = {
   description: ['minimum 2 characters'],
 };
 
-export {registerErrorMessages, loginErrorMessages, uploadErrorMessages};
+const commentErrorMessages = {
+  comment: [
+    'Comment required',
+    'minimum 1 character',
+    'maximum 1000 characters',
+  ],
+};
+
+export {
+  registerErrorMessages,
+  updateUserErrorMessages,
+  loginErrorMessages,
+  uploadErrorMessages,
+  commentErrorMessages,
+  updateProfilePictureErrorMessages,
+};

@@ -6,6 +6,7 @@ import {mediaUrl} from '../utils/variables';
 import {ValidatorForm, TextValidator} from 'react-material-ui-form-validator';
 import {uploadErrorMessages} from '../utils/errorMessages';
 import {uploadValidators} from '../utils/validator';
+import {useEffect} from 'react';
 
 const Modify = () => {
   const {putMedia} = useMedia();
@@ -68,6 +69,12 @@ const Modify = () => {
     null,
     filterInitValues
   );
+
+  useEffect(() => {
+    ValidatorForm.addValidationRule('isEmptyOrMin2', (value) => {
+      return value === '' || value.length >= 2;
+    });
+  }, [inputs]);
 
   return (
     <Box sx={{maxWidth: 'md', margin: 'auto'}}>

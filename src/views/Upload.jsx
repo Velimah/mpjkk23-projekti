@@ -1,6 +1,6 @@
 import {Box, Button, Grid, Slider, Typography} from '@mui/material';
 import useForm from '../hooks/FormHooks';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {useMedia, useTag} from '../hooks/ApiHooks';
 import {useNavigate} from 'react-router-dom';
 import {appId} from '../utils/variables';
@@ -48,7 +48,6 @@ const Upload = () => {
         },
         token
       );
-      console.log(uploadResult);
       console.log(tagResult);
       navigate('/home');
     } catch (error) {
@@ -59,7 +58,6 @@ const Upload = () => {
   const handleFileChange = (event) => {
     event.persist();
     setFile(event.target.files[0]);
-    console.log(event.target.files[0]);
     const reader = new FileReader();
     reader.addEventListener('load', () => {
       setSelectedImage(reader.result);
@@ -76,6 +74,12 @@ const Upload = () => {
     null,
     filterInitValues
   );
+
+  useEffect(() => {
+    ValidatorForm.addValidationRule('isEmptyOrMin2', (value) => {
+      return value === '' || value.length >= 2;
+    });
+  }, [inputs]);
 
   return (
     <Box sx={{maxWidth: 'md', margin: 'auto'}}>
