@@ -77,8 +77,9 @@ const UploadProfileBackgroundPicture = () => {
             src={selectedImage}
             alt="preview"
             style={{
-              width: '400px',
-              height: '100%',
+              width: '900px',
+              height: '300px',
+              objectFit: 'cover',
             }}
           ></img>
         </Grid>

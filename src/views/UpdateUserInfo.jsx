@@ -24,8 +24,8 @@ const UpdateUserInfo = () => {
               Update User info
             </Typography>
             <Grid container justifyContent="center">
-              <UploadProfilePicture />
               <UploadProfileBackgroundPicture />
+              <UploadProfilePicture />
               <UpdateUserForm />
             </Grid>
             <Grid container justifyContent="center" gap={5}>

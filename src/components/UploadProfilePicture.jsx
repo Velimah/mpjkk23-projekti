@@ -98,8 +98,10 @@ const UploadProfilePicture = () => {
             src={selectedImage}
             alt="preview"
             style={{
-              width: '400px',
-              height: '100%',
+              width: '300px',
+              height: '300px',
+              objectFit: 'cover',
+              borderRadius: '100%',
             }}
           ></img>
         </Grid>

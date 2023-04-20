@@ -90,7 +90,7 @@ const Profile = () => {
               sx={{
                 borderRadius: 0,
                 boxShadow: 3,
-                width: 800,
+                width: 900,
                 height: 320,
               }}
             />
