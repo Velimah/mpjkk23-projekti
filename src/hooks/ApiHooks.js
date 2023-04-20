@@ -110,7 +110,7 @@ const useUser = () => {
       },
       body: JSON.stringify(data),
     };
-    return await doFetch(baseUrl + 'users/', fetchOptions);
+    return await doFetch(baseUrl + 'users', fetchOptions);
   };
 
   const getUserByToken = async (token) => {
@@ -251,4 +251,55 @@ const useComment = () => {
   return {postComment, deleteComment, getCommentsById};
 };
 
-export {useMedia, useUser, useAuthentication, useTag, useFavourite, useComment};
+const useRating = () => {
+  const postRating = async (data, token) => {
+    const fetchOptions = {
+      method: 'POST',
+      headers: {
+        'x-access-token': token,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    };
+    return await doFetch(baseUrl + 'ratings', fetchOptions);
+  };
+
+  const deleteRating = async (id, token) => {
+    const fetchOptions = {
+      method: 'DELETE',
+      headers: {
+        'x-access-token': token,
+      },
+    };
+    return await doFetch(baseUrl + 'ratings/file/' + id, fetchOptions);
+  };
+
+  const getRatingById = async (id) => {
+    const fetchOptions = {
+      method: 'GET',
+    };
+    return await doFetch(baseUrl + 'ratings/file/' + id, fetchOptions);
+  };
+
+  const getAllRatings = async (token) => {
+    const fetchOptions = {
+      method: 'GET',
+      headers: {
+        'x-access-token': token,
+      },
+    };
+    return await doFetch(baseUrl + 'ratings', fetchOptions);
+  };
+
+  return {postRating, deleteRating, getRatingById, getAllRatings};
+};
+
+export {
+  useMedia,
+  useUser,
+  useAuthentication,
+  useTag,
+  useFavourite,
+  useComment,
+  useRating,
+};
