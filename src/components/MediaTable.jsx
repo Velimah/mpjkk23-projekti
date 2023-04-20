@@ -41,9 +41,13 @@ const MediaTable = ({myFilesOnly = false}) => {
         }}
         gap={5}
       >
-        {mediaArray.map((item, index) => {
-          return <MediaRow key={index} file={item} deleteMedia={deleteMedia} />;
-        })}
+        {mediaArray
+          .map((item, index) => {
+            return (
+              <MediaRow key={index} file={item} deleteMedia={deleteMedia} />
+            );
+          })
+          .reverse()}
       </ImageList>
     </>
   );
