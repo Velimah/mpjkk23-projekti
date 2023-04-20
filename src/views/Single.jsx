@@ -326,7 +326,7 @@ const Single = () => {
                     <Rating
                       name="read-only"
                       size="large"
-                      precision={0.1}
+                      precision={0.2}
                       defaultValue={rating}
                       value={rating}
                       readOnly
@@ -348,6 +348,7 @@ const Single = () => {
                       value={rating}
                       precision={1}
                       onChange={(event, newValue) => {
+                        console.log('value', newValue);
                         doRating(newValue);
                       }}
                     />
