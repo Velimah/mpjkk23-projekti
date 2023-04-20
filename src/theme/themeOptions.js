@@ -16,36 +16,39 @@ const themeOptions = {
       main: '#232020',
     },
     white: {
-      main: '#FDF7F4',
+      main: '#ACCC7F',
     },
   },
   typography: {
-    fontFamily: 'Nunito',
-    body1: {
-      fontFamily: 'Nunito',
-    },
-    body2: {
-      fontFamily: 'Nunito',
-    },
     h1: {
       fontFamily: 'Nunito',
-      fontWeight: 700,
+      fontSize: '1.8rem',
+      fontWeight: 'bold',
     },
     h2: {
       fontFamily: 'Nunito',
-      fontWeight: 700,
+      fontSize: '1.5rem',
+      fontWeight: 'bold',
     },
-    h3: {
+    body1: {
       fontFamily: 'Nunito',
-      fontWeight: 700,
+      fontSize: '16px',
     },
-    h4: {
+    body2: {
       fontFamily: 'Nunito',
-      fontWeight: 700,
+      fontSize: '16px',
     },
-    h6: {
-      fontFamily: 'Nunito',
-      fontWeight: 700,
+  },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          fontFamily: 'Nunito',
+          borderRadius: 20,
+          paddingTop: 10,
+          paddingBottom: 10,
+        },
+      },
     },
   },
 };
