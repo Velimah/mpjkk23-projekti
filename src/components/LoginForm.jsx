@@ -1,16 +1,18 @@
 import useForm from '../hooks/FormHooks';
 import {useAuthentication} from '../hooks/ApiHooks';
 import {useNavigate} from 'react-router-dom';
-import {useContext} from 'react';
+import {useContext, useState} from 'react';
 import {MediaContext} from '../contexts/MediaContext';
-import Button from '@mui/material/Button';
 import {loginValidators} from '../utils/validator';
 import {loginErrorMessages} from '../utils/errorMessages';
 import {TextValidator, ValidatorForm} from 'react-material-ui-form-validator';
+import {InputAdornment, IconButton, Button} from '@mui/material';
+import {Visibility, VisibilityOff} from '@mui/icons-material';
 
 const LoginForm = () => {
   const {setUser} = useContext(MediaContext);
   const {postLogin} = useAuthentication();
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   const initValues = {
@@ -34,6 +36,8 @@ const LoginForm = () => {
     initValues
   );
 
+  const handleClickShowPassword = () => setShowPassword(!showPassword);
+
   return (
     <>
       <ValidatorForm onSubmit={handleSubmit}>
@@ -53,7 +57,7 @@ const LoginForm = () => {
           fullWidth
           margin="dense"
           name="password"
-          type="password"
+          type={showPassword ? 'text' : 'password'}
           placeholder="Password"
           label="Password"
           onChange={handleInputChange}
@@ -61,7 +65,21 @@ const LoginForm = () => {
           validators={loginValidators.password}
           errorMessages={loginErrorMessages.password}
           sx={{mb: 3}}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={handleClickShowPassword}
+                  edge="end"
+                >
+                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
         />
+
         <Button fullWidth variant="contained" type="submit" sx={{mt: 1}}>
           Login
         </Button>

@@ -1,14 +1,16 @@
 import PropTypes from 'prop-types';
 import useForm from '../hooks/FormHooks';
 import {useUser} from '../hooks/ApiHooks';
-import {Button} from '@mui/material';
+import {InputAdornment, IconButton, Button} from '@mui/material';
 import {ValidatorForm, TextValidator} from 'react-material-ui-form-validator';
 import {registerErrorMessages} from '../utils/errorMessages';
 import {registerValidators} from '../utils/validator';
-import {useEffect} from 'react';
+import {useEffect, useState} from 'react';
+import {Visibility, VisibilityOff} from '@mui/icons-material';
 
 const RegisterForm = ({toggle}) => {
   const {postUser, getCheckUser} = useUser();
+  const [showPassword, setShowPassword] = useState(false);
 
   const initValues = {
     username: '',
@@ -51,6 +53,8 @@ const RegisterForm = ({toggle}) => {
       return value === '' || value.length >= 2;
     });
   }, [inputs]);
+
+  const handleClickShowPassword = () => setShowPassword(!showPassword);
 
   return (
     <>
@@ -96,7 +100,7 @@ const RegisterForm = ({toggle}) => {
           fullWidth
           margin="dense"
           name="password"
-          type="password"
+          type={showPassword ? 'text' : 'password'}
           placeholder="Password"
           label="Password"
           onChange={handleInputChange}
@@ -104,12 +108,25 @@ const RegisterForm = ({toggle}) => {
           validators={registerValidators.password}
           errorMessages={registerErrorMessages.password}
           sx={{mb: 3}}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={handleClickShowPassword}
+                  edge="end"
+                >
+                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
         />
         <TextValidator
           fullWidth
           margin="dense"
           name="confirm"
-          type="password"
+          type={showPassword ? 'text' : 'password'}
           placeholder="Confirm password"
           label="Confirm password"
           onChange={handleInputChange}
@@ -117,6 +134,19 @@ const RegisterForm = ({toggle}) => {
           validators={registerValidators.confirmPassword}
           errorMessages={registerErrorMessages.confirmPassword}
           sx={{mb: 3}}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={handleClickShowPassword}
+                  edge="end"
+                >
+                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
         />
         <Button fullWidth variant="contained" sx={{mt: 1}} type="submit">
           Register

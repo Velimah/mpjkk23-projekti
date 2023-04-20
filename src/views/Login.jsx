@@ -62,7 +62,7 @@ const Login = () => {
               {formToggle
                 ? "Don't have an account?"
                 : 'Already have an account'}
-              <Button large onClick={toggle}>
+              <Button onClick={toggle}>
                 {formToggle ? 'Register' : 'Login'}
               </Button>
             </Typography>
