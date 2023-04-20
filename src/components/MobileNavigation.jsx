@@ -16,6 +16,11 @@ import {
   LoginRounded,
 } from '@mui/icons-material';
 
+const loggedNavLinks = [
+  {page: 'Liked', to: '/liked', icon: <FavoriteRounded />},
+  {page: 'Profile', to: '/profile', icon: <PersonRounded />},
+];
+
 const MobileNavigation = () => {
   const {user} = useContext(MediaContext);
   const location = useLocation();
@@ -59,25 +64,17 @@ const MobileNavigation = () => {
             to="/search"
             className={location.pathname === '/search' ? 'Mui-selected' : ''}
           />
-          {!user ? (
-            <>
+          {user ? (
+            loggedNavLinks.map((link) => (
               <BottomNavigationAction
-                label="Liked"
-                icon={<FavoriteRounded />}
+                key={link.page}
+                label={link.page}
+                icon={link.icon}
                 component={Link}
-                to="/"
-                className={location.pathname === '/liked' ? 'Mui-selected' : ''}
+                to={link.to}
+                className={location.pathname === link.to ? 'Mui-selected' : ''}
               />
-              <BottomNavigationAction
-                label="Profile"
-                icon={<PersonRounded />}
-                component={Link}
-                to="/"
-                className={
-                  location.pathname === '/profile' ? 'Mui-selected' : ''
-                }
-              />
-            </>
+            ))
           ) : (
             <BottomNavigationAction
               label="Login"

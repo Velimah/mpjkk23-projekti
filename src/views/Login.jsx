@@ -25,10 +25,10 @@ const Login = () => {
           item
           xs={5}
           alignSelf="center"
-          sx={{display: {xs: 'none', lg: 'inline-block'}}}
+          sx={{display: {xs: 'none', md: 'inline-block'}}}
         >
           <img
-            src={'/src/assets/onlycats_illustration3.png'}
+            src={'/src/assets/onlycats_illustration2.png'}
             alt={'Cat illustration'}
             loading="lazy"
             width="100%"
