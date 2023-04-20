@@ -46,6 +46,16 @@ const useMedia = (myFilesOnly = false) => {
     }
   }, [update]);
 
+  const getAllMediaById = async (token) => {
+    const fetchOptions = {
+      method: 'GET',
+      headers: {
+        'x-access-token': token,
+      },
+    };
+    return await doFetch(baseUrl + 'media/user', fetchOptions);
+  };
+
   const postMedia = async (data, token) => {
     const fetchOptions = {
       method: 'POST',
@@ -86,7 +96,14 @@ const useMedia = (myFilesOnly = false) => {
     return await doFetch(baseUrl + 'media/' + id, fetchOptions);
   };
 
-  return {mediaArray, postMedia, deleteMedia, putMedia, getMediaById};
+  return {
+    mediaArray,
+    postMedia,
+    deleteMedia,
+    putMedia,
+    getMediaById,
+    getAllMediaById,
+  };
 };
 
 const useUser = () => {

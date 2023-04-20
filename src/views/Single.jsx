@@ -259,7 +259,7 @@ const Single = () => {
 
   return (
     <>
-      <Box sx={{maxWidth: 'lg', margin: 'auto', my: 6}}>
+      <Box sx={{maxWidth: 'md', margin: 'auto', my: 6}}>
         <Card>
           <Avatar
             src={profilePic.filename}
@@ -325,7 +325,8 @@ const Single = () => {
                   <Box sx={{mt: 1}}>
                     <Rating
                       name="read-only"
-                      precision={0.1}
+                      size="large"
+                      precision={0.01}
                       defaultValue={rating}
                       value={rating}
                       readOnly
@@ -343,6 +344,7 @@ const Single = () => {
                     <Rating
                       defaultValue={rating}
                       name="simple-controlled"
+                      size="large"
                       value={rating}
                       precision={1}
                       onChange={(event, newValue) => {
