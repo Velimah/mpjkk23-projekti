@@ -10,6 +10,7 @@ import {Link} from 'react-router-dom';
 import {mediaUrl} from '../utils/variables';
 import {useContext} from 'react';
 import {MediaContext} from '../contexts/MediaContext';
+import {AspectRatio} from '@mui/icons-material';
 
 const MediaRow = ({file, deleteMedia}) => {
   const {user, update, setUpdate} = useContext(MediaContext);
@@ -27,7 +28,14 @@ const MediaRow = ({file, deleteMedia}) => {
 
   return (
     <ImageListItem>
-      <Box component={Link} variant="contained" to="/single" state={{file}}>
+      <Box
+        component={Link}
+        variant="contained"
+        to="/single"
+        state={{file}}
+        height="100%"
+        width="100%"
+      >
         <img
           src={
             file.media_type !== 'audio'
@@ -35,6 +43,8 @@ const MediaRow = ({file, deleteMedia}) => {
               : '/vite.svg'
           }
           alt={file.title}
+          height="100%"
+          width="100%"
         />
       </Box>
     </ImageListItem>

@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import {useState} from 'react';
 import WindowIcon from '@mui/icons-material/Window';
 import MenuIcon from '@mui/icons-material/Menu';
-import { NavLink } from 'react-router-dom';
+import {NavLink} from 'react-router-dom';
 
 const MediaTable = ({myFilesOnly = false}) => {
   const {mediaArray, deleteMedia} = useMedia(myFilesOnly);
@@ -55,18 +55,25 @@ const MediaTable = ({myFilesOnly = false}) => {
         )}
       </Grid>
 
-      <ImageList
-        sx={{
-          gridTemplateColumns: style
-            ? 'repeat(auto-fill,minmax(300px, 1fr))!important'
-            : 'repeat(auto-fill,minmax(600px, 1fr))!important',
-        }}
-        gap={5}
+      <Grid
+        container
+        direction="row"
+        justifyContent="space-evenly"
+        alignItems="stretch"
       >
-        {mediaArray.map((item, index) => {
-          return <MediaRow key={index} file={item} deleteMedia={deleteMedia} />;
-        })}
-      </ImageList>
+        <ImageList
+          sx={{width: '500', height: '500'}}
+          cols={style ? '4' : '1'}
+          rowHeight={style ? '450' : '150'}
+          alignItems="stretch"
+        >
+          {mediaArray.map((item, index) => {
+            return (
+              <MediaRow key={index} file={item} deleteMedia={deleteMedia} />
+            );
+          })}
+        </ImageList>
+      </Grid>
     </>
   );
 };
