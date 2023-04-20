@@ -1,6 +1,5 @@
-import React, {useContext, useState} from 'react';
-import PropTypes from 'prop-types';
-import {Link} from 'react-router-dom';
+import React, {useContext} from 'react';
+import {Link, useLocation} from 'react-router-dom';
 import {MediaContext} from '../contexts/MediaContext';
 import {
   BottomNavigation,
@@ -8,11 +7,18 @@ import {
   Fab,
   Paper,
 } from '@mui/material';
-import {AddCircleOutlineRounded} from '@mui/icons-material';
+import {
+  AddCircleOutlineRounded,
+  HomeRounded,
+  SearchRounded,
+  FavoriteRounded,
+  PersonRounded,
+  LoginRounded,
+} from '@mui/icons-material';
 
-const MobileNavigation = ({navUnLogged, navLogged}) => {
+const MobileNavigation = () => {
   const {user} = useContext(MediaContext);
-  const [value, setValue] = useState(0);
+  const location = useLocation();
   return (
     <>
       {user && (
@@ -35,47 +41,56 @@ const MobileNavigation = ({navUnLogged, navLogged}) => {
         </Fab>
       )}
       <Paper
-        sx={{position: 'fixed', bottom: 0, left: 0, right: 0}}
+        sx={{position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 1}}
         elevation={4}
       >
-        <BottomNavigation
-          showLabels
-          as="nav"
-          value={value}
-          onChange={(event, newValue) => {
-            setValue(newValue);
-          }}
-        >
-          {user
-            ? navLogged.map((link) => (
-                <BottomNavigationAction
-                  key={link.page}
-                  label={link.page}
-                  icon={link.icon}
-                  component={Link}
-                  to={link.to}
-                  selected
-                />
-              ))
-            : navUnLogged.map((link) => (
-                <BottomNavigationAction
-                  key={link.page}
-                  label={link.page}
-                  icon={link.icon}
-                  component={Link}
-                  to={link.to}
-                  selected
-                />
-              ))}
+        <BottomNavigation showLabels as="nav">
+          <BottomNavigationAction
+            label="Home"
+            icon={<HomeRounded />}
+            component={Link}
+            to="/home"
+            className={location.pathname === '/home' ? 'Mui-selected' : ''}
+          />
+          <BottomNavigationAction
+            label="Search"
+            icon={<SearchRounded />}
+            component={Link}
+            to="/search"
+            className={location.pathname === '/search' ? 'Mui-selected' : ''}
+          />
+          {!user ? (
+            <>
+              <BottomNavigationAction
+                label="Liked"
+                icon={<FavoriteRounded />}
+                component={Link}
+                to="/"
+                className={location.pathname === '/liked' ? 'Mui-selected' : ''}
+              />
+              <BottomNavigationAction
+                label="Profile"
+                icon={<PersonRounded />}
+                component={Link}
+                to="/"
+                className={
+                  location.pathname === '/profile' ? 'Mui-selected' : ''
+                }
+              />
+            </>
+          ) : (
+            <BottomNavigationAction
+              label="Login"
+              icon={<LoginRounded />}
+              component={Link}
+              to="/"
+              className={location.pathname === '/' ? 'Mui-selected' : ''}
+            />
+          )}
         </BottomNavigation>
       </Paper>
     </>
   );
-};
-
-MobileNavigation.propTypes = {
-  navUnLogged: PropTypes.array,
-  navLogged: PropTypes.array,
 };
 
 export default MobileNavigation;

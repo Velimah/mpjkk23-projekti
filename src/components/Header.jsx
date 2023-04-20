@@ -1,8 +1,6 @@
 import {useContext} from 'react';
-import PropTypes from 'prop-types';
 import {Link, useLocation} from 'react-router-dom';
 import {MediaContext} from '../contexts/MediaContext';
-import {useWindowSize} from '../hooks/WindowHooks';
 import {
   AppBar,
   Button,
@@ -10,35 +8,35 @@ import {
   Toolbar,
   Box,
   Typography,
+  useMediaQuery,
+  Avatar,
+  Tooltip,
 } from '@mui/material';
+import {PersonRounded} from '@mui/icons-material';
 
-const Header = ({navUnLogged, navLogged}) => {
+const Header = () => {
   const {user} = useContext(MediaContext);
-  const windowSize = useWindowSize();
+  const extraSmallScreen = useMediaQuery((theme) =>
+    theme.breakpoints.down('sm')
+  );
   const location = useLocation();
+
   return (
     <AppBar
-      position={windowSize.width > 658 ? 'sticky' : 'absolute'}
-      elevation={windowSize.width > 658 ? 6 : 0}
-      color="white"
+      elevation={extraSmallScreen ? 0 : 6}
+      position={extraSmallScreen ? 'absolute' : 'sticky'}
+      color={extraSmallScreen ? 'transparent' : 'white'}
     >
       <Container maxWidth="lg">
-        <Toolbar
-          sx={
-            windowSize.width > 658
-              ? {justifyContent: 'space-between'}
-              : {justifyContent: 'center'}
-          }
-          disableGutters
-        >
+        <Toolbar sx={{justifyContent: {xs: 'center'}}} disableGutters>
           <Box sx={{display: 'flex', alignItems: 'center'}}>
             <img
-              src="./public/onlycats_logo.png"
+              src="/onlycats_logo.png"
               style={{display: 'flex', marginRight: 8, width: 45}}
               alt="OnlyCats logo"
             />
             <Typography
-              variant="h4"
+              variant="h1"
               noWrap
               component={Link}
               to="/home"
@@ -52,49 +50,69 @@ const Header = ({navUnLogged, navLogged}) => {
               OnlyCats
             </Typography>
           </Box>
-          {windowSize.width > 658 && (
-            <Box as="nav">
-              {user
-                ? navLogged.map((link) => (
-                    <Button
-                      key={link.page}
-                      color={
-                        location.pathname === '/' + link.to
-                          ? 'primary'
-                          : 'black'
-                      }
-                      sx={{mr: 1}}
-                      component={Link}
-                      to={link.to}
-                    >
-                      {link.icon}
-                      {link.page}
-                    </Button>
-                  ))
-                : navUnLogged.map((link) => (
-                    <Button
-                      key={link.page}
-                      color={
-                        location.pathname === '/' + link.to
-                          ? 'primary'
-                          : 'black'
-                      }
-                      sx={{mr: 1}}
-                      component={Link}
-                      to={link.to}
-                    >
-                      {link.icon}
-                      {link.page}
-                    </Button>
-                  ))}
+          <Box sx={{flexGrow: 1, display: {xs: 'none', sm: 'flex'}}}>
+            <Box as="nav" sx={{flexGrow: 1}}>
+              <Button
+                color={
+                  location.pathname === '/home' ? 'primary' : 'blackMedium'
+                }
+                sx={{mr: 1}}
+                component={Link}
+                to="/home"
+              >
+                Home
+              </Button>
+              <Button
+                color={
+                  location.pathname === '/search' ? 'primary' : 'blackMedium'
+                }
+                sx={{mr: 1}}
+                component={Link}
+                to="/search"
+              >
+                Search
+              </Button>
+              {user && (
+                <Button
+                  color={
+                    location.pathname === '/liked' ? 'primary' : 'blackMedium'
+                  }
+                  sx={{mr: 1}}
+                  component={Link}
+                  to="/liked"
+                >
+                  Liked
+                </Button>
+              )}
             </Box>
-          )}
+            {user ? (
+              <>
+                <Tooltip title="Profile">
+                  <Avatar
+                    aria-label="Profile"
+                    component={Link}
+                    to="/profile"
+                    sx={{mr: 1}}
+                  >
+                    <PersonRounded />
+                  </Avatar>
+                </Tooltip>
+                <Button variant="contained" component={Link} to="/upload">
+                  Upload
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button variant="contained" component={Link} to="/">
+                  Login
+                </Button>
+              </>
+            )}
+          </Box>
         </Toolbar>
       </Container>
     </AppBar>
   );
 };
-
-Header.propTypes = {navUnLogged: PropTypes.array, navLogged: PropTypes.array};
 
 export default Header;

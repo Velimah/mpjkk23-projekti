@@ -15,8 +15,11 @@ const themeOptions = {
     black: {
       main: '#232020',
     },
+    blackMedium: {
+      main: 'rgba(35, 32, 32, 0.6)',
+    },
     white: {
-      main: '#ACCC7F',
+      main: '#FDF7F4',
     },
   },
   typography: {
@@ -32,11 +35,11 @@ const themeOptions = {
     },
     body1: {
       fontFamily: 'Nunito',
-      fontSize: '16px',
+      fontSize: '1rem',
     },
     body2: {
       fontFamily: 'Nunito',
-      fontSize: '16px',
+      fontSize: '1rem',
     },
   },
   components: {
@@ -44,9 +47,14 @@ const themeOptions = {
       styleOverrides: {
         root: {
           fontFamily: 'Nunito',
-          borderRadius: 20,
-          paddingTop: 10,
-          paddingBottom: 10,
+          borderRadius: 25,
+        },
+      },
+    },
+    MuiBottomNavigation: {
+      styleOverrides: {
+        root: {
+          backgroundColor: '#FDF7F4',
         },
       },
     },
