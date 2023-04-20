@@ -58,34 +58,26 @@ const RegisterForm = ({toggle}) => {
         <TextValidator
           fullWidth
           margin="dense"
+          name="full_name"
+          placeholder="Name"
+          label="Name"
+          onChange={handleInputChange}
+          value={inputs.full_name}
+          validators={registerValidators.fullName}
+          errorMessages={registerErrorMessages.fullName}
+          sx={{mb: 3}}
+        />
+        <TextValidator
+          fullWidth
+          margin="dense"
           name="username"
           placeholder="Username"
+          label="Username"
           onChange={handleInputChange}
           value={inputs.username}
           validators={registerValidators.username}
           errorMessages={registerErrorMessages.username}
-        />
-        <TextValidator
-          fullWidth
-          margin="dense"
-          name="password"
-          type="password"
-          placeholder="Password"
-          onChange={handleInputChange}
-          value={inputs.password}
-          validators={registerValidators.password}
-          errorMessages={registerErrorMessages.password}
-        />
-        <TextValidator
-          fullWidth
-          margin="dense"
-          name="confirm"
-          type="password"
-          placeholder="Confirm password"
-          onChange={handleInputChange}
-          value={inputs.confirm}
-          validators={registerValidators.confirmPassword}
-          errorMessages={registerErrorMessages.confirmPassword}
+          sx={{mb: 3}}
         />
         <TextValidator
           fullWidth
@@ -93,22 +85,40 @@ const RegisterForm = ({toggle}) => {
           name="email"
           type="email"
           placeholder="Email"
+          label="Email"
           onChange={handleInputChange}
           value={inputs.email}
           validators={registerValidators.email}
           errorMessages={registerErrorMessages.email}
+          sx={{mb: 3}}
         />
         <TextValidator
           fullWidth
           margin="dense"
-          name="full_name"
-          placeholder="Full name"
+          name="password"
+          type="password"
+          placeholder="Password"
+          label="Password"
           onChange={handleInputChange}
-          value={inputs.full_name}
-          validators={registerValidators.fullName}
-          errorMessages={registerErrorMessages.fullName}
+          value={inputs.password}
+          validators={registerValidators.password}
+          errorMessages={registerErrorMessages.password}
+          sx={{mb: 3}}
         />
-        <Button fullWidth variant="contained" sx={{mt: 1, mb: 1}} type="submit">
+        <TextValidator
+          fullWidth
+          margin="dense"
+          name="confirm"
+          type="password"
+          placeholder="Confirm password"
+          label="Confirm password"
+          onChange={handleInputChange}
+          value={inputs.confirm}
+          validators={registerValidators.confirmPassword}
+          errorMessages={registerErrorMessages.confirmPassword}
+          sx={{mb: 3}}
+        />
+        <Button fullWidth variant="contained" sx={{mt: 1}} type="submit">
           Register
         </Button>
       </ValidatorForm>

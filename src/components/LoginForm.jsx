@@ -42,10 +42,12 @@ const LoginForm = () => {
           margin="dense"
           name="username"
           placeholder="Username"
+          label="Username"
           onChange={handleInputChange}
           value={inputs.username}
           validators={loginValidators.username}
           errorMessages={loginErrorMessages.username}
+          sx={{mb: 3}}
         />
         <TextValidator
           fullWidth
@@ -53,12 +55,14 @@ const LoginForm = () => {
           name="password"
           type="password"
           placeholder="Password"
+          label="Password"
           onChange={handleInputChange}
           value={inputs.password}
           validators={loginValidators.password}
           errorMessages={loginErrorMessages.password}
+          sx={{mb: 3}}
         />
-        <Button fullWidth sx={{mt: 1, mb: 1}} variant="contained" type="submit">
+        <Button fullWidth variant="contained" type="submit" sx={{mt: 1}}>
           Login
         </Button>
       </ValidatorForm>
