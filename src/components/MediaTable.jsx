@@ -1,8 +1,9 @@
-import {Button, ImageList} from '@mui/material';
+import {Button, IconButton, ImageList} from '@mui/material';
 import {useMedia} from '../hooks/ApiHooks';
 import MediaRow from './MediaRow';
 import PropTypes from 'prop-types';
 import {useState} from 'react';
+import WindowIcon from '@mui/icons-material/Window';
 
 const MediaTable = ({myFilesOnly = false}) => {
   const {mediaArray, deleteMedia} = useMedia(myFilesOnly);
