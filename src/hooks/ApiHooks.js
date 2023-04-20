@@ -274,7 +274,7 @@ const useRating = () => {
     return await doFetch(baseUrl + 'ratings/file/' + id, fetchOptions);
   };
 
-  const getRatingById = async (id) => {
+  const getRatingsById = async (id) => {
     const fetchOptions = {
       method: 'GET',
     };
@@ -291,7 +291,7 @@ const useRating = () => {
     return await doFetch(baseUrl + 'ratings', fetchOptions);
   };
 
-  return {postRating, deleteRating, getRatingById, getAllRatings};
+  return {postRating, deleteRating, getRatingsById, getAllRatings};
 };
 
 export {
