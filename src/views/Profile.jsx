@@ -8,21 +8,18 @@ import {useNavigate} from 'react-router-dom';
 
 const Profile = () => {
   const {user} = useContext(MediaContext);
+  const {getTag} = useTag();
+  const navigate = useNavigate();
 
   const [profilePic, setProfilePic] = useState({
     filename: 'https://placekitten.com/200/200',
   });
-
   const [backgroundPic, setBackgroundPic] = useState({
     filename: 'https://placekitten.com/800/300',
   });
-
   const [profileDescription, setprofileDescription] = useState(
     'No profile text yet!'
   );
-
-  const {getTag} = useTag();
-  const navigate = useNavigate();
 
   const fetchProfilePicture = async () => {
     try {

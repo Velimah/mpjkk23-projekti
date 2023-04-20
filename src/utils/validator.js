@@ -14,6 +14,10 @@ const updateUserValidators = {
   fullName: ['isEmptyOrMin2', 'matchRegexp:^(.{2,})?$'],
 };
 
+const updateProfilePictureValidators = {
+  description: ['isEmptyOrMin2', 'maxStringLength: 500'],
+};
+
 const loginValidators = {
   username: ['required'],
   password: ['required'],
@@ -34,4 +38,5 @@ export {
   loginValidators,
   uploadValidators,
   commentValidators,
+  updateProfilePictureValidators,
 };

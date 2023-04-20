@@ -22,17 +22,14 @@ import {formatTime, formatSize} from '../hooks/UnitHooks';
 
 const Single = () => {
   const [owner, setOwner] = useState({username: ''});
-
   const [likes, setLikes] = useState(0);
   const [userLike, setUserLike] = useState(false);
-
-  const {user} = useContext(MediaContext);
-
   const [commentArray, setCommentArray] = useState([]);
   const [commentCount, setCommentCount] = useState(0);
   const [mediaInfo, setMediaInfo] = useState({});
   const [refreshData, setRefreshData] = useState(false);
 
+  const {user} = useContext(MediaContext);
   const {getMediaById} = useMedia();
   const {getUser} = useUser();
   const {getFavourites, postFavourite, deleteFavourite} = useFavourite();
@@ -87,6 +84,15 @@ const Single = () => {
     }
   };
 
+  const fetchMediaInfo = async () => {
+    try {
+      const mediaInfo = await getMediaById(data.file_id);
+      setMediaInfo(mediaInfo);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   const fetchLikes = async () => {
     try {
       const likeInfo = await getFavourites(file.file_id);
@@ -96,29 +102,6 @@ const Single = () => {
           setUserLike(true);
         }
       });
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
-
-  const doLike = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      const data = {file_id: file.file_id};
-      const likeInfo = await postFavourite(data, token);
-      console.log(likeInfo);
-      setUserLike(true);
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
-
-  const deleteLike = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      const likeInfo = await deleteFavourite(file.file_id, token);
-      console.log(likeInfo);
-      setUserLike(false);
     } catch (error) {
       console.log(error.message);
     }
@@ -134,6 +117,44 @@ const Single = () => {
     }
   };
 
+  useEffect(() => {
+    fetchUser();
+    fetchMediaInfo();
+    fetchLikes();
+    fetchComments();
+  }, []);
+
+  const doLike = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const data = {file_id: file.file_id};
+      const likeInfo = await postFavourite(data, token);
+      console.log(likeInfo);
+      setUserLike(true);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchLikes();
+  }, [userLike]);
+
+  const deleteLike = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const likeInfo = await deleteFavourite(file.file_id, token);
+      console.log(likeInfo);
+      setUserLike(false);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchComments();
+  }, [refreshData]);
+
   const doComment = async () => {
     try {
       const token = localStorage.getItem('token');
@@ -146,21 +167,6 @@ const Single = () => {
     }
   };
 
-  useEffect(() => {
-    fetchComments();
-  }, [refreshData]);
-
-  useEffect(() => {
-    fetchUser();
-    fetchLikes();
-    fetchComments();
-    getMediaInfo();
-  }, []);
-
-  useEffect(() => {
-    fetchLikes();
-  }, [userLike]);
-
   const initValues = {
     comment: '',
   };
@@ -169,16 +175,6 @@ const Single = () => {
     doComment,
     initValues
   );
-
-  const getMediaInfo = async () => {
-    try {
-      const mediaInfo = await getMediaById(data.file_id);
-      console.log('mediainfo', mediaInfo);
-      setMediaInfo(mediaInfo);
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
 
   return (
     <>

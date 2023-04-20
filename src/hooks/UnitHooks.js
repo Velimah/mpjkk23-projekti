@@ -1,5 +1,4 @@
-const formatTime = (mediaInfo) => {
-  const timestamp = mediaInfo;
+const formatTime = (timestamp) => {
   const date = new Date(timestamp);
   const milliseconds = date.getTime();
 

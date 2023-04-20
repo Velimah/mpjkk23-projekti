@@ -18,6 +18,10 @@ const updateUserErrorMessages = {
   fullName: ['minimum 2 characters', 'incorrect symbols'],
 };
 
+const updateProfilePictureErrorMessages = {
+  comment: ['minimum 2 characters', 'maximum 500 characters'],
+};
+
 const loginErrorMessages = {
   username: ['this field is required', 'minimum 3 characters'],
   password: ['this field is required', 'minimum 5 characters'],
@@ -42,4 +46,5 @@ export {
   loginErrorMessages,
   uploadErrorMessages,
   commentErrorMessages,
+  updateProfilePictureErrorMessages,
 };

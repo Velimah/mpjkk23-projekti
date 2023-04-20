@@ -5,6 +5,8 @@ import {useMedia, useTag} from '../hooks/ApiHooks';
 import {appId, mediaUrl} from '../utils/variables';
 import {ValidatorForm, TextValidator} from 'react-material-ui-form-validator';
 import {MediaContext} from '../contexts/MediaContext';
+import {updateProfilePictureValidators} from '../utils/validator';
+import {updateProfilePictureErrorMessages} from '../utils/errorMessages';
 
 const UploadProfilePicture = () => {
   const {user} = useContext(MediaContext);
@@ -82,6 +84,12 @@ const UploadProfilePicture = () => {
     initValues
   );
 
+  useEffect(() => {
+    ValidatorForm.addValidationRule('isEmptyOrMin2', (value) => {
+      return value === '' || value.length >= 2;
+    });
+  }, [inputs]);
+
   return (
     <Box sx={{maxWidth: 'md', margin: 'auto'}}>
       <Grid container direction={'column'} justifyContent="center" sx={{mt: 2}}>
@@ -114,8 +122,8 @@ const UploadProfilePicture = () => {
               placeholder="description text"
               onChange={handleInputChange}
               value={inputs.description}
-              // validators={updateUserValidators.fullName}
-              // errorMessages={updateUserErrorMessages.fullName}
+              validators={updateProfilePictureValidators.description}
+              errorMessages={updateProfilePictureErrorMessages.description}
             />
             <Button variant="contained" fullWidth type="submit">
               Update Profile Picture and Description
