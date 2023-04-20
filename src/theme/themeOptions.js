@@ -42,6 +42,18 @@ const themeOptions = {
         },
       },
     },
+    MuiIconButton: {
+      styleOverrides: {
+        root: {
+          color: '#7047A6',
+          borderRadius: 0,
+          width: '150px',
+          '&.active': {
+            borderBottom: '2px solid #7047A6',
+          },
+        },
+      },
+    },
   },
 };
 

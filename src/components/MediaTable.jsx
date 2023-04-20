@@ -1,9 +1,11 @@
-import {Button, IconButton, ImageList} from '@mui/material';
+import {Button, IconButton, ImageList, Grid} from '@mui/material';
 import {useMedia} from '../hooks/ApiHooks';
 import MediaRow from './MediaRow';
 import PropTypes from 'prop-types';
 import {useState} from 'react';
 import WindowIcon from '@mui/icons-material/Window';
+import MenuIcon from '@mui/icons-material/Menu';
+import { NavLink } from 'react-router-dom';
 
 const MediaTable = ({myFilesOnly = false}) => {
   const {mediaArray, deleteMedia} = useMedia(myFilesOnly);
@@ -19,20 +21,40 @@ const MediaTable = ({myFilesOnly = false}) => {
 
   return (
     <>
-      {style === true ? (
-        <Button variant="contained" onClick={changeToGrid}>
-          Grid
-        </Button>
-      ) : (
-        <Button onClick={changeToGrid}>Grid</Button>
-      )}
-      {style === false ? (
-        <Button variant="contained" onClick={changeToList}>
-          List
-        </Button>
-      ) : (
-        <Button onClick={changeToList}>List</Button>
-      )}
+      <Grid
+        container
+        direction="row"
+        justifyContent="flex-start"
+        alignItems="stretch"
+      >
+        {style === true ? (
+          <IconButton
+            aria-label="window"
+            onClick={changeToGrid}
+            component={NavLink}
+          >
+            <WindowIcon />
+          </IconButton>
+        ) : (
+          <IconButton onClick={changeToGrid}>
+            <WindowIcon />
+          </IconButton>
+        )}
+        {style === false ? (
+          <IconButton
+            aria-label="list"
+            onClick={changeToList}
+            component={NavLink}
+          >
+            <MenuIcon />
+          </IconButton>
+        ) : (
+          <IconButton onClick={changeToList}>
+            <MenuIcon />
+          </IconButton>
+        )}
+      </Grid>
+
       <ImageList
         sx={{
           gridTemplateColumns: style

@@ -3,6 +3,7 @@ import {
   ButtonGroup,
   ImageListItem,
   ImageListItemBar,
+  Box,
 } from '@mui/material';
 import PropTypes from 'prop-types';
 import {Link} from 'react-router-dom';
@@ -26,66 +27,16 @@ const MediaRow = ({file, deleteMedia}) => {
 
   return (
     <ImageListItem>
-      <img
-        src={
-          file.media_type !== 'audio'
-            ? mediaUrl + file.thumbnails.w640
-            : '/vite.svg'
-        }
-        alt={file.title}
-      />
-      <ImageListItemBar
-        title={file.title}
-        subtitle={description.desc}
-        sx={{
-          '& .MuiImageListItemBar-title': {color: 'White', typography: 'h6'},
-          '& .MuiImageListItemBar-subtitle': {
-            color: 'White',
-            typography: 'body2',
-          },
-        }}
-        actionIcon={
-          <ButtonGroup>
-            <Button
-              sx={{p: 1, m: 1}}
-              component={Link}
-              variant="contained"
-              to="/single"
-              state={{file}}
-            >
-              View
-            </Button>
-            {file.user_id === user.user_id && (
-              <>
-                <Button
-                  sx={{p: 1, m: 1}}
-                  component={Link}
-                  variant="contained"
-                  to="/modify"
-                  state={{file}}
-                >
-                  Modify
-                </Button>
-                <Button
-                  sx={{
-                    p: 1,
-                    m: 1,
-                    backgroundColor: 'red',
-                    '&:hover': {
-                      backgroundColor: '#C41E3A !important',
-                    },
-                  }}
-                  component={Link}
-                  variant="contained"
-                  onClick={doDelete}
-                >
-                  Delete
-                </Button>
-              </>
-            )}
-          </ButtonGroup>
-        }
-      />
+      <Box component={Link} variant="contained" to="/single" state={{file}}>
+        <img
+          src={
+            file.media_type !== 'audio'
+              ? mediaUrl + file.thumbnails.w640
+              : '/vite.svg'
+          }
+          alt={file.title}
+        />
+      </Box>
     </ImageListItem>
   );
 };
