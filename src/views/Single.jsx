@@ -7,9 +7,10 @@ import {
   Button,
   CardContent,
   Rating,
+  Avatar,
 } from '@mui/material';
 import {useLocation} from 'react-router-dom';
-import {mediaUrl} from '../utils/variables';
+import {mediaUrl, appId} from '../utils/variables';
 import {useNavigate} from 'react-router-dom';
 import {
   useFavourite,
@@ -17,6 +18,7 @@ import {
   useComment,
   useMedia,
   useRating,
+  useTag,
 } from '../hooks/ApiHooks';
 import {useContext, useEffect, useState} from 'react';
 import {MediaContext} from '../contexts/MediaContext';
@@ -28,24 +30,30 @@ import {commentValidators} from '../utils/validator';
 import {formatTime, formatSize} from '../hooks/UnitHooks';
 
 const Single = () => {
+  const {user} = useContext(MediaContext);
+
   const [owner, setOwner] = useState({username: ''});
   const [likes, setLikes] = useState(0);
   const [rating, setRating] = useState(0);
-  const [commentArray, setCommentArray] = useState([]);
   const [commentCount, setCommentCount] = useState(0);
   const [ratingCount, setRatingCount] = useState(0);
+  const [commentArray, setCommentArray] = useState([]);
   const [mediaInfo, setMediaInfo] = useState({});
 
   const [refreshLikes, setRefreshLikes] = useState(false);
   const [refreshComments, setRefreshComments] = useState(false);
   const [refreshRating, setRefreshRating] = useState(false);
 
-  const {user} = useContext(MediaContext);
+  const [profilePic, setProfilePic] = useState({
+    filename: 'https://placekitten.com/200/200',
+  });
+
   const {getMediaById} = useMedia();
   const {getUser} = useUser();
   const {getFavourites, postFavourite, deleteFavourite} = useFavourite();
   const {postComment, getCommentsById} = useComment();
   const {postRating, deleteRating, getRatingsById} = useRating();
+  const {getTag} = useTag();
 
   const navigate = useNavigate();
   const {state} = useLocation();
@@ -96,6 +104,19 @@ const Single = () => {
     }
   };
 
+  const fetchProfilePicture = async () => {
+    try {
+      const profilePictures = await getTag(
+        appId + '_profilepicture_' + data.user_id
+      );
+      const profilePicture = profilePictures.pop();
+      profilePicture.filename = mediaUrl + profilePicture.filename;
+      setProfilePic(profilePicture);
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+
   const fetchMediaInfo = async () => {
     try {
       const mediaInfo = await getMediaById(data.file_id);
@@ -131,6 +152,7 @@ const Single = () => {
 
   useEffect(() => {
     fetchUser();
+    fetchProfilePicture();
     fetchMediaInfo();
     fetchLikes();
     fetchComments();
@@ -215,7 +237,6 @@ const Single = () => {
   const fetchRatings = async () => {
     try {
       const ratingInfo = await getRatingsById(file.file_id);
-      console.log(ratingInfo);
       let sum = 0;
       setRatingCount(ratingInfo.length);
 
@@ -240,8 +261,15 @@ const Single = () => {
     <>
       <Box sx={{maxWidth: 'lg', margin: 'auto', my: 6}}>
         <Card>
+          <Avatar
+            src={profilePic.filename}
+            sx={{width: 200, height: 200, borderRadius: '100%'}}
+          />
+          <Typography component="h2" variant="h2" sx={{p: 2}}>
+            Username: {owner.username}
+          </Typography>
           <Typography component="h1" variant="h2" sx={{p: 2}}>
-            {file.title}
+            Title: {file.title}
           </Typography>
           <CardMedia
             controls={true}
@@ -266,15 +294,12 @@ const Single = () => {
               Time added: {formatTime(mediaInfo.time_added)}
             </Typography>
             <Typography component="h2" variant="h6" sx={{p: 2}}>
-              filesize: {formatSize(mediaInfo.filesize)} Mediatype:{' '}
-              {mediaInfo.media_type} mimetype: {mediaInfo.mime_type}
-            </Typography>
-            <Typography component="h2" variant="h6" sx={{p: 2}}>
-              User: {owner.username}
+              Filesize: {formatSize(mediaInfo.filesize)} Mediatype:
+              {mediaInfo.media_type} Mimetype: {mediaInfo.mime_type}
             </Typography>
 
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
+            <Grid container>
+              <Grid item xs={3} sx={{p: 2}}>
                 <Typography component="h2" variant="h6">
                   Likes: {likes}
                 </Typography>
@@ -283,11 +308,8 @@ const Single = () => {
                   variant="contained"
                   sx={
                     refreshLikes
-                      ? {
-                          mt: 1,
-                        }
+                      ? {}
                       : {
-                          mt: 1,
                           backgroundColor: 'grey',
                           '&:hover': {
                             backgroundColor: 'grey !important',
@@ -298,7 +320,7 @@ const Single = () => {
                   {refreshLikes ? 'Liked' : 'Like'}
                 </Button>
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={3} sx={{p: 2}}>
                 {refreshRating ? (
                   <Box sx={{mt: 1}}>
                     <Rating
@@ -322,7 +344,7 @@ const Single = () => {
                       defaultValue={rating}
                       name="simple-controlled"
                       value={rating}
-                      precision={0.1}
+                      precision={1}
                       onChange={(event, newValue) => {
                         doRating(newValue);
                       }}
