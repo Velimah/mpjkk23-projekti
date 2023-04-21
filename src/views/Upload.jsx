@@ -1,4 +1,13 @@
-import {Box, Button, Grid, Slider, Typography} from '@mui/material';
+import {
+  Autocomplete,
+  Box,
+  Button,
+  Chip,
+  Grid,
+  Slider,
+  TextField,
+  Typography,
+} from '@mui/material';
 import useForm from '../hooks/FormHooks';
 import {useEffect, useState} from 'react';
 import {useMedia, useTag} from '../hooks/ApiHooks';
@@ -10,13 +19,13 @@ import {uploadValidators} from '../utils/validator';
 
 const Upload = () => {
   const [file, setFile] = useState(null);
+  const [tags, setTags] = useState(null);
   const [selectedImage, setSelectedImage] = useState(
     'https://placehold.co/300x300?text=Choose-media'
   );
   const {postMedia} = useMedia();
   const {postTag} = useTag();
   const navigate = useNavigate();
-
   const initValues = {
     title: '',
     description: '',
@@ -41,14 +50,17 @@ const Upload = () => {
       data.append('file', file);
       const token = localStorage.getItem('token');
       const uploadResult = await postMedia(data, token);
-      const tagResult = await postTag(
-        {
-          file_id: uploadResult.file_id,
-          tag: appId,
-        },
-        token
-      );
-      console.log(tagResult);
+
+      const tagsTmp = [
+        {file_id: uploadResult.file_id, tag: appId},
+        {file_id: uploadResult.file_id, tag: 'kisuli'},
+      ];
+
+      for (const tag of tagsTmp) {
+        const tagResult = await postTag(tag, token);
+        console.log(tagResult);
+      }
+
       navigate('/home');
     } catch (error) {
       alert(error.message);
@@ -140,6 +152,36 @@ const Upload = () => {
                 type="file"
                 name="file"
                 accept="image/*, video/*, audio/*"
+              />{' '}
+              <Autocomplete
+                multiple
+                id="tags-filled"
+                options={[]}
+                defaultValue={[]}
+                disabled={tags.length >= 5 && true}
+                freeSolo
+                onChange={(e, value) => setTags((state) => value)}
+                renderTags={(value, getTagProps) =>
+                  value.map((option, index) => {
+                    return (
+                      <Chip
+                        key={index}
+                        variant="outlined"
+                        label={option}
+                        {...getTagProps({index})}
+                      />
+                    );
+                  })
+                }
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Keywords"
+                    placeholder="Add a keyword by pressing enter after writing"
+                    helperText="Add up to 5 keywords, for example your cat's breed."
+                    disabled={tags.length >= 5 && true}
+                  />
+                )}
               />
               <Button variant="contained" fullWidth type="submit">
                 Upload
