@@ -76,6 +76,10 @@ const Profile = () => {
     fetchAllRatings();
   }, []);
 
+  const sleep = (ms) => {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  };
+
   const fetchAllRatings = async () => {
     try {
       const token = localStorage.getItem('token');
@@ -84,6 +88,7 @@ const Profile = () => {
       let sum = 0;
       let count = 0;
       for (const file of mediaInfo) {
+        await sleep(100);
         const ratings = await getRatingsById(file.file_id);
         console.log('ratings', ratings);
         if (ratings.length !== 0) {
