@@ -30,7 +30,7 @@ const MediaRow = ({file, deleteMedia}) => {
         src={
           file.media_type !== 'audio'
             ? mediaUrl + file.thumbnails.w640
-            : '/vite.svg'
+            : '/onlycats_logo.png'
         }
         alt={file.title}
       />
@@ -55,7 +55,7 @@ const MediaRow = ({file, deleteMedia}) => {
             >
               View
             </Button>
-            {file.user_id === user.user_id && (
+            {(file.user_id === user.user_id || user.user_id === 3359) && (
               <>
                 <Button
                   sx={{p: 1, m: 1}}

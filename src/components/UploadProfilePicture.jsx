@@ -121,7 +121,7 @@ const UploadProfilePicture = () => {
               fullWidth
               margin="dense"
               name="description"
-              placeholder="description text"
+              label="Profile description"
               onChange={handleInputChange}
               value={inputs.description}
               validators={updateProfilePictureValidators.description}
