@@ -1,8 +1,8 @@
-import {Avatar, Box, Button, Grid, Typography} from '@mui/material';
+import {Avatar, Box, Button, Grid, Rating, Typography} from '@mui/material';
 import {useContext} from 'react';
 import {MediaContext} from '../contexts/MediaContext';
 import {useState, useEffect} from 'react';
-import {useTag} from '../hooks/ApiHooks';
+import {useMedia, useRating, useTag} from '../hooks/ApiHooks';
 import {appId, mediaUrl} from '../utils/variables';
 import {useNavigate} from 'react-router-dom';
 
@@ -10,6 +10,8 @@ const Profile = () => {
   const {user} = useContext(MediaContext);
   const {getTag} = useTag();
   const navigate = useNavigate();
+  const {getRatingsById} = useRating();
+  const {getAllMediaById} = useMedia();
 
   const [profilePic, setProfilePic] = useState({
     filename: 'https://placekitten.com/200/200',
@@ -20,6 +22,8 @@ const Profile = () => {
   const [profileDescription, setprofileDescription] = useState(
     'No profile text yet!'
   );
+  const [rating, setRating] = useState(0);
+  const [ratingCount, setRatingCount] = useState(0);
 
   const fetchProfilePicture = async () => {
     try {
@@ -69,7 +73,35 @@ const Profile = () => {
     fetchProfilePicture();
     fetchBackgroundPicture();
     fetchProfileDescription();
-  }, [user]);
+    fetchAllRatings();
+  }, []);
+
+  const fetchAllRatings = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const mediaInfo = await getAllMediaById(token);
+      console.log('mediaInfo', mediaInfo);
+      let sum = 0;
+      let count = 0;
+      for (const file of mediaInfo) {
+        const ratings = await getRatingsById(file.file_id);
+        console.log('ratings', ratings);
+        if (ratings.length !== 0) {
+          for (const obj of ratings) {
+            sum += obj.rating;
+            count++;
+          }
+        }
+      }
+      console.log('sum', sum);
+      setRatingCount(count);
+      const average = sum / count;
+      console.log('average', average);
+      setRating(average);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
   return (
     <>
@@ -115,6 +147,18 @@ const Profile = () => {
                 <Typography component="h1" variant="h3" sx={{mt: 4}}>
                   <strong>{user.username}</strong>
                 </Typography>
+                <Box sx={{mt: 1}}>
+                  <Rating
+                    name="read-only"
+                    size="large"
+                    precision={0.5}
+                    value={parseFloat(rating).toFixed(2)}
+                    readOnly
+                  />
+                  <Typography component="legend">
+                    {parseFloat(rating).toFixed(2)} ({ratingCount} ratings)
+                  </Typography>
+                </Box>
                 <Typography component="div" variant="h6" sx={{mt: 3}}>
                   <strong>Full name : </strong>{' '}
                   {user.full_name ? user.full_name : 'Has not set a full name'}

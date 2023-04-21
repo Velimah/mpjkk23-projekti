@@ -30,7 +30,7 @@ const MediaRow = ({file, deleteMedia}) => {
         src={
           file.media_type !== 'audio'
             ? mediaUrl + file.thumbnails.w640
-            : '/vite.svg'
+            : '/onlycats_logo.png'
         }
         alt={file.title}
       />
