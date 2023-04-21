@@ -333,7 +333,7 @@ const Single = () => {
                     />
                     <Typography component="legend">Rated already!</Typography>
                     <Typography component="legend">
-                      {parseFloat(rating.toFixed(2))} ({parseFloat(rating)}{' '}
+                      {parseFloat(rating.toFixed(2))} ({parseFloat(ratingCount)}{' '}
                       ratings)
                     </Typography>
                     <Button onClick={doDeleteRating} variant="contained">

@@ -73,9 +73,9 @@ const Profile = () => {
     fetchProfilePicture();
     fetchBackgroundPicture();
     fetchProfileDescription();
-    fetchAllRatings();
+    // fetchAllRatings();
   }, []);
-
+  /*
   const fetchAllRatings = async () => {
     try {
       const token = localStorage.getItem('token');
@@ -102,7 +102,7 @@ const Profile = () => {
       console.log(error.message);
     }
   };
-
+*/
   return (
     <>
       {user && (
