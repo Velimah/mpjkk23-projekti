@@ -240,9 +240,9 @@ const Single = () => {
       let sum = 0;
       setRatingCount(ratingInfo.length);
 
-      ratingInfo.forEach((rating) => {
-        sum += parseInt(rating.rating);
-        if (rating.user_id === user.user_id) {
+      ratingInfo.forEach((file) => {
+        sum += file.rating;
+        if (file.user_id === user.user_id) {
           setRefreshRating(true);
         }
       });
@@ -348,7 +348,6 @@ const Single = () => {
                       value={rating}
                       precision={1}
                       onChange={(event, newValue) => {
-                        console.log('value', newValue);
                         doRating(newValue);
                       }}
                     />

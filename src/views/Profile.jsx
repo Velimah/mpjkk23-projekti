@@ -22,7 +22,7 @@ const Profile = () => {
   const [profileDescription, setprofileDescription] = useState(
     'No profile text yet!'
   );
-  const [averageRating, setAverageRating] = useState(0);
+  const [rating, setRating] = useState(0);
   const [ratingCount, setRatingCount] = useState(0);
 
   const fetchProfilePicture = async () => {
@@ -74,25 +74,30 @@ const Profile = () => {
     fetchBackgroundPicture();
     fetchProfileDescription();
     fetchAllRatings();
-  }, [user]);
+  }, []);
 
   const fetchAllRatings = async () => {
     try {
       const token = localStorage.getItem('token');
       const mediaInfo = await getAllMediaById(token);
+      console.log('mediaInfo', mediaInfo);
       let sum = 0;
       let count = 0;
       for (const file of mediaInfo) {
         const ratings = await getRatingsById(file.file_id);
+        console.log('ratings', ratings);
         if (ratings.length !== 0) {
-          for (const rating of ratings) {
-            sum += parseInt(rating.rating);
+          for (const obj of ratings) {
+            sum += obj.rating;
             count++;
           }
         }
       }
+      console.log('sum', sum);
       setRatingCount(count);
-      setAverageRating((sum / count).toFixed(2));
+      const average = sum / count;
+      console.log('average', average);
+      setRating(average);
     } catch (error) {
       console.log(error.message);
     }
@@ -147,11 +152,11 @@ const Profile = () => {
                     name="read-only"
                     size="large"
                     precision={0.5}
-                    value={averageRating}
+                    value={rating.toFixed(2)}
                     readOnly
                   />
                   <Typography component="legend">
-                    {averageRating} ({ratingCount} ratings)
+                    {rating} ({ratingCount} ratings)
                   </Typography>
                 </Box>
                 <Typography component="div" variant="h6" sx={{mt: 3}}>

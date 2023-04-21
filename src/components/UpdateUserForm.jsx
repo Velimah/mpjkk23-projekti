@@ -121,7 +121,7 @@ const UpdateUserForm = () => {
             fullWidth
             margin="dense"
             name="full_name"
-            label="Full name"
+            label="Name"
             onChange={handleInputChange}
             value={inputs.full_name}
             validators={updateUserValidators.fullName}

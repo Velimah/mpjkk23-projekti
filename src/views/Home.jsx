@@ -17,7 +17,7 @@ const Home = () => {
         alignItems="center"
         sx={{py: '80px', backgroundColor: '#E3A7B6'}}
       >
-        <Grid item xs={4}>
+        <Grid item xs={5}>
           <Box sx={{maxWidth: '500px'}}>
             <img
               src={'/src/assets/onlycats_illustration1.png'}
