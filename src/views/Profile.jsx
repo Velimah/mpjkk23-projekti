@@ -152,11 +152,11 @@ const Profile = () => {
                     name="read-only"
                     size="large"
                     precision={0.5}
-                    value={rating.toFixed(2)}
+                    value={parseFloat(rating).toFixed(2)}
                     readOnly
                   />
                   <Typography component="legend">
-                    {rating} ({ratingCount} ratings)
+                    {parseFloat(rating).toFixed(2)} ({ratingCount} ratings)
                   </Typography>
                 </Box>
                 <Typography component="div" variant="h6" sx={{mt: 3}}>

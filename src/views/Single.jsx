@@ -327,13 +327,14 @@ const Single = () => {
                       name="read-only"
                       size="large"
                       precision={0.2}
-                      defaultValue={rating}
-                      value={rating}
+                      defaultValue={parseFloat(rating.toFixed(2))}
+                      value={parseFloat(rating.toFixed(2))}
                       readOnly
                     />
                     <Typography component="legend">Rated already!</Typography>
                     <Typography component="legend">
-                      {rating} ({ratingCount} ratings)
+                      {parseFloat(rating.toFixed(2))} ({parseFloat(rating)}{' '}
+                      ratings)
                     </Typography>
                     <Button onClick={doDeleteRating} variant="contained">
                       delete rating
@@ -342,10 +343,10 @@ const Single = () => {
                 ) : (
                   <Box sx={{mt: 1}}>
                     <Rating
-                      defaultValue={rating}
+                      defaultValue={parseFloat(rating.toFixed(2))}
                       name="simple-controlled"
                       size="large"
-                      value={rating}
+                      value={parseFloat(rating.toFixed(2))}
                       precision={1}
                       onChange={(event, newValue) => {
                         doRating(newValue);
