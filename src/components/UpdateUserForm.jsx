@@ -78,7 +78,7 @@ const UpdateUserForm = () => {
             fullWidth
             margin="dense"
             name="username"
-            placeholder="Username"
+            label="Username"
             onChange={handleInputChange}
             value={inputs.username}
             validators={updateUserValidators.username}
@@ -89,7 +89,7 @@ const UpdateUserForm = () => {
             margin="dense"
             name="password"
             type="password"
-            placeholder="Password"
+            label="Password"
             onChange={handleInputChange}
             value={inputs.password}
             validators={updateUserValidators.password}
@@ -100,7 +100,7 @@ const UpdateUserForm = () => {
             margin="dense"
             name="confirm"
             type="password"
-            placeholder="Confirm password"
+            label="Confirm password"
             onChange={handleInputChange}
             value={inputs.confirm}
             validators={updateUserValidators.confirmPassword}
@@ -111,7 +111,7 @@ const UpdateUserForm = () => {
             margin="dense"
             name="email"
             type="email"
-            placeholder="Email"
+            label="Email"
             onChange={handleInputChange}
             value={inputs.email}
             validators={updateUserValidators.email}
@@ -121,7 +121,7 @@ const UpdateUserForm = () => {
             fullWidth
             margin="dense"
             name="full_name"
-            placeholder="Full name"
+            label="Name"
             onChange={handleInputChange}
             value={inputs.full_name}
             validators={updateUserValidators.fullName}

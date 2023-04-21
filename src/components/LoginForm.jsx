@@ -41,7 +41,7 @@ const LoginForm = () => {
           fullWidth
           margin="dense"
           name="username"
-          placeholder="Username"
+          label="Username"
           onChange={handleInputChange}
           value={inputs.username}
           validators={loginValidators.username}
@@ -52,7 +52,7 @@ const LoginForm = () => {
           margin="dense"
           name="password"
           type="password"
-          placeholder="Password"
+          label="Password"
           onChange={handleInputChange}
           value={inputs.password}
           validators={loginValidators.password}

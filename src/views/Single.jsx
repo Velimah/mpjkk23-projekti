@@ -6,11 +6,20 @@ import {
   Grid,
   Button,
   CardContent,
+  Rating,
+  Avatar,
 } from '@mui/material';
 import {useLocation} from 'react-router-dom';
-import {mediaUrl} from '../utils/variables';
+import {mediaUrl, appId} from '../utils/variables';
 import {useNavigate} from 'react-router-dom';
-import {useFavourite, useUser, useComment, useMedia} from '../hooks/ApiHooks';
+import {
+  useFavourite,
+  useUser,
+  useComment,
+  useMedia,
+  useRating,
+  useTag,
+} from '../hooks/ApiHooks';
 import {useContext, useEffect, useState} from 'react';
 import {MediaContext} from '../contexts/MediaContext';
 import CommentRow from '../components/CommentRow';
@@ -21,19 +30,30 @@ import {commentValidators} from '../utils/validator';
 import {formatTime, formatSize} from '../hooks/UnitHooks';
 
 const Single = () => {
+  const {user} = useContext(MediaContext);
+
   const [owner, setOwner] = useState({username: ''});
   const [likes, setLikes] = useState(0);
-  const [userLike, setUserLike] = useState(false);
-  const [commentArray, setCommentArray] = useState([]);
+  const [rating, setRating] = useState(0);
   const [commentCount, setCommentCount] = useState(0);
+  const [ratingCount, setRatingCount] = useState(0);
+  const [commentArray, setCommentArray] = useState([]);
   const [mediaInfo, setMediaInfo] = useState({});
-  const [refreshData, setRefreshData] = useState(false);
 
-  const {user} = useContext(MediaContext);
+  const [refreshLikes, setRefreshLikes] = useState(false);
+  const [refreshComments, setRefreshComments] = useState(false);
+  const [refreshRating, setRefreshRating] = useState(false);
+
+  const [profilePic, setProfilePic] = useState({
+    filename: 'https://placekitten.com/200/200',
+  });
+
   const {getMediaById} = useMedia();
   const {getUser} = useUser();
   const {getFavourites, postFavourite, deleteFavourite} = useFavourite();
   const {postComment, getCommentsById} = useComment();
+  const {postRating, deleteRating, getRatingsById} = useRating();
+  const {getTag} = useTag();
 
   const navigate = useNavigate();
   const {state} = useLocation();
@@ -84,6 +104,19 @@ const Single = () => {
     }
   };
 
+  const fetchProfilePicture = async () => {
+    try {
+      const profilePictures = await getTag(
+        appId + '_profilepicture_' + data.user_id
+      );
+      const profilePicture = profilePictures.pop();
+      profilePicture.filename = mediaUrl + profilePicture.filename;
+      setProfilePic(profilePicture);
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+
   const fetchMediaInfo = async () => {
     try {
       const mediaInfo = await getMediaById(data.file_id);
@@ -99,7 +132,7 @@ const Single = () => {
       setLikes(likeInfo.length);
       likeInfo.forEach((like) => {
         if (like.user_id === user.user_id) {
-          setUserLike(true);
+          setRefreshLikes(true);
         }
       });
     } catch (error) {
@@ -119,9 +152,11 @@ const Single = () => {
 
   useEffect(() => {
     fetchUser();
+    fetchProfilePicture();
     fetchMediaInfo();
     fetchLikes();
     fetchComments();
+    fetchRatings();
   }, []);
 
   const doLike = async () => {
@@ -130,7 +165,7 @@ const Single = () => {
       const data = {file_id: file.file_id};
       const likeInfo = await postFavourite(data, token);
       console.log(likeInfo);
-      setUserLike(true);
+      setRefreshLikes(true);
     } catch (error) {
       console.log(error.message);
     }
@@ -138,22 +173,18 @@ const Single = () => {
 
   useEffect(() => {
     fetchLikes();
-  }, [userLike]);
+  }, [refreshLikes]);
 
   const deleteLike = async () => {
     try {
       const token = localStorage.getItem('token');
       const likeInfo = await deleteFavourite(file.file_id, token);
       console.log(likeInfo);
-      setUserLike(false);
+      setRefreshLikes(false);
     } catch (error) {
       console.log(error.message);
     }
   };
-
-  useEffect(() => {
-    fetchComments();
-  }, [refreshData]);
 
   const doComment = async () => {
     try {
@@ -161,11 +192,15 @@ const Single = () => {
       const data = {file_id: file.file_id, comment: inputs.comment};
       const commentInfo = await postComment(data, token);
       alert(commentInfo.message);
-      setRefreshData(!refreshData);
+      setRefreshComments(!refreshComments);
     } catch (error) {
       console.log(error.message);
     }
   };
+
+  useEffect(() => {
+    fetchComments();
+  }, [refreshComments]);
 
   const initValues = {
     comment: '',
@@ -176,12 +211,65 @@ const Single = () => {
     initValues
   );
 
+  const doRating = async (value) => {
+    try {
+      const token = localStorage.getItem('token');
+      const data = {file_id: file.file_id, rating: value};
+      const ratingInfo = await postRating(data, token);
+      console.log(ratingInfo);
+      setRefreshRating(!refreshRating);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const doDeleteRating = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const ratingInfo = await deleteRating(file.file_id, token);
+      console.log(ratingInfo);
+      setRefreshRating(!refreshRating);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const fetchRatings = async () => {
+    try {
+      const ratingInfo = await getRatingsById(file.file_id);
+      let sum = 0;
+      setRatingCount(ratingInfo.length);
+
+      ratingInfo.forEach((file) => {
+        sum += file.rating;
+        if (file.user_id === user.user_id) {
+          setRefreshRating(true);
+        }
+      });
+      const averageRating = sum / ratingInfo.length;
+      setRating(averageRating);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchRatings();
+  }, [refreshRating]);
+
   return (
     <>
-      <Box sx={{maxWidth: 'lg', margin: 'auto', my: 6}}>
+      <Box sx={{maxWidth: 'md', margin: 'auto', my: 6}}>
         <Card>
+          <Avatar
+            src={profilePic.filename}
+            sx={{width: 200, height: 200, borderRadius: '100%'}}
+          />
+          <Typography component="h2" variant="h2" sx={{p: 2}}>
+            Username: {owner.username}
+          </Typography>
           <Typography component="h1" variant="h2" sx={{p: 2}}>
-            {file.title}
+            Title: {file.title}
           </Typography>
           <CardMedia
             controls={true}
@@ -189,7 +277,7 @@ const Single = () => {
             component={componentType}
             src={mediaUrl + file.filename}
             title={file.title}
-            style={{
+            sx={{
               filter: `brightness(${allData.filters.brightness}%)
                        contrast(${allData.filters.contrast}%)
                        saturate(${allData.filters.saturation}%)
@@ -206,36 +294,72 @@ const Single = () => {
               Time added: {formatTime(mediaInfo.time_added)}
             </Typography>
             <Typography component="h2" variant="h6" sx={{p: 2}}>
-              filesize: {formatSize(mediaInfo.filesize)} Mediatype:{' '}
-              {mediaInfo.media_type} mimetype: {mediaInfo.mime_type}
+              Filesize: {formatSize(mediaInfo.filesize)} Mediatype:
+              {mediaInfo.media_type} Mimetype: {mediaInfo.mime_type}
             </Typography>
-            <Typography component="h2" variant="h6" sx={{p: 2}}>
-              User: {owner.username}
-            </Typography>
-            <Typography component="h2" variant="h6" sx={{mt: 5}}>
-              Likes: {likes}
-            </Typography>
-            <Button
-              onClick={userLike ? deleteLike : doLike}
-              variant="contained"
-              sx={
-                userLike
-                  ? {
-                      mt: 1,
-                      mr: 2,
-                    }
-                  : {
-                      mt: 1,
-                      mr: 2,
-                      backgroundColor: 'grey',
-                      '&:hover': {
-                        backgroundColor: 'grey !important',
-                      },
-                    }
-              }
-            >
-              {userLike ? 'Liked' : 'Like'}
-            </Button>
+
+            <Grid container>
+              <Grid item xs={3} sx={{p: 2}}>
+                <Typography component="h2" variant="h6">
+                  Likes: {likes}
+                </Typography>
+                <Button
+                  onClick={refreshLikes ? deleteLike : doLike}
+                  variant="contained"
+                  sx={
+                    refreshLikes
+                      ? {}
+                      : {
+                          backgroundColor: 'grey',
+                          '&:hover': {
+                            backgroundColor: 'grey !important',
+                          },
+                        }
+                  }
+                >
+                  {refreshLikes ? 'Liked' : 'Like'}
+                </Button>
+              </Grid>
+              <Grid item xs={3} sx={{p: 2}}>
+                {refreshRating ? (
+                  <Box sx={{mt: 1}}>
+                    <Rating
+                      name="read-only"
+                      size="large"
+                      precision={0.2}
+                      defaultValue={parseFloat(rating.toFixed(2))}
+                      value={parseFloat(rating.toFixed(2))}
+                      readOnly
+                    />
+                    <Typography component="legend">Rated already!</Typography>
+                    <Typography component="legend">
+                      {parseFloat(rating.toFixed(2))} ({parseFloat(rating)}{' '}
+                      ratings)
+                    </Typography>
+                    <Button onClick={doDeleteRating} variant="contained">
+                      delete rating
+                    </Button>
+                  </Box>
+                ) : (
+                  <Box sx={{mt: 1}}>
+                    <Rating
+                      defaultValue={parseFloat(rating.toFixed(2))}
+                      name="simple-controlled"
+                      size="large"
+                      value={parseFloat(rating.toFixed(2))}
+                      precision={1}
+                      onChange={(event, newValue) => {
+                        doRating(newValue);
+                      }}
+                    />
+                    <Typography component="legend">Add rating</Typography>
+                    <Typography component="legend">
+                      {rating} ({ratingCount} ratings)
+                    </Typography>
+                  </Box>
+                )}
+              </Grid>
+            </Grid>
           </CardContent>
         </Card>
         <Grid container justifyContent="center">
