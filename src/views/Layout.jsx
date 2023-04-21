@@ -1,16 +1,19 @@
-import {Link, Outlet, useNavigate, useLocation} from 'react-router-dom';
+import {Outlet, useNavigate, useLocation} from 'react-router-dom';
 import {useUser} from '../hooks/ApiHooks';
-import {useContext, useEffect} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {MediaContext} from '../contexts/MediaContext';
-import {Button, createTheme, Grid, ThemeProvider} from '@mui/material';
+import {createTheme, CssBaseline, ThemeProvider} from '@mui/material';
 import {themeOptions} from '../theme/themeOptions';
-import {Box} from '@mui/system';
+import {useWindowSize} from '../hooks/WindowHooks';
+import MobileNavigation from '../components/MobileNavigation';
+import Header from '../components/Header';
 
 const Layout = () => {
-  const {user, setUser} = useContext(MediaContext);
+  const {setUser} = useContext(MediaContext);
   const {getUserByToken} = useUser();
   const navigate = useNavigate();
   const location = useLocation();
+  const windowSize = useWindowSize();
 
   const getUserInfo = async () => {
     const userToken = localStorage.getItem('token');
@@ -23,7 +26,7 @@ const Layout = () => {
         return;
       }
     }
-    navigate('/');
+    navigate('/home');
   };
 
   useEffect(() => {
@@ -34,133 +37,9 @@ const Layout = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <Box component="nav" sx={{maxWidth: 'sm', margin: 'auto'}}>
-        <Grid container justifyContent="center" sx={{mt: 2}}>
-          <Grid item xs={2} textAlign="center">
-            {location.pathname === '/home' ? (
-              <>
-                <Button
-                  sx={{
-                    color: 'blue',
-                    borderColor: 'blue',
-                    '&:hover': {
-                      borderColor: 'blue !important',
-                    },
-                  }}
-                  variant="outlined"
-                  component={Link}
-                  to="/home"
-                  size="large"
-                >
-                  Home
-                </Button>
-              </>
-            ) : (
-              <>
-                <Button component={Link} to="/home" size="large">
-                  Home
-                </Button>
-              </>
-            )}
-          </Grid>
-          {user ? (
-            <>
-              <Grid item xs={2} textAlign="center">
-                {location.pathname === '/profile' ? (
-                  <>
-                    <Button
-                      sx={{
-                        color: 'blue',
-                        borderColor: 'blue',
-                        '&:hover': {
-                          borderColor: 'blue !important',
-                        },
-                      }}
-                      variant="outlined"
-                      component={Link}
-                      to="/profile"
-                      size="large"
-                    >
-                      Profile
-                    </Button>
-                  </>
-                ) : (
-                  <>
-                    <Button component={Link} to="/profile" size="large">
-                      Profile
-                    </Button>
-                  </>
-                )}
-              </Grid>
-              <Grid item xs={2} textAlign="center">
-                {location.pathname === '/upload' ? (
-                  <>
-                    <Button
-                      sx={{
-                        color: 'blue',
-                        borderColor: 'blue',
-                        '&:hover': {
-                          borderColor: 'blue !important',
-                        },
-                      }}
-                      variant="outlined"
-                      component={Link}
-                      to="/upload"
-                      size="large"
-                    >
-                      Upload
-                    </Button>
-                  </>
-                ) : (
-                  <>
-                    <Button component={Link} to="/upload" size="large">
-                      Upload
-                    </Button>
-                  </>
-                )}
-              </Grid>
-              <Grid item xs={3} textAlign="center">
-                {location.pathname === '/myfiles' ? (
-                  <>
-                    <Button
-                      sx={{
-                        color: 'blue',
-                        borderColor: 'blue',
-                        '&:hover': {
-                          borderColor: 'blue !important',
-                        },
-                      }}
-                      variant="outlined"
-                      component={Link}
-                      to="/myfiles"
-                      size="large"
-                    >
-                      My Files
-                    </Button>
-                  </>
-                ) : (
-                  <>
-                    <Button component={Link} to="/myfiles" size="large">
-                      My Files
-                    </Button>
-                  </>
-                )}
-              </Grid>
-              <Grid item xs={2} textAlign="center">
-                <Button component={Link} to="/logout" size="large">
-                  Logout
-                </Button>
-              </Grid>
-            </>
-          ) : (
-            <Grid item xs={2} textAlign="center">
-              <Button component={Link} to="/" size="large">
-                Login
-              </Button>
-            </Grid>
-          )}
-        </Grid>
-      </Box>
+      <CssBaseline /> {/** Css reset/normalize*/}
+      <Header />
+      {windowSize.width < 599 && <MobileNavigation />}
       <main>
         <Outlet />
       </main>

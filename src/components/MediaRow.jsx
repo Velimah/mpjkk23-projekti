@@ -55,7 +55,7 @@ const MediaRow = ({file, deleteMedia}) => {
             >
               View
             </Button>
-            {(file.user_id === user.user_id || user.user_id === 3359) && (
+            {user && file.user_id === user.user_id && (
               <>
                 <Button
                   sx={{p: 1, m: 1}}

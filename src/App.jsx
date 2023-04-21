@@ -1,6 +1,6 @@
 import './App.css';
-import Home from './views/Home';
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
+import Home from './views/Home';
 import Layout from './views/Layout';
 import Single from './views/Single';
 import Profile from './views/Profile';
@@ -11,6 +11,8 @@ import {MediaProvider} from './contexts/MediaContext';
 import MyFiles from './views/MyFiles';
 import Modify from './views/Modify';
 import UpdateUserInfo from './views/UpdateUserInfo';
+import Search from './views/Search';
+import Liked from './views/Liked';
 
 const App = () => {
   return (
@@ -21,6 +23,8 @@ const App = () => {
             <Route path="/" element={<Login />} />
             <Route path="/home" element={<Home />} />
             <Route path="/single" element={<Single />} />
+            <Route path="/search" element={<Search />} />
+            <Route path="/Liked" element={<Liked />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/profile/update" element={<UpdateUserInfo />} />
             <Route path="/upload" element={<Upload />} />

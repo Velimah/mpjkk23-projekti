@@ -2,10 +2,11 @@ import {Grid, Button, Typography} from '@mui/material';
 import {Box} from '@mui/system';
 import MediaTable from '../components/MediaTable';
 import {Link} from 'react-router-dom';
-import {useState} from 'react';
+import {useContext} from 'react';
+import {MediaContext} from '../contexts/MediaContext';
 
 const Home = () => {
-  const [loggedIn] = useState(true);
+  const {user} = useContext(MediaContext);
 
   return (
     <>
@@ -15,7 +16,7 @@ const Home = () => {
         direction="row"
         justifyContent="center"
         alignItems="center"
-        sx={{py: '80px', backgroundColor: '#E3A7B6'}}
+        sx={{py: '60px', backgroundColor: '#E3A7B6'}}
       >
         <Grid item xs={5}>
           <Box sx={{maxWidth: '500px'}}>
@@ -27,14 +28,15 @@ const Home = () => {
             />
           </Box>
         </Grid>
-        <Grid item xs={1}>
+        <Grid item>
           <Box
             sx={{
               borderRadius: '25px',
-              backgroundColor: 'white',
+              backgroundColor: '#FDF7F4',
               boxShadow: 3,
-              p: '40px',
-              width: '300px',
+              p: '2rem',
+              m: '0 1rem',
+              maxWidth: '22rem',
             }}
           >
             <Typography
@@ -43,12 +45,12 @@ const Home = () => {
               textAlign="center"
               sx={{mb: 5}}
             >
-              {loggedIn
+              {user
                 ? 'Ready to show off your cat friend?'
                 : 'Share and discover cat photos on OnlyCats.'}
             </Typography>
             <Typography component="p" textAlign="center" sx={{mb: 5}}>
-              {loggedIn
+              {user
                 ? 'Share your favorite cat moments with our community of cat lovers by uploading your photos.'
                 : 'Join our community and connect with fellow cat lovers.'}
             </Typography>
@@ -57,16 +59,16 @@ const Home = () => {
                 variant="contained"
                 size="large"
                 component={Link}
-                to={loggedIn ? '/upload' : '/login'}
+                to={user ? '/upload' : '/'}
                 sx={{mb: 1}}
               >
-                {loggedIn ? 'Upload photo' : 'Register'}
+                {user ? 'Upload photo' : 'Register'}
               </Button>
             </Box>
-            {!loggedIn && (
+            {!user && (
               <Typography component="p" textAlign="center">
                 Already have an account?{' '}
-                <Button variant="text" component={Link} to="/login">
+                <Button variant="text" component={Link} to="/">
                   Log in
                 </Button>
               </Typography>
