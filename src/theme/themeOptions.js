@@ -54,6 +54,31 @@ const themeOptions = {
         },
       },
     },
+    MuiImageListItem: {
+      styleOverrides: {
+        root: {
+          height: '100%',
+          width: '100%',
+          transition: '0.3s',
+          overflow: 'hidden',
+        },
+      },
+    },
+    MuiImageList: {
+      styleOverrides: {
+        root: {
+          margin: 0,
+        },
+      },
+    },
+  },
+  breakpoints: {
+    values: {
+      mobile: 0,
+      bigMobile: 350,
+      tablet: 650,
+      desktop: 900,
+    },
   },
 };
 
