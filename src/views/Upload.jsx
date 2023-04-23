@@ -19,7 +19,7 @@ import {uploadValidators} from '../utils/validator';
 
 const Upload = () => {
   const [file, setFile] = useState(null);
-  const [tags, setTags] = useState(null);
+  const [tags, setTags] = useState([]);
   const [selectedImage, setSelectedImage] = useState(
     'https://placehold.co/300x300?text=Choose-media'
   );
@@ -51,14 +51,16 @@ const Upload = () => {
       const token = localStorage.getItem('token');
       const uploadResult = await postMedia(data, token);
 
-      const tagsTmp = [
-        {file_id: uploadResult.file_id, tag: appId},
-        {file_id: uploadResult.file_id, tag: 'kisuli'},
-      ];
+      let tagsTmp = [{file_id: uploadResult.file_id, tag: appId}];
+
+      tagsTmp = tagsTmp.concat(
+        tags.map((tag) => {
+          return {file_id: uploadResult.file_id, tag: appId + '_' + tag};
+        })
+      );
 
       for (const tag of tagsTmp) {
         const tagResult = await postTag(tag, token);
-        console.log(tagResult);
       }
 
       navigate('/home');
@@ -75,6 +77,11 @@ const Upload = () => {
       setSelectedImage(reader.result);
     });
     reader.readAsDataURL(event.target.files[0]);
+  };
+
+  const handleTagDelete = (tagToDelete) => () => {
+    const newTags = tags.filter((tag) => tag !== tagToDelete);
+    setTags(newTags);
   };
 
   const {inputs, handleSubmit, handleInputChange} = useForm(
@@ -155,24 +162,13 @@ const Upload = () => {
               />{' '}
               <Autocomplete
                 multiple
-                id="tags-filled"
                 options={[]}
                 defaultValue={[]}
-                disabled={tags.length >= 5 && true}
                 freeSolo
-                onChange={(e, value) => setTags((state) => value)}
-                renderTags={(value, getTagProps) =>
-                  value.map((option, index) => {
-                    return (
-                      <Chip
-                        key={index}
-                        variant="outlined"
-                        label={option}
-                        {...getTagProps({index})}
-                      />
-                    );
-                  })
-                }
+                value={tags}
+                onChange={(e, value) => setTags(value)}
+                disabled={tags.length >= 5 && true}
+                renderTags={() => null}
                 renderInput={(params) => (
                   <TextField
                     {...params}
@@ -183,6 +179,23 @@ const Upload = () => {
                   />
                 )}
               />
+              <Box
+                mt={3}
+                sx={{
+                  '& > :not(:last-child)': {marginRight: 1},
+                  '& > *': {marginBottom: 1},
+                }}
+              >
+                {tags.map((tag) => (
+                  <Chip
+                    variant="outlined"
+                    color="primary"
+                    key={tag}
+                    label={tag}
+                    onDelete={handleTagDelete(tag)}
+                  />
+                ))}
+              </Box>
               <Button variant="contained" fullWidth type="submit">
                 Upload
               </Button>
