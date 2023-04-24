@@ -37,7 +37,6 @@ const MediaTable = ({myFilesOnly = false}) => {
         justifyContent="flex-start"
         alignItems="stretch"
         wrap="nowrap"
-        sx={{mx: '5%'}}
       >
         {style === true ? (
           <IconButton
@@ -74,7 +73,11 @@ const MediaTable = ({myFilesOnly = false}) => {
         alignItems="stretch"
       >
         {style === false ? (
-          <ImageList cols={1} gap={50}>
+          <ImageList
+            cols={1}
+            gap={50}
+            sx={{width: smallScreen ? '100%' : '500px'}}
+          >
             {mediaArray.map((item, index) => {
               return (
                 <MediaRow
@@ -92,11 +95,10 @@ const MediaTable = ({myFilesOnly = false}) => {
               width: '100%',
               height: '100%',
               objectFit: 'contain',
-              mx: '5%',
             }}
             cols={smallScreen ? 3 : 4}
-            rowHeight={smallScreen ? 100 : 200}
-            gap={10}
+            rowHeight={smallScreen ? 100 : 300}
+            gap={5}
           >
             {mediaArray.map((item, index) => {
               return (
