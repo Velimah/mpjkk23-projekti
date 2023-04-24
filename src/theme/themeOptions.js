@@ -90,14 +90,6 @@ const themeOptions = {
       },
     },
   },
-  breakpoints: {
-    values: {
-      mobile: 0,
-      bigMobile: 350,
-      tablet: 650,
-      desktop: 900,
-    },
-  },
 };
 
 export {themeOptions};
