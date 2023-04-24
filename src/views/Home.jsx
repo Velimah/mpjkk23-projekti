@@ -76,8 +76,8 @@ const Home = () => {
           </Box>
         </Grid>
       </Grid>
-      <Box sx={{my: '50px'}}>
-        <Typography component="h2" variant="h2" sx={{mb: 2, mx: '5%'}}>
+      <Box sx={{my: '50px', mx: '5%'}}>
+        <Typography component="h2" variant="h2" sx={{mb: 2}}>
           Discover cats
         </Typography>
         <MediaTable />
