@@ -24,27 +24,29 @@ const loggedNavLinks = [
 const MobileNavigation = () => {
   const {user} = useContext(MediaContext);
   const location = useLocation();
+  console.log(location.pathname);
   return (
     <>
-      {user && (
-        <Fab
-          color="secondary"
-          variant="extended"
-          component={Link}
-          to="/upload"
-          style={{
-            margin: 0,
-            top: 'auto',
-            right: '1rem',
-            bottom: 72,
-            left: 'auto',
-            position: 'fixed',
-          }}
-        >
-          <AddCircleOutlineRounded sx={{mr: 1}} />
-          Upload
-        </Fab>
-      )}
+      {(location.pathname === '/home' || location.pathname === '/profile') &&
+        user && (
+          <Fab
+            color="secondary"
+            variant="extended"
+            component={Link}
+            to="/upload"
+            style={{
+              margin: 0,
+              top: 'auto',
+              right: '1rem',
+              bottom: 72,
+              left: 'auto',
+              position: 'fixed',
+            }}
+          >
+            <AddCircleOutlineRounded sx={{mr: 1}} />
+            Upload
+          </Fab>
+        )}
       <Paper
         sx={{position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 1}}
         elevation={4}

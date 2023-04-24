@@ -3,6 +3,7 @@ import {
   Box,
   Button,
   Chip,
+  Container,
   Grid,
   Slider,
   TextField,
@@ -101,12 +102,12 @@ const Upload = () => {
   }, [inputs]);
 
   return (
-    <Box sx={{maxWidth: 'md', margin: 'auto'}}>
+    <Container maxWidth="md" sx={{px: {xs: '32px', sm: '16px'}}}>
       <Typography component="h1" variant="h2" textAlign="center" sx={{my: 6}}>
-        Upload
+        Create new post
       </Typography>
       <Grid container direction={'row'} justifyContent="center" sx={{mt: 2}}>
-        <Grid item xs={5} sx={{mt: 0}}>
+        <Grid item xs={{sm: 12, md: 6}} sx={{mt: 0}}>
           <img
             src={selectedImage}
             alt="preview"
@@ -120,7 +121,7 @@ const Upload = () => {
             }}
           ></img>
         </Grid>
-        <Grid item xs={5} sx={{pl: 2}}>
+        <Grid item xs={6} sx={{pl: 2}}>
           <Grid
             container
             direction={'column'}
@@ -130,31 +131,33 @@ const Upload = () => {
           >
             <ValidatorForm onSubmit={handleSubmit} noValidate>
               <TextValidator
-                sx={{mb: 1}}
+                sx={{mb: 3}}
                 fullWidth
                 onChange={handleInputChange}
                 type="text"
                 name="title"
                 placeholder="Title"
+                label="Title"
                 value={inputs.title}
                 validators={uploadValidators.title}
                 errorMessages={uploadErrorMessages.title}
               />
               <TextValidator
-                sx={{mb: 1}}
+                sx={{mb: 3}}
                 fullWidth
                 multiline
                 rows={4}
                 onChange={handleInputChange}
                 name="description"
                 value={inputs.description}
-                variant="filled"
-                placeholder="Description (optional)"
+                variant="outlined"
+                placeholder="Description"
+                label="Description"
                 validators={uploadValidators.description}
                 errorMessages={uploadErrorMessages.description}
               />
               <TextValidator
-                sx={{mb: 1}}
+                sx={{mb: 3}}
                 onChange={handleFileChange}
                 type="file"
                 name="file"
@@ -268,7 +271,7 @@ const Upload = () => {
           </Button>
         </Grid>
       </Grid>
-    </Box>
+    </Container>
   );
 };
 
