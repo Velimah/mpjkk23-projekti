@@ -93,9 +93,6 @@ const CommentRow = ({file, fetchComments}) => {
           variant="contained"
           to="/userprofiles"
           state={{file}}
-          onClick={() => {
-            console.log('file', file);
-          }}
         >
           View profile
         </Button>

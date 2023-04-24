@@ -15,7 +15,19 @@ const UserProfiles = () => {
   const {getAllMediaById} = useMedia();
   const {getUser} = useUser();
   const {state} = useLocation();
-  const file = state.file;
+
+  const [data, setData] = useState(() => {
+    return (
+      state?.data ||
+      JSON.parse(window.localStorage.getItem('userDetails')) ||
+      {}
+    );
+  });
+
+  useEffect(() => {
+    window.localStorage.setItem('userDetails', JSON.stringify(data));
+    console.log('userdetails', data);
+  }, [data]);
 
   const [profilePic, setProfilePic] = useState({
     filename: 'https://placekitten.com/200/200',
@@ -35,9 +47,9 @@ const UserProfiles = () => {
     try {
       if (user) {
         const token = localStorage.getItem('token');
-        const userData = await getUser(file.user_id, token);
+        const userData = await getUser(data.user_id, token);
         setUserData(userData);
-        console.log(userData);
+        console.log('userdata', userData);
       }
     } catch (error) {
       console.error(error.message);
@@ -48,7 +60,7 @@ const UserProfiles = () => {
     try {
       if (user) {
         const profilePictures = await getTag(
-          appId + '_profilepicture_' + file.user_id
+          appId + '_profilepicture_' + data.user_id
         );
         const profilePicture = profilePictures.pop();
         profilePicture.filename = mediaUrl + profilePicture.filename;
@@ -63,7 +75,7 @@ const UserProfiles = () => {
     try {
       if (user) {
         const backgroundPictures = await getTag(
-          appId + '_backgroundpicture_' + file.user_id
+          appId + '_backgroundpicture_' + data.user_id
         );
         const backgroundPicture = backgroundPictures.pop();
         backgroundPicture.filename = mediaUrl + backgroundPicture.filename;
@@ -78,7 +90,7 @@ const UserProfiles = () => {
     try {
       if (user) {
         const profilePictures = await getTag(
-          appId + '_profilepicture_' + file.user_id
+          appId + '_profilepicture_' + data.user_id
         );
         const profileText = profilePictures.pop();
         setprofileDescription(profileText.description);
@@ -106,13 +118,13 @@ const UserProfiles = () => {
   const fetchAllRatings = async () => {
     try {
       const token = localStorage.getItem('token');
-      const mediaInfo = await getAllMediaById(file.user_id, token);
+      const mediaInfo = await getAllMediaById(data.user_id, token);
       console.log(mediaInfo);
       let sum = 0;
       let count = 0;
-      for (const file of mediaInfo) {
+      for (const data of mediaInfo) {
         await sleep(100);
-        const ratings = await getRatingsById(file.file_id);
+        const ratings = await getRatingsById(data.file_id);
         if (ratings.length !== 0) {
           for (const obj of ratings) {
             sum += obj.rating;
