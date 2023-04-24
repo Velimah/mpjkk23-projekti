@@ -7,11 +7,18 @@ import {appId, mediaUrl} from '../utils/variables';
 import {useNavigate} from 'react-router-dom';
 
 const Profile = () => {
-  const {user} = useContext(MediaContext);
+  const {user, setUser} = useContext(MediaContext);
   const {getTag} = useTag();
   const navigate = useNavigate();
   const {getRatingsById} = useRating();
   const {getAllMediaById} = useMedia();
+
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem('user'));
+    if (storedUser) {
+      setUser(storedUser);
+    }
+  }, [setUser]);
 
   const [profilePic, setProfilePic] = useState({
     filename: 'https://placekitten.com/200/200',
@@ -70,11 +77,14 @@ const Profile = () => {
   };
 
   useEffect(() => {
+    fetchAllRatings();
+  }, []);
+
+  useEffect(() => {
     fetchProfilePicture();
     fetchBackgroundPicture();
     fetchProfileDescription();
-    fetchAllRatings();
-  }, []);
+  }, [user]);
 
   const sleep = (ms) => {
     return new Promise((resolve) => setTimeout(resolve, ms));
@@ -84,13 +94,11 @@ const Profile = () => {
     try {
       const token = localStorage.getItem('token');
       const mediaInfo = await getAllMediaById(token);
-      console.log('mediaInfo', mediaInfo);
       let sum = 0;
       let count = 0;
       for (const file of mediaInfo) {
         await sleep(100);
         const ratings = await getRatingsById(file.file_id);
-        console.log('ratings', ratings);
         if (ratings.length !== 0) {
           for (const obj of ratings) {
             sum += obj.rating;
@@ -98,10 +106,8 @@ const Profile = () => {
           }
         }
       }
-      console.log('sum', sum);
       setRatingCount(count);
       const average = sum / count;
-      console.log('average', average);
       setRating(average);
     } catch (error) {
       console.log(error.message);
