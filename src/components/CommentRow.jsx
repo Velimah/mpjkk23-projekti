@@ -87,6 +87,7 @@ const CommentRow = ({file, fetchComments}) => {
             height: 50,
           }}
         />
+        <Typography sx={{mb: 2}}>user_name: {userInfo.username}</Typography>
         <Button
           sx={{p: 1, m: 1}}
           component={Link}
@@ -96,7 +97,6 @@ const CommentRow = ({file, fetchComments}) => {
         >
           View profile
         </Button>
-        <Typography sx={{mb: 2}}>user_name: {userInfo.username}</Typography>
         <Typography sx={{mb: 1}}>
           time added: {formatTime(file.time_added)}
         </Typography>

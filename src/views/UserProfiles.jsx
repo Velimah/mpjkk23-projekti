@@ -98,17 +98,6 @@ const UserProfiles = () => {
     }
   };
 
-  useEffect(() => {
-    fetchAllRatings();
-  }, []);
-
-  useEffect(() => {
-    fetchUserData();
-    fetchProfilePicture();
-    fetchBackgroundPicture();
-    fetchProfileDescription();
-  }, [user]);
-
   const sleep = (ms) => {
     return new Promise((resolve) => setTimeout(resolve, ms));
   };
@@ -120,7 +109,7 @@ const UserProfiles = () => {
       let sum = 0;
       let count = 0;
       for (const data of mediaInfo) {
-        await sleep(100);
+        await sleep(200);
         const ratings = await getRatingsById(data.file_id);
         if (ratings.length !== 0) {
           for (const obj of ratings) {
@@ -136,6 +125,15 @@ const UserProfiles = () => {
       console.log(error.message);
     }
   };
+
+  useEffect(() => {
+    fetchUserData();
+    fetchProfilePicture();
+    fetchBackgroundPicture();
+    fetchProfileDescription();
+    fetchAllRatings();
+    console.log('useEffectCount user');
+  }, [user]);
 
   return (
     <>
@@ -190,8 +188,7 @@ const UserProfiles = () => {
                     readOnly
                   />
                   <Typography component="legend">
-                    {rating.toFixed(2)} ({ratingCount}
-                    ratings)
+                    {rating.toFixed(2)} ({ratingCount} ratings)
                   </Typography>
                 </Box>
                 <Typography component="div" variant="h6" sx={{mt: 3}}>

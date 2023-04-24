@@ -76,16 +76,6 @@ const Profile = () => {
     }
   };
 
-  useEffect(() => {
-    fetchAllRatings();
-  }, []);
-
-  useEffect(() => {
-    fetchProfilePicture();
-    fetchBackgroundPicture();
-    fetchProfileDescription();
-  }, [user]);
-
   const sleep = (ms) => {
     return new Promise((resolve) => setTimeout(resolve, ms));
   };
@@ -97,7 +87,7 @@ const Profile = () => {
       let sum = 0;
       let count = 0;
       for (const file of mediaInfo) {
-        await sleep(100);
+        await sleep(200);
         const ratings = await getRatingsById(file.file_id);
         if (ratings.length !== 0) {
           for (const obj of ratings) {
@@ -113,6 +103,13 @@ const Profile = () => {
       console.log(error.message);
     }
   };
+
+  useEffect(() => {
+    fetchProfilePicture();
+    fetchBackgroundPicture();
+    fetchProfileDescription();
+    fetchAllRatings();
+  }, [user]);
 
   return (
     <>
