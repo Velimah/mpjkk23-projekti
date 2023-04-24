@@ -161,8 +161,8 @@ const Single = () => {
   const doLike = async () => {
     try {
       const token = localStorage.getItem('token');
-      const data = {file_id: data.file_id};
-      const likeInfo = await postFavourite(data, token);
+      const data2 = {file_id: data.file_id};
+      const likeInfo = await postFavourite(data2, token);
       console.log(likeInfo);
       setRefreshLikes(true);
     } catch (error) {
@@ -188,8 +188,8 @@ const Single = () => {
   const doComment = async () => {
     try {
       const token = localStorage.getItem('token');
-      const data = {file_id: data.file_id, comment: inputs.comment};
-      const commentInfo = await postComment(data, token);
+      const data2 = {file_id: data.file_id, comment: inputs.comment};
+      const commentInfo = await postComment(data2, token);
       alert(commentInfo.message);
       setRefreshComments(!refreshComments);
     } catch (error) {
@@ -213,8 +213,8 @@ const Single = () => {
   const doRating = async (value) => {
     try {
       const token = localStorage.getItem('token');
-      const data = {file_id: data.file_id, rating: value};
-      const ratingInfo = await postRating(data, token);
+      const data2 = {file_id: data.file_id, rating: value};
+      const ratingInfo = await postRating(data2, token);
       console.log(ratingInfo);
       setRefreshRating(!refreshRating);
     } catch (error) {
@@ -335,13 +335,13 @@ const Single = () => {
                       name="read-only"
                       size="large"
                       precision={0.2}
-                      defaultValue={parseFloat(rating.toFixed(2))}
-                      value={parseFloat(rating.toFixed(2))}
+                      defaultValue={rating.toFixed(2)}
+                      value={rating.toFixed(2)}
                       readOnly
                     />
                     <Typography component="legend">Rated already!</Typography>
                     <Typography component="legend">
-                      {parseFloat(rating.toFixed(2))} ({parseFloat(ratingCount)}{' '}
+                      {rating.toFixed(2)} ({ratingCount}
                       ratings)
                     </Typography>
                     <Button onClick={doDeleteRating} variant="contained">
@@ -351,10 +351,10 @@ const Single = () => {
                 ) : (
                   <Box sx={{mt: 1}}>
                     <Rating
-                      defaultValue={parseFloat(rating.toFixed(2))}
+                      defaultValue={rating.toFixed(2)}
                       name="simple-controlled"
                       size="large"
-                      value={parseFloat(rating.toFixed(2))}
+                      value={rating.toFixed(2)}
                       precision={1}
                       onChange={(event, newValue) => {
                         doRating(newValue);

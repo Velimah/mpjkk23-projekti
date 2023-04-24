@@ -5,7 +5,6 @@ import {useState, useEffect} from 'react';
 import {useMedia, useRating, useTag, useUser} from '../hooks/ApiHooks';
 import {appId, mediaUrl} from '../utils/variables';
 import {useLocation, useNavigate} from 'react-router-dom';
-import PropTypes from 'prop-types';
 
 const UserProfiles = () => {
   const {user} = useContext(MediaContext);
@@ -19,6 +18,7 @@ const UserProfiles = () => {
   const [data, setData] = useState(() => {
     return (
       state?.data ||
+      state?.file ||
       JSON.parse(window.localStorage.getItem('userDetails')) ||
       {}
     );
@@ -26,7 +26,6 @@ const UserProfiles = () => {
 
   useEffect(() => {
     window.localStorage.setItem('userDetails', JSON.stringify(data));
-    console.log('userdetails', data);
   }, [data]);
 
   const [profilePic, setProfilePic] = useState({
@@ -49,7 +48,6 @@ const UserProfiles = () => {
         const token = localStorage.getItem('token');
         const userData = await getUser(data.user_id, token);
         setUserData(userData);
-        console.log('userdata', userData);
       }
     } catch (error) {
       console.error(error.message);
@@ -119,7 +117,6 @@ const UserProfiles = () => {
     try {
       const token = localStorage.getItem('token');
       const mediaInfo = await getAllMediaById(data.user_id, token);
-      console.log(mediaInfo);
       let sum = 0;
       let count = 0;
       for (const data of mediaInfo) {
@@ -189,11 +186,12 @@ const UserProfiles = () => {
                     name="read-only"
                     size="large"
                     precision={0.5}
-                    value={parseFloat(rating).toFixed(2)}
+                    value={rating.toFixed(2)}
                     readOnly
                   />
                   <Typography component="legend">
-                    {parseFloat(rating).toFixed(2)} ({ratingCount} ratings)
+                    {rating.toFixed(2)} ({ratingCount}
+                    ratings)
                   </Typography>
                 </Box>
                 <Typography component="div" variant="h6" sx={{mt: 3}}>
@@ -230,10 +228,6 @@ const UserProfiles = () => {
       )}
     </>
   );
-};
-
-UserProfiles.propTypes = {
-  file: PropTypes.object.isRequired,
 };
 
 export default UserProfiles;
