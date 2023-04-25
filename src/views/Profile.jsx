@@ -5,6 +5,7 @@ import {useState, useEffect} from 'react';
 import {useMedia, useRating, useTag} from '../hooks/ApiHooks';
 import {appId, mediaUrl} from '../utils/variables';
 import {useNavigate} from 'react-router-dom';
+import MediaTable from '../components/MediaTable';
 
 const Profile = () => {
   const {user, setUser} = useContext(MediaContext);
@@ -219,6 +220,7 @@ const Profile = () => {
               </Grid>
             </Grid>
           </Box>
+          <MediaTable myFilesOnly={true} />
         </>
       )}
     </>
