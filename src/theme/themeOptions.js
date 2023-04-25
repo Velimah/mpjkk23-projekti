@@ -33,6 +33,26 @@ const themeOptions = {
       fontSize: '1.5rem',
       fontWeight: 'bold',
     },
+    h3: {
+      fontFamily: 'Nunito',
+      fontSize: '1.4rem',
+      fontWeight: 'bold',
+    },
+    h4: {
+      fontFamily: 'Nunito',
+      fontSize: '1.3rem',
+      fontWeight: 'bold',
+    },
+    h5: {
+      fontFamily: 'Nunito',
+      fontSize: '1.2rem',
+      fontWeight: 'bold',
+    },
+    h6: {
+      fontFamily: 'Nunito',
+      fontSize: '1.1rem',
+      fontWeight: 'bold',
+    },
     body1: {
       fontFamily: 'Nunito',
       fontSize: '1rem',
@@ -57,6 +77,35 @@ const themeOptions = {
       styleOverrides: {
         root: {
           backgroundColor: '#FDF7F4',
+        },
+      },
+    },
+    MuiIconButton: {
+      styleOverrides: {
+        root: {
+          color: '#232020',
+          borderRadius: 0,
+          '&.active': {
+            color: '#7047A6',
+            borderBottom: '5px solid #7047A6',
+          },
+        },
+      },
+    },
+    MuiImageListItem: {
+      styleOverrides: {
+        root: {
+          height: '100%',
+          width: '100%',
+          transition: '0.3s',
+          overflow: 'hidden',
+        },
+      },
+    },
+    MuiImageList: {
+      styleOverrides: {
+        root: {
+          margin: 0,
         },
       },
     },

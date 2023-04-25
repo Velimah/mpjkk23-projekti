@@ -1,12 +1,27 @@
-import {Grid, Button, Typography} from '@mui/material';
+import {
+  Grid,
+  Button,
+  Typography,
+  Container,
+  InputLabel,
+  Select,
+  FormControl,
+  MenuItem,
+} from '@mui/material';
 import {Box} from '@mui/system';
 import MediaTable from '../components/MediaTable';
 import {Link} from 'react-router-dom';
-import {useContext} from 'react';
+import {useContext, useState} from 'react';
 import {MediaContext} from '../contexts/MediaContext';
 
 const Home = () => {
   const {user} = useContext(MediaContext);
+
+  const [sort, setSort] = useState();
+
+  const handleChange = (event) => {
+    setSort(event.target.value);
+  };
 
   return (
     <>
@@ -21,7 +36,7 @@ const Home = () => {
         <Grid item xs={5}>
           <Box sx={{maxWidth: '500px'}}>
             <img
-              src={'/src/assets/onlycats_illustration1.png'}
+              src={'onlycats_illustration1.png'}
               alt={'Cat illustration'}
               loading="lazy"
               width="100%"
@@ -76,12 +91,35 @@ const Home = () => {
           </Box>
         </Grid>
       </Grid>
-      <Box sx={{my: '50px', mx: '10%'}}>
-        <Typography component="h2" variant="h2" sx={{mb: 2}}>
-          Discover cats
-        </Typography>
-        <MediaTable />
-      </Box>
+      <Grid sx={{mt: '50px', mb: '100px'}}>
+        <Container>
+          <Grid
+            container
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <Typography component="h2" variant="h2" sx={{mb: 2}}>
+              Discover cats
+            </Typography>
+            <FormControl sx={{width: 150}}>
+              <InputLabel id="select-label">Sort</InputLabel>
+              <Select
+                labelId="select-label"
+                id="select"
+                value={sort}
+                label="Sort"
+                onChange={handleChange}
+              >
+                <MenuItem value={1}>Newest</MenuItem>
+                <MenuItem value={2}>Most liked</MenuItem>
+                <MenuItem value={3}>Top rated</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+        </Container>
+        <MediaTable sort={sort} />
+      </Grid>
     </>
   );
 };

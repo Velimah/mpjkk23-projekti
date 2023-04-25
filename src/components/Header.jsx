@@ -1,4 +1,4 @@
-import {useContext} from 'react';
+import {useContext, useEffect, useState} from 'react';
 import {Link, useLocation} from 'react-router-dom';
 import {MediaContext} from '../contexts/MediaContext';
 import {
@@ -13,6 +13,8 @@ import {
   Tooltip,
 } from '@mui/material';
 import {PersonRounded} from '@mui/icons-material';
+import {useTag} from '../hooks/ApiHooks';
+import {appId, mediaUrl} from '../utils/variables';
 
 const Header = () => {
   const {user} = useContext(MediaContext);
@@ -20,6 +22,30 @@ const Header = () => {
     theme.breakpoints.down('sm')
   );
   const location = useLocation();
+
+  const {getTag} = useTag();
+  const [profilePic, setProfilePic] = useState({
+    filename: 'https://placekitten.com/200/200',
+  });
+
+  const fetchProfilePicture = async () => {
+    try {
+      if (user) {
+        const profilePictures = await getTag(
+          appId + '_profilepicture_' + user.user_id
+        );
+        const profilePicture = profilePictures.pop();
+        profilePicture.filename = mediaUrl + profilePicture.filename;
+        setProfilePic(profilePicture);
+      }
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchProfilePicture();
+  }, [user]);
 
   return (
     <AppBar
@@ -31,7 +57,7 @@ const Header = () => {
         <Toolbar sx={{justifyContent: {xs: 'center'}}} disableGutters>
           <Box sx={{display: 'flex', alignItems: 'center'}}>
             <img
-              src="/onlycats_logo.png"
+              src="onlycats_logo.png"
               style={{display: 'flex', marginRight: 8, width: 45}}
               alt="OnlyCats logo"
             />
@@ -89,6 +115,7 @@ const Header = () => {
               <>
                 <Tooltip title="Profile">
                   <Avatar
+                    src={profilePic.filename}
                     aria-label="Profile"
                     component={Link}
                     to="/profile"

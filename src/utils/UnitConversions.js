@@ -32,4 +32,15 @@ const formatSize = (sizeInBytes) => {
   return sizeInMegaBytes.toFixed(2) + ' MB';
 };
 
-export {formatTime, formatSize};
+const calculateTokenCost = (completionTokens, promptTokens) => {
+  const completionTokenPrice = 0.06 / 1000;
+  const promptTokenPrice = 0.03 / 1000;
+
+  const completionTokenCost = completionTokens * completionTokenPrice;
+  const promptTokenCost = promptTokens * promptTokenPrice;
+
+  const totalCost = completionTokenCost + promptTokenCost;
+  return totalCost.toFixed(4);
+};
+
+export {formatTime, formatSize, calculateTokenCost};
