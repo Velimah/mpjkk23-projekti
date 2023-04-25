@@ -28,18 +28,15 @@ const UpdateUserInfo = () => {
               <UploadProfilePicture />
               <UpdateUserForm />
             </Grid>
-            <Grid container justifyContent="center" gap={5}>
-              <Grid item xs={4}>
-                <Button
-                  variant="contained"
-                  fullWidth
-                  sx={{mt: 5}}
-                  onClick={() => navigate('/profile')}
-                >
-                  Back
-                </Button>
-              </Grid>
-            </Grid>
+            <Box display="flex" width="100%" justifyContent="center">
+              <Button
+                variant="contained"
+                sx={{m: 5, width: '200px'}}
+                onClick={() => navigate('/home')}
+              >
+                Back
+              </Button>
+            </Box>
           </Box>
         </>
       )}

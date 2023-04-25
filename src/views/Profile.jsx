@@ -241,13 +241,15 @@ const Profile = () => {
         </Box>
       </Box>
       <MediaTable myFilesOnly={true} />
-      <Button
-        variant="contained"
-        sx={{mt: 5}}
-        onClick={() => navigate('/home')}
-      >
-        Back
-      </Button>
+      <Box display="flex" width="100%" justifyContent="center">
+        <Button
+          variant="contained"
+          sx={{m: 5, width: '200px'}}
+          onClick={() => navigate('/home')}
+        >
+          Back
+        </Button>
+      </Box>
     </>
   );
 };

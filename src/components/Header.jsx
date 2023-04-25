@@ -1,5 +1,5 @@
 import {useContext, useEffect, useState} from 'react';
-import {Link, useLocation} from 'react-router-dom';
+import {Link, useLocation, Navigate} from 'react-router-dom';
 import {MediaContext} from '../contexts/MediaContext';
 import {
   AppBar,
@@ -15,6 +15,7 @@ import {
 import {PersonRounded} from '@mui/icons-material';
 import {useTag} from '../hooks/ApiHooks';
 import {appId, mediaUrl} from '../utils/variables';
+import {useNavigate} from 'react-router-dom';
 
 const Header = () => {
   const {user} = useContext(MediaContext);
@@ -22,6 +23,7 @@ const Header = () => {
     theme.breakpoints.down('sm')
   );
   const location = useLocation();
+  const navigate = useNavigate();
 
   const {getTag} = useTag();
   const [profilePic, setProfilePic] = useState({
@@ -58,8 +60,14 @@ const Header = () => {
           <Box sx={{display: 'flex', alignItems: 'center'}}>
             <img
               src="onlycats_logo.png"
-              style={{display: 'flex', marginRight: 8, width: 45}}
+              style={{
+                display: 'flex',
+                marginRight: 8,
+                width: 45,
+                cursor: 'pointer',
+              }}
               alt="OnlyCats logo"
+              onClick={() => navigate('/home')}
             />
             <Typography
               variant="h1"

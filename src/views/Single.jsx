@@ -373,18 +373,15 @@ const Single = () => {
             </Grid>
           </CardContent>
         </Card>
-        <Grid container justifyContent="center">
-          <Grid item xs={4} sx={{mb: 5}}>
-            <Button
-              variant="contained"
-              fullWidth
-              sx={{mt: 5}}
-              onClick={() => navigate('/home')}
-            >
-              Back
-            </Button>
-          </Grid>
-        </Grid>
+        <Box display="flex" width="100%" justifyContent="center">
+          <Button
+            variant="contained"
+            sx={{m: 5, width: '200px'}}
+            onClick={() => navigate('/home')}
+          >
+            Back
+          </Button>
+        </Box>
 
         <ValidatorForm onSubmit={handleSubmit}>
           <TextValidator
