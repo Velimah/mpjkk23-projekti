@@ -121,14 +121,10 @@ const CatGPT = () => {
         justifyContent="center"
         flexWrap="nowrap"
         sx={{
-          height: '100vh',
+          height: '90vh',
           width: '100%',
           maxWidth: '1200px',
-          position: 'absolute',
-          top: {xs: '55%', sm: '58%'},
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          pb: 10,
+          margin: 'auto',
         }}
       >
         <Grid
@@ -139,19 +135,19 @@ const CatGPT = () => {
           sx={{
             height: '100%',
             width: '200px',
-            display: {xs: 'none', sm: 'none', md: 'block'},
+            display: {xs: 'none', sm: 'block'},
           }}
           pl={1}
         >
           <Button
-            sx={{mt: 9, mb: 4, width: '180px'}}
+            sx={{mt: 15, mb: 4, width: '184px'}}
             variant="contained"
             onClick={createNewChat}
           >
             New chat
           </Button>
           {uniqueTitles?.length > 0 && (
-            <Typography component="p" variant="h6" sx={{}}>
+            <Typography component="p" variant="h6" sx={{textAlign: 'center'}}>
               Chats
             </Typography>
           )}
@@ -162,8 +158,6 @@ const CatGPT = () => {
               alignItems: 'flex-start',
               height: 'fit-content',
               width: '184px',
-              m: 1,
-              textAlign: 'left',
             }}
           >
             {uniqueTitles?.map((uniqueTitle, index) => (
@@ -199,6 +193,7 @@ const CatGPT = () => {
             width: '100%',
             maxWidth: '1000px',
             px: 2,
+            pt: {xs: 7, sm: 1},
           }}
         >
           <Typography
@@ -268,7 +263,7 @@ const CatGPT = () => {
               sx={{
                 borderTop: 'solid 0.5px black',
                 pt: 2,
-                display: {xs: 'block', sm: 'flex'},
+                display: {xs: 'block', md: 'flex'},
               }}
             >
               <TextField
@@ -301,9 +296,9 @@ const CatGPT = () => {
                     '&:hover': {
                       backgroundColor: messageSent ? 'crimson' : '',
                     },
-                    mt: {xs: 1, sm: 0},
-                    ml: {xs: 0, sm: 2},
-                    width: {xs: '200px', sm: '150px'},
+                    mt: {xs: 1, md: 0},
+                    ml: {xs: 0, md: 2},
+                    width: {xs: '200px', md: '150px'},
                   }}
                   variant="contained"
                   id="submit"
@@ -320,7 +315,8 @@ const CatGPT = () => {
                 sx={{
                   textAlign: 'center',
                   mx: {xs: 2, sm: 1},
-                  py: {xs: 2, sm: 1},
+                  pt: {xs: 2, sm: 1},
+                  display: {xs: 'none', sm: 'block'},
                 }}
               >
                 {responseData
@@ -333,17 +329,10 @@ const CatGPT = () => {
                 sx={{
                   textAlign: 'center',
                   mx: {xs: 2, sm: 1},
-                  py: {xs: 2, sm: 1},
+                  pt: {xs: 2, sm: 1},
                   variant: {xs: 'body1', sm: 'h6'},
                   color: cost < 0.01 ? '#6B8B4D' : '#9E0022',
                   borderRadius: '5px',
-                  p: 1,
-                  '&:hover': {
-                    textShadow:
-                      cost < 0.01
-                        ? '0px 0px 1px #6B8B4D'
-                        : '0px 0px 1px #9E0022',
-                  },
                 }}
               >
                 {'Total cost: ' + cost.toFixed(4) + '$'}
