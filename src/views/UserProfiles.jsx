@@ -2,23 +2,31 @@ import {Avatar, Box, Button, Grid, Rating, Typography} from '@mui/material';
 import {useContext} from 'react';
 import {MediaContext} from '../contexts/MediaContext';
 import {useState, useEffect} from 'react';
-import {useMedia, useRating, useTag} from '../hooks/ApiHooks';
+import {useMedia, useRating, useTag, useUser} from '../hooks/ApiHooks';
 import {appId, mediaUrl} from '../utils/variables';
-import {useNavigate} from 'react-router-dom';
+import {useLocation, useNavigate} from 'react-router-dom';
 
-const Profile = () => {
-  const {user, setUser} = useContext(MediaContext);
+const UserProfiles = () => {
+  const {user} = useContext(MediaContext);
   const {getTag} = useTag();
   const navigate = useNavigate();
   const {getRatingsById} = useRating();
-  const {getAllMediaByCurrentUser} = useMedia();
+  const {getAllMediaById} = useMedia();
+  const {getUser} = useUser();
+  const {state} = useLocation();
+
+  const [data, setData] = useState(() => {
+    return (
+      state?.data ||
+      state?.file ||
+      JSON.parse(window.localStorage.getItem('userDetails')) ||
+      {}
+    );
+  });
 
   useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem('user'));
-    if (storedUser) {
-      setUser(storedUser);
-    }
-  }, [setUser]);
+    window.localStorage.setItem('userDetails', JSON.stringify(data));
+  }, [data]);
 
   const [profilePic, setProfilePic] = useState({
     filename: 'https://placekitten.com/200/200',
@@ -29,14 +37,28 @@ const Profile = () => {
   const [profileDescription, setprofileDescription] = useState(
     'No profile text yet!'
   );
+
+  const [userData, setUserData] = useState({});
   const [rating, setRating] = useState(0);
   const [ratingCount, setRatingCount] = useState(0);
+
+  const fetchUserData = async () => {
+    try {
+      if (user) {
+        const token = localStorage.getItem('token');
+        const userData = await getUser(data.user_id, token);
+        setUserData(userData);
+      }
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
 
   const fetchProfilePicture = async () => {
     try {
       if (user) {
         const profilePictures = await getTag(
-          appId + '_profilepicture_' + user.user_id
+          appId + '_profilepicture_' + data.user_id
         );
         const profilePicture = profilePictures.pop();
         profilePicture.filename = mediaUrl + profilePicture.filename;
@@ -51,7 +73,7 @@ const Profile = () => {
     try {
       if (user) {
         const backgroundPictures = await getTag(
-          appId + '_backgroundpicture_' + user.user_id
+          appId + '_backgroundpicture_' + data.user_id
         );
         const backgroundPicture = backgroundPictures.pop();
         backgroundPicture.filename = mediaUrl + backgroundPicture.filename;
@@ -66,7 +88,7 @@ const Profile = () => {
     try {
       if (user) {
         const profilePictures = await getTag(
-          appId + '_profilepicture_' + user.user_id
+          appId + '_profilepicture_' + data.user_id
         );
         const profileText = profilePictures.pop();
         setprofileDescription(profileText.description);
@@ -83,12 +105,12 @@ const Profile = () => {
   const fetchAllRatings = async () => {
     try {
       const token = localStorage.getItem('token');
-      const mediaInfo = await getAllMediaByCurrentUser(token);
+      const mediaInfo = await getAllMediaById(data.user_id, token);
       let sum = 0;
       let count = 0;
-      for (const file of mediaInfo) {
+      for (const data of mediaInfo) {
         await sleep(200);
-        const ratings = await getRatingsById(file.file_id);
+        const ratings = await getRatingsById(data.file_id);
         if (ratings.length !== 0) {
           for (const obj of ratings) {
             sum += obj.rating;
@@ -105,10 +127,12 @@ const Profile = () => {
   };
 
   useEffect(() => {
+    fetchUserData();
     fetchProfilePicture();
     fetchBackgroundPicture();
     fetchProfileDescription();
     fetchAllRatings();
+    console.log('useEffectCount user');
   }, [user]);
 
   return (
@@ -122,7 +146,7 @@ const Profile = () => {
               textAlign="center"
               sx={{my: 6}}
             >
-              Profile
+              User profile
             </Typography>
             <Avatar
               src={backgroundPic.filename}
@@ -153,7 +177,7 @@ const Profile = () => {
               </Grid>
               <Grid item sx={{px: 3}}>
                 <Typography component="h1" variant="h3" sx={{mt: 4}}>
-                  <strong>{user.username}</strong>
+                  <strong>{userData.username}</strong>
                 </Typography>
                 <Box sx={{mt: 1}}>
                   <Rating
@@ -169,33 +193,19 @@ const Profile = () => {
                 </Box>
                 <Typography component="div" variant="h6" sx={{mt: 3}}>
                   <strong>Full name : </strong>{' '}
-                  {user.full_name ? user.full_name : 'Has not set a full name'}
+                  {userData.full_name
+                    ? userData.full_name
+                    : 'Has not set a full name'}
                 </Typography>
                 <Typography component="div" variant="h6" sx={{mt: 3}}>
-                  <strong>Email : </strong> {user.email}
+                  <strong>Email : </strong> {userData.email}
                 </Typography>
                 <Typography component="div" variant="h6" sx={{mt: 3}}>
-                  <strong> User ID : </strong> {user.user_id}
+                  <strong> User ID : </strong> {userData.user_id}
                 </Typography>
                 <Typography component="div" variant="h6" sx={{mt: 3}}>
                   <strong> Description : </strong> {profileDescription}
                 </Typography>
-                <Button
-                  variant="contained"
-                  fullWidth
-                  sx={{mt: 5}}
-                  onClick={() => navigate('/profile/update')}
-                >
-                  Update User Info
-                </Button>
-                <Button
-                  variant="contained"
-                  fullWidth
-                  sx={{mt: 5}}
-                  onClick={() => navigate('/logout')}
-                >
-                  Logout
-                </Button>
               </Grid>
             </Grid>
             <Grid container justifyContent="center" gap={5}>
@@ -217,4 +227,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default UserProfiles;

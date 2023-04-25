@@ -13,6 +13,7 @@ import Modify from './views/Modify';
 import UpdateUserInfo from './views/UpdateUserInfo';
 import Search from './views/Search';
 import Liked from './views/Liked';
+import UserProfiles from './views/UserProfiles';
 
 const App = () => {
   return (
@@ -27,6 +28,7 @@ const App = () => {
             <Route path="/Liked" element={<Liked />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/profile/update" element={<UpdateUserInfo />} />
+            <Route path="/userprofiles" element={<UserProfiles />} />
             <Route path="/upload" element={<Upload />} />
             <Route path="/myfiles" element={<MyFiles />} />
             <Route path="/modify" element={<Modify />} />

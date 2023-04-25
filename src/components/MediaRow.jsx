@@ -23,14 +23,17 @@ const MediaRow = ({file, deleteMedia}) => {
       setUpdate(!update);
     }
   };
+  console.log(file);
 
   return (
     <ImageListItem>
       <img
         src={
-          file.media_type !== 'audio'
-            ? mediaUrl + file.thumbnails.w640
-            : '/onlycats_logo.png'
+          file.media_type === 'audio'
+            ? '/onlycats_logo.png'
+            : file.mime_type === 'image/webp' || file.mime_type === 'image/avif'
+            ? mediaUrl + file.filename
+            : mediaUrl + file.thumbnails.w640
         }
         alt={file.title}
       />
