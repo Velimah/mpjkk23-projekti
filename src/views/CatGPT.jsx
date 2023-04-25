@@ -18,6 +18,7 @@ const CatGPT = () => {
   const [currentTitle, setCurrentTitle] = useState(null);
   const [responseData, setRestponseData] = useState(null);
   const [messageSent, setMessageSent] = useState(false);
+  const [cost, setCost] = useState(0);
   const {user} = useContext(MediaContext);
 
   const createNewChat = () => {
@@ -34,7 +35,7 @@ const CatGPT = () => {
 
   const getMessages = async () => {
     setMessageSent(true);
-    const catValue = 'Answer like you were a cat:' + value;
+    const catValue = 'Add a cat pun to the answer:' + value;
     const options = {
       method: 'POST',
       body: JSON.stringify({
@@ -54,6 +55,14 @@ const CatGPT = () => {
       setMessage(data.choices[0].message);
       setRestponseData(data);
       setMessageSent(false);
+      const newCost = parseFloat(
+        calculateTokenCost(
+          data.usage.completion_tokens,
+          data.usage.prompt_tokens
+        )
+      );
+      const addedCost = newCost + cost;
+      setCost(addedCost);
     } catch (error) {
       console.error(error);
     }
@@ -85,12 +94,13 @@ const CatGPT = () => {
     element.scrollIntoView({
       behavior: 'smooth',
       block: 'end',
-      inline: 'nearest',
     });
   };
 
   useEffect(() => {
-    scrollPage();
+    setTimeout(() => {
+      scrollPage();
+    }, 1000);
   }, [responseData]);
 
   const currentChat = previousChats.filter(
@@ -204,6 +214,7 @@ const CatGPT = () => {
               '&::-webkit-scrollbar': {
                 display: 'none',
               },
+              scrollbarWidth: 'none',
             }}
             className="feed"
           >
@@ -243,46 +254,75 @@ const CatGPT = () => {
               ))}
             </Box>
           </List>
-          <Box
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-            width="100%"
-            sx={{borderTop: 'solid 0.5px black', pt: 2}}
-          >
-            <TextField
-              className="text-field"
-              multiline
-              maxRows={4}
-              fullWidth
-              variant="outlined"
-              label="Ask Mr. Mittens a question!"
-              type="text"
-              sx={{mx: 2}}
-              value={value}
-              onChange={(e) => setValue(e.target.value)}
-            />
-            <Box display="flex" justifyContent="flex-end" alignItems="flex-end">
-              <Button
-                sx={{
-                  backgroundColor: messageSent ? 'red' : '',
-                  mr: 2,
-                }}
-                variant="contained"
-                id="submit"
-                onClick={getMessages}
+          <Box display="flex" flexDirection="column" width="100%">
+            <Box
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              width="100%"
+              sx={{
+                borderTop: 'solid 0.5px black',
+                pt: 2,
+              }}
+            >
+              <TextField
+                className="text-field"
+                multiline
+                maxRows={4}
+                fullWidth
+                variant="outlined"
+                label="Ask Mr. Mittens a question!"
+                type="text"
+                sx={{mx: 2, boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px'}}
+                value={value}
+                onChange={(e) => setValue(e.target.value)}
+              />
+              <Box
+                display="flex"
+                justifyContent="flex-end"
+                alignItems="flex-end"
               >
-                {messageSent ? 'Sent!' : 'Submit'}
-              </Button>
+                <Button
+                  sx={{
+                    backgroundColor: messageSent ? 'red' : '',
+                    '&:hover': {
+                      backgroundColor: messageSent ? 'crimson' : '',
+                    },
+                    mr: 2,
+                  }}
+                  variant="contained"
+                  id="submit"
+                  onClick={getMessages}
+                >
+                  {messageSent ? 'Sent!' : 'Submit'}
+                </Button>
+              </Box>
+            </Box>
+            <Box display="flex" justifyContent="center" alignItems="center">
+              <Typography
+                component="p"
+                variant="h6"
+                sx={{textAlign: 'center', m: 2}}
+              >
+                {responseData
+                  ? `Responding model: ${responseData.model}`
+                  : null}
+              </Typography>
+              <Typography
+                component="p"
+                variant="h6"
+                sx={{
+                  textAlign: 'center',
+                  m: 2,
+                  backgroundColor: cost < 0.1 ? '#ACCC7F' : '#CF6E87',
+                  borderRadius: '5px',
+                  p: 1,
+                }}
+              >
+                {'Total cost: ' + cost.toFixed(4) + '$'}
+              </Typography>
             </Box>
           </Box>
-          <Typography
-            component="p"
-            variant="body1"
-            sx={{textAlign: 'center', my: 2}}
-          >
-            {responseData ? `Model: ${responseData.model}` : null}
-          </Typography>
         </Grid>
       </Grid>
     </>
