@@ -1,4 +1,4 @@
-import {Avatar, Box, Button, Grid, Rating, Typography} from '@mui/material';
+import {Avatar, Box, Button, Rating, Typography} from '@mui/material';
 import {useContext} from 'react';
 import {MediaContext} from '../contexts/MediaContext';
 import {useState, useEffect} from 'react';
@@ -32,6 +32,7 @@ const Profile = () => {
   );
   const [rating, setRating] = useState(0);
   const [ratingCount, setRatingCount] = useState(0);
+  const [postCount, setPostCount] = useState(0);
 
   const fetchProfilePicture = async () => {
     try {
@@ -110,7 +111,16 @@ const Profile = () => {
     fetchBackgroundPicture();
     fetchProfileDescription();
     fetchAllRatings();
-  }, [user]);
+    setTimeout(() => {
+      countPosts();
+    }, 1000);
+  }, []);
+
+  const countPosts = () => {
+    const itemCount = document.querySelectorAll('.post').length;
+    setPostCount(itemCount);
+    console.log('itemcount', itemCount);
+  };
 
   return (
     <>
@@ -143,22 +153,24 @@ const Profile = () => {
         />
         <Box
           display="flex"
-          flexDirection="row"
-          justifyContent="space-between"
+          justifyContent="center"
           sx={{
-            maxWidth: '800px',
+            maxWidth: '1000px',
             width: '100%',
             margin: 'auto',
             mt: {xs: -8, md: -23},
-            pl: {xs: 0, md: 25},
+            flexDirection: {xs: 'row', sm: 'row'},
           }}
         >
           <Box
             display="flex"
             flexDirection="column"
-            justifyContent="center"
+            textAlign="center"
             sx={{
-              p: {xs: 4, md: 4},
+              px: {xs: 2, md: 6},
+              py: {xs: 1, md: 1},
+              justifyContent: {xs: 'center', sm: 'center'},
+              alignItems: {xs: 'center', sm: 'flex-start'},
             }}
           >
             <Typography component="p" variant="h1" sx={{mt: 1}}>
@@ -167,75 +179,75 @@ const Profile = () => {
             <Typography component="p" variant="body4" sx={{mt: 1}}>
               {'@' + user.username}
             </Typography>
-            <Typography component="p" variant="body4" sx={{mt: 4}}>
-              {user.email}
+            <Rating
+              name="read-only"
+              size="large"
+              precision={0.5}
+              value={rating.toFixed(2)}
+              readOnly
+              sx={{mt: 1}}
+            />
+            <Typography component="legend">
+              {rating.toFixed(2)} ({ratingCount} ratings)
             </Typography>
-            <Typography component="p" variant="body4" sx={{mt: 1}}>
-              {'ID ' + user.user_id}
-            </Typography>
-            <Box sx={{mt: 1}}>
-              <Rating
-                name="read-only"
-                size="large"
-                precision={0.5}
-                value={rating.toFixed(2)}
-                readOnly
-              />
-              <Typography component="legend">
-                {rating.toFixed(2)} ({ratingCount} ratings)
-              </Typography>
-            </Box>
           </Box>
 
           <Box
             display="flex"
             flexDirection="column"
-            justifyContent="flex-start"
+            justifyContent="center"
             sx={{
-              p: {xs: 4, md: 4},
+              px: {xs: 2, sm: 2},
+              pl: {xs: 0, sm: 2},
+              py: {xs: 1, md: 1},
+              width: {xs: '200px'},
             }}
           >
             <Button
               variant="contained"
-              sx={{mt: 2, mr: 4}}
+              sx={{
+                mt: 2,
+                mr: {xs: 0, sm: 0},
+              }}
               onClick={() => navigate('/profile/update')}
             >
               Edit Profile
             </Button>
             <Button
               variant="outlined"
-              sx={{mt: 2, mr: 4}}
+              sx={{mt: 2, mr: {xs: 0, sm: 0}}}
               onClick={() => navigate('/logout')}
             >
               Logout
             </Button>
-            <Button
-              variant="contained"
-              sx={{mt: 2, mr: 4}}
-              onClick={() => navigate('/catgpt')}
-            >
-              CatGPT
-            </Button>
           </Box>
         </Box>
-
-        <Typography component="div" variant="h6" sx={{mt: 3}}>
-          <strong> Description : </strong> {profileDescription}
-        </Typography>
-        <Grid container justifyContent="center" gap={5}>
-          <Grid item xs={4}>
-            <Button
-              variant="contained"
-              fullWidth
-              sx={{mt: 5}}
-              onClick={() => navigate('/home')}
-            >
-              Back
-            </Button>
-          </Grid>
-        </Grid>
+        <Box display="flex" flexDirection="column" justifyContent="center">
+          <Typography
+            component="p"
+            variant="body3"
+            alignSelf="center"
+            sx={{maxWidth: '700px', p: 4, pl: {xs: 4, md: 10}}}
+          >
+            {profileDescription}
+          </Typography>
+          <Typography
+            component="p"
+            variant="h2"
+            sx={{maxWidth: '1000px', px: 3, py: 2}}
+          >
+            {postCount} {postCount === 1 ? 'post' : 'posts'}
+          </Typography>
+        </Box>
       </Box>
       <MediaTable myFilesOnly={true} />
+      <Button
+        variant="contained"
+        sx={{mt: 5}}
+        onClick={() => navigate('/home')}
+      >
+        Back
+      </Button>
     </>
   );
 };

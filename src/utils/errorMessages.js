@@ -19,7 +19,7 @@ const updateUserErrorMessages = {
 };
 
 const updateProfilePictureErrorMessages = {
-  description: ['Minimum 2 characters', 'Maximum 500 characters'],
+  description: ['Minimum 2 characters', 'Maximum 750 characters'],
 };
 
 const loginErrorMessages = {

@@ -151,7 +151,7 @@ const MediaRow = ({file, deleteMedia, style, sort}) => {
 
   return (
     <Box component="div">
-      <ImageListItem sx={{borderBottom: style ? 0 : 1}}>
+      <ImageListItem className="post" sx={{borderBottom: style ? 0 : 1}}>
         {/* LISTING style user profile */}
         {!style && (
           <Grid

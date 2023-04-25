@@ -15,7 +15,7 @@ const updateUserValidators = {
 };
 
 const updateProfilePictureValidators = {
-  description: ['isEmptyOrMin2', 'maxStringLength: 500'],
+  description: ['isEmptyOrMin2', 'maxStringLength: 750'],
 };
 
 const loginValidators = {
