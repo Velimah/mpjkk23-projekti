@@ -28,7 +28,7 @@ const RegisterForm = ({toggle}) => {
       alert(userResult.message);
       toggle();
     } catch (e) {
-      alert(e.message);
+      console.error(e.message);
     }
   };
 

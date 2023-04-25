@@ -8,18 +8,16 @@ import {
   DialogContentText,
   DialogTitle,
 } from '@mui/material';
-import {useNavigate} from 'react-router-dom';
 
-const AlertDialog = ({title, content, dialogOpen, setDialogOpen}) => {
-  const navigate = useNavigate();
-
+const AlertDialog = ({
+  title,
+  content,
+  dialogOpen,
+  setDialogOpen,
+  functionToDo,
+}) => {
   const handleNo = () => {
     setDialogOpen(false);
-  };
-
-  const handleYes = () => {
-    setDialogOpen(false);
-    navigate(-1);
   };
 
   return (
@@ -34,7 +32,7 @@ const AlertDialog = ({title, content, dialogOpen, setDialogOpen}) => {
         <DialogContentText>{content}</DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleYes}>Yes</Button>
+        <Button onClick={functionToDo}>Yes</Button>
         <Button onClick={handleNo}>No</Button>
       </DialogActions>
     </Dialog>
@@ -46,6 +44,7 @@ AlertDialog.propTypes = {
   content: PropTypes.string,
   dialogOpen: PropTypes.bool,
   setDialogOpen: PropTypes.func,
+  functionToDo: PropTypes.func,
 };
 
 export default AlertDialog;

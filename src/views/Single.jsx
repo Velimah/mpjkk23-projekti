@@ -153,7 +153,7 @@ const Single = () => {
 
   const fetchTags = async () => {
     try {
-      const tagInfo = await getTagsByFileId(file.file_id);
+      const tagInfo = await getTagsByFileId(data.file_id);
       setTagArray(tagInfo);
     } catch (error) {
       console.log(error.message);
