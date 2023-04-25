@@ -106,10 +106,10 @@ const CatGPT = () => {
         alignItems="center"
         justifyContent="center"
         flexWrap="nowrap"
-        style={{
+        sx={{
           height: '80vh',
           width: '100%',
-          maxWidth: '1000px',
+          maxWidth: '1200px',
           margin: 'auto',
         }}
       >
@@ -130,7 +130,7 @@ const CatGPT = () => {
           <List sx={{height: 'fit-content'}}>
             {uniqueTitles?.map((uniqueTitle, index) => (
               <ListItem
-                component="h4"
+                component="li"
                 variant="h6"
                 key={index}
                 onClick={() => handleClick(uniqueTitle)}
@@ -152,7 +152,7 @@ const CatGPT = () => {
             height: '80vh',
 
             width: '100%',
-            maxWidth: '800px',
+            maxWidth: '1000px',
           }}
         >
           <Typography
@@ -168,20 +168,30 @@ const CatGPT = () => {
               display: 'flex',
               flexDirection: 'column',
               width: '100%',
+              '&::-webkit-scrollbar': {
+                display: 'none',
+              },
             }}
+            className="feed"
           >
             <Box className="scroller">
               {currentChat?.map((chat, index) => (
                 <ListItem
                   sx={{
                     backgroundColor:
-                      chat.role === 'assistant' ? 'pink' : 'turquoise',
+                      chat.role === 'assistant' ? '#E3A7B6' : '#E3A7B6',
                     padding: '20px',
-                    margin: '20px 0',
+                    marginTop: '20px',
+                    width: 'fit-content',
+                    borderRadius: '10px',
                   }}
                   key={index}
                 >
-                  <Typography sx={{minWidth: '100px', height: '100%'}}>
+                  <Typography
+                    variant="h6"
+                    component="p"
+                    sx={{minWidth: '120px', height: '100%'}}
+                  >
                     {chat.role === 'assistant' ? 'Mr. Mittens' : chat.role}
                   </Typography>
                   <Typography sx={{textAlign: 'left', margin: '0 10px'}}>
@@ -199,6 +209,7 @@ const CatGPT = () => {
             sx={{borderTop: 'solid 0.5px black', pt: 2}}
           >
             <TextField
+              className="text-field"
               multiline
               maxRows={4}
               fullWidth
@@ -223,11 +234,15 @@ const CatGPT = () => {
               </Button>
             </Box>
           </Box>
+          <Typography
+            component="p"
+            variant="body1"
+            sx={{textAlign: 'center', my: 2}}
+          >
+            {responseData ? `Model: ${responseData.model}` : null}
+          </Typography>
         </Grid>
       </Grid>
-      <Typography component="h2" variant="h5" sx={{textAlign: 'center', my: 2}}>
-        {responseData ? `Model: ${responseData.model}` : null}
-      </Typography>
     </>
   );
 };

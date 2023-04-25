@@ -196,6 +196,14 @@ const Profile = () => {
                 >
                   Logout
                 </Button>
+                <Button
+                  variant="contained"
+                  fullWidth
+                  sx={{mt: 5}}
+                  onClick={() => navigate('/catgpt')}
+                >
+                  CatGPT
+                </Button>
               </Grid>
             </Grid>
             <Grid container justifyContent="center" gap={5}>
