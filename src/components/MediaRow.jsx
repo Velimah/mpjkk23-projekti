@@ -61,6 +61,7 @@ const MediaRow = ({file, deleteMedia, style, sort}) => {
       console.error(error.message);
     }
   };
+  console.log(file);
 
   const fetchLikes = async () => {
     try {

@@ -33,6 +33,26 @@ const themeOptions = {
       fontSize: '1.5rem',
       fontWeight: 'bold',
     },
+    h3: {
+      fontFamily: 'Nunito',
+      fontSize: '1.4rem',
+      fontWeight: 'bold',
+    },
+    h4: {
+      fontFamily: 'Nunito',
+      fontSize: '1.3rem',
+      fontWeight: 'bold',
+    },
+    h5: {
+      fontFamily: 'Nunito',
+      fontSize: '1.2rem',
+      fontWeight: 'bold',
+    },
+    h6: {
+      fontFamily: 'Nunito',
+      fontSize: '1.1rem',
+      fontWeight: 'bold',
+    },
     body1: {
       fontFamily: 'Nunito',
       fontSize: '1rem',

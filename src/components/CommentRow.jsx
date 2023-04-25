@@ -5,7 +5,7 @@ import {useComment, useTag, useUser} from '../hooks/ApiHooks';
 import {appId, mediaUrl} from '../utils/variables';
 import {Link} from 'react-router-dom';
 import {MediaContext} from '../contexts/MediaContext';
-import {formatTime} from '../hooks/UnitHooks';
+import {formatTime} from '../utils/UnitConversions';
 
 const CommentRow = ({file, fetchComments}) => {
   const {user} = useContext(MediaContext);
@@ -88,6 +88,15 @@ const CommentRow = ({file, fetchComments}) => {
           }}
         />
         <Typography sx={{mb: 2}}>user_name: {userInfo.username}</Typography>
+        <Button
+          sx={{p: 1, m: 1}}
+          component={Link}
+          variant="contained"
+          to="/userprofiles"
+          state={{file}}
+        >
+          View profile
+        </Button>
         <Typography sx={{mb: 1}}>
           time added: {formatTime(file.time_added)}
         </Typography>
