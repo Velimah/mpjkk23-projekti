@@ -35,6 +35,9 @@ const CatGPT = () => {
 
   const getMessages = async () => {
     setMessageSent(true);
+    setTimeout(() => {
+      setMessageSent(false);
+    }, 5000);
     const catValue = 'Add a cat pun to the answer:' + value;
     const options = {
       method: 'POST',
@@ -54,7 +57,6 @@ const CatGPT = () => {
       console.log(data);
       setMessage(data.choices[0].message);
       setRestponseData(data);
-      setMessageSent(false);
       const newCost = parseFloat(
         calculateTokenCost(
           data.usage.completion_tokens,
@@ -119,13 +121,14 @@ const CatGPT = () => {
         justifyContent="center"
         flexWrap="nowrap"
         sx={{
-          height: '90vh',
+          height: '100vh',
           width: '100%',
           maxWidth: '1200px',
           position: 'absolute',
-          top: '53%',
+          top: {xs: '55%', sm: '58%'},
           left: '50%',
           transform: 'translate(-50%, -50%)',
+          pb: 10,
         }}
       >
         <Grid
@@ -135,9 +138,10 @@ const CatGPT = () => {
           justifyContent="flex-start"
           sx={{
             height: '100%',
-
             width: '200px',
+            display: {xs: 'none', sm: 'none', md: 'block'},
           }}
+          pl={1}
         >
           <Button
             sx={{mt: 9, mb: 4, width: '180px'}}
@@ -228,6 +232,7 @@ const CatGPT = () => {
                     marginTop: '20px',
                     alignItems: 'start',
                     borderRadius: '5px',
+                    display: {xs: 'block'},
                   }}
                   key={index}
                 >
@@ -263,6 +268,7 @@ const CatGPT = () => {
               sx={{
                 borderTop: 'solid 0.5px black',
                 pt: 2,
+                display: {xs: 'block', sm: 'flex'},
               }}
             >
               <TextField
@@ -273,7 +279,10 @@ const CatGPT = () => {
                 variant="outlined"
                 label="Ask Mr. Mittens a question!"
                 type="text"
-                sx={{mx: 2, boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px'}}
+                sx={{
+                  m: 0,
+                  boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px',
+                }}
                 value={value}
                 onChange={(e) => setValue(e.target.value)}
               />
@@ -281,6 +290,10 @@ const CatGPT = () => {
                 display="flex"
                 justifyContent="flex-end"
                 alignItems="flex-end"
+                sx={{
+                  justifyContent: {xs: 'center', sm: 'flex-end'},
+                  alignContent: {xs: 'center', sm: 'flex-end'},
+                }}
               >
                 <Button
                   sx={{
@@ -288,7 +301,9 @@ const CatGPT = () => {
                     '&:hover': {
                       backgroundColor: messageSent ? 'crimson' : '',
                     },
-                    mr: 2,
+                    mt: {xs: 1, sm: 0},
+                    ml: {xs: 0, sm: 2},
+                    width: {xs: '200px', sm: '150px'},
                   }}
                   variant="contained"
                   id="submit"
@@ -302,7 +317,11 @@ const CatGPT = () => {
               <Typography
                 component="p"
                 variant="h6"
-                sx={{textAlign: 'center', m: 2}}
+                sx={{
+                  textAlign: 'center',
+                  mx: {xs: 2, sm: 1},
+                  py: {xs: 2, sm: 1},
+                }}
               >
                 {responseData
                   ? `Responding model: ${responseData.model}`
@@ -313,10 +332,18 @@ const CatGPT = () => {
                 variant="h6"
                 sx={{
                   textAlign: 'center',
-                  m: 2,
-                  backgroundColor: cost < 0.1 ? '#ACCC7F' : '#CF6E87',
+                  mx: {xs: 2, sm: 1},
+                  py: {xs: 2, sm: 1},
+                  variant: {xs: 'body1', sm: 'h6'},
+                  color: cost < 0.01 ? '#6B8B4D' : '#9E0022',
                   borderRadius: '5px',
                   p: 1,
+                  '&:hover': {
+                    textShadow:
+                      cost < 0.01
+                        ? '0px 0px 1px #6B8B4D'
+                        : '0px 0px 1px #9E0022',
+                  },
                 }}
               >
                 {'Total cost: ' + cost.toFixed(4) + '$'}
