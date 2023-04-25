@@ -1,12 +1,27 @@
-import {Grid, Button, Typography} from '@mui/material';
+import {
+  Grid,
+  Button,
+  Typography,
+  Container,
+  InputLabel,
+  Select,
+  FormControl,
+  MenuItem,
+} from '@mui/material';
 import {Box} from '@mui/system';
 import MediaTable from '../components/MediaTable';
 import {Link} from 'react-router-dom';
-import {useContext} from 'react';
+import {useContext, useState} from 'react';
 import {MediaContext} from '../contexts/MediaContext';
 
 const Home = () => {
   const {user} = useContext(MediaContext);
+
+  const [sort, setSort] = useState();
+
+  const handleChange = (event) => {
+    setSort(event.target.value);
+  };
 
   return (
     <>
@@ -76,12 +91,30 @@ const Home = () => {
           </Box>
         </Grid>
       </Grid>
-      <Box sx={{my: '50px', mx: '10%'}}>
-        <Typography component="h2" variant="h2" sx={{mb: 2}}>
-          Discover cats
-        </Typography>
-        <MediaTable />
-      </Box>
+      <Grid sx={{mt: '50px', mb: '100px'}}>
+        <Container>
+          <Grid>
+            <Typography component="h2" variant="h2" sx={{mb: 2}}>
+              Discover cats
+            </Typography>
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">Sort</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={sort}
+                label="Sort"
+                onChange={handleChange}
+              >
+                <MenuItem value={1}>Newest</MenuItem>
+                <MenuItem value={2}>Most liked</MenuItem>
+                <MenuItem value={3}>Top rated</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+        </Container>
+        <MediaTable sort={sort} />
+      </Grid>
     </>
   );
 };
