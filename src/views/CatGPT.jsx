@@ -1,4 +1,4 @@
-import {useState, useEffect} from 'react';
+import {useState, useEffect, useContext} from 'react';
 import {calculateTokenCost} from '../utils/UnitConversions';
 import {
   Box,
@@ -9,6 +9,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import {MediaContext} from '../contexts/MediaContext';
 
 const CatGPT = () => {
   const [value, setValue] = useState(null);
@@ -17,6 +18,7 @@ const CatGPT = () => {
   const [currentTitle, setCurrentTitle] = useState(null);
   const [responseData, setRestponseData] = useState(null);
   const [messageSent, setMessageSent] = useState(false);
+  const {user} = useContext(MediaContext);
 
   const createNewChat = () => {
     setMessage(null);
@@ -32,7 +34,7 @@ const CatGPT = () => {
 
   const getMessages = async () => {
     setMessageSent(true);
-    const catValue = /* "Answer like a cat:" + */ value;
+    const catValue = 'Answer like you were a cat:' + value;
     const options = {
       method: 'POST',
       body: JSON.stringify({
@@ -107,10 +109,13 @@ const CatGPT = () => {
         justifyContent="center"
         flexWrap="nowrap"
         sx={{
-          height: '80vh',
+          height: '90vh',
           width: '100%',
           maxWidth: '1200px',
-          margin: 'auto',
+          position: 'absolute',
+          top: '53%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
         }}
       >
         <Grid
@@ -124,14 +129,41 @@ const CatGPT = () => {
             width: '200px',
           }}
         >
-          <Button sx={{mt: 15}} variant="contained" onClick={createNewChat}>
+          <Button
+            sx={{mt: 9, mb: 4, width: '180px'}}
+            variant="contained"
+            onClick={createNewChat}
+          >
             New chat
           </Button>
-          <List sx={{height: 'fit-content'}}>
+          {uniqueTitles?.length > 0 && (
+            <Typography component="p" variant="h6" sx={{}}>
+              Chats
+            </Typography>
+          )}
+          <List
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'flex-start',
+              height: 'fit-content',
+              width: '184px',
+              m: 1,
+              textAlign: 'left',
+            }}
+          >
             {uniqueTitles?.map((uniqueTitle, index) => (
               <ListItem
                 component="li"
                 variant="h6"
+                sx={{
+                  backgroundColor: '#ACCC7F',
+                  borderRadius: '5px',
+                  '&:hover': {
+                    backgroundColor: '#8FB361',
+                  },
+                  mb: 1,
+                }}
                 key={index}
                 onClick={() => handleClick(uniqueTitle)}
               >
@@ -149,15 +181,15 @@ const CatGPT = () => {
           textAlign="center"
           flexWrap="nowrap"
           sx={{
-            height: '80vh',
-
+            height: '90vh',
             width: '100%',
             maxWidth: '1000px',
+            px: 2,
           }}
         >
           <Typography
             component="h1"
-            variant={!currentTitle ? 'h3' : 'h4'}
+            variant={!currentTitle ? 'h1' : 'h2'}
             sx={{textAlign: 'center', my: 2}}
           >
             {!currentTitle ? 'Cat-GPT' : currentTitle}
@@ -168,6 +200,7 @@ const CatGPT = () => {
               display: 'flex',
               flexDirection: 'column',
               width: '100%',
+              borderRadius: '5px 5px 0 0',
               '&::-webkit-scrollbar': {
                 display: 'none',
               },
@@ -179,22 +212,31 @@ const CatGPT = () => {
                 <ListItem
                   sx={{
                     backgroundColor:
-                      chat.role === 'assistant' ? '#E3A7B6' : '#E3A7B6',
+                      chat.role === 'assistant' ? '#F4DCE1' : '#F4DCE1',
                     padding: '20px',
                     marginTop: '20px',
-                    width: 'fit-content',
-                    borderRadius: '10px',
+                    alignItems: 'start',
+                    borderRadius: '5px',
                   }}
                   key={index}
                 >
                   <Typography
-                    variant="h6"
+                    variant="Body1"
                     component="p"
-                    sx={{minWidth: '120px', height: '100%'}}
+                    sx={{
+                      minWidth: '120px',
+                      height: '100%',
+                      fontWeight: 'bold',
+                      textAlign: 'left',
+                    }}
                   >
-                    {chat.role === 'assistant' ? 'Mr. Mittens' : chat.role}
+                    {chat.role === 'assistant' ? 'Mr. Mittens' : user.username}
                   </Typography>
-                  <Typography sx={{textAlign: 'left', margin: '0 10px'}}>
+                  <Typography
+                    component="p"
+                    variant="body1"
+                    sx={{textAlign: 'left', margin: '0 10px'}}
+                  >
                     {chat.content}
                   </Typography>
                 </ListItem>
