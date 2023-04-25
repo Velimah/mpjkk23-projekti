@@ -224,7 +224,7 @@ const CatGPT = () => {
                     backgroundColor:
                       chat.role === 'assistant' ? '#F4DCE1' : '#F4DCE1',
                     padding: '20px',
-                    marginTop: '20px',
+                    marginTop: '15px',
                     alignItems: 'start',
                     borderRadius: '5px',
                     display: {xs: 'block'},
@@ -335,7 +335,7 @@ const CatGPT = () => {
                   borderRadius: '5px',
                 }}
               >
-                {'Total cost: ' + cost.toFixed(4) + '$'}
+                {responseData ? 'Total cost: ' + cost.toFixed(4) + '$' : null}
               </Typography>
             </Box>
           </Box>
