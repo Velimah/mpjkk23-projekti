@@ -114,115 +114,128 @@ const Profile = () => {
 
   return (
     <>
-      {user && (
-        <>
-          <Box sx={{maxWidth: 'md', margin: 'auto'}}>
-            <Typography
-              component="h1"
-              variant="h2"
-              textAlign="center"
-              sx={{my: 6}}
-            >
-              Profile
+      <Box sx={{maxWidth: '1200px', margin: 'auto', pt: {xs: 8, sm: 1, md: 1}}}>
+        <Avatar
+          src={backgroundPic.filename}
+          alt="Logo"
+          sx={{
+            borderRadius: 0,
+            boxShadow: 3,
+            maxWidth: '1200px',
+            width: '100%',
+            height: {xs: '150px', md: '300px'},
+            maxHeight: '300px',
+          }}
+        />
+        <Avatar
+          src={profilePic.filename}
+          alt="Logo"
+          sx={{
+            boxShadow: 3,
+            borderColor: 'white',
+            position: 'relative',
+            height: {xs: '150px', sm: '150px', md: '200px'},
+            width: {xs: '150px', sm: '150px', md: '200px'},
+            top: {xs: '-75px', sm: '-75px', md: '-100px'},
+            left: {xs: '0', sm: '50px', md: '50px'},
+            margin: {xs: 'auto', sm: 'initial'},
+          }}
+        />
+        <Box
+          display="flex"
+          flexDirection="row"
+          justifyContent="space-between"
+          sx={{
+            maxWidth: '800px',
+            width: '100%',
+            margin: 'auto',
+            mt: {xs: -8, md: -23},
+            pl: {xs: 0, md: 25},
+          }}
+        >
+          <Box
+            display="flex"
+            flexDirection="column"
+            justifyContent="center"
+            sx={{
+              p: {xs: 4, md: 4},
+            }}
+          >
+            <Typography component="p" variant="h1" sx={{mt: 1}}>
+              {user.full_name ? user.full_name : 'Has not set a full name'}
             </Typography>
-            <Avatar
-              src={backgroundPic.filename}
-              alt="Logo"
-              sx={{
-                borderRadius: 0,
-                boxShadow: 3,
-                width: 900,
-                height: 320,
-              }}
-            />
-            <Grid container justifyContent="center">
-              <Grid item sx={{px: 3}}>
-                <Avatar
-                  src={profilePic.filename}
-                  alt="Logo"
-                  sx={{
-                    top: -100,
-                    left: -100,
-                    boxShadow: 3,
-                    width: 200,
-                    height: 200,
-                    borderStyle: 'solid',
-                    borderWidth: 3,
-                    borderColor: 'white',
-                  }}
-                />
-              </Grid>
-              <Grid item sx={{px: 3}}>
-                <Typography component="h1" variant="h3" sx={{mt: 4}}>
-                  <strong>{user.username}</strong>
-                </Typography>
-                <Box sx={{mt: 1}}>
-                  <Rating
-                    name="read-only"
-                    size="large"
-                    precision={0.5}
-                    value={rating.toFixed(2)}
-                    readOnly
-                  />
-                  <Typography component="legend">
-                    {rating.toFixed(2)} ({ratingCount} ratings)
-                  </Typography>
-                </Box>
-                <Typography component="div" variant="h6" sx={{mt: 3}}>
-                  <strong>Full name : </strong>{' '}
-                  {user.full_name ? user.full_name : 'Has not set a full name'}
-                </Typography>
-                <Typography component="div" variant="h6" sx={{mt: 3}}>
-                  <strong>Email : </strong> {user.email}
-                </Typography>
-                <Typography component="div" variant="h6" sx={{mt: 3}}>
-                  <strong> User ID : </strong> {user.user_id}
-                </Typography>
-                <Typography component="div" variant="h6" sx={{mt: 3}}>
-                  <strong> Description : </strong> {profileDescription}
-                </Typography>
-                <Button
-                  variant="contained"
-                  fullWidth
-                  sx={{mt: 5}}
-                  onClick={() => navigate('/profile/update')}
-                >
-                  Update User Info
-                </Button>
-                <Button
-                  variant="contained"
-                  fullWidth
-                  sx={{mt: 5}}
-                  onClick={() => navigate('/logout')}
-                >
-                  Logout
-                </Button>
-                <Button
-                  variant="contained"
-                  fullWidth
-                  sx={{mt: 5}}
-                  onClick={() => navigate('/catgpt')}
-                >
-                  CatGPT
-                </Button>
-              </Grid>
-            </Grid>
-            <Grid container justifyContent="center" gap={5}>
-              <Grid item xs={4}>
-                <Button
-                  variant="contained"
-                  fullWidth
-                  sx={{mt: 5}}
-                  onClick={() => navigate('/home')}
-                >
-                  Back
-                </Button>
-              </Grid>
-            </Grid>
+            <Typography component="p" variant="body4" sx={{mt: 1}}>
+              {'@' + user.username}
+            </Typography>
+            <Typography component="p" variant="body4" sx={{mt: 4}}>
+              {user.email}
+            </Typography>
+            <Typography component="p" variant="body4" sx={{mt: 1}}>
+              {'ID ' + user.user_id}
+            </Typography>
+            <Box sx={{mt: 1}}>
+              <Rating
+                name="read-only"
+                size="large"
+                precision={0.5}
+                value={rating.toFixed(2)}
+                readOnly
+              />
+              <Typography component="legend">
+                {rating.toFixed(2)} ({ratingCount} ratings)
+              </Typography>
+            </Box>
           </Box>
-          <MediaTable myFilesOnly={true} />
-        </>
-      )}
+
+          <Box
+            display="flex"
+            flexDirection="column"
+            justifyContent="flex-start"
+            sx={{
+              p: {xs: 4, md: 4},
+            }}
+          >
+            <Button
+              variant="contained"
+              sx={{mt: 2, mr: 4}}
+              onClick={() => navigate('/profile/update')}
+            >
+              Edit Profile
+            </Button>
+            <Button
+              variant="outlined"
+              sx={{mt: 2, mr: 4}}
+              onClick={() => navigate('/logout')}
+            >
+              Logout
+            </Button>
+            <Button
+              variant="contained"
+              sx={{mt: 2, mr: 4}}
+              onClick={() => navigate('/catgpt')}
+            >
+              CatGPT
+            </Button>
+          </Box>
+        </Box>
+
+        <Typography component="div" variant="h6" sx={{mt: 3}}>
+          <strong> Description : </strong> {profileDescription}
+        </Typography>
+        <Grid container justifyContent="center" gap={5}>
+          <Grid item xs={4}>
+            <Button
+              variant="contained"
+              fullWidth
+              sx={{mt: 5}}
+              onClick={() => navigate('/home')}
+            >
+              Back
+            </Button>
+          </Grid>
+        </Grid>
+      </Box>
+      <MediaTable myFilesOnly={true} />
     </>
   );
 };
