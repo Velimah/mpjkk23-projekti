@@ -5,10 +5,10 @@ import {
   useMediaQuery,
   Container,
 } from '@mui/material';
-import {useMedia, useFavourite} from '../hooks/ApiHooks';
+import {useMedia} from '../hooks/ApiHooks';
 import MediaRow from './MediaRow';
 import PropTypes from 'prop-types';
-import {useState, useEffect} from 'react';
+import {useState} from 'react';
 import WindowIcon from '@mui/icons-material/Window';
 import MenuIcon from '@mui/icons-material/Menu';
 import {NavLink} from 'react-router-dom';
@@ -17,7 +17,7 @@ import {useTheme} from '@mui/material/styles';
 const MediaTable = ({myFilesOnly = false, sort}) => {
   const {mediaArray, deleteMedia} = useMedia(myFilesOnly);
 
-  let sortedArray = mediaArray;
+  let sortedArray = mediaArray.slice().reverse();
 
   const [style, setStyle] = useState(true);
   const changeToGrid = () => {
@@ -28,13 +28,12 @@ const MediaTable = ({myFilesOnly = false, sort}) => {
     setStyle(false);
   };
 
-  if (sort === 1) {
-    sortedArray = mediaArray.slice().reverse();
-    console.log(sortedArray);
-  } else if (sort === 2) {
-    sortedArray = mediaArray;
+  if (sort === 2) {
+    console.log('top rated');
+  } else if (sort === 3) {
+    console.log('most liked');
   } else {
-    console.log('third');
+    sortedArray = mediaArray.slice().reverse();
   }
 
   const theme = useTheme();
@@ -55,11 +54,15 @@ const MediaTable = ({myFilesOnly = false, sort}) => {
               aria-label="window"
               onClick={changeToGrid}
               component={NavLink}
+              sx={{width: smallScreen ? '50%' : '150px'}}
             >
               <WindowIcon />
             </IconButton>
           ) : (
-            <IconButton onClick={changeToGrid}>
+            <IconButton
+              onClick={changeToGrid}
+              sx={{width: smallScreen ? '50%' : '150px'}}
+            >
               <WindowIcon />
             </IconButton>
           )}
@@ -68,11 +71,15 @@ const MediaTable = ({myFilesOnly = false, sort}) => {
               aria-label="list"
               onClick={changeToList}
               component={NavLink}
+              sx={{width: smallScreen ? '50%' : '150px'}}
             >
               <MenuIcon />
             </IconButton>
           ) : (
-            <IconButton onClick={changeToList}>
+            <IconButton
+              onClick={changeToList}
+              sx={{width: smallScreen ? '50%' : '150px'}}
+            >
               <MenuIcon />
             </IconButton>
           )}

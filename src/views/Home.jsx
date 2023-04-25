@@ -93,15 +93,20 @@ const Home = () => {
       </Grid>
       <Grid sx={{mt: '50px', mb: '100px'}}>
         <Container>
-          <Grid>
+          <Grid
+            container
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+          >
             <Typography component="h2" variant="h2" sx={{mb: 2}}>
               Discover cats
             </Typography>
-            <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">Sort</InputLabel>
+            <FormControl sx={{width: 150}}>
+              <InputLabel id="select-label">Sort</InputLabel>
               <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
+                labelId="select-label"
+                id="select"
                 value={sort}
                 label="Sort"
                 onChange={handleChange}
