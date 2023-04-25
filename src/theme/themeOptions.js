@@ -63,11 +63,11 @@ const themeOptions = {
     MuiIconButton: {
       styleOverrides: {
         root: {
-          color: '#7047A6',
+          color: '#232020',
           borderRadius: 0,
-          width: '150px',
           '&.active': {
-            borderBottom: '2px solid #7047A6',
+            color: '#7047A6',
+            borderBottom: '5px solid #7047A6',
           },
         },
       },

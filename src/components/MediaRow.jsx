@@ -23,6 +23,7 @@ import {
 } from '../hooks/ApiHooks';
 import {useTheme} from '@mui/material/styles';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 import StarOutlineIcon from '@mui/icons-material/StarOutline';
 
 const MediaRow = ({file, deleteMedia, style, sort}) => {
@@ -43,15 +44,12 @@ const MediaRow = ({file, deleteMedia, style, sort}) => {
 
   const {getUser} = useUser();
   const {getFavourites, postFavourite, deleteFavourite} = useFavourite();
+  const {getRatingsById} = useRating();
 
   const {getTag} = useTag();
 
-  const {getMediaById} = useMedia();
-
-  const {postRating, deleteRating, getRatingsById} = useRating();
-
   const [profilePic, setProfilePic] = useState({
-    filename: 'https://placekitten.com/200/200',
+    filename: '',
   });
 
   const fetchUser = async () => {
@@ -70,30 +68,9 @@ const MediaRow = ({file, deleteMedia, style, sort}) => {
       setLikes(likeInfo.length);
       likeInfo.forEach((like) => {
         if (like.user_id === user.user_id) {
-          setUserLike(true);
+          setRefreshLikes(true);
         }
       });
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
-
-  const doLike = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      const data = {file_id: file.file_id};
-      const likeInfo = await postFavourite(data, token);
-      setUserLike(true);
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
-
-  const deleteLike = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      const likeInfo = await deleteFavourite(file.file_id, token);
-      setUserLike(false);
     } catch (error) {
       console.log(error.message);
     }
@@ -112,28 +89,41 @@ const MediaRow = ({file, deleteMedia, style, sort}) => {
     }
   };
 
-  const doRating = async (value) => {
+  useEffect(() => {
+    fetchUser();
+    fetchLikes();
+    fetchProfilePicture();
+    fetchRatings();
+  }, []);
+
+  const doLike = async () => {
     try {
       const token = localStorage.getItem('token');
-      const data = {file_id: file.file_id, rating: value};
-      const ratingInfo = await postRating(data, token);
-      console.log(ratingInfo);
-      setRefreshRating(!refreshRating);
+      const data = {file_id: file.file_id};
+      const likeInfo = await postFavourite(data, token);
+      setRefreshLikes(true);
     } catch (error) {
       console.log(error.message);
     }
   };
 
-  const doDeleteRating = async () => {
+  useEffect(() => {
+    fetchLikes();
+  }, [refreshLikes]);
+
+  const deleteLike = async () => {
     try {
       const token = localStorage.getItem('token');
-      const ratingInfo = await deleteRating(file.file_id, token);
-      console.log(ratingInfo);
-      setRefreshRating(!refreshRating);
+      const likeInfo = await deleteFavourite(file.file_id, token);
+      setRefreshLikes(false);
     } catch (error) {
       console.log(error.message);
     }
   };
+
+  useEffect(() => {
+    fetchLikes();
+  }, [userLike]);
 
   const fetchRatings = async () => {
     try {
@@ -148,6 +138,7 @@ const MediaRow = ({file, deleteMedia, style, sort}) => {
         }
       });
       const averageRating = sum / ratingInfo.length;
+
       setRating(averageRating);
     } catch (error) {
       console.log(error.message);
@@ -158,31 +149,22 @@ const MediaRow = ({file, deleteMedia, style, sort}) => {
     fetchRatings();
   }, [refreshRating]);
 
-  useEffect(() => {
-    fetchUser();
-    fetchLikes();
-    fetchProfilePicture();
-    fetchRatings();
-  }, []);
-
-  useEffect(() => {
-    fetchLikes();
-  }, [userLike]);
   return (
     <Box component="div">
-      <ImageListItem sx={{boxShadow: !style & !smallScreen ? 1 : 0}}>
+      <ImageListItem sx={{borderBottom: style ? 0 : 1}}>
+        {/* LISTING style user profile */}
         {!style && (
           <Grid
             container
             direction="row"
             alignItems="center"
-            sx={{px: smallScreen ? '5%' : 'auto'}}
+            sx={{px: smallScreen ? '5%' : 'auto', my: 3}}
           >
             <Avatar
               aria-label="Profile"
               component={Link}
               to="/profile"
-              sx={{my: 3, boxShadow: 3}}
+              sx={{boxShadow: 3}}
               src={profilePic.filename}
             />
             <Typography component="p" sx={{pl: 1}}>
@@ -201,7 +183,12 @@ const MediaRow = ({file, deleteMedia, style, sort}) => {
           >
             <Box
               component="img"
-              sx={{height: '100%', width: '100%', objectFit: 'cover'}}
+              sx={{
+                height: '100%',
+                width: '100%',
+                objectFit: 'cover',
+                borderRadius: '5px',
+              }}
               src={
                 file.media_type !== 'audio'
                   ? mediaUrl + file.thumbnails.w640
@@ -218,7 +205,7 @@ const MediaRow = ({file, deleteMedia, style, sort}) => {
               height: '350px',
               width: '100%',
               objectFit: 'cover',
-              borderRadius: smallScreen ? 0 : '10px',
+              borderRadius: smallScreen ? 0 : '5px',
             }}
             src={
               file.media_type !== 'audio'
@@ -229,61 +216,58 @@ const MediaRow = ({file, deleteMedia, style, sort}) => {
           />
         )}
         {!style && (
-          // TODO: make 2 rows max desc
-          <Grid sx={{px: smallScreen ? '5%' : 'auto'}}>
+          // TODO: make 2 rows max desc, it is only 1 row now..
+          <Grid sx={{px: smallScreen ? '5%' : 'auto', py: 1, pb: 3}}>
             <Grid
               container
               direction="row"
               justifyContent="space-between"
               alignItems="center"
-              sx={{py: '15px'}}
+              rowSpacing={2}
             >
               <Grid item>
                 <IconButton
-                  aria-label="favoriteBorderIcon"
-                  onClick={doLike}
-                  sx={{width: '100%'}}
+                  aria-label="favoriteIcon"
+                  onClick={refreshLikes ? deleteLike : doLike}
+                  variant="contained"
                 >
-                  <FavoriteBorderIcon />{' '}
+                  {refreshLikes ? (
+                    <FavoriteIcon sx={{color: '#7047A6'}} />
+                  ) : (
+                    <FavoriteBorderIcon sx={{color: '#7047A6'}} />
+                  )}
                   <Typography component="p">
-                    Add a like ({likes} likes)
+                    {refreshLikes ? 'Unlike' : 'Add a like'} ({likes} likes)
                   </Typography>
                 </IconButton>
               </Grid>
               <Grid item>
-                {refreshRating ? (
-                  <Box sx={{mt: 1}}>
-                    <Rating
-                      name="read-only"
-                      size="large"
-                      precision={0.2}
-                      defaultValue={parseFloat(rating.toFixed(2))}
-                      value={parseFloat(rating.toFixed(2))}
-                      readOnly
-                    />
-                    <Typography component="legend">
-                      {parseFloat(rating.toFixed(2))} ({parseFloat(ratingCount)}{' '}
-                      ratings)
+                {/* TODO: if rating has been given, make icon filled */}
+                <Box>
+                  <IconButton aria-label="list" component={Link} to="/single">
+                    <StarOutlineIcon sx={{color: '#7047A6'}} />
+                    <Typography component="p">
+                      {rating} ({ratingCount} ratings)
                     </Typography>
-                    <Button onClick={doDeleteRating} variant="contained">
-                      delete rating
-                    </Button>
-                  </Box>
-                ) : (
-                  <Box>
-                    <IconButton aria-label="list">
-                      <StarOutlineIcon />
-                      <Typography component="p">
-                        {rating} ({ratingCount} ratings)
-                      </Typography>
-                    </IconButton>
-                  </Box>
-                )}
+                  </IconButton>
+                </Box>
               </Grid>
             </Grid>
-            <Grid item>
-              <Typography component="p" sx={{mb: 3}}>
-                {description.desc}{' '}
+            <Grid
+              item
+              style={{
+                width: smallScreen ? 250 : 500,
+                whiteSpace: 'nowrap',
+              }}
+            >
+              <Typography
+                sx={{
+                  textOverflow: 'ellipsis',
+                  overflow: 'hidden',
+                  padding: '8px',
+                }}
+              >
+                {description.desc}
               </Typography>
               <Button
                 variant="text"
