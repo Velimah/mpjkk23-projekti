@@ -8,7 +8,6 @@ import Login from './views/Login';
 import Logout from './views/Logout';
 import Upload from './views/Upload';
 import {MediaProvider} from './contexts/MediaContext';
-import MyFiles from './views/MyFiles';
 import Modify from './views/Modify';
 import UpdateUserInfo from './views/UpdateUserInfo';
 import Search from './views/Search';
@@ -31,7 +30,6 @@ const App = () => {
             <Route path="/profile/update" element={<UpdateUserInfo />} />
             <Route path="/userprofiles" element={<UserProfiles />} />
             <Route path="/upload" element={<Upload />} />
-            <Route path="/myfiles" element={<MyFiles />} />
             <Route path="/modify" element={<Modify />} />
             <Route path="/catgpt" element={<CatGPT />} />
             <Route path="/logout" element={<Logout />} />

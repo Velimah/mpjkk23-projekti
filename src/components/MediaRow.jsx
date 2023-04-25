@@ -30,7 +30,7 @@ const MediaRow = ({file, deleteMedia, style, sort}) => {
   const theme = useTheme();
   const smallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const {user, update, setUpdate} = useContext(MediaContext);
+  const {user, update, setUpdate, setTargetUser} = useContext(MediaContext);
   const description = JSON.parse(file.description);
 
   const [owner, setOwner] = useState({username: ''});
@@ -163,7 +163,11 @@ const MediaRow = ({file, deleteMedia, style, sort}) => {
             <Avatar
               aria-label="Profile"
               component={Link}
-              to="/profile"
+              to="/userprofiles"
+              state={{file}}
+              onClick={() => {
+                setTargetUser(file);
+              }}
               sx={{boxShadow: 3}}
               src={profilePic.filename}
             />
@@ -179,6 +183,9 @@ const MediaRow = ({file, deleteMedia, style, sort}) => {
             variant="contained"
             to="/single"
             state={{file}}
+            onClick={() => {
+              setTargetUser(file);
+            }}
             sx={{height: '100%', width: '100%', objectFit: 'cover'}}
           >
             <Box
@@ -280,6 +287,9 @@ const MediaRow = ({file, deleteMedia, style, sort}) => {
                 component={Link}
                 to="/single"
                 state={{file}}
+                onClick={() => {
+                  setTargetUser(file);
+                }}
               >
                 Show more
               </Button>

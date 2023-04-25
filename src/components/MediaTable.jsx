@@ -14,8 +14,12 @@ import MenuIcon from '@mui/icons-material/Menu';
 import {NavLink} from 'react-router-dom';
 import {useTheme} from '@mui/material/styles';
 
-const MediaTable = ({myFilesOnly = false, sort}) => {
-  const {mediaArray, deleteMedia} = useMedia(myFilesOnly);
+const MediaTable = ({
+  myFilesOnly = false,
+  sort,
+  targetUserFilesOnly = false,
+}) => {
+  const {mediaArray, deleteMedia} = useMedia(myFilesOnly, targetUserFilesOnly);
 
   let sortedArray = mediaArray.slice().reverse();
 
@@ -146,6 +150,7 @@ const MediaTable = ({myFilesOnly = false, sort}) => {
 
 MediaTable.propTypes = {
   myFilesOnly: PropTypes.bool,
+  targetUserFilesOnly: PropTypes.bool,
   sort: PropTypes.any,
 };
 

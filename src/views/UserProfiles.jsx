@@ -1,13 +1,14 @@
-import {Avatar, Box, Button, Grid, Rating, Typography} from '@mui/material';
+import {Avatar, Box, Button, Rating, Typography} from '@mui/material';
 import {useContext} from 'react';
 import {MediaContext} from '../contexts/MediaContext';
 import {useState, useEffect} from 'react';
 import {useMedia, useRating, useTag, useUser} from '../hooks/ApiHooks';
 import {appId, mediaUrl} from '../utils/variables';
 import {useLocation, useNavigate} from 'react-router-dom';
+import MediaTable from '../components/MediaTable';
 
 const UserProfiles = () => {
-  const {user} = useContext(MediaContext);
+  const {user, setTargetUser} = useContext(MediaContext);
   const {getTag} = useTag();
   const navigate = useNavigate();
   const {getRatingsById} = useRating();
@@ -26,6 +27,7 @@ const UserProfiles = () => {
 
   useEffect(() => {
     window.localStorage.setItem('userDetails', JSON.stringify(data));
+    setTargetUser(data);
   }, [data]);
 
   const [profilePic, setProfilePic] = useState({
@@ -41,6 +43,7 @@ const UserProfiles = () => {
   const [userData, setUserData] = useState({});
   const [rating, setRating] = useState(0);
   const [ratingCount, setRatingCount] = useState(0);
+  const [postCount, setPostCount] = useState(0);
 
   const fetchUserData = async () => {
     try {
@@ -132,97 +135,114 @@ const UserProfiles = () => {
     fetchBackgroundPicture();
     fetchProfileDescription();
     fetchAllRatings();
-    console.log('useEffectCount user');
-  }, [user]);
+    setTimeout(() => {
+      countPosts();
+    }, 1000);
+  }, []);
+
+  const countPosts = () => {
+    const itemCount = document.querySelectorAll('.post').length;
+    setPostCount(itemCount);
+  };
 
   return (
     <>
-      {user && (
-        <>
-          <Box sx={{maxWidth: 'md', margin: 'auto'}}>
-            <Typography
-              component="h1"
-              variant="h2"
-              textAlign="center"
-              sx={{my: 6}}
-            >
-              User profile
+      <Box sx={{maxWidth: '1200px', margin: 'auto', pt: {xs: 8, sm: 1, md: 1}}}>
+        <Avatar
+          src={backgroundPic.filename}
+          alt="Logo"
+          sx={{
+            borderRadius: 0,
+            boxShadow: 3,
+            maxWidth: '1200px',
+            width: '100%',
+            height: {xs: '150px', sm: '300px'},
+            maxHeight: '300px',
+          }}
+        />
+        <Avatar
+          src={profilePic.filename}
+          alt="Logo"
+          sx={{
+            boxShadow: 3,
+            borderColor: 'white',
+            position: 'relative',
+            height: {xs: '150px', sm: '175px', md: '200px'},
+            width: {xs: '150px', sm: '175px', md: '200px'},
+            top: {xs: '-75px', sm: '-100px', md: '-100px'},
+            left: {xs: '0', sm: '50px', md: '50px'},
+            margin: {xs: 'auto', sm: 'initial'},
+          }}
+        />
+        <Box
+          display="flex"
+          justifyContent="center"
+          sx={{
+            maxWidth: '1000px',
+            width: '100%',
+            margin: 'auto',
+            mt: {xs: -8, sm: -23},
+            flexDirection: {xs: 'row', sm: 'row'},
+          }}
+        >
+          <Box
+            display="flex"
+            flexDirection="column"
+            textAlign="center"
+            sx={{
+              px: {xs: 2, md: 6},
+              py: {xs: 1, md: 1},
+              justifyContent: {xs: 'center', sm: 'center'},
+              alignItems: {xs: 'center', sm: 'center'},
+            }}
+          >
+            <Typography component="p" variant="h1" sx={{mt: 1}}>
+              {userData.full_name
+                ? userData.full_name
+                : 'Has not set a full name'}
             </Typography>
-            <Avatar
-              src={backgroundPic.filename}
-              alt="Logo"
-              sx={{
-                borderRadius: 0,
-                boxShadow: 3,
-                width: 900,
-                height: 320,
-              }}
+            <Typography component="p" variant="body4" sx={{mt: 1}}>
+              {'@' + userData.username}
+            </Typography>
+            <Rating
+              name="read-only"
+              size="large"
+              precision={0.5}
+              value={rating.toFixed(2)}
+              readOnly
+              sx={{mt: 1}}
             />
-            <Grid container justifyContent="center">
-              <Grid item sx={{px: 3}}>
-                <Avatar
-                  src={profilePic.filename}
-                  alt="Logo"
-                  sx={{
-                    top: -100,
-                    left: -100,
-                    boxShadow: 3,
-                    width: 200,
-                    height: 200,
-                    borderStyle: 'solid',
-                    borderWidth: 3,
-                    borderColor: 'white',
-                  }}
-                />
-              </Grid>
-              <Grid item sx={{px: 3}}>
-                <Typography component="h1" variant="h3" sx={{mt: 4}}>
-                  <strong>{userData.username}</strong>
-                </Typography>
-                <Box sx={{mt: 1}}>
-                  <Rating
-                    name="read-only"
-                    size="large"
-                    precision={0.5}
-                    value={rating.toFixed(2)}
-                    readOnly
-                  />
-                  <Typography component="legend">
-                    {rating.toFixed(2)} ({ratingCount} ratings)
-                  </Typography>
-                </Box>
-                <Typography component="div" variant="h6" sx={{mt: 3}}>
-                  <strong>Full name : </strong>{' '}
-                  {userData.full_name
-                    ? userData.full_name
-                    : 'Has not set a full name'}
-                </Typography>
-                <Typography component="div" variant="h6" sx={{mt: 3}}>
-                  <strong>Email : </strong> {userData.email}
-                </Typography>
-                <Typography component="div" variant="h6" sx={{mt: 3}}>
-                  <strong> User ID : </strong> {userData.user_id}
-                </Typography>
-                <Typography component="div" variant="h6" sx={{mt: 3}}>
-                  <strong> Description : </strong> {profileDescription}
-                </Typography>
-              </Grid>
-            </Grid>
-            <Grid container justifyContent="center" gap={5}>
-              <Grid item xs={4}>
-                <Button
-                  variant="contained"
-                  fullWidth
-                  sx={{mt: 5}}
-                  onClick={() => navigate('/home')}
-                >
-                  Back
-                </Button>
-              </Grid>
-            </Grid>
+            <Typography component="legend">
+              {rating.toFixed(2)} ({ratingCount} ratings)
+            </Typography>
           </Box>
-        </>
-      )}
+        </Box>
+        <Box display="flex" flexDirection="column" justifyContent="center">
+          <Typography
+            component="p"
+            variant="body3"
+            alignSelf="center"
+            sx={{maxWidth: '700px', px: {xs: 4, sm: 2}, py: {xs: 2}}}
+          >
+            {profileDescription}
+          </Typography>
+          <Typography
+            component="p"
+            variant="h2"
+            sx={{maxWidth: '1000px', px: 3, py: 2}}
+          >
+            {postCount} {postCount === 1 ? 'post' : 'posts'}
+          </Typography>
+        </Box>
+      </Box>
+      <MediaTable targetUserFilesOnly={true} />
+      <Button
+        variant="contained"
+        sx={{mt: 5}}
+        onClick={() => navigate('/home')}
+      >
+        Back
+      </Button>
     </>
   );
 };

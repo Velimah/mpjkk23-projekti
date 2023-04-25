@@ -30,7 +30,7 @@ import {commentValidators} from '../utils/validator';
 import {formatTime, formatSize} from '../utils/UnitConversions';
 
 const Single = () => {
-  const {user} = useContext(MediaContext);
+  const {user, setTargetUser} = useContext(MediaContext);
 
   const [owner, setOwner] = useState({username: ''});
   const [likes, setLikes] = useState(0);
@@ -273,6 +273,9 @@ const Single = () => {
             variant="contained"
             to="/userprofiles"
             state={{data}}
+            onClick={() => {
+              setTargetUser(data);
+            }}
           >
             View profile
           </Button>

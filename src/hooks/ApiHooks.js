@@ -15,9 +15,9 @@ const doFetch = async (url, options) => {
   return json;
 };
 
-const useMedia = (myFilesOnly = false) => {
+const useMedia = (myFilesOnly = false, targetUserFilesOnly = false) => {
   const [mediaArray, setMediaArray] = useState([]);
-  const {user, update} = useContext(MediaContext);
+  const {user, update, targetUser} = useContext(MediaContext);
 
   const getMedia = async () => {
     try {
@@ -25,6 +25,10 @@ const useMedia = (myFilesOnly = false) => {
 
       if (myFilesOnly) {
         files = files.filter((file) => file.user_id === user.user_id);
+      }
+
+      if (targetUserFilesOnly) {
+        files = files.filter((file) => file.user_id === targetUser.user_id);
       }
 
       const filesWithThumbnail = await Promise.all(
