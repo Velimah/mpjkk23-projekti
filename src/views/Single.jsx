@@ -9,7 +9,7 @@ import {
   Rating,
   Avatar,
 } from '@mui/material';
-import {useLocation} from 'react-router-dom';
+import {Link, useLocation} from 'react-router-dom';
 import {mediaUrl, appId} from '../utils/variables';
 import {useNavigate} from 'react-router-dom';
 import {
@@ -27,7 +27,7 @@ import {TextValidator, ValidatorForm} from 'react-material-ui-form-validator';
 import useForm from '../hooks/FormHooks';
 import {commentErrorMessages} from '../utils/errorMessages';
 import {commentValidators} from '../utils/validator';
-import {formatTime, formatSize} from '../hooks/UnitHooks';
+import {formatTime, formatSize} from '../utils/UnitConversions';
 
 const Single = () => {
   const {user} = useContext(MediaContext);
@@ -68,9 +68,8 @@ const Single = () => {
     window.localStorage.setItem('details', JSON.stringify(data));
   }, [data]);
 
-  const file = data;
   let allData = {
-    desc: file.description,
+    desc: data.description,
     filters: {
       brightness: 100,
       contrast: 100,
@@ -79,13 +78,13 @@ const Single = () => {
     },
   };
   try {
-    allData = JSON.parse(file.description);
+    allData = JSON.parse(data.description);
   } catch (error) {
     console.log(allData);
   }
 
   let componentType = 'img';
-  switch (file.media_type) {
+  switch (data.media_type) {
     case 'video':
       componentType = 'video';
       break;
@@ -97,7 +96,7 @@ const Single = () => {
   const fetchUser = async () => {
     try {
       const token = localStorage.getItem('token');
-      const ownerInfo = await getUser(file.user_id, token);
+      const ownerInfo = await getUser(data.user_id, token);
       setOwner(ownerInfo);
     } catch (error) {
       console.error(error.message);
@@ -128,7 +127,7 @@ const Single = () => {
 
   const fetchLikes = async () => {
     try {
-      const likeInfo = await getFavourites(file.file_id);
+      const likeInfo = await getFavourites(data.file_id);
       setLikes(likeInfo.length);
       likeInfo.forEach((like) => {
         if (like.user_id === user.user_id) {
@@ -142,7 +141,7 @@ const Single = () => {
 
   const fetchComments = async () => {
     try {
-      const commentInfo = await getCommentsById(file.file_id);
+      const commentInfo = await getCommentsById(data.file_id);
       setCommentCount(commentInfo.length);
       return setCommentArray(commentInfo);
     } catch (error) {
@@ -162,8 +161,8 @@ const Single = () => {
   const doLike = async () => {
     try {
       const token = localStorage.getItem('token');
-      const data = {file_id: file.file_id};
-      const likeInfo = await postFavourite(data, token);
+      const data2 = {file_id: data.file_id};
+      const likeInfo = await postFavourite(data2, token);
       console.log(likeInfo);
       setRefreshLikes(true);
     } catch (error) {
@@ -178,7 +177,7 @@ const Single = () => {
   const deleteLike = async () => {
     try {
       const token = localStorage.getItem('token');
-      const likeInfo = await deleteFavourite(file.file_id, token);
+      const likeInfo = await deleteFavourite(data.file_id, token);
       console.log(likeInfo);
       setRefreshLikes(false);
     } catch (error) {
@@ -189,8 +188,8 @@ const Single = () => {
   const doComment = async () => {
     try {
       const token = localStorage.getItem('token');
-      const data = {file_id: file.file_id, comment: inputs.comment};
-      const commentInfo = await postComment(data, token);
+      const data2 = {file_id: data.file_id, comment: inputs.comment};
+      const commentInfo = await postComment(data2, token);
       alert(commentInfo.message);
       setRefreshComments(!refreshComments);
     } catch (error) {
@@ -214,8 +213,8 @@ const Single = () => {
   const doRating = async (value) => {
     try {
       const token = localStorage.getItem('token');
-      const data = {file_id: file.file_id, rating: value};
-      const ratingInfo = await postRating(data, token);
+      const data2 = {file_id: data.file_id, rating: value};
+      const ratingInfo = await postRating(data2, token);
       console.log(ratingInfo);
       setRefreshRating(!refreshRating);
     } catch (error) {
@@ -226,7 +225,7 @@ const Single = () => {
   const doDeleteRating = async () => {
     try {
       const token = localStorage.getItem('token');
-      const ratingInfo = await deleteRating(file.file_id, token);
+      const ratingInfo = await deleteRating(data.file_id, token);
       console.log(ratingInfo);
       setRefreshRating(!refreshRating);
     } catch (error) {
@@ -236,7 +235,7 @@ const Single = () => {
 
   const fetchRatings = async () => {
     try {
-      const ratingInfo = await getRatingsById(file.file_id);
+      const ratingInfo = await getRatingsById(data.file_id);
       let sum = 0;
       setRatingCount(ratingInfo.length);
 
@@ -268,22 +267,31 @@ const Single = () => {
           <Typography component="h2" variant="h2" sx={{p: 2}}>
             Username: {owner.username}
           </Typography>
+          <Button
+            sx={{p: 1, m: 1}}
+            component={Link}
+            variant="contained"
+            to="/userprofiles"
+            state={{data}}
+          >
+            View profile
+          </Button>
           <Typography component="h1" variant="h2" sx={{p: 2}}>
-            Title: {file.title}
+            Title: {data.title}
           </Typography>
           <CardMedia
             controls={true}
-            poster={mediaUrl + file.screenshot}
+            poster={mediaUrl + data.screenshot}
             component={componentType}
-            src={mediaUrl + file.filename}
-            title={file.title}
+            src={mediaUrl + data.filename}
+            title={data.title}
             sx={{
               filter: `brightness(${allData.filters.brightness}%)
                        contrast(${allData.filters.contrast}%)
                        saturate(${allData.filters.saturation}%)
                        sepia(${allData.filters.sepia}%)`,
               backgroundImage:
-                file.media_type === 'audio' && `url('/vite.svg')`,
+                data.media_type === 'audio' && `url('/vite.svg')`,
             }}
           />
           <CardContent>
@@ -327,13 +335,13 @@ const Single = () => {
                       name="read-only"
                       size="large"
                       precision={0.2}
-                      defaultValue={parseFloat(rating.toFixed(2))}
-                      value={parseFloat(rating.toFixed(2))}
+                      defaultValue={rating.toFixed(2)}
+                      value={rating.toFixed(2)}
                       readOnly
                     />
                     <Typography component="legend">Rated already!</Typography>
                     <Typography component="legend">
-                      {parseFloat(rating.toFixed(2))} ({parseFloat(ratingCount)}{' '}
+                      {rating.toFixed(2)} ({ratingCount}
                       ratings)
                     </Typography>
                     <Button onClick={doDeleteRating} variant="contained">
@@ -343,10 +351,10 @@ const Single = () => {
                 ) : (
                   <Box sx={{mt: 1}}>
                     <Rating
-                      defaultValue={parseFloat(rating.toFixed(2))}
+                      defaultValue={rating.toFixed(2)}
                       name="simple-controlled"
                       size="large"
-                      value={parseFloat(rating.toFixed(2))}
+                      value={rating.toFixed(2)}
                       precision={1}
                       onChange={(event, newValue) => {
                         doRating(newValue);
