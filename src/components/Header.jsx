@@ -57,7 +57,7 @@ const Header = () => {
         <Toolbar sx={{justifyContent: {xs: 'center'}}} disableGutters>
           <Box sx={{display: 'flex', alignItems: 'center'}}>
             <img
-              src="/onlycats_logo.png"
+              src="onlycats_logo.png"
               style={{display: 'flex', marginRight: 8, width: 45}}
               alt="OnlyCats logo"
             />

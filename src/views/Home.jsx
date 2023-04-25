@@ -36,7 +36,7 @@ const Home = () => {
         <Grid item xs={5}>
           <Box sx={{maxWidth: '500px'}}>
             <img
-              src={'/src/assets/onlycats_illustration1.png'}
+              src={'onlycats_illustration1.png'}
               alt={'Cat illustration'}
               loading="lazy"
               width="100%"

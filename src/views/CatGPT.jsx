@@ -38,7 +38,8 @@ const CatGPT = () => {
     setTimeout(() => {
       setMessageSent(false);
     }, 5000);
-    const catValue = 'Add a cat pun to the answer:' + value;
+    const catValue =
+      'Add a cat pun to the answer but answer factually:' + value;
     const options = {
       method: 'POST',
       body: JSON.stringify({
