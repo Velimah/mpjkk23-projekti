@@ -27,7 +27,7 @@ import {TextValidator, ValidatorForm} from 'react-material-ui-form-validator';
 import useForm from '../hooks/FormHooks';
 import {commentErrorMessages} from '../utils/errorMessages';
 import {commentValidators} from '../utils/validator';
-import {formatTime, formatSize} from '../hooks/UnitHooks';
+import {formatTime, formatSize} from '../utils/UnitConversions';
 
 const Single = () => {
   const {user} = useContext(MediaContext);

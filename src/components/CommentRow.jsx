@@ -5,7 +5,7 @@ import {useComment, useTag, useUser} from '../hooks/ApiHooks';
 import {appId, mediaUrl} from '../utils/variables';
 import {Link} from 'react-router-dom';
 import {MediaContext} from '../contexts/MediaContext';
-import {formatTime} from '../hooks/UnitHooks';
+import {formatTime} from '../utils/UnitConversions';
 
 const CommentRow = ({file, fetchComments}) => {
   const {user} = useContext(MediaContext);
