@@ -10,6 +10,7 @@ import {
   Paper,
   Grid,
   useMediaQuery,
+  CircularProgress,
 } from '@mui/material';
 import useForm from '../hooks/FormHooks';
 import {useEffect, useState} from 'react';
@@ -26,6 +27,7 @@ const Upload = () => {
   const [tags, setTags] = useState([]);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState(filePlaceholder);
+  const [upload, setUpload] = useState(false);
   const {postMedia} = useMedia();
   const {postTag} = useTag();
   const navigate = useNavigate();
@@ -46,6 +48,7 @@ const Upload = () => {
 
   const doUpload = async () => {
     try {
+      setUpload(true);
       const data = new FormData();
       data.append('title', inputs.title);
       const allData = {
@@ -86,7 +89,7 @@ const Upload = () => {
     reader.readAsDataURL(event.target.files[0]);
   };
 
-  const handleTagDelete = (tagToDelete) => () => {
+  const doTagDelete = (tagToDelete) => () => {
     const newTags = tags.filter((tag) => tag !== tagToDelete);
     setTags(newTags);
   };
@@ -145,7 +148,7 @@ const Upload = () => {
               />
               <Box sx={{px: {xs: 4, sm: 0}}}>
                 <TextValidator
-                  sx={selectedFile !== filePlaceholder ? {my: 3} : {mt: 4}}
+                  sx={selectedFile !== filePlaceholder ? {my: 3} : {mt: 3}}
                   fullWidth
                   onChange={handleFileChange}
                   type="file"
@@ -241,7 +244,7 @@ const Upload = () => {
                       color="primary"
                       key={tag}
                       label={tag}
-                      onDelete={handleTagDelete(tag)}
+                      onDelete={doTagDelete(tag)}
                       sx={{mr: 1, mt: 1}}
                     />
                   ))}
@@ -251,13 +254,18 @@ const Upload = () => {
                   fullWidth
                   type="submit"
                   sx={{mb: 2}}
+                  disabled={upload}
                 >
-                  Upload
+                  {upload ? 'Uploading...' : 'Upload'}
+                  {upload && (
+                    <CircularProgress color="black" sx={{ml: 2}} size={24} />
+                  )}
                 </Button>
                 <Button
                   variant="outlined"
                   fullWidth
                   onClick={() => setDialogOpen(true)}
+                  disabled={upload}
                 >
                   Cancel
                 </Button>

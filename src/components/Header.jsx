@@ -144,7 +144,7 @@ const Header = () => {
                   </Avatar>
                 </Tooltip>
                 <Button variant="contained" component={Link} to="/upload">
-                  Upload
+                  Add photo
                 </Button>
               </>
             ) : (

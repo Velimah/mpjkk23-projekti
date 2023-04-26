@@ -166,8 +166,6 @@ const Single = () => {
     fetchComments();
     fetchRatings();
     fetchTags();
-    console.log(owner);
-    console.log(user);
   }, []);
 
   const doLike = async () => {
