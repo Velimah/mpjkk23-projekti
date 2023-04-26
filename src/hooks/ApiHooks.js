@@ -15,18 +15,39 @@ const doFetch = async (url, options) => {
   return json;
 };
 
-const useMedia = (myFilesOnly = false) => {
+const useMedia = (myFilesOnly = false, targetUserFilesOnly = false) => {
   const [mediaArray, setMediaArray] = useState([]);
-  const {user, update} = useContext(MediaContext);
+  const {user, update, targetUser, setUser, setTargetUser} =
+    useContext(MediaContext);
+
+  const [userData, setData] = useState(() => {
+    return user ?? JSON.parse(window.localStorage.getItem('user'));
+  });
+
+  useEffect(() => {
+    window.localStorage.setItem('user', JSON.stringify(userData));
+    setUser(userData);
+  }, [setData]);
+
+  const [targetUserData, setTargetUserData] = useState(() => {
+    return targetUser ?? JSON.parse(window.localStorage.getItem('targetUser'));
+  });
+
+  useEffect(() => {
+    window.localStorage.setItem('targetUser', JSON.stringify(targetUserData));
+    setTargetUser(targetUserData);
+  }, [setTargetUserData]);
 
   const getMedia = async () => {
     try {
       let files = await useTag().getTag(appId);
 
       if (myFilesOnly) {
-        files = files.filter((file) => file.user_id === user.user_id);
+        files = files.filter((file) => file.user_id === userData.user_id);
       }
-
+      if (targetUserFilesOnly) {
+        files = files.filter((file) => file.user_id === targetUserData.user_id);
+      }
       const filesWithThumbnail = await Promise.all(
         files.map(async (file) => {
           return await doFetch(baseUrl + 'media/' + file.file_id);
