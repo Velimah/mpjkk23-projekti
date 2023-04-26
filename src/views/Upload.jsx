@@ -25,6 +25,7 @@ import AlertDialog from '../components/AlertDialog';
 const Upload = () => {
   const [file, setFile] = useState(null);
   const [tags, setTags] = useState([]);
+  const [fileError, setFileError] = useState({isError: false, message: ''});
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState(filePlaceholder);
   const [upload, setUpload] = useState(false);
@@ -36,7 +37,7 @@ const Upload = () => {
     theme.breakpoints.down('sm')
   );
   const initValues = {
-    title: 'cat image',
+    title: 'cat post',
     description: '',
   };
 
@@ -49,6 +50,13 @@ const Upload = () => {
 
   const doUpload = async () => {
     try {
+      // Check that file is there
+      if (!file) {
+        setFileError({isError: true, message: 'File is required.'});
+      }
+      if (fileError.isError) {
+        return;
+      }
       setUpload(true);
       const data = new FormData();
       data.append('title', inputs.title);
@@ -61,6 +69,7 @@ const Upload = () => {
       const token = localStorage.getItem('token');
       const uploadResult = await postMedia(data, token);
 
+      // Add tags
       let tagsTmp = [{file_id: uploadResult.file_id, tag: appId}];
 
       tagsTmp = tagsTmp.concat(
@@ -76,11 +85,13 @@ const Upload = () => {
 
       navigate('/home');
     } catch (error) {
+      setUpload(false);
       alert(error.message);
     }
   };
 
   const handleFileChange = (event) => {
+    setFileError({isError: false, message: ''});
     event.persist();
     setFile(event.target.files[0]);
 
@@ -94,6 +105,30 @@ const Upload = () => {
         setSelectedFile(reader.result);
       });
       reader.readAsDataURL(event.target.files[0]);
+    }
+
+    // Check that file is video or image
+    if (
+      !event.target.files[0].type.includes('image') &
+      !event.target.files[0].type.includes('video')
+    ) {
+      setFileError({
+        isError: true,
+        message: 'File needs to be video or image file',
+      });
+    }
+
+    // Check file size
+    const maxFileSize = event.target.files[0].type.includes('image')
+      ? 5000000
+      : 45000000;
+
+    if (event.target.files[0].size > maxFileSize) {
+      console.log('häh');
+      setFileError({
+        isError: true,
+        message: 'Maximum filesize is 45 MB for video and 5 MB for image files',
+      });
     }
   };
 
@@ -176,13 +211,19 @@ const Upload = () => {
               )}
 
               <Box sx={{px: {xs: 4, sm: 0}}}>
-                <TextValidator
+                <TextField
                   sx={selectedFile !== filePlaceholder ? {my: 3} : {mt: 3}}
                   fullWidth
                   onChange={handleFileChange}
                   type="file"
                   name="file"
                   accept="image/*,video/*"
+                  error={fileError.isError}
+                  helperText={
+                    fileError.isError
+                      ? fileError.message
+                      : 'Maximum filesize is 45 MB for video and 5 MB for image files'
+                  }
                 />
                 {selectedFile !== filePlaceholder &&
                   file.type.includes('image') && (
@@ -269,7 +310,7 @@ const Upload = () => {
                       {...params}
                       label="Keywords"
                       placeholder="Add a keyword by pressing enter after writing"
-                      helperText="Add up to 5 keywords, for example your cat's breed."
+                      helperText="Add up to 5 keywords, for example your cat's breed"
                       disabled={tags.length >= 5 && true}
                       sx={tags.length > 0 ? {mb: 2} : {mb: 4}}
                     />
