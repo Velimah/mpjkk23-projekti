@@ -125,7 +125,7 @@ const Profile = () => {
           alt="Logo"
           sx={{
             borderRadius: 0,
-            boxShadow: 3,
+            boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px',
             maxWidth: '1200px',
             width: '100%',
             height: {xs: '150px', md: '300px'},
@@ -136,8 +136,10 @@ const Profile = () => {
           src={profilePic.filename}
           alt="Logo"
           sx={{
-            boxShadow: 3,
-            borderColor: 'white',
+            boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px',
+            borderStyle: 'solid',
+            borderColor: '#FFFFFF',
+            borderWidth: '3px',
             position: 'relative',
             height: {xs: '150px', sm: '150px', md: '200px'},
             width: {xs: '150px', sm: '150px', md: '200px'},
@@ -209,13 +211,6 @@ const Profile = () => {
               onClick={() => navigate('/profile/update')}
             >
               Edit Profile
-            </Button>
-            <Button
-              variant="contained"
-              sx={{mt: 2, mr: {xs: 0, sm: 0}}}
-              onClick={() => navigate('/catgpt')}
-            >
-              Cat-GPT
             </Button>
             <Button
               variant="outlined"
