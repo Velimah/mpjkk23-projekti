@@ -12,7 +12,7 @@ const Modify = () => {
   const {putMedia} = useMedia();
   const navigate = useNavigate();
   const {state} = useLocation();
-  const file = state.file;
+  const file = state.data;
 
   let selectedImage = mediaUrl + file.filename;
   if (file.media_type === 'video' || file.media_type === 'audio') {

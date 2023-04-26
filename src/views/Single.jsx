@@ -8,6 +8,7 @@ import {
   CardContent,
   Rating,
   Avatar,
+  ButtonGroup,
 } from '@mui/material';
 import {Link, useLocation} from 'react-router-dom';
 import {mediaUrl, appId} from '../utils/variables';
@@ -49,7 +50,7 @@ const Single = () => {
     filename: 'https://placekitten.com/200/200',
   });
 
-  const {getMediaById} = useMedia();
+  const {getMediaById, deleteMedia} = useMedia();
   const {getUser} = useUser();
   const {getFavourites, postFavourite, deleteFavourite} = useFavourite();
   const {postComment, getCommentsById} = useComment();
@@ -165,6 +166,8 @@ const Single = () => {
     fetchComments();
     fetchRatings();
     fetchTags();
+    console.log(owner);
+    console.log(user);
   }, []);
 
   const doLike = async () => {
@@ -242,6 +245,20 @@ const Single = () => {
     }
   };
 
+  const doFileDelete = async () => {
+    try {
+      const sure = confirm('Are you sure you want to delete this file?');
+      if (sure) {
+        const token = localStorage.getItem('token');
+        const deleteResult = await deleteMedia(data.file_id, token);
+        console.log(deleteResult);
+        navigate(-1);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const fetchRatings = async () => {
     try {
       const ratingInfo = await getRatingsById(data.file_id);
@@ -291,6 +308,21 @@ const Single = () => {
           <Typography component="h1" variant="h2" sx={{p: 2}}>
             Title: {data.title}
           </Typography>
+          {user.user_id === owner.user_id && (
+            <ButtonGroup>
+              <Button variant="contained" onClick={doFileDelete}>
+                Delete
+              </Button>
+              <Button
+                component={Link}
+                variant="contained"
+                to="/modify"
+                state={{data}}
+              >
+                Modify
+              </Button>
+            </ButtonGroup>
+          )}
           <CardMedia
             controls={true}
             poster={mediaUrl + data.screenshot}
