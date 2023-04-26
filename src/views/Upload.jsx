@@ -9,12 +9,13 @@ import {
   Typography,
   Paper,
   Grid,
+  useMediaQuery,
 } from '@mui/material';
 import useForm from '../hooks/FormHooks';
 import {useEffect, useState} from 'react';
 import {useMedia, useTag} from '../hooks/ApiHooks';
 import {useNavigate} from 'react-router-dom';
-import {appId} from '../utils/variables';
+import {appId, filePlaceholder} from '../utils/variables';
 import {ValidatorForm, TextValidator} from 'react-material-ui-form-validator';
 import {uploadErrorMessages} from '../utils/errorMessages';
 import {uploadValidators} from '../utils/validator';
@@ -24,12 +25,13 @@ const Upload = () => {
   const [file, setFile] = useState(null);
   const [tags, setTags] = useState([]);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const selectedFilePlaceholder =
-    'https://placehold.co/300x300?text=Choose-media';
-  const [selectedFile, setSelectedFile] = useState(selectedFilePlaceholder);
+  const [selectedFile, setSelectedFile] = useState(filePlaceholder);
   const {postMedia} = useMedia();
   const {postTag} = useTag();
   const navigate = useNavigate();
+  const extraSmallScreen = useMediaQuery((theme) =>
+    theme.breakpoints.down('sm')
+  );
   const initValues = {
     title: 'cat image',
     description: '',
@@ -122,7 +124,7 @@ const Upload = () => {
             borderRadius: '1.5rem',
             bgcolor: {xs: 'transparent', sm: '#FFFFFF'},
           }}
-          elevation={0}
+          elevation={extraSmallScreen ? 0 : 6}
         >
           <Grid container columnSpacing={5} alignItems="start">
             <Grid item xs={12} md={7}>
@@ -132,7 +134,7 @@ const Upload = () => {
                 style={{
                   width: '100%',
                   height: '100%',
-                  borderRadius: '1.25rem',
+                  borderRadius: extraSmallScreen ? 0 : '1.25rem',
                   aspectRatio: '1 / 1',
                   objectFit: 'cover',
                   filter: `brightness(${filterInputs.brightness}%)
@@ -142,17 +144,15 @@ const Upload = () => {
                 }}
               />
               <Box sx={{px: {xs: 4, sm: 0}}}>
-                <input
-                  // sx={
-                  //   selectedFile !== selectedFilePlaceholder ? {my: 3} : {mt: 4}
-                  // }
-                  // fullWidth
+                <TextValidator
+                  sx={selectedFile !== filePlaceholder ? {my: 3} : {mt: 4}}
+                  fullWidth
                   onChange={handleFileChange}
                   type="file"
                   name="file"
                   accept="image/*"
                 />
-                {selectedFile !== selectedFilePlaceholder && (
+                {selectedFile !== filePlaceholder && (
                   <>
                     <Typography>Brightness:</Typography>
                     <Slider

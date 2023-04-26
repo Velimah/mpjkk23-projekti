@@ -18,11 +18,10 @@ import {appId, mediaUrl} from '../utils/variables';
 
 const Header = () => {
   const {user} = useContext(MediaContext);
+  const location = useLocation();
   const extraSmallScreen = useMediaQuery((theme) =>
     theme.breakpoints.down('sm')
   );
-  const location = useLocation();
-
   const {getTag} = useTag();
   const [profilePic, setProfilePic] = useState({
     filename: 'https://placekitten.com/200/200',
