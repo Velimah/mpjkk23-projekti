@@ -11,7 +11,7 @@ import {
   ButtonGroup,
 } from '@mui/material';
 import {Link, useLocation} from 'react-router-dom';
-import {mediaUrl, appId} from '../utils/variables';
+import {mediaUrl, appId, profilePlaceholder} from '../utils/variables';
 import {useNavigate} from 'react-router-dom';
 import {
   useFavourite,
@@ -47,7 +47,7 @@ const Single = () => {
   const [refreshRating, setRefreshRating] = useState(false);
 
   const [profilePic, setProfilePic] = useState({
-    filename: 'https://placekitten.com/200/200',
+    filename: profilePlaceholder,
   });
 
   const {getMediaById, deleteMedia} = useMedia();

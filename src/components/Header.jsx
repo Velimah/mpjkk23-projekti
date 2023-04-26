@@ -14,7 +14,7 @@ import {
 } from '@mui/material';
 import {PersonRounded} from '@mui/icons-material';
 import {useTag} from '../hooks/ApiHooks';
-import {appId, mediaUrl} from '../utils/variables';
+import {appId, mediaUrl, profilePlaceholder} from '../utils/variables';
 import {useNavigate} from 'react-router-dom';
 
 const Header = () => {
@@ -27,7 +27,7 @@ const Header = () => {
 
   const {getTag} = useTag();
   const [profilePic, setProfilePic] = useState({
-    filename: 'https://placekitten.com/200/200',
+    filename: profilePlaceholder,
   });
 
   const fetchProfilePicture = async () => {
@@ -144,7 +144,7 @@ const Header = () => {
                   </Avatar>
                 </Tooltip>
                 <Button variant="contained" component={Link} to="/upload">
-                  Add photo
+                  Add post
                 </Button>
               </>
             ) : (
