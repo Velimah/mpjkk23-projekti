@@ -24,7 +24,7 @@ const AlertDialog = ({
     <Dialog
       open={dialogOpen}
       keepMounted
-      onClose={dialogOpen}
+      onClose={() => setDialogOpen(false)}
       aria-describedby="alert-dialog-slide-description"
     >
       <DialogTitle>{title}</DialogTitle>

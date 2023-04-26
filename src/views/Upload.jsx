@@ -26,7 +26,7 @@ const Upload = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const selectedFilePlaceholder =
     'https://placehold.co/300x300?text=Choose-media';
-  const [selectedFile, setselectedFile] = useState(selectedFilePlaceholder);
+  const [selectedFile, setSelectedFile] = useState(selectedFilePlaceholder);
   const {postMedia} = useMedia();
   const {postTag} = useTag();
   const navigate = useNavigate();
@@ -79,7 +79,7 @@ const Upload = () => {
     setFile(event.target.files[0]);
     const reader = new FileReader();
     reader.addEventListener('load', () => {
-      setselectedFile(reader.result);
+      setSelectedFile(reader.result);
     });
     reader.readAsDataURL(event.target.files[0]);
   };
@@ -113,7 +113,7 @@ const Upload = () => {
   return (
     <Container maxWidth="lg" sx={{p: {xs: '6rem 0', sm: '3rem 3rem'}}}>
       <Typography component="h1" variant="h1" textAlign="center" sx={{mb: 3}}>
-        Create new post
+        Add new photo
       </Typography>
       <ValidatorForm onSubmit={handleSubmit} noValidate>
         <Paper
@@ -122,9 +122,10 @@ const Upload = () => {
             borderRadius: '1.5rem',
             bgcolor: {xs: 'transparent', sm: '#FFFFFF'},
           }}
+          elevation={0}
         >
           <Grid container columnSpacing={5} alignItems="start">
-            <Grid item xs={12} md={7} sx={{position: 'relative'}}>
+            <Grid item xs={12} md={7}>
               <img
                 src={selectedFile}
                 alt="Selected file's preview"
@@ -132,6 +133,8 @@ const Upload = () => {
                   width: '100%',
                   height: '100%',
                   borderRadius: '1.25rem',
+                  aspectRatio: '1 / 1',
+                  objectFit: 'cover',
                   filter: `brightness(${filterInputs.brightness}%)
                    contrast(${filterInputs.contrast}%)
                    saturate(${filterInputs.saturation}%)
@@ -139,11 +142,11 @@ const Upload = () => {
                 }}
               />
               <Box sx={{px: {xs: 4, sm: 0}}}>
-                <TextValidator
-                  sx={
-                    selectedFile !== selectedFilePlaceholder ? {my: 3} : {mt: 4}
-                  }
-                  fullWidth
+                <input
+                  // sx={
+                  //   selectedFile !== selectedFilePlaceholder ? {my: 3} : {mt: 4}
+                  // }
+                  // fullWidth
                   onChange={handleFileChange}
                   type="file"
                   name="file"
@@ -231,7 +234,7 @@ const Upload = () => {
                     />
                   )}
                 />
-                <Box sx={tags.length > 0 && {mb: 4}}>
+                <Box sx={tags.length > 0 ? {mb: 4} : {mb: 0}}>
                   {tags.map((tag) => (
                     <Chip
                       variant="outlined"

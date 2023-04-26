@@ -26,7 +26,6 @@ const loginValidators = {
 const uploadValidators = {
   title: ['required', 'minStringLength:2'],
   description: ['required', 'isEmptyOrMin2'],
-  file: ['required'],
 };
 
 const commentValidators = {
