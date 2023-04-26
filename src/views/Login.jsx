@@ -28,7 +28,7 @@ const Login = () => {
           sx={{display: {xs: 'none', md: 'inline-block'}}}
         >
           <img
-            src={'/src/assets/onlycats_illustration2.png'}
+            src={'onlycats_illustration2.png'}
             alt={'Cat illustration'}
             loading="lazy"
             width="100%"

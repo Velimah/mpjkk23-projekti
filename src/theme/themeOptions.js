@@ -59,7 +59,15 @@ const themeOptions = {
     },
     body2: {
       fontFamily: 'Nunito',
-      fontSize: '1rem',
+      fontSize: '1.1rem',
+    },
+    body3: {
+      fontFamily: 'Nunito',
+      fontSize: '1.2rem',
+    },
+    body4: {
+      fontFamily: 'Nunito',
+      fontSize: '1.3rem',
     },
   },
   components: {

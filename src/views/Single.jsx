@@ -30,7 +30,7 @@ import {commentValidators} from '../utils/validator';
 import {formatTime, formatSize} from '../utils/UnitConversions';
 
 const Single = () => {
-  const {user} = useContext(MediaContext);
+  const {user, setTargetUser} = useContext(MediaContext);
 
   const [owner, setOwner] = useState({username: ''});
   const [likes, setLikes] = useState(0);
@@ -60,14 +60,12 @@ const Single = () => {
   const {state} = useLocation();
 
   const [data, setData] = useState(() => {
-    return (
-      state?.file || JSON.parse(window.localStorage.getItem('details')) || {}
-    );
+    return state?.file ?? JSON.parse(window.localStorage.getItem('targetUser'));
   });
 
   useEffect(() => {
-    window.localStorage.setItem('details', JSON.stringify(data));
-  }, [data]);
+    window.localStorage.setItem('targetUser', JSON.stringify(data));
+  }, [setData]);
 
   let allData = {
     desc: data.description,
@@ -284,6 +282,9 @@ const Single = () => {
             variant="contained"
             to="/userprofiles"
             state={{data}}
+            onClick={() => {
+              setTargetUser(data);
+            }}
           >
             View profile
           </Button>
@@ -390,18 +391,15 @@ const Single = () => {
             </Grid>
           </CardContent>
         </Card>
-        <Grid container justifyContent="center">
-          <Grid item xs={4} sx={{mb: 5}}>
-            <Button
-              variant="contained"
-              fullWidth
-              sx={{mt: 5}}
-              onClick={() => navigate('/home')}
-            >
-              Back
-            </Button>
-          </Grid>
-        </Grid>
+        <Box display="flex" width="100%" justifyContent="center">
+          <Button
+            variant="contained"
+            sx={{m: 5, width: '200px'}}
+            onClick={() => navigate('/home')}
+          >
+            Back
+          </Button>
+        </Box>
 
         <ValidatorForm onSubmit={handleSubmit}>
           <TextValidator

@@ -10,6 +10,7 @@ import {
   Typography,
 } from '@mui/material';
 import {MediaContext} from '../contexts/MediaContext';
+import {useNavigate} from 'react-router-dom';
 
 const CatGPT = () => {
   const [value, setValue] = useState(null);
@@ -20,6 +21,7 @@ const CatGPT = () => {
   const [messageSent, setMessageSent] = useState(false);
   const [cost, setCost] = useState(0);
   const {user} = useContext(MediaContext);
+  const navigate = useNavigate();
 
   const createNewChat = () => {
     setMessage(null);
@@ -287,15 +289,17 @@ const CatGPT = () => {
                 justifyContent="flex-end"
                 alignItems="flex-end"
                 sx={{
-                  justifyContent: {xs: 'center', sm: 'flex-end'},
+                  justifyContent: {xs: 'center', md: 'flex-end'},
                   alignContent: {xs: 'center', sm: 'flex-end'},
                 }}
               >
                 <Button
                   sx={{
-                    backgroundColor: messageSent ? 'red' : '',
+                    backgroundColor: messageSent ? '#ACCC7F' : '',
+                    color: messageSent ? '#000000' : '',
                     '&:hover': {
-                      backgroundColor: messageSent ? 'crimson' : '',
+                      backgroundColor: messageSent ? '#8FB361' : '',
+                      color: messageSent ? '#000000' : '',
                     },
                     mt: {xs: 1, md: 0},
                     ml: {xs: 0, md: 2},
@@ -305,33 +309,30 @@ const CatGPT = () => {
                   id="submit"
                   onClick={getMessages}
                 >
-                  {messageSent ? 'Sent!' : 'Submit'}
+                  {messageSent ? 'Submitted!' : 'Submit'}
                 </Button>
               </Box>
             </Box>
             <Box display="flex" justifyContent="center" alignItems="center">
               <Typography
                 component="p"
-                variant="h6"
+                variant="body3"
                 sx={{
                   textAlign: 'center',
                   mx: {xs: 2, sm: 1},
                   pt: {xs: 2, sm: 1},
-                  display: {xs: 'none', sm: 'block'},
+                  display: {xs: 'block', sm: 'block'},
                 }}
               >
-                {responseData
-                  ? `Responding model: ${responseData.model}`
-                  : null}
+                {responseData ? `Model: ${responseData.model}` : null}
               </Typography>
               <Typography
+                variant="body4"
                 component="p"
-                variant="h6"
                 sx={{
                   textAlign: 'center',
                   mx: {xs: 2, sm: 1},
                   pt: {xs: 2, sm: 1},
-                  variant: {xs: 'body1', sm: 'h6'},
                   color: cost < 0.01 ? '#6B8B4D' : '#9E0022',
                   borderRadius: '5px',
                 }}
@@ -342,6 +343,15 @@ const CatGPT = () => {
           </Box>
         </Grid>
       </Grid>
+      <Box display="flex" width="100%" justifyContent="center">
+        <Button
+          variant="contained"
+          sx={{m: 10, width: '200px'}}
+          onClick={() => navigate('/home')}
+        >
+          Back
+        </Button>
+      </Box>
     </>
   );
 };

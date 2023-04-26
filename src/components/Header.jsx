@@ -15,13 +15,16 @@ import {
 import {PersonRounded} from '@mui/icons-material';
 import {useTag} from '../hooks/ApiHooks';
 import {appId, mediaUrl} from '../utils/variables';
+import {useNavigate} from 'react-router-dom';
 
 const Header = () => {
   const {user} = useContext(MediaContext);
-  const location = useLocation();
   const extraSmallScreen = useMediaQuery((theme) =>
     theme.breakpoints.down('sm')
   );
+  const location = useLocation();
+  const navigate = useNavigate();
+
   const {getTag} = useTag();
   const [profilePic, setProfilePic] = useState({
     filename: 'https://placekitten.com/200/200',
@@ -57,8 +60,14 @@ const Header = () => {
           <Box sx={{display: 'flex', alignItems: 'center'}}>
             <img
               src="onlycats_logo.png"
-              style={{display: 'flex', marginRight: 8, width: 45}}
+              style={{
+                display: 'flex',
+                marginRight: 8,
+                width: 45,
+                cursor: 'pointer',
+              }}
               alt="OnlyCats logo"
+              onClick={() => navigate('/home')}
             />
             <Typography
               variant="h1"
@@ -67,7 +76,7 @@ const Header = () => {
               to="/home"
               sx={{
                 mr: 2,
-                display: 'flex',
+                display: {xs: 'flex', sm: 'none', md: 'flex'},
                 color: 'inherit',
                 textDecoration: 'none',
               }}
@@ -112,6 +121,17 @@ const Header = () => {
             </Box>
             {user ? (
               <>
+                <Tooltip title="Cat-GPT">
+                  <Avatar
+                    src={'gpt-logo.png'}
+                    aria-label="Cat-GPT"
+                    component={Link}
+                    to="/catgpt"
+                    sx={{mr: 1}}
+                  >
+                    <PersonRounded />
+                  </Avatar>
+                </Tooltip>
                 <Tooltip title="Profile">
                   <Avatar
                     src={profilePic.filename}

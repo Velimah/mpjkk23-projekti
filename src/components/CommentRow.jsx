@@ -8,7 +8,7 @@ import {MediaContext} from '../contexts/MediaContext';
 import {formatTime} from '../utils/UnitConversions';
 
 const CommentRow = ({file, fetchComments}) => {
-  const {user} = useContext(MediaContext);
+  const {user, setTargetUser} = useContext(MediaContext);
   const {getUser} = useUser();
   const {getTag} = useTag();
   const {deleteComment} = useComment();
@@ -94,6 +94,9 @@ const CommentRow = ({file, fetchComments}) => {
           variant="contained"
           to="/userprofiles"
           state={{file}}
+          onClick={() => {
+            setTargetUser(file);
+          }}
         >
           View profile
         </Button>
