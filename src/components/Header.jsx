@@ -1,5 +1,5 @@
 import {useContext, useEffect, useState} from 'react';
-import {Link, useLocation, Navigate} from 'react-router-dom';
+import {Link, useLocation} from 'react-router-dom';
 import {MediaContext} from '../contexts/MediaContext';
 import {
   AppBar,
@@ -76,7 +76,7 @@ const Header = () => {
               to="/home"
               sx={{
                 mr: 2,
-                display: 'flex',
+                display: {xs: 'flex', sm: 'none', md: 'flex'},
                 color: 'inherit',
                 textDecoration: 'none',
               }}
@@ -121,6 +121,17 @@ const Header = () => {
             </Box>
             {user ? (
               <>
+                <Tooltip title="Cat-GPT">
+                  <Avatar
+                    src={'gpt-logo.png'}
+                    aria-label="Cat-GPT"
+                    component={Link}
+                    to="/catgpt"
+                    sx={{mr: 1}}
+                  >
+                    <PersonRounded />
+                  </Avatar>
+                </Tooltip>
                 <Tooltip title="Profile">
                   <Avatar
                     src={profilePic.filename}

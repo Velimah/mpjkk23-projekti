@@ -16,19 +16,22 @@ const UserProfiles = () => {
   const {getUser} = useUser();
   const {state} = useLocation();
 
-  const [data, setData] = useState(() => {
+  const [rating, setRating] = useState(0);
+  const [ratingCount, setRatingCount] = useState(0);
+  const [postCount, setPostCount] = useState(0);
+
+  const [userData, setUserData] = useState(() => {
     return (
-      state?.data ||
-      state?.file ||
-      JSON.parse(window.localStorage.getItem('userDetails')) ||
-      {}
+      state?.data ??
+      state?.file ??
+      JSON.parse(window.localStorage.getItem('targetUser'))
     );
   });
 
   useEffect(() => {
-    window.localStorage.setItem('userDetails', JSON.stringify(data));
-    setTargetUser(data);
-  }, [data]);
+    window.localStorage.setItem('targetUser', JSON.stringify(userData));
+    setTargetUser(userData);
+  }, [setUserData]);
 
   const [profilePic, setProfilePic] = useState({
     filename: 'https://placekitten.com/200/200',
@@ -40,18 +43,11 @@ const UserProfiles = () => {
     'No profile text yet!'
   );
 
-  const [userData, setUserData] = useState({});
-  const [rating, setRating] = useState(0);
-  const [ratingCount, setRatingCount] = useState(0);
-  const [postCount, setPostCount] = useState(0);
-
   const fetchUserData = async () => {
     try {
-      if (user) {
-        const token = localStorage.getItem('token');
-        const userData = await getUser(data.user_id, token);
-        setUserData(userData);
-      }
+      const token = localStorage.getItem('token');
+      const userInfo = await getUser(userData.user_id, token);
+      setUserData(userInfo);
     } catch (error) {
       console.error(error.message);
     }
@@ -59,14 +55,12 @@ const UserProfiles = () => {
 
   const fetchProfilePicture = async () => {
     try {
-      if (user) {
-        const profilePictures = await getTag(
-          appId + '_profilepicture_' + data.user_id
-        );
-        const profilePicture = profilePictures.pop();
-        profilePicture.filename = mediaUrl + profilePicture.filename;
-        setProfilePic(profilePicture);
-      }
+      const profilePictures = await getTag(
+        appId + '_profilepicture_' + userData.user_id
+      );
+      const profilePicture = profilePictures.pop();
+      profilePicture.filename = mediaUrl + profilePicture.filename;
+      setProfilePic(profilePicture);
     } catch (error) {
       console.error(error.message);
     }
@@ -74,14 +68,12 @@ const UserProfiles = () => {
 
   const fetchBackgroundPicture = async () => {
     try {
-      if (user) {
-        const backgroundPictures = await getTag(
-          appId + '_backgroundpicture_' + data.user_id
-        );
-        const backgroundPicture = backgroundPictures.pop();
-        backgroundPicture.filename = mediaUrl + backgroundPicture.filename;
-        setBackgroundPic(backgroundPicture);
-      }
+      const backgroundPictures = await getTag(
+        appId + '_backgroundpicture_' + userData.user_id
+      );
+      const backgroundPicture = backgroundPictures.pop();
+      backgroundPicture.filename = mediaUrl + backgroundPicture.filename;
+      setBackgroundPic(backgroundPicture);
     } catch (error) {
       console.error(error.message);
     }
@@ -91,7 +83,7 @@ const UserProfiles = () => {
     try {
       if (user) {
         const profilePictures = await getTag(
-          appId + '_profilepicture_' + data.user_id
+          appId + '_profilepicture_' + userData.user_id
         );
         const profileText = profilePictures.pop();
         setprofileDescription(profileText.description);
@@ -108,7 +100,7 @@ const UserProfiles = () => {
   const fetchAllRatings = async () => {
     try {
       const token = localStorage.getItem('token');
-      const mediaInfo = await getAllMediaById(data.user_id, token);
+      const mediaInfo = await getAllMediaById(userData.user_id, token);
       let sum = 0;
       let count = 0;
       for (const data of mediaInfo) {

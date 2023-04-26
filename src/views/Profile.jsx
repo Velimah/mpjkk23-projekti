@@ -14,12 +14,14 @@ const Profile = () => {
   const {getRatingsById} = useRating();
   const {getAllMediaByCurrentUser} = useMedia();
 
+  const [userData, setData] = useState(() => {
+    return user ?? JSON.parse(window.localStorage.getItem('user'));
+  });
+
   useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem('user'));
-    if (storedUser) {
-      setUser(storedUser);
-    }
-  }, [setUser]);
+    window.localStorage.setItem('user', JSON.stringify(userData));
+    setUser(userData);
+  }, [setData]);
 
   const [profilePic, setProfilePic] = useState({
     filename: 'https://placekitten.com/200/200',
@@ -36,14 +38,12 @@ const Profile = () => {
 
   const fetchProfilePicture = async () => {
     try {
-      if (user) {
-        const profilePictures = await getTag(
-          appId + '_profilepicture_' + user.user_id
-        );
-        const profilePicture = profilePictures.pop();
-        profilePicture.filename = mediaUrl + profilePicture.filename;
-        setProfilePic(profilePicture);
-      }
+      const profilePictures = await getTag(
+        appId + '_profilepicture_' + userData.user_id
+      );
+      const profilePicture = profilePictures.pop();
+      profilePicture.filename = mediaUrl + profilePicture.filename;
+      setProfilePic(profilePicture);
     } catch (error) {
       console.error(error.message);
     }
@@ -51,14 +51,12 @@ const Profile = () => {
 
   const fetchBackgroundPicture = async () => {
     try {
-      if (user) {
-        const backgroundPictures = await getTag(
-          appId + '_backgroundpicture_' + user.user_id
-        );
-        const backgroundPicture = backgroundPictures.pop();
-        backgroundPicture.filename = mediaUrl + backgroundPicture.filename;
-        setBackgroundPic(backgroundPicture);
-      }
+      const backgroundPictures = await getTag(
+        appId + '_backgroundpicture_' + userData.user_id
+      );
+      const backgroundPicture = backgroundPictures.pop();
+      backgroundPicture.filename = mediaUrl + backgroundPicture.filename;
+      setBackgroundPic(backgroundPicture);
     } catch (error) {
       console.error(error.message);
     }
@@ -66,13 +64,11 @@ const Profile = () => {
 
   const fetchProfileDescription = async () => {
     try {
-      if (user) {
-        const profilePictures = await getTag(
-          appId + '_profilepicture_' + user.user_id
-        );
-        const profileText = profilePictures.pop();
-        setprofileDescription(profileText.description);
-      }
+      const profilePictures = await getTag(
+        appId + '_profilepicture_' + userData.user_id
+      );
+      const profileText = profilePictures.pop();
+      setprofileDescription(profileText.description);
     } catch (error) {
       console.error(error.message);
     }
@@ -114,12 +110,11 @@ const Profile = () => {
     setTimeout(() => {
       countPosts();
     }, 1000);
-  }, []);
+  }, [user]);
 
   const countPosts = () => {
     const itemCount = document.querySelectorAll('.post').length;
     setPostCount(itemCount);
-    console.log('itemcount', itemCount);
   };
 
   return (
@@ -174,10 +169,12 @@ const Profile = () => {
             }}
           >
             <Typography component="p" variant="h1" sx={{mt: 1}}>
-              {user.full_name ? user.full_name : 'Has not set a full name'}
+              {userData.full_name
+                ? userData.full_name
+                : 'Has not set a full name'}
             </Typography>
             <Typography component="p" variant="body4" sx={{mt: 1}}>
-              {'@' + user.username}
+              {'@' + userData.username}
             </Typography>
             <Rating
               name="read-only"
@@ -212,6 +209,13 @@ const Profile = () => {
               onClick={() => navigate('/profile/update')}
             >
               Edit Profile
+            </Button>
+            <Button
+              variant="contained"
+              sx={{mt: 2, mr: {xs: 0, sm: 0}}}
+              onClick={() => navigate('/catgpt')}
+            >
+              Cat-GPT
             </Button>
             <Button
               variant="outlined"

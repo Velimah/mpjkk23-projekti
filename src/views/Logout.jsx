@@ -6,7 +6,7 @@ const Logout = () => {
   const {setUser} = useContext(MediaContext);
   useEffect(() => {
     setUser(null);
-    localStorage.removeItem('token');
+    localStorage.clear();
   }, []);
   return <Navigate to="/" />;
 };

@@ -59,14 +59,12 @@ const Single = () => {
   const {state} = useLocation();
 
   const [data, setData] = useState(() => {
-    return (
-      state?.file || JSON.parse(window.localStorage.getItem('details')) || {}
-    );
+    return state?.file ?? JSON.parse(window.localStorage.getItem('targetUser'));
   });
 
   useEffect(() => {
-    window.localStorage.setItem('details', JSON.stringify(data));
-  }, [data]);
+    window.localStorage.setItem('targetUser', JSON.stringify(data));
+  }, [setData]);
 
   let allData = {
     desc: data.description,
