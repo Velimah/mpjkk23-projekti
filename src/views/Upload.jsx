@@ -13,7 +13,7 @@ import {
   CircularProgress,
 } from '@mui/material';
 import useForm from '../hooks/FormHooks';
-import {useEffect, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {useMedia, useTag} from '../hooks/ApiHooks';
 import {useNavigate} from 'react-router-dom';
 import {appId, filePlaceholder} from '../utils/variables';
@@ -31,6 +31,7 @@ const Upload = () => {
   const {postMedia} = useMedia();
   const {postTag} = useTag();
   const navigate = useNavigate();
+  const videoRef = useRef();
   const extraSmallScreen = useMediaQuery((theme) =>
     theme.breakpoints.down('sm')
   );
@@ -82,12 +83,23 @@ const Upload = () => {
   const handleFileChange = (event) => {
     event.persist();
     setFile(event.target.files[0]);
-    const reader = new FileReader();
-    reader.addEventListener('load', () => {
-      setSelectedFile(reader.result);
-    });
-    reader.readAsDataURL(event.target.files[0]);
+
+    if (event.target.files[0].type.includes('video')) {
+      const file = event.target.files[0];
+      const blobURL = URL.createObjectURL(file);
+      setSelectedFile(blobURL);
+    } else {
+      const reader = new FileReader();
+      reader.addEventListener('load', () => {
+        setSelectedFile(reader.result);
+      });
+      reader.readAsDataURL(event.target.files[0]);
+    }
   };
+
+  useEffect(() => {
+    videoRef.current?.load();
+  }, [selectedFile]);
 
   const doTagDelete = (tagToDelete) => () => {
     const newTags = tags.filter((tag) => tag !== tagToDelete);
@@ -118,7 +130,7 @@ const Upload = () => {
   return (
     <Container maxWidth="lg" sx={{p: {xs: '6rem 0', sm: '3rem 3rem'}}}>
       <Typography component="h1" variant="h1" textAlign="center" sx={{mb: 3}}>
-        Add new photo
+        Add new post
       </Typography>
       <ValidatorForm onSubmit={handleSubmit} noValidate>
         <Paper
@@ -131,21 +143,38 @@ const Upload = () => {
         >
           <Grid container columnSpacing={5} alignItems="start">
             <Grid item xs={12} md={7}>
-              <img
-                src={selectedFile}
-                alt="Selected file's preview"
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  borderRadius: extraSmallScreen ? 0 : '1.25rem',
-                  aspectRatio: '1 / 1',
-                  objectFit: 'cover',
-                  filter: `brightness(${filterInputs.brightness}%)
+              {file && file.type.includes('video') ? (
+                <video
+                  controls
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    borderRadius: extraSmallScreen ? 0 : '1.25rem',
+                    aspectRatio: '1 / 1',
+                    objectFit: 'cover',
+                  }}
+                  ref={videoRef}
+                >
+                  <source src={selectedFile} type={file.type}></source>
+                </video>
+              ) : (
+                <img
+                  src={selectedFile}
+                  alt="Selected file's preview"
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    borderRadius: extraSmallScreen ? 0 : '1.25rem',
+                    aspectRatio: '1 / 1',
+                    objectFit: 'cover',
+                    filter: `brightness(${filterInputs.brightness}%)
                    contrast(${filterInputs.contrast}%)
                    saturate(${filterInputs.saturation}%)
                    sepia(${filterInputs.sepia}%)`,
-                }}
-              />
+                  }}
+                />
+              )}
+
               <Box sx={{px: {xs: 4, sm: 0}}}>
                 <TextValidator
                   sx={selectedFile !== filePlaceholder ? {my: 3} : {mt: 3}}
@@ -153,52 +182,61 @@ const Upload = () => {
                   onChange={handleFileChange}
                   type="file"
                   name="file"
-                  accept="image/*"
+                  accept="image/*,video/*"
                 />
-                {selectedFile !== filePlaceholder && (
-                  <>
-                    <Typography>Brightness:</Typography>
-                    <Slider
-                      name="brightness"
-                      min={0}
-                      max={200}
-                      step={5}
-                      valueLabelDisplay="auto"
-                      onChange={handleFilterChange}
-                      value={filterInputs.brightness}
-                    />
-                    <Typography>Contrast:</Typography>
-                    <Slider
-                      name="contrast"
-                      min={0}
-                      max={200}
-                      step={5}
-                      valueLabelDisplay="auto"
-                      onChange={handleFilterChange}
-                      value={filterInputs.contrast}
-                    />
-                    <Typography>Saturation:</Typography>
-                    <Slider
-                      name="saturation"
-                      min={0}
-                      max={200}
-                      step={5}
-                      valueLabelDisplay="auto"
-                      onChange={handleFilterChange}
-                      value={filterInputs.saturation}
-                    />
-                    <Typography>Sepia:</Typography>
-                    <Slider
-                      name="sepia"
-                      min={0}
-                      max={100}
-                      step={5}
-                      valueLabelDisplay="auto"
-                      onChange={handleFilterChange}
-                      value={filterInputs.sepia}
-                    />
-                  </>
-                )}
+                {selectedFile !== filePlaceholder &&
+                  file.type.includes('image') && (
+                    <>
+                      <Typography component="p" variant="subtitle2">
+                        Brightness:
+                      </Typography>
+                      <Slider
+                        name="brightness"
+                        min={0}
+                        max={200}
+                        step={5}
+                        valueLabelDisplay="auto"
+                        onChange={handleFilterChange}
+                        value={filterInputs.brightness}
+                      />
+                      <Typography component="p" variant="subtitle2">
+                        Contrast:
+                      </Typography>
+                      <Slider
+                        name="contrast"
+                        min={0}
+                        max={200}
+                        step={5}
+                        valueLabelDisplay="auto"
+                        onChange={handleFilterChange}
+                        value={filterInputs.contrast}
+                      />
+                      <Typography component="p" variant="subtitle2">
+                        Saturation:
+                      </Typography>
+                      <Slider
+                        name="saturation"
+                        min={0}
+                        max={200}
+                        step={5}
+                        valueLabelDisplay="auto"
+                        onChange={handleFilterChange}
+                        value={filterInputs.saturation}
+                      />
+                      <Typography component="p" variant="subtitle2">
+                        Sepia:
+                      </Typography>
+                      <Slider
+                        name="sepia"
+                        min={0}
+                        max={100}
+                        step={5}
+                        valueLabelDisplay="auto"
+                        onChange={handleFilterChange}
+                        value={filterInputs.sepia}
+                      />
+                    </>
+                  )}
               </Box>
             </Grid>
             <Grid item xs={12} md={5}>
@@ -261,6 +299,11 @@ const Upload = () => {
                     <CircularProgress color="black" sx={{ml: 2}} size={24} />
                   )}
                 </Button>
+                {upload && (
+                  <Typography component="p" variant="subtitle2" sx={{mb: 2}}>
+                    This might take a while depending on your file size.
+                  </Typography>
+                )}
                 <Button
                   variant="outlined"
                   fullWidth

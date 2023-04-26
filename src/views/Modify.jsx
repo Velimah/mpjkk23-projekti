@@ -38,7 +38,9 @@ const Modify = () => {
 
   let selectedFile = mediaUrl + file.filename;
 
-  if (file.media_type === 'video' || file.media_type === 'audio') {
+  if (file.media_type === 'video') selectedFile = mediaUrl + file.screenshot;
+
+  if (file.media_type === 'audio') {
     selectedFile = 'https://placehold.co/300x300?text=No image preview';
   }
 
@@ -163,7 +165,7 @@ const Modify = () => {
   return (
     <Container maxWidth="lg" sx={{p: {xs: '6rem 0', sm: '3rem 3rem'}}}>
       <Typography component="h1" variant="h1" textAlign="center" sx={{mb: 3}}>
-        Modify photo
+        Modify post
       </Typography>
       <ValidatorForm onSubmit={handleSubmit} noValidate>
         <Paper
@@ -176,71 +178,89 @@ const Modify = () => {
         >
           <Grid container columnSpacing={5} alignItems="start">
             <Grid item xs={12} md={7}>
-              <img
-                src={selectedFile}
-                alt="File's preview"
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  borderRadius: extraSmallScreen ? 0 : '1.25rem',
-                  aspectRatio: '1 / 1',
-                  objectFit: 'cover',
-                  filter: `brightness(${filterInputs.brightness}%)
+              {file.media_type === 'video' ? (
+                <video
+                  controls
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    borderRadius: extraSmallScreen ? 0 : '1.25rem',
+                    aspectRatio: '1 / 1',
+                    objectFit: 'cover',
+                  }}
+                >
+                  <source src={mediaUrl + file.filename}></source>
+                </video>
+              ) : (
+                <img
+                  src={selectedFile}
+                  alt="File's preview"
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    borderRadius: extraSmallScreen ? 0 : '1.25rem',
+                    aspectRatio: '1 / 1',
+                    objectFit: 'cover',
+                    filter: `brightness(${filterInputs.brightness}%)
                    contrast(${filterInputs.contrast}%)
                    saturate(${filterInputs.saturation}%)
                    sepia(${filterInputs.sepia}%)`,
-                }}
-              />
-              <Box sx={{px: {xs: 4, sm: 0}, mt: 3}}>
-                <Typography component="p" variant="subtitle2">
-                  Brightness:
-                </Typography>
-                <Slider
-                  name="brightness"
-                  min={0}
-                  max={200}
-                  step={5}
-                  valueLabelDisplay="auto"
-                  onChange={handleFilterChange}
-                  value={filterInputs.brightness}
+                  }}
                 />
-                <Typography component="p" variant="subtitle2">
-                  Contrast:
-                </Typography>
-                <Slider
-                  name="contrast"
-                  min={0}
-                  max={200}
-                  step={5}
-                  valueLabelDisplay="auto"
-                  onChange={handleFilterChange}
-                  value={filterInputs.contrast}
-                />
-                <Typography component="p" variant="subtitle2">
-                  Saturation:
-                </Typography>
-                <Slider
-                  name="saturation"
-                  min={0}
-                  max={200}
-                  step={5}
-                  valueLabelDisplay="auto"
-                  onChange={handleFilterChange}
-                  value={filterInputs.saturation}
-                />
-                <Typography component="p" variant="subtitle2">
-                  Sepia:
-                </Typography>
-                <Slider
-                  name="sepia"
-                  min={0}
-                  max={100}
-                  step={5}
-                  valueLabelDisplay="auto"
-                  onChange={handleFilterChange}
-                  value={filterInputs.sepia}
-                />
-              </Box>
+              )}
+
+              {file.media_type === 'image' && (
+                <Box sx={{px: {xs: 4, sm: 0}, mt: 3}}>
+                  <Typography component="p" variant="subtitle2">
+                    Brightness:
+                  </Typography>
+                  <Slider
+                    name="brightness"
+                    min={0}
+                    max={200}
+                    step={5}
+                    valueLabelDisplay="auto"
+                    onChange={handleFilterChange}
+                    value={filterInputs.brightness}
+                  />
+                  <Typography component="p" variant="subtitle2">
+                    Contrast:
+                  </Typography>
+                  <Slider
+                    name="contrast"
+                    min={0}
+                    max={200}
+                    step={5}
+                    valueLabelDisplay="auto"
+                    onChange={handleFilterChange}
+                    value={filterInputs.contrast}
+                  />
+                  <Typography component="p" variant="subtitle2">
+                    Saturation:
+                  </Typography>
+                  <Slider
+                    name="saturation"
+                    min={0}
+                    max={200}
+                    step={5}
+                    valueLabelDisplay="auto"
+                    onChange={handleFilterChange}
+                    value={filterInputs.saturation}
+                  />
+                  <Typography component="p" variant="subtitle2">
+                    Sepia:
+                  </Typography>
+                  <Slider
+                    name="sepia"
+                    min={0}
+                    max={100}
+                    step={5}
+                    valueLabelDisplay="auto"
+                    onChange={handleFilterChange}
+                    value={filterInputs.sepia}
+                  />
+                </Box>
+              )}
             </Grid>
             <Grid item xs={12} md={5}>
               <Box sx={{px: {xs: 4, sm: 0}}}>
