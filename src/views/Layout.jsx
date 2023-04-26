@@ -4,7 +4,6 @@ import React, {useContext, useEffect} from 'react';
 import {MediaContext} from '../contexts/MediaContext';
 import {createTheme, CssBaseline, ThemeProvider} from '@mui/material';
 import {themeOptions} from '../theme/themeOptions';
-import {useWindowSize} from '../hooks/WindowHooks';
 import MobileNavigation from '../components/MobileNavigation';
 import Header from '../components/Header';
 
@@ -13,7 +12,6 @@ const Layout = () => {
   const {getUserByToken} = useUser();
   const navigate = useNavigate();
   const location = useLocation();
-  const windowSize = useWindowSize();
 
   const getUserInfo = async () => {
     const userToken = localStorage.getItem('token');
@@ -39,7 +37,7 @@ const Layout = () => {
     <ThemeProvider theme={theme}>
       <CssBaseline /> {/** Css reset/normalize*/}
       <Header />
-      {windowSize.width < 599 && <MobileNavigation />}
+      <MobileNavigation />
       <main>
         <Outlet />
       </main>

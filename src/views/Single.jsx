@@ -38,6 +38,7 @@ const Single = () => {
   const [commentCount, setCommentCount] = useState(0);
   const [ratingCount, setRatingCount] = useState(0);
   const [commentArray, setCommentArray] = useState([]);
+  const [tagArray, setTagArray] = useState([]);
   const [mediaInfo, setMediaInfo] = useState({});
 
   const [refreshLikes, setRefreshLikes] = useState(false);
@@ -53,7 +54,7 @@ const Single = () => {
   const {getFavourites, postFavourite, deleteFavourite} = useFavourite();
   const {postComment, getCommentsById} = useComment();
   const {postRating, deleteRating, getRatingsById} = useRating();
-  const {getTag} = useTag();
+  const {getTag, getTagsByFileId} = useTag();
 
   const navigate = useNavigate();
   const {state} = useLocation();
@@ -147,6 +148,15 @@ const Single = () => {
     }
   };
 
+  const fetchTags = async () => {
+    try {
+      const tagInfo = await getTagsByFileId(data.file_id);
+      setTagArray(tagInfo);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   useEffect(() => {
     fetchUser();
     fetchProfilePicture();
@@ -154,6 +164,7 @@ const Single = () => {
     fetchLikes();
     fetchComments();
     fetchRatings();
+    fetchTags();
   }, []);
 
   const doLike = async () => {
@@ -305,6 +316,15 @@ const Single = () => {
             <Typography component="h2" variant="h6" sx={{p: 2}}>
               Filesize: {formatSize(mediaInfo.filesize)} Mediatype:
               {mediaInfo.media_type} Mimetype: {mediaInfo.mime_type}
+            </Typography>
+            <Typography component="h2" variant="h6" sx={{p: 2}}>
+              Tags:{' '}
+              {tagArray.length > 0 &&
+                tagArray.map((tag) => {
+                  if (tag.tag !== appId) {
+                    return tag.tag.replace(appId + '_', '') + ' ';
+                  }
+                })}
             </Typography>
 
             <Grid container>

@@ -6,7 +6,6 @@ import {
   Grid,
   IconButton,
   Avatar,
-  Rating,
   useMediaQuery,
 } from '@mui/material';
 import PropTypes from 'prop-types';
@@ -14,13 +13,7 @@ import {Link} from 'react-router-dom';
 import {mediaUrl, appId} from '../utils/variables';
 import {useContext, useEffect, useState} from 'react';
 import {MediaContext} from '../contexts/MediaContext';
-import {
-  useFavourite,
-  useUser,
-  useTag,
-  useMedia,
-  useRating,
-} from '../hooks/ApiHooks';
+import {useFavourite, useUser, useTag, useRating} from '../hooks/ApiHooks';
 import {useTheme} from '@mui/material/styles';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
@@ -30,7 +23,7 @@ const MediaRow = ({file, deleteMedia, style, sort}) => {
   const theme = useTheme();
   const smallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const {user, update, setUpdate, setTargetUser} = useContext(MediaContext);
+  const {user, setTargetUser} = useContext(MediaContext);
   const description = JSON.parse(file.description);
 
   const [owner, setOwner] = useState({username: ''});
@@ -188,11 +181,11 @@ const MediaRow = ({file, deleteMedia, style, sort}) => {
             }}
             sx={{height: '100%', width: '100%', objectFit: 'cover'}}
           >
-            <Box
-              component="img"
-              sx={{
+            <img
+              style={{
                 height: '100%',
                 width: '100%',
+                aspectRatio: '1 / 1',
                 objectFit: 'cover',
                 borderRadius: '5px',
               }}
@@ -209,11 +202,11 @@ const MediaRow = ({file, deleteMedia, style, sort}) => {
           </Box>
         ) : (
           /* * LISTING STYLE * */
-          <Box
-            component="img"
-            sx={{
-              height: '350px',
+          <img
+            style={{
+              height: '100%',
               width: '100%',
+              aspectRatio: '1 / 1',
               objectFit: 'cover',
               borderRadius: smallScreen ? 0 : '5px',
             }}

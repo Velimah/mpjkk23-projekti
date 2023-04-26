@@ -27,7 +27,7 @@ const LoginForm = () => {
       setUser(loginResult.user);
       navigate('/home');
     } catch (e) {
-      alert(e.message);
+      console.error(e.message);
     }
   };
 

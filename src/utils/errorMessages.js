@@ -30,6 +30,7 @@ const loginErrorMessages = {
 const uploadErrorMessages = {
   title: ['This field is required', 'Minimum 2 characters'],
   description: ['Minimum 2 characters'],
+  file: ['A file is required'],
 };
 
 const commentErrorMessages = {

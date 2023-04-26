@@ -77,7 +77,7 @@ const Home = () => {
                 to={user ? '/upload' : '/'}
                 sx={{mb: 1}}
               >
-                {user ? 'Upload photo' : 'Register'}
+                {user ? 'Add photo' : 'Register'}
               </Button>
             </Box>
             {!user && (

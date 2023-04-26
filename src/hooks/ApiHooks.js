@@ -237,7 +237,12 @@ const useTag = () => {
     return await doFetch(baseUrl + 'tags/' + tagId, fetchOptions);
   };
 
-  return {getTag, postTag, deleteTag};
+  const getTagsByFileId = async (fileId) => {
+    const tagResult = await doFetch(baseUrl + 'tags/file/' + fileId);
+    return tagResult;
+  };
+
+  return {getTag, postTag, deleteTag, getTagsByFileId};
 };
 
 const useFavourite = () => {
