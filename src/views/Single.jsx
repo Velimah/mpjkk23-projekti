@@ -33,7 +33,6 @@ import {formatTime, formatSize} from '../utils/UnitConversions';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import {Star, StarBorderOutlined} from '@mui/icons-material';
-import {styled} from '@mui/material/styles';
 
 const Single = () => {
   const {user, setTargetUser} = useContext(MediaContext);
@@ -101,8 +100,10 @@ const Single = () => {
   const fetchUser = async () => {
     try {
       const token = localStorage.getItem('token');
-      const ownerInfo = await getUser(data.user_id, token);
-      setOwner(ownerInfo);
+      if (token) {
+        const ownerInfo = await getUser(data.user_id, token);
+        setOwner(ownerInfo);
+      }
     } catch (error) {
       console.error(error.message);
     }
@@ -135,7 +136,7 @@ const Single = () => {
       const likeInfo = await getFavourites(data.file_id);
       setLikes(likeInfo.length);
       likeInfo.forEach((like) => {
-        if (like.user_id === user.user_id) {
+        if (user && like.user_id === user.user_id) {
           setRefreshLikes(true);
         }
       });
@@ -176,9 +177,11 @@ const Single = () => {
   const doLike = async () => {
     try {
       const token = localStorage.getItem('token');
-      const fileId = {file_id: data.file_id};
-      await postFavourite(fileId, token);
-      setRefreshLikes(true);
+      if (token) {
+        const fileId = {file_id: data.file_id};
+        await postFavourite(fileId, token);
+        setRefreshLikes(true);
+      }
     } catch (error) {
       console.log(error.message);
     }
@@ -191,8 +194,10 @@ const Single = () => {
   const deleteLike = async () => {
     try {
       const token = localStorage.getItem('token');
-      await deleteFavourite(data.file_id, token);
-      setRefreshLikes(false);
+      if (token) {
+        await deleteFavourite(data.file_id, token);
+        setRefreshLikes(false);
+      }
     } catch (error) {
       console.log(error.message);
     }
@@ -201,10 +206,12 @@ const Single = () => {
   const doComment = async () => {
     try {
       const token = localStorage.getItem('token');
-      const data2 = {file_id: data.file_id, comment: inputs.comment};
-      const commentInfo = await postComment(data2, token);
-      alert(commentInfo.message);
-      setRefreshComments(!refreshComments);
+      if (token) {
+        const data2 = {file_id: data.file_id, comment: inputs.comment};
+        const commentInfo = await postComment(data2, token);
+        alert(commentInfo.message);
+        setRefreshComments(!refreshComments);
+      }
     } catch (error) {
       console.log(error.message);
     }
@@ -226,10 +233,12 @@ const Single = () => {
   const doRating = async (value) => {
     try {
       const token = localStorage.getItem('token');
-      const data2 = {file_id: data.file_id, rating: value};
-      const ratingInfo = await postRating(data2, token);
-      console.log(ratingInfo);
-      setRefreshRating(!refreshRating);
+      if (token) {
+        const data2 = {file_id: data.file_id, rating: value};
+        const ratingInfo = await postRating(data2, token);
+        console.log(ratingInfo);
+        setRefreshRating(!refreshRating);
+      }
     } catch (error) {
       console.log(error.message);
     }
@@ -238,9 +247,11 @@ const Single = () => {
   const doDeleteRating = async () => {
     try {
       const token = localStorage.getItem('token');
-      const ratingInfo = await deleteRating(data.file_id, token);
-      console.log(ratingInfo);
-      setRefreshRating(!refreshRating);
+      if (token) {
+        const ratingInfo = await deleteRating(data.file_id, token);
+        console.log(ratingInfo);
+        setRefreshRating(!refreshRating);
+      }
     } catch (error) {
       console.log(error.message);
     }
@@ -251,9 +262,11 @@ const Single = () => {
       const sure = confirm('Are you sure you want to delete this file?');
       if (sure) {
         const token = localStorage.getItem('token');
-        const deleteResult = await deleteMedia(data.file_id, token);
-        console.log(deleteResult);
-        navigate(-1);
+        if (token) {
+          const deleteResult = await deleteMedia(data.file_id, token);
+          console.log(deleteResult);
+          navigate(-1);
+        }
       }
     } catch (error) {
       console.log(error);
@@ -268,7 +281,7 @@ const Single = () => {
 
       ratingInfo.forEach((file) => {
         sum += file.rating;
-        if (file.user_id === user.user_id) {
+        if (user && file.user_id === user.user_id) {
           setRefreshRating(true);
         }
       });
@@ -309,7 +322,7 @@ const Single = () => {
           <Typography component="h1" variant="h2" sx={{p: 2}}>
             Title: {data.title}
           </Typography>
-          {user.user_id === owner.user_id && (
+          {user && user.user_id === owner.user_id && (
             <ButtonGroup>
               <Button variant="contained" onClick={doFileDelete}>
                 Delete

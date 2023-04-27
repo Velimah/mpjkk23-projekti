@@ -2,7 +2,7 @@ import {Avatar, Box, Typography, Button} from '@mui/material';
 import PropTypes from 'prop-types';
 import {useContext, useState, useEffect} from 'react';
 import {useComment, useTag, useUser} from '../hooks/ApiHooks';
-import {appId, mediaUrl} from '../utils/variables';
+import {appId, mediaUrl, profilePlaceholder} from '../utils/variables';
 import {Link} from 'react-router-dom';
 import {MediaContext} from '../contexts/MediaContext';
 import {formatTime} from '../utils/UnitConversions';
@@ -13,7 +13,7 @@ const CommentRow = ({file, fetchComments}) => {
   const {getTag} = useTag();
   const {deleteComment} = useComment();
   const [profilePic, setProfilePic] = useState({
-    filename: 'https://placekitten.com/50/50',
+    filename: profilePlaceholder,
   });
   const [userInfo, setUserInfo] = useState('');
   const [refreshData, setRefreshData] = useState(false);
@@ -34,8 +34,10 @@ const CommentRow = ({file, fetchComments}) => {
   const fetchUserInfo = async () => {
     try {
       const token = localStorage.getItem('token');
-      const userInfo = await getUser(file.user_id, token);
-      setUserInfo(userInfo);
+      if (token) {
+        const userInfo = await getUser(file.user_id, token);
+        setUserInfo(userInfo);
+      }
     } catch (error) {
       console.error(error.message);
     }
@@ -51,9 +53,11 @@ const CommentRow = ({file, fetchComments}) => {
     if (sure) {
       try {
         const token = localStorage.getItem('token');
-        const commentInfo = await deleteComment(file.comment_id, token);
-        alert(commentInfo.message);
-        setRefreshData(!refreshData);
+        if (token) {
+          const commentInfo = await deleteComment(file.comment_id, token);
+          alert(commentInfo.message);
+          setRefreshData(!refreshData);
+        }
       } catch (error) {
         console.log(error.message);
       }
@@ -65,66 +69,66 @@ const CommentRow = ({file, fetchComments}) => {
   }, [refreshData]);
 
   return (
-    <>
-      <Box
+    <Box
+      sx={{
+        maxWidth: 'lg',
+        margin: 'auto',
+        p: 2,
+        my: 2,
+        borderWidth: '1px',
+        borderColor: 'black',
+        borderStyle: 'solid',
+      }}
+    >
+      <Avatar
+        src={profilePic.filename}
+        alt="Logo"
         sx={{
-          maxWidth: 'lg',
-          margin: 'auto',
-          p: 2,
-          my: 2,
-          borderWidth: '1px',
-          borderColor: 'black',
-          borderStyle: 'solid',
+          borderRadius: 0,
+          boxShadow: 3,
+          width: 50,
+          height: 50,
+        }}
+      />
+      <Typography sx={{mb: 2}}>
+        user_name: {userInfo && userInfo.username}
+      </Typography>
+      <Button
+        sx={{p: 1, m: 1}}
+        component={Link}
+        variant="contained"
+        to="/userprofiles"
+        state={{file}}
+        onClick={() => {
+          setTargetUser(file);
         }}
       >
-        <Avatar
-          src={profilePic.filename}
-          alt="Logo"
-          sx={{
-            borderRadius: 0,
-            boxShadow: 3,
-            width: 50,
-            height: 50,
-          }}
-        />
-        <Typography sx={{mb: 2}}>user_name: {userInfo.username}</Typography>
+        View profile
+      </Button>
+      <Typography sx={{mb: 1}}>
+        time added: {formatTime(file.time_added)}
+      </Typography>
+      <Typography sx={{mb: 1}}>comment: {file.comment}</Typography>
+      <Typography sx={{mb: 1}}>user_id: {file.user_id}</Typography>
+      <Typography sx={{mb: 1}}>comment_id: {file.comment_id}</Typography>
+      {user && file.user_id === user.user_id && (
         <Button
-          sx={{p: 1, m: 1}}
+          sx={{
+            p: 1,
+            m: 1,
+            backgroundColor: 'red',
+            '&:hover': {
+              backgroundColor: '#C41E3A !important',
+            },
+          }}
           component={Link}
           variant="contained"
-          to="/userprofiles"
-          state={{file}}
-          onClick={() => {
-            setTargetUser(file);
-          }}
+          onClick={doDeleteComment}
         >
-          View profile
+          Delete
         </Button>
-        <Typography sx={{mb: 1}}>
-          time added: {formatTime(file.time_added)}
-        </Typography>
-        <Typography sx={{mb: 1}}>comment: {file.comment}</Typography>
-        <Typography sx={{mb: 1}}>user_id: {file.user_id}</Typography>
-        <Typography sx={{mb: 1}}>comment_id: {file.comment_id}</Typography>
-        {file.user_id === user.user_id && (
-          <Button
-            sx={{
-              p: 1,
-              m: 1,
-              backgroundColor: 'red',
-              '&:hover': {
-                backgroundColor: '#C41E3A !important',
-              },
-            }}
-            component={Link}
-            variant="contained"
-            onClick={doDeleteComment}
-          >
-            Delete
-          </Button>
-        )}
-      </Box>
-    </>
+      )}
+    </Box>
   );
 };
 
