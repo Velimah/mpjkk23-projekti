@@ -1,22 +1,45 @@
-import {Box, Button, Grid, Slider, Typography} from '@mui/material';
+import {
+  Box,
+  Button,
+  Container,
+  Grid,
+  Slider,
+  Typography,
+  useMediaQuery,
+  Paper,
+  Chip,
+} from '@mui/material';
 import useForm from '../hooks/FormHooks';
-import {useMedia} from '../hooks/ApiHooks';
+import {useMedia, useTag} from '../hooks/ApiHooks';
 import {useLocation, useNavigate} from 'react-router-dom';
-import {mediaUrl} from '../utils/variables';
+import {mediaUrl, appId} from '../utils/variables';
 import {ValidatorForm, TextValidator} from 'react-material-ui-form-validator';
 import {uploadErrorMessages} from '../utils/errorMessages';
 import {uploadValidators} from '../utils/validator';
-import {useEffect} from 'react';
+import {useEffect, useState} from 'react';
+import AlertDialog from '../components/AlertDialog';
 
 const Modify = () => {
-  const {putMedia} = useMedia();
   const navigate = useNavigate();
   const {state} = useLocation();
-  const file = state.file;
+  if (state === null) navigate('/home');
+  const file = state.data;
+  const [tags, setTags] = useState([]);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const {putMedia} = useMedia();
+  const {getTagsByFileId} = useTag();
+  // FOR DELETING TAGS AND ADDING NEW (if the api would't need admin permission)
+  // const [originalTags, setOriginalTags] = useState([]);
+  const extraSmallScreen = useMediaQuery((theme) =>
+    theme.breakpoints.down('sm')
+  );
 
-  let selectedImage = mediaUrl + file.filename;
-  if (file.media_type === 'video' || file.media_type === 'audio') {
-    selectedImage = 'https://placehold.co/300x300?text=No image preview';
+  let selectedFile = mediaUrl + file.filename;
+
+  if (file.media_type === 'video') selectedFile = mediaUrl + file.screenshot;
+
+  if (file.media_type === 'audio') {
+    selectedFile = 'https://placehold.co/300x300?text=No image preview';
   }
 
   let allData = {
@@ -28,6 +51,33 @@ const Modify = () => {
       sepia: 0,
     },
   };
+
+  const fetchTags = async () => {
+    try {
+      const tagInfo = await getTagsByFileId(file.file_id);
+      const filteredTags = tagInfo.filter((tag) => tag.tag !== appId);
+      // setOriginalTags(filteredTags);
+      setTags(
+        filteredTags.map((tag) => tag.tag.replace(appId + '_', '') + ' ')
+      );
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchTags();
+  }, []);
+
+  // FOR DELETING TAGS AND ADDING NEW (if the api would't need admin permission)
+  // useEffect(() => {
+  //   console.log(tags);
+  // }, [tags]);
+  // const doTagDelete = (tagToDelete) => () => {
+  //   const newTags = tags.filter((tag) => tag !== tagToDelete);
+  //   setTags(newTags);
+  // };
+
   try {
     allData = JSON.parse(file.description);
   } catch (error) {
@@ -47,17 +97,51 @@ const Modify = () => {
         desc: inputs.description,
         filters: filterInputs,
       };
+
       const data = {
         title: inputs.title,
         description: JSON.stringify(allData),
       };
+
       const token = localStorage.getItem('token');
       const modifyResult = await putMedia(file.file_id, data, token);
+
+      // FOR DELETING TAGS AND ADDING NEW (if the api would't need admin permission)
+      // const oldTags = originalTags.map(
+      //   (tag) => tag.tag.replace(appId + '_', '') + ' '
+      // );
+      // // Check if tags have changed
+      // if (oldTags.sort() != newTags.sort()) {
+      //   console.log('Not same tags');
+      //   // Delete old tags
+      //   const tagIdsToDeleteTmp = originalTags.map((tag) => tag.tag_id);
+      //   for (const tagId of tagIdsToDeleteTmp) {
+      //     const tagResult = await deleteTag(tagId, token);
+      //     console.log(tagResult);
+      //   }
+      //   // Add new tags
+      //   let tagsTmp = [{file_id: file.file_id, tag: appId}];
+      //   tagsTmp = tagsTmp.concat(
+      //     newTags.maps((tag) => {
+      //       return {file_id: file.file_id, tag: appId + '_' + tag};
+      //     })
+      //   );
+      //   for (const tag of tagsTmp) {
+      //     const tagResult = await postTag(tag, token);
+      //     console.log(tagResult);
+      //   }
+      // }
+
       console.log(modifyResult);
-      navigate('/home');
+      navigate('/single', {state: file});
     } catch (error) {
       alert(error.message);
     }
+  };
+
+  const handleDialogYes = () => {
+    setDialogOpen(false);
+    navigate('/single', {state: file});
   };
 
   const {inputs, handleSubmit, handleInputChange} = useForm(
@@ -77,131 +161,184 @@ const Modify = () => {
   }, [inputs]);
 
   return (
-    <Box sx={{maxWidth: 'md', margin: 'auto'}}>
-      <Typography component="h1" variant="h2" textAlign="center" sx={{my: 6}}>
-        Modify
+    <Container maxWidth="lg" sx={{p: {xs: '6rem 0', sm: '3rem 3rem'}}}>
+      <Typography component="h1" variant="h1" textAlign="center" sx={{mb: 3}}>
+        Modify post
       </Typography>
-      <Grid container direction={'row'} justifyContent="center" sx={{mt: 2}}>
-        <Grid item xs={5} sx={{mt: 0}}>
-          <img
-            src={selectedImage}
-            alt="preview"
-            style={{
-              width: '100%',
-              height: '100%',
-              filter: `brightness(${filterInputs.brightness}%)
+      <ValidatorForm onSubmit={handleSubmit} noValidate>
+        <Paper
+          sx={{
+            p: {xs: 0, sm: '3rem'},
+            borderRadius: '1.5rem',
+            bgcolor: {xs: 'transparent', sm: '#FFFFFF'},
+          }}
+          elevation={extraSmallScreen ? 0 : 6}
+        >
+          <Grid container columnSpacing={5} alignItems="start">
+            <Grid item xs={12} md={7}>
+              {file.media_type === 'video' ? (
+                <video
+                  controls
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    borderRadius: extraSmallScreen ? 0 : '1.25rem',
+                    aspectRatio: '1 / 1',
+                    objectFit: 'cover',
+                  }}
+                >
+                  <source src={mediaUrl + file.filename}></source>
+                </video>
+              ) : (
+                <img
+                  src={selectedFile}
+                  alt="File's preview"
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    borderRadius: extraSmallScreen ? 0 : '1.25rem',
+                    aspectRatio: '1 / 1',
+                    objectFit: 'cover',
+                    filter: `brightness(${filterInputs.brightness}%)
                    contrast(${filterInputs.contrast}%)
                    saturate(${filterInputs.saturation}%)
                    sepia(${filterInputs.sepia}%)`,
-            }}
-          ></img>
-        </Grid>
-        <Grid item xs={5} sx={{pl: 2}}>
-          <Grid
-            container
-            direction={'column'}
-            alignItems={'center'}
-            justifyContent={'center'}
-            sx={{mt: 0}}
-          >
-            <ValidatorForm onSubmit={handleSubmit} noValidate>
-              <TextValidator
-                sx={{mb: 1}}
-                fullWidth
-                onChange={handleInputChange}
-                type="text"
-                name="title"
-                placeholder="Title"
-                value={inputs.title}
-                validators={uploadValidators.title}
-                errorMessages={uploadErrorMessages.title}
-              />
-              <TextValidator
-                sx={{mb: 1}}
-                fullWidth
-                multiline
-                rows={4}
-                onChange={handleInputChange}
-                name="description"
-                value={inputs.description}
-                variant="filled"
-                placeholder="Description (optional)"
-                validators={uploadValidators.description}
-                errorMessages={uploadErrorMessages.description}
-              />
-              <Button variant="contained" fullWidth type="submit">
-                Upload
-              </Button>
-            </ValidatorForm>
+                  }}
+                />
+              )}
+
+              {file.media_type === 'image' && (
+                <Box sx={{px: {xs: 4, sm: 0}, mt: 3}}>
+                  <Typography component="p" variant="subtitle2">
+                    Brightness:
+                  </Typography>
+                  <Slider
+                    name="brightness"
+                    min={0}
+                    max={200}
+                    step={5}
+                    valueLabelDisplay="auto"
+                    onChange={handleFilterChange}
+                    value={filterInputs.brightness}
+                  />
+                  <Typography component="p" variant="subtitle2">
+                    Contrast:
+                  </Typography>
+                  <Slider
+                    name="contrast"
+                    min={0}
+                    max={200}
+                    step={5}
+                    valueLabelDisplay="auto"
+                    onChange={handleFilterChange}
+                    value={filterInputs.contrast}
+                  />
+                  <Typography component="p" variant="subtitle2">
+                    Saturation:
+                  </Typography>
+                  <Slider
+                    name="saturation"
+                    min={0}
+                    max={200}
+                    step={5}
+                    valueLabelDisplay="auto"
+                    onChange={handleFilterChange}
+                    value={filterInputs.saturation}
+                  />
+                  <Typography component="p" variant="subtitle2">
+                    Sepia:
+                  </Typography>
+                  <Slider
+                    name="sepia"
+                    min={0}
+                    max={100}
+                    step={5}
+                    valueLabelDisplay="auto"
+                    onChange={handleFilterChange}
+                    value={filterInputs.sepia}
+                  />
+                </Box>
+              )}
+            </Grid>
+            <Grid item xs={12} md={5}>
+              <Box sx={{px: {xs: 4, sm: 0}}}>
+                <TextValidator
+                  sx={{mb: 4, mt: {xs: 4, md: 0}}}
+                  fullWidth
+                  multiline
+                  rows={4}
+                  onChange={handleInputChange}
+                  name="description"
+                  value={inputs.description}
+                  variant="outlined"
+                  placeholder="Description"
+                  label="Description"
+                  validators={uploadValidators.description}
+                  errorMessages={uploadErrorMessages.description}
+                />
+                {/* FOR DELETING TAGS AND ADDING NEW (if the api would't need admin permission)
+                <Autocomplete
+                  multiple
+                  options={[]}
+                  defaultValue={[]}
+                  freeSolo
+                  value={tags}
+                  onChange={(e, value) => setTags(value)}
+                  disabled={tags.length >= 5 && true}
+                  renderTags={() => null}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Keywords"
+                      placeholder="Add a keyword by pressing enter after writing"
+                      helperText="Add up to 5 keywords, for example your cat's breed."
+                      disabled={tags.length >= 5 && true}
+                      sx={tags.length > 0 ? {mb: 2} : {mb: 4}}
+                    />
+                  )}
+                /> */}
+                <Box sx={tags.length > 0 ? {mb: 4} : {mb: 0}}>
+                  <Typography component="p" variant="subtitle2">
+                    Added tags:
+                  </Typography>
+                  {tags.map((tag) => (
+                    <Chip
+                      variant="outlined"
+                      color="primary"
+                      key={tag}
+                      label={tag}
+                      sx={{mr: 1, mt: 1}}
+                    />
+                  ))}
+                </Box>
+                <Button
+                  variant="contained"
+                  fullWidth
+                  type="submit"
+                  sx={{mb: 2}}
+                >
+                  Update
+                </Button>
+                <Button
+                  variant="outlined"
+                  fullWidth
+                  onClick={() => setDialogOpen(true)}
+                >
+                  Cancel
+                </Button>
+              </Box>
+            </Grid>
           </Grid>
-        </Grid>
-      </Grid>
-      <Grid
-        container
-        direction={'row'}
-        justifyContent="start"
-        sx={{mt: 2, ml: 9}}
-      >
-        <Grid item xs={5} sx={{mt: 2}}>
-          <Typography>Brightness</Typography>
-          <Slider
-            name="brightness"
-            min={0}
-            max={200}
-            step={5}
-            marks={true}
-            valueLabelDisplay="auto"
-            onChange={handleFilterChange}
-            value={filterInputs.brightness}
-          />
-          <Typography>Contrast</Typography>
-          <Slider
-            name="contrast"
-            min={0}
-            max={200}
-            step={5}
-            marks={true}
-            valueLabelDisplay="auto"
-            onChange={handleFilterChange}
-            value={filterInputs.contrast}
-          />
-          <Typography>Saturation</Typography>
-          <Slider
-            name="saturation"
-            min={0}
-            max={200}
-            step={5}
-            marks={true}
-            valueLabelDisplay="auto"
-            onChange={handleFilterChange}
-            value={filterInputs.saturation}
-          />
-          <Typography>Sepia</Typography>
-          <Slider
-            name="sepia"
-            min={0}
-            max={100}
-            step={5}
-            marks={true}
-            valueLabelDisplay="auto"
-            onChange={handleFilterChange}
-            value={filterInputs.sepia}
-          />
-        </Grid>
-      </Grid>
-      <Grid container justifyContent="center">
-        <Grid item xs={4}>
-          <Button
-            variant="contained"
-            fullWidth
-            sx={{mt: 5}}
-            onClick={() => navigate(-1)}
-          >
-            Back
-          </Button>
-        </Grid>
-      </Grid>
-    </Box>
+        </Paper>
+      </ValidatorForm>
+      <AlertDialog
+        title={'Are you sure you want to cancel modifying this post?'}
+        content={'All your work will be lost.'}
+        dialogOpen={dialogOpen}
+        setDialogOpen={setDialogOpen}
+        functionToDo={handleDialogYes}
+      />
+    </Container>
   );
 };
 

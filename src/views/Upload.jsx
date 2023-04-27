@@ -10,9 +10,10 @@ import {
   Paper,
   Grid,
   useMediaQuery,
+  CircularProgress,
 } from '@mui/material';
 import useForm from '../hooks/FormHooks';
-import {useEffect, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {useMedia, useTag} from '../hooks/ApiHooks';
 import {useNavigate} from 'react-router-dom';
 import {appId, filePlaceholder} from '../utils/variables';
@@ -24,16 +25,19 @@ import AlertDialog from '../components/AlertDialog';
 const Upload = () => {
   const [file, setFile] = useState(null);
   const [tags, setTags] = useState([]);
+  const [fileError, setFileError] = useState({isError: false, message: ''});
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState(filePlaceholder);
+  const [upload, setUpload] = useState(false);
   const {postMedia} = useMedia();
   const {postTag} = useTag();
   const navigate = useNavigate();
+  const videoRef = useRef();
   const extraSmallScreen = useMediaQuery((theme) =>
     theme.breakpoints.down('sm')
   );
   const initValues = {
-    title: 'cat image',
+    title: 'Cat post',
     description: '',
   };
 
@@ -46,6 +50,15 @@ const Upload = () => {
 
   const doUpload = async () => {
     try {
+      // Validate file
+      validateFile(file);
+      // Check is file valid
+      if (fileError.isError) {
+        return;
+      }
+      // Set upload process started, changes buttons in form
+      setUpload(true);
+      // Create form data and append title, desc, filters and file to it
       const data = new FormData();
       data.append('title', inputs.title);
       const allData = {
@@ -54,39 +67,83 @@ const Upload = () => {
       };
       data.append('description', JSON.stringify(allData));
       data.append('file', file);
+      // Get token and start postMedia
       const token = localStorage.getItem('token');
       const uploadResult = await postMedia(data, token);
-
+      // Create temp array for tags
       let tagsTmp = [{file_id: uploadResult.file_id, tag: appId}];
-
+      // Add tags that user inputted
       tagsTmp = tagsTmp.concat(
         tags.map((tag) => {
           return {file_id: uploadResult.file_id, tag: appId + '_' + tag};
         })
       );
-
+      // Loop postTags
       for (const tag of tagsTmp) {
         const tagResult = await postTag(tag, token);
         console.log(tagResult);
       }
-
+      // Navigate back to home
       navigate('/home');
     } catch (error) {
+      setUpload(false);
       alert(error.message);
+      console.error(error.message);
     }
   };
 
   const handleFileChange = (event) => {
     event.persist();
+    // Remove errors from fileError
+    setFileError({isError: false, message: ''});
     setFile(event.target.files[0]);
-    const reader = new FileReader();
-    reader.addEventListener('load', () => {
-      setSelectedFile(reader.result);
-    });
-    reader.readAsDataURL(event.target.files[0]);
+    // Check if files' type is video and create blob from it to add to selectedFile
+    if (event.target.files[0].type.includes('video')) {
+      const file = event.target.files[0];
+      const blobURL = URL.createObjectURL(file);
+      setSelectedFile(blobURL);
+    } else if (event.target.files[0].type.includes('image')) {
+      const reader = new FileReader();
+      reader.addEventListener('load', () => {
+        setSelectedFile(reader.result);
+      });
+      reader.readAsDataURL(event.target.files[0]);
+    }
+    validateFile(event.target.files[0]);
   };
 
-  const handleTagDelete = (tagToDelete) => () => {
+  const validateFile = (file) => {
+    // Check if there is a file
+    if (!file) {
+      setFileError({isError: true, message: 'File is required'});
+      return;
+    }
+
+    // Check that file is video or image
+    if (!file.type.includes('image') & !file.type.includes('video')) {
+      setFileError({
+        isError: true,
+        message: 'File needs to be video or image file',
+      });
+      return;
+    }
+
+    // Check file size
+    const maxFileSize = file.type.includes('image') ? 5000000 : 45000000;
+    if (file.size > maxFileSize) {
+      setFileError({
+        isError: true,
+        message: 'Maximum filesize is 45 MB for video and 5 MB for image files',
+      });
+      return;
+    }
+  };
+
+  useEffect(() => {
+    videoRef.current?.load();
+  }, [selectedFile]);
+
+  const doTagDelete = (tagToDelete) => () => {
     const newTags = tags.filter((tag) => tag !== tagToDelete);
     setTags(newTags);
   };
@@ -115,7 +172,7 @@ const Upload = () => {
   return (
     <Container maxWidth="lg" sx={{p: {xs: '6rem 0', sm: '3rem 3rem'}}}>
       <Typography component="h1" variant="h1" textAlign="center" sx={{mb: 3}}>
-        Add new photo
+        Add new post
       </Typography>
       <ValidatorForm onSubmit={handleSubmit} noValidate>
         <Paper
@@ -128,74 +185,106 @@ const Upload = () => {
         >
           <Grid container columnSpacing={5} alignItems="start">
             <Grid item xs={12} md={7}>
-              <img
-                src={selectedFile}
-                alt="Selected file's preview"
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  borderRadius: extraSmallScreen ? 0 : '1.25rem',
-                  aspectRatio: '1 / 1',
-                  objectFit: 'cover',
-                  filter: `brightness(${filterInputs.brightness}%)
+              {file && file.type.includes('video') ? (
+                <video
+                  controls
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    borderRadius: extraSmallScreen ? 0 : '1.25rem',
+                    aspectRatio: '1 / 1',
+                    objectFit: 'cover',
+                  }}
+                  ref={videoRef}
+                >
+                  <source src={selectedFile} type={file.type}></source>
+                </video>
+              ) : (
+                <img
+                  src={selectedFile}
+                  alt="Selected file's preview"
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    borderRadius: extraSmallScreen ? 0 : '1.25rem',
+                    aspectRatio: '1 / 1',
+                    objectFit: 'cover',
+                    filter: `brightness(${filterInputs.brightness}%)
                    contrast(${filterInputs.contrast}%)
                    saturate(${filterInputs.saturation}%)
                    sepia(${filterInputs.sepia}%)`,
-                }}
-              />
+                  }}
+                />
+              )}
+
               <Box sx={{px: {xs: 4, sm: 0}}}>
-                <TextValidator
-                  sx={selectedFile !== filePlaceholder ? {my: 3} : {mt: 4}}
+                <TextField
+                  sx={selectedFile !== filePlaceholder ? {my: 3} : {mt: 3}}
                   fullWidth
                   onChange={handleFileChange}
                   type="file"
                   name="file"
-                  accept="image/*"
+                  accept="image/*,video/*"
+                  error={fileError.isError}
+                  helperText={
+                    fileError.isError
+                      ? fileError.message
+                      : 'Maximum filesize is 45 MB for video and 5 MB for image files'
+                  }
                 />
-                {selectedFile !== filePlaceholder && (
-                  <>
-                    <Typography>Brightness:</Typography>
-                    <Slider
-                      name="brightness"
-                      min={0}
-                      max={200}
-                      step={5}
-                      valueLabelDisplay="auto"
-                      onChange={handleFilterChange}
-                      value={filterInputs.brightness}
-                    />
-                    <Typography>Contrast:</Typography>
-                    <Slider
-                      name="contrast"
-                      min={0}
-                      max={200}
-                      step={5}
-                      valueLabelDisplay="auto"
-                      onChange={handleFilterChange}
-                      value={filterInputs.contrast}
-                    />
-                    <Typography>Saturation:</Typography>
-                    <Slider
-                      name="saturation"
-                      min={0}
-                      max={200}
-                      step={5}
-                      valueLabelDisplay="auto"
-                      onChange={handleFilterChange}
-                      value={filterInputs.saturation}
-                    />
-                    <Typography>Sepia:</Typography>
-                    <Slider
-                      name="sepia"
-                      min={0}
-                      max={100}
-                      step={5}
-                      valueLabelDisplay="auto"
-                      onChange={handleFilterChange}
-                      value={filterInputs.sepia}
-                    />
-                  </>
-                )}
+                {selectedFile !== filePlaceholder &&
+                  file.type.includes('image') && (
+                    <>
+                      <Typography component="p" variant="subtitle2">
+                        Brightness:
+                      </Typography>
+                      <Slider
+                        name="brightness"
+                        min={0}
+                        max={200}
+                        step={5}
+                        valueLabelDisplay="auto"
+                        onChange={handleFilterChange}
+                        value={filterInputs.brightness}
+                      />
+                      <Typography component="p" variant="subtitle2">
+                        Contrast:
+                      </Typography>
+                      <Slider
+                        name="contrast"
+                        min={0}
+                        max={200}
+                        step={5}
+                        valueLabelDisplay="auto"
+                        onChange={handleFilterChange}
+                        value={filterInputs.contrast}
+                      />
+                      <Typography component="p" variant="subtitle2">
+                        Saturation:
+                      </Typography>
+                      <Slider
+                        name="saturation"
+                        min={0}
+                        max={200}
+                        step={5}
+                        valueLabelDisplay="auto"
+                        onChange={handleFilterChange}
+                        value={filterInputs.saturation}
+                      />
+                      <Typography component="p" variant="subtitle2">
+                        Sepia:
+                      </Typography>
+                      <Slider
+                        name="sepia"
+                        min={0}
+                        max={100}
+                        step={5}
+                        valueLabelDisplay="auto"
+                        onChange={handleFilterChange}
+                        value={filterInputs.sepia}
+                      />
+                    </>
+                  )}
               </Box>
             </Grid>
             <Grid item xs={12} md={5}>
@@ -228,7 +317,7 @@ const Upload = () => {
                       {...params}
                       label="Keywords"
                       placeholder="Add a keyword by pressing enter after writing"
-                      helperText="Add up to 5 keywords, for example your cat's breed."
+                      helperText="Add up to 5 keywords, for example your cat's breed"
                       disabled={tags.length >= 5 && true}
                       sx={tags.length > 0 ? {mb: 2} : {mb: 4}}
                     />
@@ -241,7 +330,7 @@ const Upload = () => {
                       color="primary"
                       key={tag}
                       label={tag}
-                      onDelete={handleTagDelete(tag)}
+                      onDelete={doTagDelete(tag)}
                       sx={{mr: 1, mt: 1}}
                     />
                   ))}
@@ -251,13 +340,23 @@ const Upload = () => {
                   fullWidth
                   type="submit"
                   sx={{mb: 2}}
+                  disabled={upload}
                 >
-                  Upload
+                  {upload ? 'Uploading...' : 'Upload'}
+                  {upload && (
+                    <CircularProgress color="black" sx={{ml: 2}} size={24} />
+                  )}
                 </Button>
+                {upload && (
+                  <Typography component="p" variant="subtitle2" sx={{mb: 2}}>
+                    This might take a while depending on your file size.
+                  </Typography>
+                )}
                 <Button
                   variant="outlined"
                   fullWidth
                   onClick={() => setDialogOpen(true)}
+                  disabled={upload}
                 >
                   Cancel
                 </Button>

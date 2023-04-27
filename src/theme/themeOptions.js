@@ -53,6 +53,12 @@ const themeOptions = {
       fontSize: '1.1rem',
       fontWeight: 'bold',
     },
+    subtitle1: {
+      fontFamily: 'Nunito',
+    },
+    subtitle2: {
+      fontFamily: 'Nunito',
+    },
     body1: {
       fontFamily: 'Nunito',
       fontSize: '1rem',
@@ -68,6 +74,15 @@ const themeOptions = {
     body4: {
       fontFamily: 'Nunito',
       fontSize: '1.3rem',
+    },
+    button: {
+      fontFamily: 'Nunito',
+    },
+    caption: {
+      fontFamily: 'Nunito',
+    },
+    overline: {
+      fontFamily: 'Nunito',
     },
   },
   components: {

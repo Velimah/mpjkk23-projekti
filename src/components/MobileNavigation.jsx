@@ -51,7 +51,7 @@ const MobileNavigation = () => {
                 }}
               >
                 <AddRounded sx={{mr: 1}} />
-                Upload
+                Add post
               </Fab>
             )}
           <Paper
