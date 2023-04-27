@@ -21,7 +21,6 @@ import {useTheme} from '@mui/material/styles';
 
 const MediaTable = ({
   myFilesOnly = false,
-  sort,
   targetUserFilesOnly = false,
   myFavouritesOnly = false,
 }) => {
@@ -42,7 +41,7 @@ const MediaTable = ({
 
   const theme = useTheme();
   const smallScreen = useMediaQuery(theme.breakpoints.down('sm'));
-
+  console.log(mediaArray);
   return (
     <>
       <Grid sx={{mt: '50px', mb: '100px'}}>

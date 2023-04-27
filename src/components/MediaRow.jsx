@@ -44,6 +44,21 @@ const MediaRow = ({file, style}) => {
     filename: '',
   });
 
+  let allData = {
+    desc: file.description,
+    filters: {
+      brightness: 100,
+      contrast: 100,
+      saturation: 100,
+      sepia: 0,
+    },
+  };
+  try {
+    allData = JSON.parse(file.description);
+  } catch (error) {
+    console.log(allData);
+  }
+
   const fetchUser = async () => {
     try {
       const token = localStorage.getItem('token');
@@ -198,6 +213,10 @@ const MediaRow = ({file, style}) => {
                 aspectRatio: '1 / 1',
                 objectFit: 'cover',
                 borderRadius: '5px',
+                filter: `brightness(${allData.filters.brightness}%)
+                       contrast(${allData.filters.contrast}%)
+                       saturate(${allData.filters.saturation}%)
+                       sepia(${allData.filters.sepia}%)`,
               }}
               src={
                 file.media_type === 'audio'
@@ -229,6 +248,10 @@ const MediaRow = ({file, style}) => {
                 aspectRatio: '1 / 1',
                 objectFit: 'cover',
                 borderRadius: smallScreen ? 0 : '5px',
+                filter: `brightness(${allData.filters.brightness}%)
+                       contrast(${allData.filters.contrast}%)
+                       saturate(${allData.filters.saturation}%)
+                       sepia(${allData.filters.sepia}%)`,
               }}
               src={
                 file.media_type === 'audio'
