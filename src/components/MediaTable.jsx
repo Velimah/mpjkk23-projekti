@@ -18,8 +18,13 @@ const MediaTable = ({
   myFilesOnly = false,
   sort,
   targetUserFilesOnly = false,
+  myFavouritesOnly = false,
 }) => {
-  const {mediaArray, deleteMedia} = useMedia(myFilesOnly, targetUserFilesOnly);
+  const {mediaArray, deleteMedia} = useMedia(
+    myFilesOnly,
+    targetUserFilesOnly,
+    myFavouritesOnly
+  );
 
   let sortedArray = mediaArray.slice().reverse();
 
@@ -152,6 +157,7 @@ MediaTable.propTypes = {
   myFilesOnly: PropTypes.bool,
   targetUserFilesOnly: PropTypes.bool,
   sort: PropTypes.any,
+  myFavouritesOnly: PropTypes.bool,
 };
 
 export default MediaTable;
