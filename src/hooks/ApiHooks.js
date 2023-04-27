@@ -15,7 +15,11 @@ const doFetch = async (url, options) => {
   return json;
 };
 
-const useMedia = (myFilesOnly = false, targetUserFilesOnly = false) => {
+const useMedia = (
+  myFilesOnly = false,
+  targetUserFilesOnly = false,
+  myFavouritesOnly = false
+) => {
   const [mediaArray, setMediaArray] = useState([]);
   const {user, update, targetUser, setUser, setTargetUser} =
     useContext(MediaContext);
@@ -47,6 +51,17 @@ const useMedia = (myFilesOnly = false, targetUserFilesOnly = false) => {
       }
       if (targetUserFilesOnly) {
         files = files.filter((file) => file.user_id === targetUserData.user_id);
+      }
+      if (myFavouritesOnly) {
+        const token = localStorage.getItem('token');
+        const likedFiles = await useFavourite().getUsersFavouritesByToken(
+          token
+        );
+        files = files.filter((file) => {
+          return likedFiles.some((likedFile) => {
+            return likedFile.file_id === file.file_id;
+          });
+        });
       }
       const filesWithThumbnail = await Promise.all(
         files.map(async (file) => {
@@ -262,6 +277,16 @@ const useFavourite = () => {
     return await doFetch(baseUrl + 'favourites/file/' + id);
   };
 
+  const getUsersFavouritesByToken = async (token) => {
+    const fetchOptions = {
+      method: 'GET',
+      headers: {
+        'x-access-token': token,
+      },
+    };
+    return await doFetch(baseUrl + 'favourites', fetchOptions);
+  };
+
   const deleteFavourite = async (id, token) => {
     const fetchOptions = {
       method: 'DELETE',
@@ -272,7 +297,12 @@ const useFavourite = () => {
     return await doFetch(baseUrl + 'favourites/file/' + id, fetchOptions);
   };
 
-  return {postFavourite, getFavourites, deleteFavourite};
+  return {
+    postFavourite,
+    getFavourites,
+    getUsersFavouritesByToken,
+    deleteFavourite,
+  };
 };
 
 const useComment = () => {

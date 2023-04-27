@@ -87,7 +87,7 @@ const Upload = () => {
       navigate('/home');
     } catch (error) {
       setUpload(false);
-      alert(error.message);
+      alert('Something went wrong.');
       console.error(error.message);
     }
   };
@@ -114,7 +114,7 @@ const Upload = () => {
 
   const validateFile = (file) => {
     // Check if there is a file
-    if (!file) {
+    if (file === null) {
       setFileError({isError: true, message: 'File is required'});
       return;
     }

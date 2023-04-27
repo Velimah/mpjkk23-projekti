@@ -91,8 +91,6 @@ const themeOptions = {
         root: {
           fontFamily: 'Nunito',
           borderRadius: 25,
-          paddingTop: 10,
-          paddingBottom: 10,
         },
       },
     },
