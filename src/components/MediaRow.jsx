@@ -17,7 +17,8 @@ import {useFavourite, useUser, useTag, useRating} from '../hooks/ApiHooks';
 import {useTheme} from '@mui/material/styles';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import {Star, StarBorderOutlined} from '@mui/icons-material';
+import {FiberManualRecord, Star, StarBorderOutlined} from '@mui/icons-material';
+import {formatTime} from '../utils/UnitConversions';
 
 const MediaRow = ({file, style}) => {
   const theme = useTheme();
@@ -175,22 +176,35 @@ const MediaRow = ({file, style}) => {
               src={profilePic.filename}
             />
             <Typography
-              aria-label="Profile"
               component={Link}
               to="/userprofiles"
               state={{file}}
               onClick={() => {
                 setTargetUser(file);
               }}
-              variant="body1"
+              variant="h1"
               sx={{
-                pl: 1,
-                fontSize: '1.5rem',
+                pl: 2,
+                fontSize: '1.3rem',
                 color: 'inherit',
                 textDecoration: 'none',
               }}
             >
               {owner.username}
+            </Typography>
+            <FiberManualRecord
+              sx={{
+                m: 2,
+                fontSize: '0.4rem',
+              }}
+            ></FiberManualRecord>
+            <Typography
+              variant="body1"
+              sx={{
+                fontSize: '1.3rem',
+              }}
+            >
+              {formatTime(file.time_added)}
             </Typography>
           </Grid>
         )}
@@ -363,7 +377,7 @@ const MediaRow = ({file, style}) => {
 MediaRow.propTypes = {
   file: PropTypes.object.isRequired,
   deleteMedia: PropTypes.func.isRequired,
-  style: PropTypes.any.isRequired,
+  style: PropTypes.bool.isRequired,
 };
 
 export default MediaRow;
