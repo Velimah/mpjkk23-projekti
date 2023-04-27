@@ -19,7 +19,6 @@ import MenuIcon from '@mui/icons-material/Menu';
 import {NavLink} from 'react-router-dom';
 import {useTheme} from '@mui/material/styles';
 
-<<<<<<< HEAD
 const MediaTable = ({
   myFilesOnly = false,
   sort,
@@ -31,10 +30,6 @@ const MediaTable = ({
     targetUserFilesOnly,
     myFavouritesOnly
   );
-=======
-const MediaTable = ({myFilesOnly = false, targetUserFilesOnly = false}) => {
-  const {mediaArray, deleteMedia} = useMedia(myFilesOnly, targetUserFilesOnly);
->>>>>>> 8efa13e644af21c1c7a2a24cd7b8279a651d14f5
 
   const [style, setStyle] = useState(true);
   const changeToGrid = () => {
@@ -181,11 +176,8 @@ const MediaTable = ({myFilesOnly = false, targetUserFilesOnly = false}) => {
 MediaTable.propTypes = {
   myFilesOnly: PropTypes.bool,
   targetUserFilesOnly: PropTypes.bool,
-<<<<<<< HEAD
   sort: PropTypes.any,
   myFavouritesOnly: PropTypes.bool,
-=======
->>>>>>> 8efa13e644af21c1c7a2a24cd7b8279a651d14f5
 };
 
 export default MediaTable;
