@@ -37,7 +37,7 @@ const Upload = () => {
     theme.breakpoints.down('sm')
   );
   const initValues = {
-    title: 'cat post',
+    title: 'Cat post',
     description: '',
   };
 
@@ -50,14 +50,15 @@ const Upload = () => {
 
   const doUpload = async () => {
     try {
-      // Check that file is there
-      if (!file) {
-        setFileError({isError: true, message: 'File is required.'});
-      }
+      // Validate file
+      validateFile(file);
+      // Check is file valid
       if (fileError.isError) {
         return;
       }
+      // Set upload process started, changes buttons in form
       setUpload(true);
+      // Create form data and append title, desc, filters and file to it
       const data = new FormData();
       data.append('title', inputs.title);
       const allData = {
@@ -66,69 +67,75 @@ const Upload = () => {
       };
       data.append('description', JSON.stringify(allData));
       data.append('file', file);
+      // Get token and start postMedia
       const token = localStorage.getItem('token');
       const uploadResult = await postMedia(data, token);
-
-      // Add tags
+      // Create temp array for tags
       let tagsTmp = [{file_id: uploadResult.file_id, tag: appId}];
-
+      // Add tags that user inputted
       tagsTmp = tagsTmp.concat(
         tags.map((tag) => {
           return {file_id: uploadResult.file_id, tag: appId + '_' + tag};
         })
       );
-
+      // Loop postTags
       for (const tag of tagsTmp) {
         const tagResult = await postTag(tag, token);
         console.log(tagResult);
       }
-
+      // Navigate back to home
       navigate('/home');
     } catch (error) {
       setUpload(false);
       alert(error.message);
+      console.error(error.message);
     }
   };
 
   const handleFileChange = (event) => {
-    setFileError({isError: false, message: ''});
     event.persist();
+    // Remove errors from fileError
+    setFileError({isError: false, message: ''});
     setFile(event.target.files[0]);
-
+    // Check if files' type is video and create blob from it to add to selectedFile
     if (event.target.files[0].type.includes('video')) {
       const file = event.target.files[0];
       const blobURL = URL.createObjectURL(file);
       setSelectedFile(blobURL);
-    } else {
+    } else if (event.target.files[0].type.includes('image')) {
       const reader = new FileReader();
       reader.addEventListener('load', () => {
         setSelectedFile(reader.result);
       });
       reader.readAsDataURL(event.target.files[0]);
     }
+    validateFile(event.target.files[0]);
+  };
+
+  const validateFile = (file) => {
+    // Check if there is a file
+    if (!file) {
+      setFileError({isError: true, message: 'File is required'});
+      return;
+    }
 
     // Check that file is video or image
-    if (
-      !event.target.files[0].type.includes('image') &
-      !event.target.files[0].type.includes('video')
-    ) {
+    if (!file.type.includes('image') & !file.type.includes('video')) {
       setFileError({
         isError: true,
         message: 'File needs to be video or image file',
       });
+      return;
     }
 
     // Check file size
-    const maxFileSize = event.target.files[0].type.includes('image')
-      ? 5000000
-      : 45000000;
-
-    if (event.target.files[0].size > maxFileSize) {
-      console.log('häh');
+    const maxFileSize = file.type.includes('image') ? 5000000 : 45000000;
+    if (file.size > maxFileSize) {
       setFileError({
         isError: true,
         message: 'Maximum filesize is 45 MB for video and 5 MB for image files',
       });
+      return;
     }
   };
 

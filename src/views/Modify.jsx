@@ -24,14 +24,12 @@ const Modify = () => {
   const {state} = useLocation();
   if (state === null) navigate('/home');
   const file = state.data;
-
   const [tags, setTags] = useState([]);
   const [dialogOpen, setDialogOpen] = useState(false);
   const {putMedia} = useMedia();
   const {getTagsByFileId} = useTag();
   // FOR DELETING TAGS AND ADDING NEW (if the api would't need admin permission)
   // const [originalTags, setOriginalTags] = useState([]);
-
   const extraSmallScreen = useMediaQuery((theme) =>
     theme.breakpoints.down('sm')
   );
@@ -135,7 +133,7 @@ const Modify = () => {
       // }
 
       console.log(modifyResult);
-      navigate(-1);
+      navigate('/single', {state: file});
     } catch (error) {
       alert(error.message);
     }
@@ -143,7 +141,7 @@ const Modify = () => {
 
   const handleDialogYes = () => {
     setDialogOpen(false);
-    navigate(-1);
+    navigate('/single', {state: file});
   };
 
   const {inputs, handleSubmit, handleInputChange} = useForm(
