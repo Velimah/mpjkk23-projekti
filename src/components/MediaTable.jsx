@@ -4,6 +4,11 @@ import {
   Grid,
   useMediaQuery,
   Container,
+  Typography,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from '@mui/material';
 import {useMedia} from '../hooks/ApiHooks';
 import MediaRow from './MediaRow';
@@ -14,6 +19,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import {NavLink} from 'react-router-dom';
 import {useTheme} from '@mui/material/styles';
 
+<<<<<<< HEAD
 const MediaTable = ({
   myFilesOnly = false,
   sort,
@@ -25,8 +31,10 @@ const MediaTable = ({
     targetUserFilesOnly,
     myFavouritesOnly
   );
-
-  let sortedArray = mediaArray.slice().reverse();
+=======
+const MediaTable = ({myFilesOnly = false, targetUserFilesOnly = false}) => {
+  const {mediaArray, deleteMedia} = useMedia(myFilesOnly, targetUserFilesOnly);
+>>>>>>> 8efa13e644af21c1c7a2a24cd7b8279a651d14f5
 
   const [style, setStyle] = useState(true);
   const changeToGrid = () => {
@@ -37,19 +45,33 @@ const MediaTable = ({
     setStyle(false);
   };
 
-  if (sort === 2) {
-    console.log('top rated');
-  } else if (sort === 3) {
-    console.log('most liked');
-  } else {
-    sortedArray = mediaArray.slice().reverse();
-  }
-
   const theme = useTheme();
   const smallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
   return (
     <>
+      <Grid sx={{mt: '50px', mb: '100px'}}>
+        <Container>
+          <Grid
+            container
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <Typography component="h2" variant="h2" sx={{mb: 2}}>
+              Discover cats
+            </Typography>
+            <FormControl sx={{width: 150}}>
+              <InputLabel id="select-label">Sort</InputLabel>
+              <Select labelId="select-label" id="select" label="Sort">
+                <MenuItem value={1}>Newest</MenuItem>
+                <MenuItem value={2}>Most liked</MenuItem>
+                <MenuItem value={3}>Top rated</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+        </Container>
+      </Grid>
       <Container maxWidth="lg" sx={{padding: smallScreen ? 0 : 'auto'}}>
         <Grid
           container
@@ -105,19 +127,21 @@ const MediaTable = ({
           {style === false ? (
             <ImageList
               cols={1}
-              gap={20}
+              gap={0}
               sx={{width: smallScreen ? '100%' : '500px'}}
             >
-              {sortedArray.map((item, index) => {
-                return (
-                  <MediaRow
-                    key={index}
-                    file={item}
-                    deleteMedia={deleteMedia}
-                    style={style}
-                  />
-                );
-              })}
+              {mediaArray
+                .map((item, index) => {
+                  return (
+                    <MediaRow
+                      key={index}
+                      file={item}
+                      deleteMedia={deleteMedia}
+                      style={style}
+                    />
+                  );
+                })
+                .reverse()}
             </ImageList>
           ) : (
             /* * GRID STYLE * */
@@ -134,17 +158,18 @@ const MediaTable = ({
               direction="row"
               alignItems="stretch"
             >
-              {sortedArray.map((item, index) => {
-                return (
-                  <MediaRow
-                    key={index}
-                    file={item}
-                    deleteMedia={deleteMedia}
-                    style={style}
-                    sort={sort}
-                  />
-                );
-              })}
+              {mediaArray
+                .map((item, index) => {
+                  return (
+                    <MediaRow
+                      key={index}
+                      file={item}
+                      deleteMedia={deleteMedia}
+                      style={style}
+                    />
+                  );
+                })
+                .reverse()}
             </ImageList>
           )}
         </Grid>
@@ -156,8 +181,11 @@ const MediaTable = ({
 MediaTable.propTypes = {
   myFilesOnly: PropTypes.bool,
   targetUserFilesOnly: PropTypes.bool,
+<<<<<<< HEAD
   sort: PropTypes.any,
   myFavouritesOnly: PropTypes.bool,
+=======
+>>>>>>> 8efa13e644af21c1c7a2a24cd7b8279a651d14f5
 };
 
 export default MediaTable;

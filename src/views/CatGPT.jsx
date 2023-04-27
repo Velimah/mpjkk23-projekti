@@ -8,6 +8,8 @@ import {
   ListItem,
   TextField,
   Typography,
+  Container,
+  Paper,
 } from '@mui/material';
 import {MediaContext} from '../contexts/MediaContext';
 import {useNavigate} from 'react-router-dom';
@@ -117,241 +119,253 @@ const CatGPT = () => {
 
   return (
     <>
-      <Grid
-        container
-        direction="row"
-        alignItems="center"
-        justifyContent="center"
-        flexWrap="nowrap"
-        sx={{
-          height: '90vh',
-          width: '100%',
-          maxWidth: '1200px',
-          margin: 'auto',
-        }}
+      <Container
+        maxWidth="lg"
+        sx={{p: {xs: '6rem 0', sm: '2rem 1rem', md: '2rem 3rem'}}}
       >
-        <Grid
-          container
-          direction="column"
-          alignItems="center"
-          justifyContent="flex-start"
-          sx={{
-            height: '100%',
-            width: '200px',
-            display: {xs: 'none', sm: 'block'},
-          }}
-          pl={1}
+        <Typography
+          component="h1"
+          variant={!currentTitle ? 'h1' : 'h2'}
+          sx={{textAlign: 'center', mb: 3}}
         >
-          <Button
-            sx={{mt: 15, mb: 4, width: '184px'}}
-            variant="contained"
-            onClick={createNewChat}
-          >
-            New chat
-          </Button>
-          {uniqueTitles?.length > 0 && (
-            <Typography component="p" variant="h6" sx={{textAlign: 'center'}}>
-              Chats
-            </Typography>
-          )}
-          <List
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'flex-start',
-              height: 'fit-content',
-              width: '184px',
-            }}
-          >
-            {uniqueTitles?.map((uniqueTitle, index) => (
-              <ListItem
-                component="li"
-                variant="h6"
-                sx={{
-                  backgroundColor: '#ACCC7F',
-                  borderRadius: '5px',
-                  '&:hover': {
-                    backgroundColor: '#8FB361',
-                  },
-                  mb: 1,
-                }}
-                key={index}
-                onClick={() => handleClick(uniqueTitle)}
-              >
-                {uniqueTitle}
-              </ListItem>
-            ))}
-          </List>
-        </Grid>
-
-        <Grid
-          container
-          direction="column"
-          justifyContent="space-between"
-          alignItems="center"
-          textAlign="center"
-          flexWrap="nowrap"
+          {!currentTitle ? 'Cat-GPT' : currentTitle}
+        </Typography>
+        <Paper
           sx={{
-            height: '90vh',
-            width: '100%',
-            maxWidth: '1000px',
-            px: 2,
-            pt: {xs: 7, sm: 1},
+            p: {xs: 0, sm: '1rem', md: '3rem'},
+            borderRadius: '1.5rem',
+            bgcolor: {xs: 'transparent', sm: '#FFFFFF'},
           }}
         >
-          <Typography
-            component="h1"
-            variant={!currentTitle ? 'h1' : 'h2'}
-            sx={{textAlign: 'center', my: 2}}
-          >
-            {!currentTitle ? 'Cat-GPT' : currentTitle}
-          </Typography>
-          <List
+          <Grid
+            container
+            direction="row"
+            flexWrap="nowrap"
             sx={{
-              overflowY: 'scroll',
-              display: 'flex',
-              flexDirection: 'column',
               width: '100%',
-              borderRadius: '5px 5px 0 0',
-              '&::-webkit-scrollbar': {
-                display: 'none',
-              },
-              scrollbarWidth: 'none',
             }}
-            className="feed"
           >
-            <Box className="scroller">
-              {currentChat?.map((chat, index) => (
-                <ListItem
-                  sx={{
-                    backgroundColor:
-                      chat.role === 'assistant' ? '#F4DCE1' : '#F4DCE1',
-                    padding: '20px',
-                    marginTop: '15px',
-                    alignItems: 'start',
-                    borderRadius: '5px',
-                    display: {xs: 'block'},
-                  }}
-                  key={index}
+            <Grid
+              container
+              direction="column"
+              alignItems="center"
+              justifyContent="flex-start"
+              sx={{
+                height: '70vh',
+                maxWidth: '200px',
+                display: {xs: 'none', sm: 'block'},
+                pr: {xs: 1, sm: 3},
+              }}
+            >
+              <Button
+                sx={{width: '100%'}}
+                variant="contained"
+                onClick={createNewChat}
+              >
+                New chat
+              </Button>
+              {uniqueTitles?.length > 0 && (
+                <Typography
+                  component="p"
+                  variant="h2"
+                  sx={{textAlign: 'center', my: 3, width: '100%'}}
                 >
-                  <Typography
-                    variant="Body1"
-                    component="p"
+                  Chats
+                </Typography>
+              )}
+              <List
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'flex-start',
+                  height: 'fit-content',
+                  width: '100%',
+                }}
+              >
+                {uniqueTitles?.map((uniqueTitle, index) => (
+                  <ListItem
+                    component="li"
+                    variant="h6"
                     sx={{
-                      minWidth: '120px',
-                      height: '100%',
-                      fontWeight: 'bold',
-                      textAlign: 'left',
+                      backgroundColor: '#ACCC7F',
+                      borderRadius: 2,
+                      '&:hover': {
+                        backgroundColor: '#8FB361',
+                      },
+                      mb: 1,
                     }}
+                    key={index}
+                    onClick={() => handleClick(uniqueTitle)}
                   >
-                    {chat.role === 'assistant' ? 'Mr. Mittens' : user.username}
-                  </Typography>
+                    {uniqueTitle}
+                  </ListItem>
+                ))}
+              </List>
+            </Grid>
+
+            <Grid
+              container
+              direction="column"
+              justifyContent="space-between"
+              alignItems="center"
+              textAlign="center"
+              flexWrap="nowrap"
+              sx={{
+                height: '70vh',
+                width: '100%',
+                maxWidth: '1000px',
+                pt: {xs: 7, sm: 0},
+              }}
+            >
+              <List
+                sx={{
+                  overflowY: 'scroll',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  width: '100%',
+                  '&::-webkit-scrollbar': {
+                    display: 'none',
+                  },
+                  scrollbarWidth: 'none',
+                }}
+                className="feed"
+              >
+                <Box className="scroller">
+                  {currentChat?.map((chat, index) => (
+                    <ListItem
+                      sx={{
+                        backgroundColor:
+                          chat.role === 'assistant' ? '#F4DCE1' : '#F4DCE1',
+                        p: 2,
+                        mt: 2,
+                        alignItems: 'start',
+                        borderRadius: {xs: 0, sm: 2},
+                        display: {xs: 'block'},
+                      }}
+                      key={index}
+                    >
+                      <Typography
+                        variant="h6"
+                        component="p"
+                        sx={{
+                          height: '100%',
+                          textAlign: 'left',
+                          fontSize: {xs: '0.8rem', sm: '1rem'},
+                        }}
+                      >
+                        {chat.role === 'assistant'
+                          ? 'Mr. Mittens'
+                          : user.username}
+                      </Typography>
+                      <Typography
+                        component="p"
+                        variant="body1"
+                        sx={{
+                          textAlign: 'left',
+                          margin: '0 10px',
+                          fontSize: {xs: '0.8rem', sm: '1rem'},
+                        }}
+                      >
+                        {chat.content}
+                      </Typography>
+                    </ListItem>
+                  ))}
+                </Box>
+              </List>
+
+              <Box display="flex" flexDirection="column" width="100%">
+                <Box
+                  display="flex"
+                  justifyContent="center"
+                  alignItems="center"
+                  width="100%"
+                  sx={{
+                    px: {xs: 4, sm: 0},
+                    pt: 3,
+                    display: {xs: 'block', md: 'flex'},
+                  }}
+                >
+                  <TextField
+                    className="text-field"
+                    multiline
+                    maxRows={4}
+                    fullWidth
+                    variant="outlined"
+                    label="Ask Mr. Mittens a question!"
+                    type="text"
+                    sx={{
+                      boxShadow:
+                        '0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12)',
+                    }}
+                    value={value}
+                    onChange={(e) => setValue(e.target.value)}
+                  />
+                  <Button
+                    sx={{
+                      backgroundColor: messageSent ? '#ACCC7F' : '',
+                      color: messageSent ? '#000000' : '',
+                      '&:hover': {
+                        backgroundColor: messageSent ? '#8FB361' : '',
+                        color: messageSent ? '#000000' : '',
+                      },
+                      mt: {xs: 2, md: 0},
+                      ml: {xs: 0, md: 2},
+                      width: {xs: '100%', md: '200px'},
+                    }}
+                    variant="contained"
+                    id="submit"
+                    onClick={getMessages}
+                  >
+                    {messageSent ? 'Submitted!' : 'Submit'}
+                  </Button>
+                </Box>
+                <Box
+                  display="flex"
+                  justifyContent="center"
+                  alignItems="center"
+                  sx={{flexDirection: {xs: 'column', md: 'row'}}}
+                >
                   <Typography
                     component="p"
                     variant="body1"
-                    sx={{textAlign: 'left', margin: '0 10px'}}
+                    sx={{
+                      textAlign: 'center',
+                      p: 1,
+                      display: {xs: 'block', sm: 'block'},
+                      fontSize: {xs: '0.9rem', sm: '1.1rem'},
+                    }}
                   >
-                    {chat.content}
+                    {responseData ? `Model: ${responseData.model}` : null}
                   </Typography>
-                </ListItem>
-              ))}
-            </Box>
-          </List>
-          <Box display="flex" flexDirection="column" width="100%">
-            <Box
-              display="flex"
-              justifyContent="center"
-              alignItems="center"
-              width="100%"
-              sx={{
-                borderTop: 'solid 0.5px black',
-                pt: 2,
-                display: {xs: 'block', md: 'flex'},
-              }}
-            >
-              <TextField
-                className="text-field"
-                multiline
-                maxRows={4}
-                fullWidth
-                variant="outlined"
-                label="Ask Mr. Mittens a question!"
-                type="text"
-                sx={{
-                  m: 0,
-                  boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px',
-                }}
-                value={value}
-                onChange={(e) => setValue(e.target.value)}
-              />
-              <Box
-                display="flex"
-                justifyContent="flex-end"
-                alignItems="flex-end"
-                sx={{
-                  justifyContent: {xs: 'center', md: 'flex-end'},
-                  alignContent: {xs: 'center', sm: 'flex-end'},
-                }}
-              >
-                <Button
-                  sx={{
-                    backgroundColor: messageSent ? '#ACCC7F' : '',
-                    color: messageSent ? '#000000' : '',
-                    '&:hover': {
-                      backgroundColor: messageSent ? '#8FB361' : '',
-                      color: messageSent ? '#000000' : '',
-                    },
-                    mt: {xs: 1, md: 0},
-                    ml: {xs: 0, md: 2},
-                    width: {xs: '200px', md: '150px'},
-                  }}
-                  variant="contained"
-                  id="submit"
-                  onClick={getMessages}
-                >
-                  {messageSent ? 'Submitted!' : 'Submit'}
-                </Button>
+                  <Typography
+                    variant="body1"
+                    component="p"
+                    sx={{
+                      textAlign: 'center',
+                      p: {xs: 0, md: 1},
+                      fontSize: {xs: '0.9rem', sm: '1.1rem'},
+                      color: cost < 0.01 ? '#6B8B4D' : '#9E0022',
+                    }}
+                  >
+                    {responseData
+                      ? 'Total cost: ' + cost.toFixed(4) + '$'
+                      : null}
+                  </Typography>
+                </Box>
               </Box>
-            </Box>
-            <Box display="flex" justifyContent="center" alignItems="center">
-              <Typography
-                component="p"
-                variant="body3"
-                sx={{
-                  textAlign: 'center',
-                  mx: {xs: 2, sm: 1},
-                  pt: {xs: 2, sm: 1},
-                  display: {xs: 'block', sm: 'block'},
-                }}
-              >
-                {responseData ? `Model: ${responseData.model}` : null}
-              </Typography>
-              <Typography
-                variant="body4"
-                component="p"
-                sx={{
-                  textAlign: 'center',
-                  mx: {xs: 2, sm: 1},
-                  pt: {xs: 2, sm: 1},
-                  color: cost < 0.01 ? '#6B8B4D' : '#9E0022',
-                  borderRadius: '5px',
-                }}
-              >
-                {responseData ? 'Total cost: ' + cost.toFixed(4) + '$' : null}
-              </Typography>
-            </Box>
-          </Box>
-        </Grid>
-      </Grid>
-      <Box display="flex" width="100%" justifyContent="center">
-        <Button
-          variant="contained"
-          sx={{m: 10, width: '200px'}}
-          onClick={() => navigate('/home')}
-        >
-          Back
-        </Button>
-      </Box>
+            </Grid>
+          </Grid>
+        </Paper>
+        <Box display="flex" width="100%" justifyContent="center">
+          <Button
+            variant="contained"
+            sx={{mt: 3, width: '200px'}}
+            onClick={() => navigate('/home')}
+          >
+            Back
+          </Button>
+        </Box>
+      </Container>
     </>
   );
 };
