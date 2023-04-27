@@ -127,7 +127,11 @@ const Header = () => {
                     aria-label="Cat-GPT"
                     component={Link}
                     to="/catgpt"
-                    sx={{mr: 1}}
+                    sx={{
+                      p: '3px',
+                      mr: 1,
+                      backgroundColor: '#E3A7B6',
+                    }}
                   >
                     <PersonRounded />
                   </Avatar>

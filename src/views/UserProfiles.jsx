@@ -150,7 +150,7 @@ const UserProfiles = () => {
           alt="Logo"
           sx={{
             borderRadius: 0,
-            boxShadow: 3,
+            boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px',
             maxWidth: '1200px',
             width: '100%',
             height: {xs: '150px', sm: '300px'},
@@ -161,8 +161,10 @@ const UserProfiles = () => {
           src={profilePic.filename}
           alt="Logo"
           sx={{
-            boxShadow: 3,
-            borderColor: 'white',
+            boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px',
+            borderStyle: 'solid',
+            borderColor: '#FFFFFF',
+            borderWidth: '3px',
             position: 'relative',
             height: {xs: '150px', sm: '175px', md: '200px'},
             width: {xs: '150px', sm: '175px', md: '200px'},
