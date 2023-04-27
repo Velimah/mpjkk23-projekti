@@ -19,7 +19,7 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import StarOutlineIcon from '@mui/icons-material/StarOutline';
 
-const MediaRow = ({file, deleteMedia, style, sort}) => {
+const MediaRow = ({file, style}) => {
   const theme = useTheme();
   const smallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -28,7 +28,6 @@ const MediaRow = ({file, deleteMedia, style, sort}) => {
 
   const [owner, setOwner] = useState({username: ''});
   const [likes, setLikes] = useState(0);
-  const [userLike, setUserLike] = useState(false);
   const [rating, setRating] = useState(0);
   const [ratingCount, setRatingCount] = useState(0);
 
@@ -91,23 +90,23 @@ const MediaRow = ({file, deleteMedia, style, sort}) => {
 
   const doLike = async () => {
     try {
+      console.log('liketesti', file);
       const token = localStorage.getItem('token');
-      const data = {file_id: file.file_id};
-      const likeInfo = await postFavourite(data, token);
+      const data2 = {file_id: file.file_id};
+      const likeInfo = await postFavourite(data2, token);
+      console.log('liketestiInfo', likeInfo);
       setRefreshLikes(true);
     } catch (error) {
       console.log(error.message);
     }
   };
 
-  useEffect(() => {
-    fetchLikes();
-  }, [refreshLikes]);
-
   const deleteLike = async () => {
     try {
+      console.log('deleteliketesti', file);
       const token = localStorage.getItem('token');
       const likeInfo = await deleteFavourite(file.file_id, token);
+      console.log('deleteliketestiInfo', likeInfo);
       setRefreshLikes(false);
     } catch (error) {
       console.log(error.message);
@@ -116,7 +115,7 @@ const MediaRow = ({file, deleteMedia, style, sort}) => {
 
   useEffect(() => {
     fetchLikes();
-  }, [userLike]);
+  }, [refreshLikes]);
 
   const fetchRatings = async () => {
     try {
@@ -298,7 +297,6 @@ MediaRow.propTypes = {
   file: PropTypes.object.isRequired,
   deleteMedia: PropTypes.func.isRequired,
   style: PropTypes.any.isRequired,
-  sort: PropTypes.any.isRequired,
 };
 
 export default MediaRow;
