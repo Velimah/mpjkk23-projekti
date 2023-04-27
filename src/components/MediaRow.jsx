@@ -298,7 +298,7 @@ MediaRow.propTypes = {
   file: PropTypes.object.isRequired,
   deleteMedia: PropTypes.func.isRequired,
   style: PropTypes.any.isRequired,
-  sort: PropTypes.any.isRequired,
+  sort: PropTypes.any,
 };
 
 export default MediaRow;

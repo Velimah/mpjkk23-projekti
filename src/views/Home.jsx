@@ -118,7 +118,7 @@ const Home = () => {
             </FormControl>
           </Grid>
         </Container>
-        <MediaTable sort={sort} />
+        <MediaTable />
       </Grid>
     </>
   );

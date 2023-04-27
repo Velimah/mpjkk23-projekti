@@ -5,25 +5,32 @@ import {
   useMediaQuery,
   Container,
 } from '@mui/material';
-import {useMedia} from '../hooks/ApiHooks';
+import {useMedia, useTag} from '../hooks/ApiHooks';
 import MediaRow from './MediaRow';
 import PropTypes from 'prop-types';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import WindowIcon from '@mui/icons-material/Window';
 import MenuIcon from '@mui/icons-material/Menu';
 import {NavLink} from 'react-router-dom';
 import {useTheme} from '@mui/material/styles';
+import {appId} from '../utils/variables';
 
 const MediaTable = ({
   myFilesOnly = false,
-  sort,
+  searchQuery,
   targetUserFilesOnly = false,
 }) => {
   const {mediaArray, deleteMedia} = useMedia(myFilesOnly, targetUserFilesOnly);
 
-  let sortedArray = mediaArray.slice().reverse();
+  const {getMediaById} = useMedia();
+
+  const {getTag} = useTag();
+
+  const [tagResults, setTagResults] = useState('');
+  const [refreshArray, setRefreshArray] = useState(mediaArray);
 
   const [style, setStyle] = useState(true);
+
   const changeToGrid = () => {
     setStyle(true);
   };
@@ -32,16 +39,34 @@ const MediaTable = ({
     setStyle(false);
   };
 
-  if (sort === 2) {
-    console.log('top rated');
-  } else if (sort === 3) {
-    console.log('most liked');
-  } else {
-    sortedArray = mediaArray.slice().reverse();
-  }
-
   const theme = useTheme();
   const smallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+
+  const fetchTag = async () => {
+    try {
+      const tagTest = await getTag(appId + searchQuery);
+      setTagResults(tagTest);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const fetchMediaById = async () => {
+    try {
+      const search = [];
+      for (const file of tagResults) {
+        search.push(await getMediaById(file.file_id));
+      }
+      setRefreshArray(search);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchTag();
+    fetchMediaById();
+  }, []);
 
   return (
     <>
@@ -103,16 +128,27 @@ const MediaTable = ({
               gap={20}
               sx={{width: smallScreen ? '100%' : '500px'}}
             >
-              {sortedArray.map((item, index) => {
-                return (
-                  <MediaRow
-                    key={index}
-                    file={item}
-                    deleteMedia={deleteMedia}
-                    style={style}
-                  />
-                );
-              })}
+              {searchQuery === undefined
+                ? mediaArray.map((item, index) => {
+                    return (
+                      <MediaRow
+                        key={index}
+                        file={item}
+                        deleteMedia={deleteMedia}
+                        style={style}
+                      />
+                    );
+                  })
+                : refreshArray.map((item, index) => {
+                    return (
+                      <MediaRow
+                        key={index}
+                        file={item}
+                        deleteMedia={deleteMedia}
+                        style={style}
+                      />
+                    );
+                  })}
             </ImageList>
           ) : (
             /* * GRID STYLE * */
@@ -129,17 +165,27 @@ const MediaTable = ({
               direction="row"
               alignItems="stretch"
             >
-              {sortedArray.map((item, index) => {
-                return (
-                  <MediaRow
-                    key={index}
-                    file={item}
-                    deleteMedia={deleteMedia}
-                    style={style}
-                    sort={sort}
-                  />
-                );
-              })}
+              {searchQuery === undefined
+                ? mediaArray.map((item, index) => {
+                    return (
+                      <MediaRow
+                        key={index}
+                        file={item}
+                        deleteMedia={deleteMedia}
+                        style={style}
+                      />
+                    );
+                  })
+                : refreshArray.map((item, index) => {
+                    return (
+                      <MediaRow
+                        key={index}
+                        file={item}
+                        deleteMedia={deleteMedia}
+                        style={style}
+                      />
+                    );
+                  })}
             </ImageList>
           )}
         </Grid>
@@ -151,7 +197,7 @@ const MediaTable = ({
 MediaTable.propTypes = {
   myFilesOnly: PropTypes.bool,
   targetUserFilesOnly: PropTypes.bool,
-  sort: PropTypes.any,
+  searchQuery: PropTypes.string,
 };
 
 export default MediaTable;
