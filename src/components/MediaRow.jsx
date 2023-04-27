@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import PropTypes from 'prop-types';
 import {Link} from 'react-router-dom';
-import {mediaUrl, appId} from '../utils/variables';
+import {mediaUrl, appId, profilePlaceholder} from '../utils/variables';
 import {useContext, useEffect, useState} from 'react';
 import {MediaContext} from '../contexts/MediaContext';
 import {useFavourite, useUser, useTag, useRating} from '../hooks/ApiHooks';
@@ -42,7 +42,7 @@ const MediaRow = ({file, style}) => {
   const {getTag} = useTag();
 
   const [profilePic, setProfilePic] = useState({
-    filename: '',
+    filename: profilePlaceholder,
   });
 
   let allData = {
