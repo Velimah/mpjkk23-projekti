@@ -13,7 +13,7 @@ import {
 import {useMedia} from '../hooks/ApiHooks';
 import MediaRow from './MediaRow';
 import PropTypes from 'prop-types';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import WindowIcon from '@mui/icons-material/Window';
 import MenuIcon from '@mui/icons-material/Menu';
 import {NavLink} from 'react-router-dom';
@@ -21,7 +21,6 @@ import {useTheme} from '@mui/material/styles';
 
 const MediaTable = ({
   myFilesOnly = false,
-  sort,
   targetUserFilesOnly = false,
   myFavouritesOnly = false,
 }) => {
@@ -30,6 +29,12 @@ const MediaTable = ({
     targetUserFilesOnly,
     myFavouritesOnly
   );
+
+  const [arrayLength, setArrayLength] = useState(0);
+
+  useEffect(() => {
+    setArrayLength(mediaArray.length);
+  }, [mediaArray]);
 
   const [style, setStyle] = useState(true);
   const changeToGrid = () => {
@@ -45,17 +50,25 @@ const MediaTable = ({
 
   return (
     <>
-      <Grid sx={{mt: '50px', mb: '100px'}}>
+      <Grid sx={{mt: 3, mb: 3}}>
         <Container>
           <Grid
             container
             direction="row"
-            justifyContent="space-between"
+            justifyContent="center"
             alignItems="center"
           >
-            <Typography component="h2" variant="h2" sx={{mb: 2}}>
-              Discover cats
-            </Typography>
+            {myFilesOnly || targetUserFilesOnly ? (
+              <Typography component="h2" variant="h2" sx={{mb: 2}}>
+                {arrayLength} {arrayLength === 1 ? 'post' : 'posts'}
+              </Typography>
+            ) : null}
+            {!myFilesOnly && !targetUserFilesOnly ? (
+              <Typography component="h2" variant="h2" sx={{mb: 2}}>
+                Discover cats
+              </Typography>
+            ) : null}
+            {/*
             <FormControl sx={{width: 150}}>
               <InputLabel id="select-label">Sort</InputLabel>
               <Select labelId="select-label" id="select" label="Sort">
@@ -64,6 +77,7 @@ const MediaTable = ({
                 <MenuItem value={3}>Top rated</MenuItem>
               </Select>
             </FormControl>
+            */}
           </Grid>
         </Container>
       </Grid>
@@ -176,7 +190,6 @@ const MediaTable = ({
 MediaTable.propTypes = {
   myFilesOnly: PropTypes.bool,
   targetUserFilesOnly: PropTypes.bool,
-  sort: PropTypes.any,
   myFavouritesOnly: PropTypes.bool,
 };
 

@@ -39,7 +39,6 @@ const Profile = () => {
   );
   const [rating, setRating] = useState(0);
   const [ratingCount, setRatingCount] = useState(0);
-  const [postCount, setPostCount] = useState(0);
 
   const fetchProfilePicture = async () => {
     try {
@@ -112,15 +111,7 @@ const Profile = () => {
     fetchBackgroundPicture();
     fetchProfileDescription();
     fetchAllRatings();
-    setTimeout(() => {
-      countPosts();
-    }, 1000);
   }, [user]);
-
-  const countPosts = () => {
-    const itemCount = document.querySelectorAll('.post').length;
-    setPostCount(itemCount);
-  };
 
   return (
     <>
@@ -234,13 +225,6 @@ const Profile = () => {
             sx={{maxWidth: '700px', p: 4, pl: {xs: 4, md: 10}}}
           >
             {profileDescription}
-          </Typography>
-          <Typography
-            component="p"
-            variant="h2"
-            sx={{maxWidth: '1000px', px: 3, py: 2}}
-          >
-            {postCount} {postCount === 1 ? 'post' : 'posts'}
           </Typography>
         </Box>
       </Box>

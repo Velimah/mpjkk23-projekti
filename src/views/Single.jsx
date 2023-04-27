@@ -73,6 +73,15 @@ const Single = () => {
     window.localStorage.setItem('targetUser', JSON.stringify(data));
   }, [setData]);
 
+  const [userData, setUserData] = useState(() => {
+    return user ?? JSON.parse(window.localStorage.getItem('user'));
+  });
+
+  useEffect(() => {
+    window.localStorage.setItem('user', JSON.stringify(userData));
+    setUserData(userData);
+  }, [setUserData]);
+
   let allData = {
     desc: data.description,
     filters: {
@@ -135,7 +144,7 @@ const Single = () => {
       const likeInfo = await getFavourites(data.file_id);
       setLikes(likeInfo.length);
       likeInfo.forEach((like) => {
-        if (like.user_id === user.user_id) {
+        if (like.user_id === userData.user_id) {
           setRefreshLikes(true);
         }
       });
@@ -268,7 +277,7 @@ const Single = () => {
 
       ratingInfo.forEach((file) => {
         sum += file.rating;
-        if (file.user_id === user.user_id) {
+        if (file.user_id === userData.user_id) {
           setRefreshRating(true);
         }
       });
@@ -309,7 +318,7 @@ const Single = () => {
           <Typography component="h1" variant="h2" sx={{p: 2}}>
             Title: {data.title}
           </Typography>
-          {user.user_id === owner.user_id && (
+          {userData.user_id === owner.user_id && (
             <ButtonGroup>
               <Button variant="contained" onClick={doFileDelete}>
                 Delete

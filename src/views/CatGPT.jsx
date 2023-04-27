@@ -15,7 +15,7 @@ import {MediaContext} from '../contexts/MediaContext';
 import {useNavigate} from 'react-router-dom';
 
 const CatGPT = () => {
-  const [value, setValue] = useState(null);
+  const [value, setValue] = useState('');
   const [message, setMessage] = useState(null);
   const [previousChats, setPreviousChats] = useState([]);
   const [currentTitle, setCurrentTitle] = useState(null);
