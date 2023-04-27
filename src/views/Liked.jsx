@@ -2,7 +2,12 @@ import React from 'react';
 // import PropTypes from 'prop-types'
 
 const Liked = (props) => {
-  return <div>Liked</div>;
+  return (
+    <div>
+      Liked
+      <p>Likes here</p>
+    </div>
+  );
 };
 
 // Liked.propTypes = {}
