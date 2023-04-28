@@ -24,11 +24,15 @@ const MediaTable = ({
   targetUserFilesOnly = false,
   myFavouritesOnly = false,
 }) => {
-  const {mediaArray, deleteMedia} = useMedia(
+  const {mediaArray, deleteMedia, getMedia} = useMedia(
     myFilesOnly,
     targetUserFilesOnly,
     myFavouritesOnly
   );
+
+  useEffect(() => {
+    getMedia();
+  }, []);
 
   const [arrayLength, setArrayLength] = useState(0);
   useEffect(() => {

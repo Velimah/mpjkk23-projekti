@@ -21,8 +21,7 @@ const useMedia = (
   myFavouritesOnly = false
 ) => {
   const [mediaArray, setMediaArray] = useState([]);
-  const {user, update, targetUser, setUser, setTargetUser} =
-    useContext(MediaContext);
+  const {user, targetUser, setUser, setTargetUser} = useContext(MediaContext);
 
   const [userData, setData] = useState(() => {
     return user ?? JSON.parse(window.localStorage.getItem('user'));
@@ -73,16 +72,21 @@ const useMedia = (
         })
       );
 
+      let fetchCountLikes = 0;
       for (const file of filesWithThumbnail) {
-        await sleep(10);
+        fetchCountLikes++;
+        await sleep(5);
         const likes = await doFetch(
           baseUrl + 'favourites/file/' + file.file_id
         );
         file.likes = likes;
       }
+      console.log('getMediaCalledLikes', fetchCountLikes);
 
+      let fetchCountRatings = 0;
       for (const file of filesWithThumbnail) {
-        await sleep(10);
+        fetchCountRatings++;
+        await sleep(5);
         const fetchOptions = {
           method: 'GET',
         };
@@ -106,19 +110,11 @@ const useMedia = (
       }
 
       setMediaArray(filesWithThumbnail);
-      console.log('getMediaCalled', filesWithThumbnail);
+      console.log('getMediaCalledRatings', fetchCountRatings);
     } catch (error) {
       console.error('getMedia', error.message);
     }
   };
-
-  useEffect(() => {
-    try {
-      getMedia();
-    } catch (error) {
-      console.log(error.message);
-    }
-  }, [update]);
 
   const getAllMediaByCurrentUser = async (token) => {
     const fetchOptions = {
@@ -182,6 +178,7 @@ const useMedia = (
 
   return {
     mediaArray,
+    getMedia,
     postMedia,
     deleteMedia,
     putMedia,
