@@ -83,6 +83,7 @@ const MediaTable = ({
             <FormControl sx={{width: 150}}>
               <InputLabel id="select-label">Sort</InputLabel>
               <Select
+                defaultValue={1}
                 onChange={handleChange}
                 labelId="select-label"
                 id="select"
@@ -156,7 +157,7 @@ const MediaTable = ({
             >
               {selectedOption === 'rating' &&
                 [...mediaArray]
-                  .sort((a, b) => b.rating - a.rating)
+                  .sort((a, b) => b.averageRating - a.averageRating)
                   .map((item, index) => {
                     return (
                       <MediaRow
@@ -169,7 +170,7 @@ const MediaTable = ({
                   })}
               {selectedOption === 'likes' &&
                 [...mediaArray]
-                  .sort((a, b) => b.likes - a.likes)
+                  .sort((a, b) => b.likes.length - a.likes.length)
                   .map((item, index) => {
                     return (
                       <MediaRow
@@ -211,7 +212,7 @@ const MediaTable = ({
             >
               {selectedOption === 'rating' &&
                 [...mediaArray]
-                  .sort((a, b) => b.rating - a.rating)
+                  .sort((a, b) => b.averageRating - a.averageRating)
                   .map((item, index) => {
                     return (
                       <MediaRow
@@ -224,7 +225,7 @@ const MediaTable = ({
                   })}
               {selectedOption === 'likes' &&
                 [...mediaArray]
-                  .sort((a, b) => b.likes - a.likes)
+                  .sort((a, b) => b.likes.length - a.likes.length)
                   .map((item, index) => {
                     return (
                       <MediaRow

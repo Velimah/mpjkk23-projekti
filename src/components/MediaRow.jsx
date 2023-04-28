@@ -23,8 +23,6 @@ import {formatTime} from '../utils/UnitConversions';
 const MediaRow = ({file, style}) => {
   const theme = useTheme();
   const smallScreen = useMediaQuery(theme.breakpoints.down('sm'));
-  console.log('file', file);
-
   const {user, setTargetUser} = useContext(MediaContext);
   const description = JSON.parse(file.description);
 
@@ -71,20 +69,6 @@ const MediaRow = ({file, style}) => {
     }
   };
 
-  const fetchLikes = async () => {
-    try {
-      const likeInfo = await getFavourites(file.file_id);
-      setLikes(likeInfo.length);
-      likeInfo.forEach((like) => {
-        if (like.user_id === user.user_id) {
-          setRefreshLikes(true);
-        }
-      });
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
-
   const fetchProfilePicture = async () => {
     try {
       const profilePictures = await getTag(
@@ -98,12 +82,18 @@ const MediaRow = ({file, style}) => {
     }
   };
 
+  const fetchLikes = () => {
+    setLikes(file.likes.length);
+    file.likes.forEach((like) => {
+      if (like.user_id === user.user_id) {
+        setRefreshLikes(true);
+      }
+    });
+  };
+
   useEffect(() => {
-    fetchUser();
     fetchLikes();
-    fetchProfilePicture();
-    fetchRatings();
-  }, []);
+  }, [refreshLikes]);
 
   const doLike = async () => {
     try {
@@ -126,37 +116,27 @@ const MediaRow = ({file, style}) => {
     }
   };
 
-  useEffect(() => {
-    fetchLikes();
-  }, [refreshLikes]);
+  const fetchRatings = () => {
+    setRatingCount(file.ratingInfo.length);
 
-  const fetchRatings = async () => {
-    try {
-      const ratingInfo = await getRatingsById(file.file_id);
-      let sum = 0;
-      setRatingCount(ratingInfo.length);
-
-      ratingInfo.forEach((file) => {
-        sum += file.rating;
-        if (file.user_id === user.user_id) {
-          setRefreshRating(true);
-        }
-      });
-      let averageRating = sum / ratingInfo.length;
-
-      if (isNaN(averageRating)) {
-        averageRating = 0;
+    file.ratingInfo.forEach((rating) => {
+      if (file.user_id === rating.user_id) {
+        setRefreshRating(true);
       }
-
-      setRating(averageRating);
-    } catch (error) {
-      console.log(error.message);
-    }
+    });
+    setRating(file.averageRating);
   };
 
   useEffect(() => {
     fetchRatings();
   }, [refreshRating]);
+
+  useEffect(() => {
+    fetchUser();
+    fetchLikes();
+    fetchProfilePicture();
+    fetchRatings();
+  }, []);
 
   return (
     <Box component="div">

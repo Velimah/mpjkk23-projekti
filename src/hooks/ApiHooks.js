@@ -42,6 +42,10 @@ const useMedia = (
     setTargetUser(targetUserData);
   }, [setTargetUserData]);
 
+  const sleep = (ms) => {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  };
+
   const getMedia = async () => {
     try {
       let files = await useTag().getTag(appId);
@@ -70,35 +74,39 @@ const useMedia = (
       );
 
       for (const file of filesWithThumbnail) {
+        await sleep(10);
         const likes = await doFetch(
           baseUrl + 'favourites/file/' + file.file_id
         );
-        file.likes = likes.length;
+        file.likes = likes;
       }
 
       for (const file of filesWithThumbnail) {
+        await sleep(10);
         const fetchOptions = {
           method: 'GET',
         };
-        const ratingInfo = await doFetch(
+        const rating = await doFetch(
           baseUrl + 'ratings/file/' + file.file_id,
           fetchOptions
         );
-
         let sum = 0;
-
-        ratingInfo.forEach((file) => {
-          sum += file.rating;
+        rating.forEach((r) => {
+          sum += r.rating;
         });
-        let averageRating = sum / ratingInfo.length;
-
+        let averageRating = sum / rating.length;
         if (isNaN(averageRating)) {
           averageRating = 0;
         }
-        file.rating = averageRating;
+        rating.forEach((r) => {
+          r.averageRating = averageRating;
+        });
+        file.ratingInfo = rating;
+        file.averageRating = averageRating;
       }
 
       setMediaArray(filesWithThumbnail);
+      console.log('getMediaCalled', filesWithThumbnail);
     } catch (error) {
       console.error('getMedia', error.message);
     }
