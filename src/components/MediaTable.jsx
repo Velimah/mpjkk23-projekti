@@ -159,9 +159,7 @@ const MediaTable = ({
               cols={smallScreen ? 3 : 4}
               rowHeight={smallScreen ? 100 : 300}
               gap={5}
-              container
               direction="row"
-              alignItems="stretch"
             >
               {mediaArray
                 .map((item, index) => {

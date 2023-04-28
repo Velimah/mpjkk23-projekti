@@ -10,6 +10,13 @@ import {
   Avatar,
   IconButton,
   ButtonGroup,
+  Container,
+  Stack,
+  Tooltip,
+  Menu,
+  MenuItem,
+  ListItemIcon,
+  useMediaQuery,
 } from '@mui/material';
 import {Link, useLocation} from 'react-router-dom';
 import {mediaUrl, appId, profilePlaceholder} from '../utils/variables';
@@ -32,7 +39,14 @@ import {commentValidators} from '../utils/validator';
 import {formatTime, formatSize} from '../utils/UnitConversions';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import {Star, StarBorderOutlined} from '@mui/icons-material';
+import {
+  DeleteRounded,
+  FiberManualRecord,
+  ModeEditRounded,
+  MoreVertRounded,
+  Star,
+  StarBorderOutlined,
+} from '@mui/icons-material';
 
 const Single = () => {
   const {user, setTargetUser} = useContext(MediaContext);
@@ -75,6 +89,19 @@ const Single = () => {
   const [userData, setUserData] = useState(() => {
     return user ?? JSON.parse(window.localStorage.getItem('user'));
   });
+
+  /** CLEAN!!! */
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  const extraSmallScreen = useMediaQuery((theme) =>
+    theme.breakpoints.down('sm')
+  );
 
   useEffect(() => {
     window.localStorage.setItem('user', JSON.stringify(userData));
@@ -306,47 +333,115 @@ const Single = () => {
   }, [refreshRating]);
 
   return (
-    <>
-      <Box sx={{maxWidth: 'md', margin: 'auto', my: 6}}>
-        <Card>
-          <Avatar
-            src={profilePic.filename}
-            sx={{width: 200, height: 200, borderRadius: '100%'}}
-          />
-          <Typography component="h2" variant="h2" sx={{p: 2}}>
-            Username: {owner.username}
-          </Typography>
-          <Button
-            sx={{p: 1, m: 1}}
+    <Container maxWidth="sm" sx={{my: 6}}>
+      <Stack
+        direction="row"
+        alignItems="center"
+        justifyContent="space-between"
+        sx={{mb: 3}}
+      >
+        <Stack direction="row" alignItems="center" spacing={1}>
+          <Stack
+            direction="row"
+            alignItems="center"
+            spacing={1}
             component={Link}
-            variant="contained"
             to="/userprofiles"
-            state={{data}}
-            onClick={() => {
-              setTargetUser(data);
+            aria-label="Link to user's profile"
+            sx={{
+              color: 'inherit',
+              textDecoration: 'none',
             }}
           >
-            View profile
-          </Button>
-          <Typography component="h1" variant="h2" sx={{p: 2}}>
-            Title: {data.title}
+            <Avatar
+              src={profilePic.filename}
+              alt="User's profile picture"
+              sx={{width: 45, height: 45, boxShadow: 3}}
+            />
+            <Typography component="span" variant="h6">
+              {owner.username}
+            </Typography>
+          </Stack>
+          <FiberManualRecord
+            sx={{
+              fontSize: '0.25rem',
+            }}
+          />
+          <Typography component="span" variant="subtitle1">
+            {formatTime(data.time_added)}
           </Typography>
-          {user && user.user_id === owner.user_id && (
-            <ButtonGroup>
-              <Button variant="contained" onClick={doFileDelete}>
-                Delete
-              </Button>
-              <Button
-                component={Link}
-                variant="contained"
-                to="/modify"
-                state={{data}}
+        </Stack>
+        {user && user.user_id === owner.user_id && (
+          <>
+            <Tooltip title="Post settings">
+              <IconButton
+                onClick={handleClick}
+                aria-label="Post settings"
+                aria-controls={open ? 'post-menu' : undefined}
+                aria-haspopup="true"
+                aria-expanded={open ? 'true' : undefined}
               >
-                Modify
-              </Button>
-            </ButtonGroup>
-          )}
-          <CardMedia
+                <MoreVertRounded />
+              </IconButton>
+            </Tooltip>
+            <Menu
+              id="post-menu"
+              anchorEl={anchorEl}
+              open={open}
+              onClose={handleClose}
+              MenuListProps={{
+                'aria-labelledby': 'basic-button',
+              }}
+            >
+              <MenuItem component={Link} to="/modify" state={{data}}>
+                <ListItemIcon>
+                  <ModeEditRounded fontSize="small" />
+                </ListItemIcon>
+                Modify post
+              </MenuItem>
+              <MenuItem onClick={doFileDelete}>
+                <ListItemIcon>
+                  <DeleteRounded fontSize="small" />
+                </ListItemIcon>
+                Delete post
+              </MenuItem>
+            </Menu>
+          </>
+        )}
+      </Stack>
+      {componentType === 'img' && (
+        <img
+          src={mediaUrl + data.filename}
+          style={{
+            width: '100%',
+            height: '100%',
+            borderRadius: extraSmallScreen ? 0 : '1.25rem',
+            aspectRatio: '1 / 1',
+            objectFit: 'cover',
+            filter: `brightness(${allData.filters.brightness}%)
+        contrast(${allData.filters.contrast}%)
+        saturate(${allData.filters.saturation}%)
+        sepia(${allData.filters.sepia}%)`,
+          }}
+        />
+      )}
+      {componentType === 'video' && (
+        <video
+          controls
+          style={{
+            width: '100%',
+            height: '100%',
+            borderRadius: extraSmallScreen ? 0 : '1.25rem',
+            aspectRatio: '1 / 1',
+            objectFit: 'cover',
+          }}
+        >
+          <source src={mediaUrl + data.filename}></source>
+        </video>
+      )}
+      <Box sx={{m: 'auto', my: 6}}>
+        <Card>
+          {/* <CardMedia
             controls={true}
             poster={mediaUrl + data.screenshot}
             component={componentType}
@@ -357,10 +452,8 @@ const Single = () => {
                        contrast(${allData.filters.contrast}%)
                        saturate(${allData.filters.saturation}%)
                        sepia(${allData.filters.sepia}%)`,
-              backgroundImage:
-                data.media_type === 'audio' && `url('/vite.svg')`,
             }}
-          />
+          /> */}
           <CardContent>
             <Typography component="h2" variant="h6" sx={{p: 2}}>
               Description: {allData.desc}
@@ -507,7 +600,7 @@ const Single = () => {
             .reverse()}
         </div>
       </Box>
-    </>
+    </Container>
   );
 };
 
