@@ -26,7 +26,6 @@ const MediaTable = ({
 
   const {getTag} = useTag();
 
-  const [tagResults, setTagResults] = useState('');
   const [refreshArray, setRefreshArray] = useState(mediaArray);
 
   const [style, setStyle] = useState(true);
@@ -42,19 +41,10 @@ const MediaTable = ({
   const theme = useTheme();
   const smallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const fetchTag = async () => {
-    try {
-      const tagTest = await getTag(appId + searchQuery);
-      setTagResults(tagTest);
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
-
-  const fetchMediaById = async () => {
+  const fetchMediaByIdWithTag = async () => {
     try {
       const search = [];
-      for (const file of tagResults) {
+      for (const file of await getTag(appId + searchQuery)) {
         search.push(await getMediaById(file.file_id));
       }
       setRefreshArray(search);
@@ -64,8 +54,7 @@ const MediaTable = ({
   };
 
   useEffect(() => {
-    fetchTag();
-    fetchMediaById();
+    fetchMediaByIdWithTag();
   }, []);
 
   return (

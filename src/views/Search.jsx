@@ -14,21 +14,25 @@ import PropTypes from 'prop-types';
 import React, {useState} from 'react';
 import MediaTable from '../components/MediaTable';
 import SearchIcon from '@mui/icons-material/Search';
+import {searchValidators} from '../utils/validator';
+import {searchErrorMessages} from '../utils/errorMessages';
+import useForm from '../hooks/FormHooks';
+import Skeleton from '@mui/material/Skeleton';
 
 const Search = () => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [updatedSearchQuery, setUpdatedSearchQuery] = useState(searchQuery);
   const [refreshSearch, setRefreshSearch] = useState(false);
 
-  const sendSearchQuery = () => {
-    setSearchQuery('_grey');
-    setRefreshSearch(!refreshSearch);
-    console.log(refreshSearch);
+  const loading = false;
+
+  const handleChange = (e) => {
+    setSearchQuery(e.target.value);
   };
 
-  const [sort, setSort] = useState();
-
-  const handleChange = (event) => {
-    setSort(event.target.value);
+  const sendSearchQuery = () => {
+    setUpdatedSearchQuery('_' + searchQuery);
+    setRefreshSearch(!refreshSearch);
   };
 
   return (
@@ -37,7 +41,7 @@ const Search = () => {
         container
         direction="row"
         justifyContent="center"
-        alignItems="center"
+        alignItems="stretch"
         sx={{py: '60px', backgroundColor: '#E3A7B6'}}
       >
         <TextField
@@ -45,12 +49,20 @@ const Search = () => {
           label="Search by keyword"
           type="search"
           variant="filled"
+          validators={searchValidators.search}
+          errorMessages={searchErrorMessages.search}
           InputProps={{
             startAdornment: <InputAdornment position="start">#</InputAdornment>,
           }}
+          onChange={handleChange}
+          value={searchQuery}
         />
-        <IconButton aria-label="search" onClick={sendSearchQuery}>
-          <SearchIcon style={{fill: 'blue'}} />
+        <IconButton
+          aria-label="search"
+          onClick={sendSearchQuery}
+          sx={{backgroundColor: '#7047A6'}}
+        >
+          <SearchIcon color="white" />
         </IconButton>
       </Grid>
 
@@ -67,13 +79,7 @@ const Search = () => {
             </Typography>
             <FormControl sx={{width: 150}}>
               <InputLabel id="select-label">Sort</InputLabel>
-              <Select
-                labelId="select-label"
-                id="select"
-                value={sort}
-                label="Sort"
-                onChange={handleChange}
-              >
+              <Select labelId="select-label" id="select" value={1} label="Sort">
                 <MenuItem value={1}>Newest</MenuItem>
                 <MenuItem value={2}>Most liked</MenuItem>
                 <MenuItem value={3}>Top rated</MenuItem>
@@ -81,7 +87,7 @@ const Search = () => {
             </FormControl>
           </Grid>
         </Container>
-        {refreshSearch && <MediaTable searchQuery={searchQuery} />}
+        {refreshSearch && <MediaTable searchQuery={updatedSearchQuery} />}
       </Grid>
     </>
   );
