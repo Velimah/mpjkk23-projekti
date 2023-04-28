@@ -23,6 +23,7 @@ import {formatTime} from '../utils/UnitConversions';
 const MediaRow = ({file, style}) => {
   const theme = useTheme();
   const smallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+  console.log('file', file);
 
   const {user, setTargetUser} = useContext(MediaContext);
   const description = JSON.parse(file.description);
@@ -141,7 +142,11 @@ const MediaRow = ({file, style}) => {
           setRefreshRating(true);
         }
       });
-      const averageRating = sum / ratingInfo.length;
+      let averageRating = sum / ratingInfo.length;
+
+      if (isNaN(averageRating)) {
+        averageRating = 0;
+      }
 
       setRating(averageRating);
     } catch (error) {

@@ -68,6 +68,36 @@ const useMedia = (
           return await doFetch(baseUrl + 'media/' + file.file_id);
         })
       );
+
+      for (const file of filesWithThumbnail) {
+        const likes = await doFetch(
+          baseUrl + 'favourites/file/' + file.file_id
+        );
+        file.likes = likes.length;
+      }
+
+      for (const file of filesWithThumbnail) {
+        const fetchOptions = {
+          method: 'GET',
+        };
+        const ratingInfo = await doFetch(
+          baseUrl + 'ratings/file/' + file.file_id,
+          fetchOptions
+        );
+
+        let sum = 0;
+
+        ratingInfo.forEach((file) => {
+          sum += file.rating;
+        });
+        let averageRating = sum / ratingInfo.length;
+
+        if (isNaN(averageRating)) {
+          averageRating = 0;
+        }
+        file.rating = averageRating;
+      }
+
       setMediaArray(filesWithThumbnail);
     } catch (error) {
       console.error('getMedia', error.message);
