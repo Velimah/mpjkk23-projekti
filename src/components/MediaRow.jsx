@@ -297,7 +297,7 @@ const MediaRow = ({file, deleteMedia, style, sort}) => {
 MediaRow.propTypes = {
   file: PropTypes.object.isRequired,
   deleteMedia: PropTypes.func.isRequired,
-  style: PropTypes.any.isRequired,
+  style: PropTypes.bool.isRequired,
 };
 
 export default MediaRow;
