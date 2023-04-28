@@ -92,7 +92,6 @@ const MediaRow = ({file, style}) => {
   const doLike = async () => {
     try {
       const token = localStorage.getItem('token');
-      console.log(file.file_id);
       const fileId = {file_id: file.file_id};
       await postFavourite(fileId, token);
       setRefreshLikes(true);

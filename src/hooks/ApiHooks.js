@@ -46,6 +46,7 @@ const useMedia = (
   };
 
   const getMedia = async () => {
+    console.time('myTimer');
     try {
       let files = await useTag().getTag(appId);
 
@@ -72,20 +73,18 @@ const useMedia = (
         })
       );
 
-      let fetchCountLikes = 0;
+      let fetchCount = 0;
       for (const file of filesWithThumbnail) {
-        fetchCountLikes++;
+        fetchCount++;
         await sleep(5);
         const likes = await doFetch(
           baseUrl + 'favourites/file/' + file.file_id
         );
         file.likes = likes;
       }
-      console.log('getMediaCalledLikes', fetchCountLikes);
 
-      let fetchCountRatings = 0;
       for (const file of filesWithThumbnail) {
-        fetchCountRatings++;
+        fetchCount++;
         await sleep(5);
         const fetchOptions = {
           method: 'GET',
@@ -110,7 +109,8 @@ const useMedia = (
       }
 
       setMediaArray(filesWithThumbnail);
-      console.log('getMediaCalledRatings', fetchCountRatings);
+      console.log('fetchCount', fetchCount);
+      console.timeEnd('myTimer');
     } catch (error) {
       console.error('getMedia', error.message);
     }
