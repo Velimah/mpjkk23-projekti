@@ -17,12 +17,6 @@ import {MediaContext} from '../contexts/MediaContext';
 const Home = () => {
   const {user} = useContext(MediaContext);
 
-  const [sort, setSort] = useState();
-
-  const handleChange = (event) => {
-    setSort(event.target.value);
-  };
-
   return (
     <>
       <Grid
@@ -62,11 +56,11 @@ const Home = () => {
             >
               {user
                 ? 'Ready to show off your cat friend?'
-                : 'Share and discover cat photos on OnlyCats.'}
+                : 'Share and discover cat photos and videos on OnlyCats.'}
             </Typography>
             <Typography component="p" textAlign="center" sx={{mb: 5}}>
               {user
-                ? 'Share your favorite cat moments with our community of cat lovers by uploading your photos.'
+                ? 'Share your favorite cat moments with our community of cat lovers by uploading photos and videos.'
                 : 'Join our community and connect with fellow cat lovers.'}
             </Typography>
             <Box textAlign="center">
@@ -77,7 +71,7 @@ const Home = () => {
                 to={user ? '/upload' : '/'}
                 sx={{mb: 1}}
               >
-                {user ? 'Add photo' : 'Register'}
+                {user ? 'Add post' : 'Register'}
               </Button>
             </Box>
             {!user && (

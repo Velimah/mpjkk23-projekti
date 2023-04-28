@@ -15,10 +15,13 @@ const doFetch = async (url, options) => {
   return json;
 };
 
-const useMedia = (myFilesOnly = false, targetUserFilesOnly = false) => {
+const useMedia = (
+  myFilesOnly = false,
+  targetUserFilesOnly = false,
+  myFavouritesOnly = false
+) => {
   const [mediaArray, setMediaArray] = useState([]);
-  const {user, update, targetUser, setUser, setTargetUser} =
-    useContext(MediaContext);
+  const {user, targetUser, setUser, setTargetUser} = useContext(MediaContext);
 
   const [userData, setData] = useState(() => {
     return user ?? JSON.parse(window.localStorage.getItem('user'));
@@ -38,7 +41,12 @@ const useMedia = (myFilesOnly = false, targetUserFilesOnly = false) => {
     setTargetUser(targetUserData);
   }, [setTargetUserData]);
 
+  const sleep = (ms) => {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  };
+
   const getMedia = async () => {
+    console.time('myTimer');
     try {
       let files = await useTag().getTag(appId);
 
@@ -48,24 +56,65 @@ const useMedia = (myFilesOnly = false, targetUserFilesOnly = false) => {
       if (targetUserFilesOnly) {
         files = files.filter((file) => file.user_id === targetUserData.user_id);
       }
+      if (myFavouritesOnly) {
+        const token = localStorage.getItem('token');
+        const likedFiles = await useFavourite().getUsersFavouritesByToken(
+          token
+        );
+        files = files.filter((file) => {
+          return likedFiles.some((likedFile) => {
+            return likedFile.file_id === file.file_id;
+          });
+        });
+      }
       const filesWithThumbnail = await Promise.all(
         files.map(async (file) => {
           return await doFetch(baseUrl + 'media/' + file.file_id);
         })
       );
+
+      let fetchCount = 0;
+      for (const file of filesWithThumbnail) {
+        fetchCount++;
+        await sleep(5);
+        const likes = await doFetch(
+          baseUrl + 'favourites/file/' + file.file_id
+        );
+        file.likes = likes;
+      }
+
+      for (const file of filesWithThumbnail) {
+        fetchCount++;
+        await sleep(5);
+        const fetchOptions = {
+          method: 'GET',
+        };
+        const rating = await doFetch(
+          baseUrl + 'ratings/file/' + file.file_id,
+          fetchOptions
+        );
+        let sum = 0;
+        rating.forEach((r) => {
+          sum += r.rating;
+        });
+        let averageRating = sum / rating.length;
+        if (isNaN(averageRating)) {
+          averageRating = 0;
+        }
+        rating.forEach((r) => {
+          r.averageRating = averageRating;
+        });
+        file.ratingInfo = rating;
+        file.averageRating = averageRating;
+      }
+
       setMediaArray(filesWithThumbnail);
+      console.log('fetchCount', fetchCount);
+      console.timeEnd('myTimer');
     } catch (error) {
       console.error('getMedia', error.message);
     }
   };
-
-  useEffect(() => {
-    try {
-      getMedia();
-    } catch (error) {
-      console.log(error.message);
-    }
-  }, [update]);
 
   const getAllMediaByCurrentUser = async (token) => {
     const fetchOptions = {
@@ -129,6 +178,7 @@ const useMedia = (myFilesOnly = false, targetUserFilesOnly = false) => {
 
   return {
     mediaArray,
+    getMedia,
     postMedia,
     deleteMedia,
     putMedia,
@@ -272,6 +322,16 @@ const useFavourite = () => {
     return await doFetch(baseUrl + 'favourites/file/' + id);
   };
 
+  const getUsersFavouritesByToken = async (token) => {
+    const fetchOptions = {
+      method: 'GET',
+      headers: {
+        'x-access-token': token,
+      },
+    };
+    return await doFetch(baseUrl + 'favourites', fetchOptions);
+  };
+
   const deleteFavourite = async (id, token) => {
     const fetchOptions = {
       method: 'DELETE',
@@ -282,7 +342,12 @@ const useFavourite = () => {
     return await doFetch(baseUrl + 'favourites/file/' + id, fetchOptions);
   };
 
-  return {postFavourite, getFavourites, deleteFavourite};
+  return {
+    postFavourite,
+    getFavourites,
+    getUsersFavouritesByToken,
+    deleteFavourite,
+  };
 };
 
 const useComment = () => {

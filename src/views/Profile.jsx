@@ -3,7 +3,12 @@ import {useContext} from 'react';
 import {MediaContext} from '../contexts/MediaContext';
 import {useState, useEffect} from 'react';
 import {useMedia, useRating, useTag} from '../hooks/ApiHooks';
-import {appId, mediaUrl} from '../utils/variables';
+import {
+  appId,
+  filePlaceholder,
+  mediaUrl,
+  profilePlaceholder,
+} from '../utils/variables';
 import {useNavigate} from 'react-router-dom';
 import MediaTable from '../components/MediaTable';
 
@@ -24,17 +29,16 @@ const Profile = () => {
   }, [setData]);
 
   const [profilePic, setProfilePic] = useState({
-    filename: 'https://placekitten.com/200/200',
+    filename: profilePlaceholder,
   });
   const [backgroundPic, setBackgroundPic] = useState({
-    filename: 'https://placekitten.com/800/300',
+    filename: filePlaceholder,
   });
   const [profileDescription, setprofileDescription] = useState(
     'No profile text yet!'
   );
   const [rating, setRating] = useState(0);
   const [ratingCount, setRatingCount] = useState(0);
-  const [postCount, setPostCount] = useState(0);
 
   const fetchProfilePicture = async () => {
     try {
@@ -85,7 +89,7 @@ const Profile = () => {
       let sum = 0;
       let count = 0;
       for (const file of mediaInfo) {
-        await sleep(200);
+        await sleep(100);
         const ratings = await getRatingsById(file.file_id);
         if (ratings.length !== 0) {
           for (const obj of ratings) {
@@ -107,15 +111,7 @@ const Profile = () => {
     fetchBackgroundPicture();
     fetchProfileDescription();
     fetchAllRatings();
-    setTimeout(() => {
-      countPosts();
-    }, 1000);
   }, [user]);
-
-  const countPosts = () => {
-    const itemCount = document.querySelectorAll('.post').length;
-    setPostCount(itemCount);
-  };
 
   return (
     <>
@@ -229,13 +225,6 @@ const Profile = () => {
             sx={{maxWidth: '700px', p: 4, pl: {xs: 4, md: 10}}}
           >
             {profileDescription}
-          </Typography>
-          <Typography
-            component="p"
-            variant="h2"
-            sx={{maxWidth: '1000px', px: 3, py: 2}}
-          >
-            {postCount} {postCount === 1 ? 'post' : 'posts'}
           </Typography>
         </Box>
       </Box>

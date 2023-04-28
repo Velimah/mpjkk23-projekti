@@ -8,9 +8,11 @@ import {
   CardContent,
   Rating,
   Avatar,
+  IconButton,
+  ButtonGroup,
 } from '@mui/material';
 import {Link, useLocation} from 'react-router-dom';
-import {mediaUrl, appId} from '../utils/variables';
+import {mediaUrl, appId, profilePlaceholder} from '../utils/variables';
 import {useNavigate} from 'react-router-dom';
 import {
   useFavourite,
@@ -28,6 +30,10 @@ import useForm from '../hooks/FormHooks';
 import {commentErrorMessages} from '../utils/errorMessages';
 import {commentValidators} from '../utils/validator';
 import {formatTime, formatSize} from '../utils/UnitConversions';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import {Star, StarBorderOutlined} from '@mui/icons-material';
+import {styled} from '@mui/material/styles';
 
 const Single = () => {
   const {user, setTargetUser} = useContext(MediaContext);
@@ -46,10 +52,10 @@ const Single = () => {
   const [refreshRating, setRefreshRating] = useState(false);
 
   const [profilePic, setProfilePic] = useState({
-    filename: 'https://placekitten.com/200/200',
+    filename: profilePlaceholder,
   });
 
-  const {getMediaById} = useMedia();
+  const {getMediaById, deleteMedia} = useMedia();
   const {getUser} = useUser();
   const {getFavourites, postFavourite, deleteFavourite} = useFavourite();
   const {postComment, getCommentsById} = useComment();
@@ -66,6 +72,15 @@ const Single = () => {
   useEffect(() => {
     window.localStorage.setItem('targetUser', JSON.stringify(data));
   }, [setData]);
+
+  const [userData, setUserData] = useState(() => {
+    return user ?? JSON.parse(window.localStorage.getItem('user'));
+  });
+
+  useEffect(() => {
+    window.localStorage.setItem('user', JSON.stringify(userData));
+    setUserData(userData);
+  }, [setUserData]);
 
   let allData = {
     desc: data.description,
@@ -129,7 +144,7 @@ const Single = () => {
       const likeInfo = await getFavourites(data.file_id);
       setLikes(likeInfo.length);
       likeInfo.forEach((like) => {
-        if (like.user_id === user.user_id) {
+        if (like.user_id === userData.user_id) {
           setRefreshLikes(true);
         }
       });
@@ -170,9 +185,8 @@ const Single = () => {
   const doLike = async () => {
     try {
       const token = localStorage.getItem('token');
-      const data2 = {file_id: data.file_id};
-      const likeInfo = await postFavourite(data2, token);
-      console.log(likeInfo);
+      const fileId = {file_id: data.file_id};
+      await postFavourite(fileId, token);
       setRefreshLikes(true);
     } catch (error) {
       console.log(error.message);
@@ -186,8 +200,7 @@ const Single = () => {
   const deleteLike = async () => {
     try {
       const token = localStorage.getItem('token');
-      const likeInfo = await deleteFavourite(data.file_id, token);
-      console.log(likeInfo);
+      await deleteFavourite(data.file_id, token);
       setRefreshLikes(false);
     } catch (error) {
       console.log(error.message);
@@ -242,6 +255,20 @@ const Single = () => {
     }
   };
 
+  const doFileDelete = async () => {
+    try {
+      const sure = confirm('Are you sure you want to delete this file?');
+      if (sure) {
+        const token = localStorage.getItem('token');
+        const deleteResult = await deleteMedia(data.file_id, token);
+        console.log(deleteResult);
+        navigate(-1);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const fetchRatings = async () => {
     try {
       const ratingInfo = await getRatingsById(data.file_id);
@@ -250,7 +277,7 @@ const Single = () => {
 
       ratingInfo.forEach((file) => {
         sum += file.rating;
-        if (file.user_id === user.user_id) {
+        if (file.user_id === userData.user_id) {
           setRefreshRating(true);
         }
       });
@@ -291,6 +318,21 @@ const Single = () => {
           <Typography component="h1" variant="h2" sx={{p: 2}}>
             Title: {data.title}
           </Typography>
+          {userData.user_id === owner.user_id && (
+            <ButtonGroup>
+              <Button variant="contained" onClick={doFileDelete}>
+                Delete
+              </Button>
+              <Button
+                component={Link}
+                variant="contained"
+                to="/modify"
+                state={{data}}
+              >
+                Modify
+              </Button>
+            </ButtonGroup>
+          )}
           <CardMedia
             controls={true}
             poster={mediaUrl + data.screenshot}
@@ -328,64 +370,84 @@ const Single = () => {
             </Typography>
 
             <Grid container>
-              <Grid item xs={3} sx={{p: 2}}>
-                <Typography component="h2" variant="h6">
-                  Likes: {likes}
-                </Typography>
-                <Button
+              <Grid item>
+                <IconButton
+                  aria-label="favoriteIcon"
                   onClick={refreshLikes ? deleteLike : doLike}
                   variant="contained"
-                  sx={
-                    refreshLikes
-                      ? {}
-                      : {
-                          backgroundColor: 'grey',
-                          '&:hover': {
-                            backgroundColor: 'grey !important',
-                          },
-                        }
-                  }
                 >
-                  {refreshLikes ? 'Liked' : 'Like'}
-                </Button>
+                  {refreshLikes ? (
+                    <FavoriteIcon
+                      sx={{color: '#7047A6', mr: 1, fontSize: '1.6rem'}}
+                    />
+                  ) : (
+                    <FavoriteBorderIcon
+                      sx={{color: '#7047A6', mr: 1, fontSize: '1.6rem'}}
+                    />
+                  )}
+                  <Typography component="p" variant="body1">
+                    {refreshLikes ? 'Unlike' : 'Add a like'} ({likes}{' '}
+                    {likes > 1 ? 'likes' : 'like'})
+                  </Typography>
+                </IconButton>
               </Grid>
-              <Grid item xs={3} sx={{p: 2}}>
+
+              <Grid item>
                 {refreshRating ? (
-                  <Box sx={{mt: 1}}>
+                  <IconButton onClick={doDeleteRating}>
                     <Rating
                       name="read-only"
                       size="large"
                       precision={0.2}
-                      defaultValue={rating.toFixed(2)}
-                      value={rating.toFixed(2)}
+                      defaultValue={rating.toFixed(1)}
+                      value={rating.toFixed(1)}
                       readOnly
+                      icon={
+                        <Star sx={{color: '#7047A6', fontSize: '1.8rem'}} />
+                      }
+                      emptyIcon={
+                        <StarBorderOutlined
+                          sx={{color: '#7047A6', fontSize: '1.8rem'}}
+                        />
+                      }
                     />
-                    <Typography component="legend">Rated already!</Typography>
-                    <Typography component="legend">
-                      {rating.toFixed(2)} ({ratingCount}
-                      ratings)
+                    <Typography sx={{ml: 1}} component="p" variant="body1">
+                      {rating.toFixed(1)} ({ratingCount}{' '}
+                      {ratingCount > 1 ? 'ratings' : 'rating'})
                     </Typography>
-                    <Button onClick={doDeleteRating} variant="contained">
-                      delete rating
-                    </Button>
-                  </Box>
+                  </IconButton>
                 ) : (
-                  <Box sx={{mt: 1}}>
+                  <IconButton>
                     <Rating
-                      defaultValue={rating.toFixed(2)}
+                      defaultValue={rating.toFixed(1)}
                       name="simple-controlled"
                       size="large"
-                      value={rating.toFixed(2)}
+                      value={rating.toFixed(1)}
                       precision={1}
                       onChange={(event, newValue) => {
                         doRating(newValue);
                       }}
+                      onClick={() => deleteRating}
+                      icon={
+                        <Star sx={{color: '#7047A6', fontSize: '1.8rem'}} />
+                      }
+                      emptyIcon={
+                        <StarBorderOutlined
+                          sx={{color: '#7047A6', fontSize: '1.8rem'}}
+                        />
+                      }
                     />
-                    <Typography component="legend">Add rating</Typography>
-                    <Typography component="legend">
-                      {rating} ({ratingCount} ratings)
-                    </Typography>
-                  </Box>
+                    {ratingCount ? (
+                      <Typography sx={{ml: 1}} component="p" variant="body1">
+                        {rating.toFixed(1)} ({ratingCount}{' '}
+                        {ratingCount > 1 ? 'ratings' : 'rating'})
+                      </Typography>
+                    ) : (
+                      <Typography sx={{ml: 1}} component="p" variant="body1">
+                        No ratings yet
+                      </Typography>
+                    )}
+                  </IconButton>
                 )}
               </Grid>
             </Grid>

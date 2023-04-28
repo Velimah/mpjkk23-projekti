@@ -14,11 +14,13 @@ import Search from './views/Search';
 import Liked from './views/Liked';
 import UserProfiles from './views/UserProfiles';
 import CatGPT from './views/CatGPT';
+import ScrollToTop from './hooks/ScrollHook';
 
 const App = () => {
   return (
     <Router basename={import.meta.env.BASE_URL}>
       <MediaProvider>
+        <ScrollToTop />
         <Routes>
           <Route element={<Layout />}>
             <Route path="/" element={<Login />} />

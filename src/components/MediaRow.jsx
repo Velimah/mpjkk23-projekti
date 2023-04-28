@@ -10,40 +10,52 @@ import {
 } from '@mui/material';
 import PropTypes from 'prop-types';
 import {Link} from 'react-router-dom';
-import {mediaUrl, appId} from '../utils/variables';
+import {mediaUrl, appId, profilePlaceholder} from '../utils/variables';
 import {useContext, useEffect, useState} from 'react';
 import {MediaContext} from '../contexts/MediaContext';
-import {useFavourite, useUser, useTag, useRating} from '../hooks/ApiHooks';
+import {useFavourite, useUser, useTag} from '../hooks/ApiHooks';
 import {useTheme} from '@mui/material/styles';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import StarOutlineIcon from '@mui/icons-material/StarOutline';
+import {FiberManualRecord, Star, StarBorderOutlined} from '@mui/icons-material';
+import {formatTime} from '../utils/UnitConversions';
 
-const MediaRow = ({file, deleteMedia, style, sort}) => {
+const MediaRow = ({file, style}) => {
   const theme = useTheme();
   const smallScreen = useMediaQuery(theme.breakpoints.down('sm'));
-
   const {user, setTargetUser} = useContext(MediaContext);
   const description = JSON.parse(file.description);
 
   const [owner, setOwner] = useState({username: ''});
   const [likes, setLikes] = useState(0);
-  const [userLike, setUserLike] = useState(false);
   const [rating, setRating] = useState(0);
   const [ratingCount, setRatingCount] = useState(0);
 
   const [refreshLikes, setRefreshLikes] = useState(false);
-  const [refreshRating, setRefreshRating] = useState(false);
 
   const {getUser} = useUser();
-  const {getFavourites, postFavourite, deleteFavourite} = useFavourite();
-  const {getRatingsById} = useRating();
+  const {postFavourite, deleteFavourite} = useFavourite();
 
   const {getTag} = useTag();
 
   const [profilePic, setProfilePic] = useState({
-    filename: '',
+    filename: profilePlaceholder,
   });
+
+  let allData = {
+    desc: file.description,
+    filters: {
+      brightness: 100,
+      contrast: 100,
+      saturation: 100,
+      sepia: 0,
+    },
+  };
+  try {
+    allData = JSON.parse(file.description);
+  } catch (error) {
+    console.log(allData);
+  }
 
   const fetchUser = async () => {
     try {
@@ -52,20 +64,6 @@ const MediaRow = ({file, deleteMedia, style, sort}) => {
       setOwner(ownerInfo);
     } catch (error) {
       console.error(error.message);
-    }
-  };
-
-  const fetchLikes = async () => {
-    try {
-      const likeInfo = await getFavourites(file.file_id);
-      setLikes(likeInfo.length);
-      likeInfo.forEach((like) => {
-        if (like.user_id === user.user_id) {
-          setRefreshLikes(true);
-        }
-      });
-    } catch (error) {
-      console.log(error.message);
     }
   };
 
@@ -82,65 +80,49 @@ const MediaRow = ({file, deleteMedia, style, sort}) => {
     }
   };
 
+  const fetchLikes = () => {
+    setLikes(file.likes.length);
+    file.likes.forEach((like) => {
+      if (like.user_id === user.user_id) {
+        setRefreshLikes(true);
+      }
+    });
+  };
+
+  const doLike = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const fileId = {file_id: file.file_id};
+      await postFavourite(fileId, token);
+      setRefreshLikes(true);
+      setLikes((prevLikes) => prevLikes + 1);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const deleteLike = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      await deleteFavourite(file.file_id, token);
+      setRefreshLikes(false);
+      setLikes((prevLikes) => prevLikes - 1);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const fetchRatings = () => {
+    setRatingCount(file.ratingInfo.length);
+    setRating(file.averageRating);
+  };
+
   useEffect(() => {
     fetchUser();
     fetchLikes();
     fetchProfilePicture();
     fetchRatings();
   }, []);
-
-  const doLike = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      const data = {file_id: file.file_id};
-      const likeInfo = await postFavourite(data, token);
-      setRefreshLikes(true);
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
-
-  useEffect(() => {
-    fetchLikes();
-  }, [refreshLikes]);
-
-  const deleteLike = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      const likeInfo = await deleteFavourite(file.file_id, token);
-      setRefreshLikes(false);
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
-
-  useEffect(() => {
-    fetchLikes();
-  }, [userLike]);
-
-  const fetchRatings = async () => {
-    try {
-      const ratingInfo = await getRatingsById(file.file_id);
-      let sum = 0;
-      setRatingCount(ratingInfo.length);
-
-      ratingInfo.forEach((file) => {
-        sum += file.rating;
-        if (file.user_id === user.user_id) {
-          setRefreshRating(true);
-        }
-      });
-      const averageRating = sum / ratingInfo.length;
-
-      setRating(averageRating);
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
-
-  useEffect(() => {
-    fetchRatings();
-  }, [refreshRating]);
 
   return (
     <Box component="div">
@@ -151,7 +133,7 @@ const MediaRow = ({file, deleteMedia, style, sort}) => {
             container
             direction="row"
             alignItems="center"
-            sx={{px: smallScreen ? '5%' : 'auto', my: 3}}
+            sx={{px: smallScreen ? 2 : 'auto', pt: 3, pb: 2}}
           >
             <Avatar
               aria-label="Profile"
@@ -161,11 +143,39 @@ const MediaRow = ({file, deleteMedia, style, sort}) => {
               onClick={() => {
                 setTargetUser(file);
               }}
-              sx={{boxShadow: 3}}
+              sx={{ml: 1, boxShadow: 3, width: 45, height: 45}}
               src={profilePic.filename}
             />
-            <Typography component="p" sx={{pl: 1}}>
+            <Typography
+              component={Link}
+              to="/userprofiles"
+              state={{file}}
+              onClick={() => {
+                setTargetUser(file);
+              }}
+              variant="h1"
+              sx={{
+                pl: 2,
+                fontSize: '1.3rem',
+                color: 'inherit',
+                textDecoration: 'none',
+              }}
+            >
               {owner.username}
+            </Typography>
+            <FiberManualRecord
+              sx={{
+                m: 2,
+                fontSize: '0.4rem',
+              }}
+            ></FiberManualRecord>
+            <Typography
+              variant="body1"
+              sx={{
+                fontSize: '1.3rem',
+              }}
+            >
+              {formatTime(file.time_added)}
             </Typography>
           </Grid>
         )}
@@ -188,10 +198,14 @@ const MediaRow = ({file, deleteMedia, style, sort}) => {
                 aspectRatio: '1 / 1',
                 objectFit: 'cover',
                 borderRadius: '5px',
+                filter: `brightness(${allData.filters.brightness}%)
+                       contrast(${allData.filters.contrast}%)
+                       saturate(${allData.filters.saturation}%)
+                       sepia(${allData.filters.sepia}%)`,
               }}
               src={
                 file.media_type === 'audio'
-                  ? '/onlycats_logo.png'
+                  ? 'onlycats_logo.png'
                   : file.mime_type === 'image/webp' ||
                     file.mime_type === 'image/avif'
                   ? mediaUrl + file.filename
@@ -202,34 +216,48 @@ const MediaRow = ({file, deleteMedia, style, sort}) => {
           </Box>
         ) : (
           /* * LISTING STYLE * */
-          <img
-            style={{
-              height: '100%',
-              width: '100%',
-              aspectRatio: '1 / 1',
-              objectFit: 'cover',
-              borderRadius: smallScreen ? 0 : '5px',
+          <Box
+            component={Link}
+            variant="contained"
+            to="/single"
+            state={{file}}
+            onClick={() => {
+              setTargetUser(file);
             }}
-            src={
-              file.media_type === 'audio'
-                ? '/onlycats_logo.png'
-                : file.mime_type === 'image/webp' ||
-                  file.mime_type === 'image/avif'
-                ? mediaUrl + file.filename
-                : mediaUrl + file.thumbnails.w640
-            }
-            alt={file.title}
-          />
+            sx={{height: '100%', width: '100%', objectFit: 'cover'}}
+          >
+            <img
+              style={{
+                height: '100%',
+                width: '100%',
+                aspectRatio: '1 / 1',
+                objectFit: 'cover',
+                borderRadius: smallScreen ? 0 : '5px',
+                filter: `brightness(${allData.filters.brightness}%)
+                       contrast(${allData.filters.contrast}%)
+                       saturate(${allData.filters.saturation}%)
+                       sepia(${allData.filters.sepia}%)`,
+              }}
+              src={
+                file.media_type === 'audio'
+                  ? 'onlycats_logo.png'
+                  : file.mime_type === 'image/webp' ||
+                    file.mime_type === 'image/avif'
+                  ? mediaUrl + file.filename
+                  : mediaUrl + file.thumbnails.w640
+              }
+              alt={file.title}
+            />
+          </Box>
         )}
         {!style && (
           // TODO: make 2 rows max desc, it is only 1 row now..
-          <Grid sx={{px: smallScreen ? '5%' : 'auto', py: 1, pb: 3}}>
+          <Grid sx={{px: {xs: 2, md: 0}, pb: 3}}>
             <Grid
               container
               direction="row"
               justifyContent="space-between"
               alignItems="center"
-              rowSpacing={2}
             >
               <Grid item>
                 <IconButton
@@ -238,54 +266,77 @@ const MediaRow = ({file, deleteMedia, style, sort}) => {
                   variant="contained"
                 >
                   {refreshLikes ? (
-                    <FavoriteIcon sx={{color: '#7047A6'}} />
+                    <FavoriteIcon
+                      sx={{color: '#7047A6', mr: 1, fontSize: '1.6rem'}}
+                    />
                   ) : (
-                    <FavoriteBorderIcon sx={{color: '#7047A6'}} />
+                    <FavoriteBorderIcon
+                      sx={{color: '#7047A6', mr: 1, fontSize: '1.6rem'}}
+                    />
                   )}
-                  <Typography component="p">
-                    {refreshLikes ? 'Unlike' : 'Add a like'} ({likes} likes)
+                  <Typography component="p" variant="body1">
+                    {refreshLikes ? 'Unlike' : 'Add a like'} ({likes}{' '}
+                    {likes > 1 ? 'likes' : 'like'})
                   </Typography>
                 </IconButton>
               </Grid>
               <Grid item>
-                {/* TODO: if rating has been given, make icon filled */}
                 <Box>
-                  <IconButton aria-label="list" component={Link} to="/single">
-                    <StarOutlineIcon sx={{color: '#7047A6'}} />
-                    <Typography component="p">
-                      {rating} ({ratingCount} ratings)
-                    </Typography>
+                  <IconButton aria-label="list">
+                    {ratingCount ? (
+                      <>
+                        <Star
+                          sx={{color: '#7047A6', mr: 0.5, fontSize: '1.8rem'}}
+                        />
+                        <Typography component="p" variant="body1">
+                          {rating.toFixed(1)} ({ratingCount}{' '}
+                          {ratingCount > 1 ? 'ratings' : 'rating'})
+                        </Typography>
+                      </>
+                    ) : (
+                      <>
+                        <StarBorderOutlined
+                          sx={{color: '#7047A6', mr: 0.5, fontSize: '1.8rem'}}
+                        />
+                        <Typography component="p" variant="body1">
+                          No ratings yet
+                        </Typography>
+                      </>
+                    )}
                   </IconButton>
                 </Box>
               </Grid>
             </Grid>
-            <Grid
-              item
-              style={{
-                width: smallScreen ? 250 : 500,
-                whiteSpace: 'nowrap',
-              }}
-            >
+            <Grid item>
               <Typography
+                component="p"
+                variant="body1"
                 sx={{
-                  textOverflow: 'ellipsis',
+                  maxHeight: '85px',
+                  p: description.desc.length === 0 ? 0 : 1,
                   overflow: 'hidden',
-                  padding: '8px',
+                  display: '-webkit-box',
+                  WebkitLineClamp: 3,
+                  textOverflow: 'ellipsis',
+                  WebkitBoxOrient: 'vertical',
+                  whiteSpace: 'pre-wrap',
                 }}
               >
                 {description.desc}
               </Typography>
-              <Button
-                variant="text"
-                component={Link}
-                to="/single"
-                state={{file}}
-                onClick={() => {
-                  setTargetUser(file);
-                }}
-              >
-                Show more
-              </Button>
+              {description.desc.length !== 0 && (
+                <Button
+                  variant="text"
+                  component={Link}
+                  to="/single"
+                  state={{file}}
+                  onClick={() => {
+                    setTargetUser(file);
+                  }}
+                >
+                  Show more
+                </Button>
+              )}
             </Grid>
           </Grid>
         )}

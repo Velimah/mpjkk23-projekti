@@ -3,7 +3,12 @@ import {useContext} from 'react';
 import {MediaContext} from '../contexts/MediaContext';
 import {useState, useEffect} from 'react';
 import {useMedia, useRating, useTag, useUser} from '../hooks/ApiHooks';
-import {appId, mediaUrl} from '../utils/variables';
+import {
+  appId,
+  filePlaceholder,
+  mediaUrl,
+  profilePlaceholder,
+} from '../utils/variables';
 import {useLocation, useNavigate} from 'react-router-dom';
 import MediaTable from '../components/MediaTable';
 
@@ -18,7 +23,6 @@ const UserProfiles = () => {
 
   const [rating, setRating] = useState(0);
   const [ratingCount, setRatingCount] = useState(0);
-  const [postCount, setPostCount] = useState(0);
 
   const [userData, setUserData] = useState(() => {
     return (
@@ -34,10 +38,10 @@ const UserProfiles = () => {
   }, [setUserData]);
 
   const [profilePic, setProfilePic] = useState({
-    filename: 'https://placekitten.com/200/200',
+    filename: profilePlaceholder,
   });
   const [backgroundPic, setBackgroundPic] = useState({
-    filename: 'https://placekitten.com/800/300',
+    filename: filePlaceholder,
   });
   const [profileDescription, setprofileDescription] = useState(
     'No profile text yet!'
@@ -127,15 +131,7 @@ const UserProfiles = () => {
     fetchBackgroundPicture();
     fetchProfileDescription();
     fetchAllRatings();
-    setTimeout(() => {
-      countPosts();
-    }, 1000);
   }, []);
-
-  const countPosts = () => {
-    const itemCount = document.querySelectorAll('.post').length;
-    setPostCount(itemCount);
-  };
 
   return (
     <>
@@ -219,13 +215,6 @@ const UserProfiles = () => {
             sx={{maxWidth: '700px', px: {xs: 4, sm: 2}, py: {xs: 2}}}
           >
             {profileDescription}
-          </Typography>
-          <Typography
-            component="p"
-            variant="h2"
-            sx={{maxWidth: '1000px', px: 3, py: 2}}
-          >
-            {postCount} {postCount === 1 ? 'post' : 'posts'}
           </Typography>
         </Box>
       </Box>
