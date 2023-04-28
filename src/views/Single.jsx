@@ -72,6 +72,15 @@ const Single = () => {
     window.localStorage.setItem('targetUser', JSON.stringify(data));
   }, [setData]);
 
+  const [userData, setUserData] = useState(() => {
+    return user ?? JSON.parse(window.localStorage.getItem('user'));
+  });
+
+  useEffect(() => {
+    window.localStorage.setItem('user', JSON.stringify(userData));
+    setUserData(userData);
+  }, [setUserData]);
+
   let allData = {
     desc: data.description,
     filters: {
