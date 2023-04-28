@@ -5,6 +5,10 @@ import {
   useMediaQuery,
   Container,
   Typography,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from '@mui/material';
 import {useMedia} from '../hooks/ApiHooks';
 import MediaRow from './MediaRow';
@@ -20,19 +24,24 @@ const MediaTable = ({
   targetUserFilesOnly = false,
   myFavouritesOnly = false,
 }) => {
-  const {mediaArray, deleteMedia} = useMedia(
+  const {mediaArray, deleteMedia, getMedia} = useMedia(
     myFilesOnly,
     targetUserFilesOnly,
     myFavouritesOnly
   );
 
-  const [arrayLength, setArrayLength] = useState(0);
+  useEffect(() => {
+    getMedia();
+  }, []);
 
+  const [arrayLength, setArrayLength] = useState(0);
   useEffect(() => {
     setArrayLength(mediaArray.length);
   }, [mediaArray]);
 
   const [style, setStyle] = useState(true);
+  const [selectedOption, setSelectedOption] = useState('file_id');
+
   const changeToGrid = () => {
     setStyle(true);
   };
@@ -44,6 +53,17 @@ const MediaTable = ({
   const theme = useTheme();
   const smallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
+  const handleChange = (event) => {
+    const value = event.target.value;
+    if (value === 1) {
+      setSelectedOption('file_id');
+    } else if (value === 2) {
+      setSelectedOption('likes');
+    } else if (value === 3) {
+      setSelectedOption('rating');
+    }
+  };
+
   return (
     <>
       <Grid sx={{mt: 3, mb: 3}}>
@@ -51,7 +71,7 @@ const MediaTable = ({
           <Grid
             container
             direction="row"
-            justifyContent="center"
+            justifyContent="space-around"
             alignItems="center"
           >
             {myFilesOnly || targetUserFilesOnly ? (
@@ -64,16 +84,20 @@ const MediaTable = ({
                 Discover cats
               </Typography>
             ) : null}
-            {/*
             <FormControl sx={{width: 150}}>
               <InputLabel id="select-label">Sort</InputLabel>
-              <Select labelId="select-label" id="select" label="Sort">
+              <Select
+                defaultValue={1}
+                onChange={handleChange}
+                labelId="select-label"
+                id="select"
+                label="Sort"
+              >
                 <MenuItem value={1}>Newest</MenuItem>
                 <MenuItem value={2}>Most liked</MenuItem>
                 <MenuItem value={3}>Top rated</MenuItem>
               </Select>
             </FormControl>
-            */}
           </Grid>
         </Container>
       </Grid>
@@ -135,18 +159,45 @@ const MediaTable = ({
               gap={0}
               sx={{width: smallScreen ? '100%' : '500px'}}
             >
-              {mediaArray
-                .map((item, index) => {
-                  return (
-                    <MediaRow
-                      key={index}
-                      file={item}
-                      deleteMedia={deleteMedia}
-                      style={style}
-                    />
-                  );
-                })
-                .reverse()}
+              {selectedOption === 'rating' &&
+                [...mediaArray]
+                  .sort((a, b) => b.averageRating - a.averageRating)
+                  .map((item, index) => {
+                    return (
+                      <MediaRow
+                        key={index}
+                        file={item}
+                        deleteMedia={deleteMedia}
+                        style={style}
+                      />
+                    );
+                  })}
+              {selectedOption === 'likes' &&
+                [...mediaArray]
+                  .sort((a, b) => b.likes.length - a.likes.length)
+                  .map((item, index) => {
+                    return (
+                      <MediaRow
+                        key={index}
+                        file={item}
+                        deleteMedia={deleteMedia}
+                        style={style}
+                      />
+                    );
+                  })}
+              {selectedOption === 'file_id' &&
+                [...mediaArray]
+                  .sort((a, b) => b.file_id - a.file_id)
+                  .map((item, index) => {
+                    return (
+                      <MediaRow
+                        key={index}
+                        file={item}
+                        deleteMedia={deleteMedia}
+                        style={style}
+                      />
+                    );
+                  })}
             </ImageList>
           ) : (
             /* * GRID STYLE * */
@@ -163,18 +214,45 @@ const MediaTable = ({
               direction="row"
               alignItems="stretch"
             >
-              {mediaArray
-                .map((item, index) => {
-                  return (
-                    <MediaRow
-                      key={index}
-                      file={item}
-                      deleteMedia={deleteMedia}
-                      style={style}
-                    />
-                  );
-                })
-                .reverse()}
+              {selectedOption === 'rating' &&
+                [...mediaArray]
+                  .sort((a, b) => b.averageRating - a.averageRating)
+                  .map((item, index) => {
+                    return (
+                      <MediaRow
+                        key={index}
+                        file={item}
+                        deleteMedia={deleteMedia}
+                        style={style}
+                      />
+                    );
+                  })}
+              {selectedOption === 'likes' &&
+                [...mediaArray]
+                  .sort((a, b) => b.likes.length - a.likes.length)
+                  .map((item, index) => {
+                    return (
+                      <MediaRow
+                        key={index}
+                        file={item}
+                        deleteMedia={deleteMedia}
+                        style={style}
+                      />
+                    );
+                  })}
+              {selectedOption === 'file_id' &&
+                [...mediaArray]
+                  .sort((a, b) => b.file_id - a.file_id)
+                  .map((item, index) => {
+                    return (
+                      <MediaRow
+                        key={index}
+                        file={item}
+                        deleteMedia={deleteMedia}
+                        style={style}
+                      />
+                    );
+                  })}
             </ImageList>
           )}
         </Grid>

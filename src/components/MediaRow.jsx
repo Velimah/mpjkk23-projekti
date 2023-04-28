@@ -13,7 +13,7 @@ import {Link} from 'react-router-dom';
 import {mediaUrl, appId, profilePlaceholder} from '../utils/variables';
 import {useContext, useEffect, useState} from 'react';
 import {MediaContext} from '../contexts/MediaContext';
-import {useFavourite, useUser, useTag, useRating} from '../hooks/ApiHooks';
+import {useFavourite, useUser, useTag} from '../hooks/ApiHooks';
 import {useTheme} from '@mui/material/styles';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
@@ -23,7 +23,6 @@ import {formatTime} from '../utils/UnitConversions';
 const MediaRow = ({file, style}) => {
   const theme = useTheme();
   const smallScreen = useMediaQuery(theme.breakpoints.down('sm'));
-
   const {user, setTargetUser} = useContext(MediaContext);
   const description = JSON.parse(file.description);
 
@@ -33,11 +32,9 @@ const MediaRow = ({file, style}) => {
   const [ratingCount, setRatingCount] = useState(0);
 
   const [refreshLikes, setRefreshLikes] = useState(false);
-  const [refreshRating, setRefreshRating] = useState(false);
 
   const {getUser} = useUser();
-  const {getFavourites, postFavourite, deleteFavourite} = useFavourite();
-  const {getRatingsById} = useRating();
+  const {postFavourite, deleteFavourite} = useFavourite();
 
   const {getTag} = useTag();
 
@@ -70,20 +67,6 @@ const MediaRow = ({file, style}) => {
     }
   };
 
-  const fetchLikes = async () => {
-    try {
-      const likeInfo = await getFavourites(file.file_id);
-      setLikes(likeInfo.length);
-      likeInfo.forEach((like) => {
-        if (like.user_id === user.user_id) {
-          setRefreshLikes(true);
-        }
-      });
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
-
   const fetchProfilePicture = async () => {
     try {
       const profilePictures = await getTag(
@@ -97,12 +80,14 @@ const MediaRow = ({file, style}) => {
     }
   };
 
-  useEffect(() => {
-    fetchUser();
-    fetchLikes();
-    fetchProfilePicture();
-    fetchRatings();
-  }, []);
+  const fetchLikes = () => {
+    setLikes(file.likes.length);
+    file.likes.forEach((like) => {
+      if (like.user_id === user.user_id) {
+        setRefreshLikes(true);
+      }
+    });
+  };
 
   const doLike = async () => {
     try {
@@ -110,6 +95,7 @@ const MediaRow = ({file, style}) => {
       const fileId = {file_id: file.file_id};
       await postFavourite(fileId, token);
       setRefreshLikes(true);
+      setLikes((prevLikes) => prevLikes + 1);
     } catch (error) {
       console.log(error.message);
     }
@@ -120,38 +106,23 @@ const MediaRow = ({file, style}) => {
       const token = localStorage.getItem('token');
       await deleteFavourite(file.file_id, token);
       setRefreshLikes(false);
+      setLikes((prevLikes) => prevLikes - 1);
     } catch (error) {
       console.log(error.message);
     }
   };
 
+  const fetchRatings = () => {
+    setRatingCount(file.ratingInfo.length);
+    setRating(file.averageRating);
+  };
+
   useEffect(() => {
+    fetchUser();
     fetchLikes();
-  }, [refreshLikes]);
-
-  const fetchRatings = async () => {
-    try {
-      const ratingInfo = await getRatingsById(file.file_id);
-      let sum = 0;
-      setRatingCount(ratingInfo.length);
-
-      ratingInfo.forEach((file) => {
-        sum += file.rating;
-        if (file.user_id === user.user_id) {
-          setRefreshRating(true);
-        }
-      });
-      const averageRating = sum / ratingInfo.length;
-
-      setRating(averageRating);
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
-
-  useEffect(() => {
+    fetchProfilePicture();
     fetchRatings();
-  }, [refreshRating]);
+  }, []);
 
   return (
     <Box component="div">

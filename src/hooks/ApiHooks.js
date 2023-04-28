@@ -21,8 +21,7 @@ const useMedia = (
   myFavouritesOnly = false
 ) => {
   const [mediaArray, setMediaArray] = useState([]);
-  const {user, update, targetUser, setUser, setTargetUser} =
-    useContext(MediaContext);
+  const {user, targetUser, setUser, setTargetUser} = useContext(MediaContext);
 
   const [userData, setData] = useState(() => {
     return user ?? JSON.parse(window.localStorage.getItem('user'));
@@ -42,7 +41,12 @@ const useMedia = (
     setTargetUser(targetUserData);
   }, [setTargetUserData]);
 
+  const sleep = (ms) => {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  };
+
   const getMedia = async () => {
+    console.time('myTimer');
     try {
       let files = await useTag().getTag(appId);
 
@@ -68,19 +72,49 @@ const useMedia = (
           return await doFetch(baseUrl + 'media/' + file.file_id);
         })
       );
+
+      let fetchCount = 0;
+      for (const file of filesWithThumbnail) {
+        fetchCount++;
+        await sleep(5);
+        const likes = await doFetch(
+          baseUrl + 'favourites/file/' + file.file_id
+        );
+        file.likes = likes;
+      }
+
+      for (const file of filesWithThumbnail) {
+        fetchCount++;
+        await sleep(5);
+        const fetchOptions = {
+          method: 'GET',
+        };
+        const rating = await doFetch(
+          baseUrl + 'ratings/file/' + file.file_id,
+          fetchOptions
+        );
+        let sum = 0;
+        rating.forEach((r) => {
+          sum += r.rating;
+        });
+        let averageRating = sum / rating.length;
+        if (isNaN(averageRating)) {
+          averageRating = 0;
+        }
+        rating.forEach((r) => {
+          r.averageRating = averageRating;
+        });
+        file.ratingInfo = rating;
+        file.averageRating = averageRating;
+      }
+
       setMediaArray(filesWithThumbnail);
+      console.log('fetchCount', fetchCount);
+      console.timeEnd('myTimer');
     } catch (error) {
       console.error('getMedia', error.message);
     }
   };
-
-  useEffect(() => {
-    try {
-      getMedia();
-    } catch (error) {
-      console.log(error.message);
-    }
-  }, [update]);
 
   const getAllMediaByCurrentUser = async (token) => {
     const fetchOptions = {
@@ -144,6 +178,7 @@ const useMedia = (
 
   return {
     mediaArray,
+    getMedia,
     postMedia,
     deleteMedia,
     putMedia,
