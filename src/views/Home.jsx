@@ -86,6 +86,32 @@ const Home = () => {
         </Grid>
       </Grid>
       <Grid sx={{mt: '50px', mb: '100px'}}>
+        <Container>
+          <Grid
+            container
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <Typography component="h2" variant="h2" sx={{mb: 2}}>
+              Discover cats
+            </Typography>
+            <FormControl sx={{width: 150}}>
+              <InputLabel id="select-label">Sort</InputLabel>
+              <Select
+                labelId="select-label"
+                id="select"
+                value={sort}
+                label="Sort"
+                onChange={handleChange}
+              >
+                <MenuItem value={1}>Newest</MenuItem>
+                <MenuItem value={2}>Most liked</MenuItem>
+                <MenuItem value={3}>Top rated</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+        </Container>
         <MediaTable />
       </Grid>
     </>

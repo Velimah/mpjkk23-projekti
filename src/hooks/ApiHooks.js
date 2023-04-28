@@ -265,6 +265,16 @@ const useTag = () => {
     }
   };
 
+  const getAllTags = async (token) => {
+    const fetchOptions = {
+      method: 'GET',
+      headers: {
+        'x-access-token': token,
+      },
+    };
+    return await doFetch(baseUrl + 'tags/' + appId, fetchOptions);
+  };
+
   const postTag = async (data, token) => {
     const fetchOptions = {
       method: 'POST',
@@ -292,7 +302,7 @@ const useTag = () => {
     return tagResult;
   };
 
-  return {getTag, postTag, deleteTag, getTagsByFileId};
+  return {getTag, postTag, deleteTag, getTagsByFileId, getAllTags};
 };
 
 const useFavourite = () => {

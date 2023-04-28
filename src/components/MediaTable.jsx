@@ -10,7 +10,7 @@ import {
   Select,
   MenuItem,
 } from '@mui/material';
-import {useMedia} from '../hooks/ApiHooks';
+import {useMedia, useTag} from '../hooks/ApiHooks';
 import MediaRow from './MediaRow';
 import PropTypes from 'prop-types';
 import {useEffect, useState} from 'react';
@@ -18,9 +18,11 @@ import WindowIcon from '@mui/icons-material/Window';
 import MenuIcon from '@mui/icons-material/Menu';
 import {NavLink} from 'react-router-dom';
 import {useTheme} from '@mui/material/styles';
+import {appId} from '../utils/variables';
 
 const MediaTable = ({
   myFilesOnly = false,
+  searchQuery,
   targetUserFilesOnly = false,
   myFavouritesOnly = false,
 }) => {
@@ -41,6 +43,14 @@ const MediaTable = ({
 
   const [style, setStyle] = useState(true);
   const [selectedOption, setSelectedOption] = useState('file_id');
+
+  const {getMediaById} = useMedia();
+
+  const {getTag} = useTag();
+
+  const [refreshArray, setRefreshArray] = useState(mediaArray);
+
+  const [style, setStyle] = useState(true);
 
   const changeToGrid = () => {
     setStyle(true);
@@ -63,6 +73,22 @@ const MediaTable = ({
       setSelectedOption('rating');
     }
   };
+
+  const fetchMediaByIdWithTag = async () => {
+    try {
+      const search = [];
+      for (const file of await getTag(appId + searchQuery)) {
+        search.push(await getMediaById(file.file_id));
+      }
+      setRefreshArray(search);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchMediaByIdWithTag();
+  }, []);
 
   return (
     <>
@@ -265,6 +291,7 @@ MediaTable.propTypes = {
   myFilesOnly: PropTypes.bool,
   targetUserFilesOnly: PropTypes.bool,
   myFavouritesOnly: PropTypes.bool,
+  searchQuery: PropTypes.string,
 };
 
 export default MediaTable;
