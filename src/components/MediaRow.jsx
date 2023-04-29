@@ -14,11 +14,22 @@ import {Link} from 'react-router-dom';
 import {mediaUrl, appId, profilePlaceholder} from '../utils/variables';
 import {useContext, useEffect, useState} from 'react';
 import {MediaContext} from '../contexts/MediaContext';
-import {useFavourite, useUser, useTag, useRating} from '../hooks/ApiHooks';
+import {
+  useFavourite,
+  useUser,
+  useTag,
+  useRating,
+  useComment,
+} from '../hooks/ApiHooks';
 import {useTheme} from '@mui/material/styles';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import {FiberManualRecord, Star, StarBorderOutlined} from '@mui/icons-material';
+import {
+  FiberManualRecord,
+  MessageOutlined,
+  Star,
+  StarBorderOutlined,
+} from '@mui/icons-material';
 import {formatTime} from '../utils/UnitConversions';
 
 const MediaRow = ({file, style}) => {
@@ -31,14 +42,16 @@ const MediaRow = ({file, style}) => {
   const [likes, setLikes] = useState(0);
   const [rating, setRating] = useState(0);
   const [ratingCount, setRatingCount] = useState(0);
+  const [commentCount, setCommentCount] = useState(0);
 
   const [refreshLikes, setRefreshLikes] = useState(false);
   const [refreshRating, setRefreshRating] = useState(false);
 
   const {getUser} = useUser();
   const {postFavourite, deleteFavourite} = useFavourite();
-
   const {getTag} = useTag();
+  const {postRating, deleteRating, getRatingsById} = useRating();
+  const {getCommentsById} = useComment();
 
   const [profilePic, setProfilePic] = useState({
     filename: profilePlaceholder,
@@ -144,11 +157,21 @@ const MediaRow = ({file, style}) => {
     fetchRatingsUpdate();
   }, [refreshRating]);
 
+  const fetchComments = async () => {
+    try {
+      const commentInfo = await getCommentsById(file.file_id);
+      setCommentCount(commentInfo.length);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   useEffect(() => {
     fetchUser();
     fetchLikes();
     fetchProfilePicture();
     fetchRatingsInitial();
+    fetchComments();
   }, []);
 
   const [showTextLikes, setShowTextLikes] = useState(false);
@@ -165,7 +188,7 @@ const MediaRow = ({file, style}) => {
   const handleMouseOutLikes = () => {
     setShowTextLikes(false);
   };
-  const {postRating, deleteRating, getRatingsById} = useRating();
+
   const doRating = async (value) => {
     try {
       const token = localStorage.getItem('token');
@@ -312,9 +335,26 @@ const MediaRow = ({file, style}) => {
             <Grid
               container
               direction="row"
-              justifyContent="space-between"
+              justifyContent="space-around"
               alignItems="center"
             >
+              <Grid item>
+                <IconButton
+                  component={Link}
+                  to="/single"
+                  state={{file}}
+                  onClick={() => {
+                    setTargetUser(file);
+                  }}
+                >
+                  <MessageOutlined
+                    sx={{color: '#7047A6', mr: 1, fontSize: '1.6rem'}}
+                  />
+                  <Typography component="p" variant="body1">
+                    {commentCount}
+                  </Typography>
+                </IconButton>
+              </Grid>
               <Grid item>
                 <IconButton
                   aria-label="favoriteIcon"
@@ -403,6 +443,7 @@ const MediaRow = ({file, style}) => {
                         <IconButton
                           onMouseOver={handleMouseOverRating}
                           onMouseOut={handleMouseOutRating}
+                          onClick={() => deleteRating}
                         >
                           <Rating
                             defaultValue={rating.toFixed(1)}
@@ -413,7 +454,6 @@ const MediaRow = ({file, style}) => {
                             onChange={(event, newValue) => {
                               doRating(newValue);
                             }}
-                            onClick={() => deleteRating}
                             icon={
                               <Star
                                 sx={{
@@ -460,7 +500,7 @@ const MediaRow = ({file, style}) => {
                     </Grid>
                   ) : (
                     <IconButton aria-label="list">
-                      {ratingCount ? (
+                      {refreshRating ? (
                         <>
                           <Star
                             sx={{color: '#7047A6', mr: 0.5, fontSize: '1.8rem'}}
@@ -476,7 +516,11 @@ const MediaRow = ({file, style}) => {
                             sx={{color: '#7047A6', mr: 0.5, fontSize: '1.8rem'}}
                           />
                           <Typography component="p" variant="body1">
-                            No ratings yet
+                            {ratingCount
+                              ? `${rating.toFixed(1)} (${ratingCount} ${
+                                  ratingCount === 1 ? 'rating' : 'ratings'
+                                })`
+                              : 'No ratings yet'}
                           </Typography>
                         </>
                       )}
