@@ -302,7 +302,7 @@ const MediaRow = ({file, style}) => {
                 : file.mime_type === 'image/webp' ||
                   file.mime_type === 'image/avif'
                 ? mediaUrl + file.filename
-                : mediaUrl + file.thumbnails.w640
+                : mediaUrl + file.thumbnails.w320
             }
             alt={file.title}
           />

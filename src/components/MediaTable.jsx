@@ -31,7 +31,6 @@ const MediaTable = ({
   );
   const theme = useTheme();
   const smallScreen = useMediaQuery(theme.breakpoints.down('sm'));
-
   const [style, setStyle] = useState(true);
   const [selectedOption, setSelectedOption] = useState('file_id');
   const [arrayLength, setArrayLength] = useState(0);
