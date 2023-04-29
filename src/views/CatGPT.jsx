@@ -39,11 +39,8 @@ const CatGPT = () => {
 
   const getMessages = async () => {
     setMessageSent(true);
-    setTimeout(() => {
-      setMessageSent(false);
-    }, 5000);
     const catValue =
-      'Add a cat pun to the answer but answer factually:' + value;
+      'Add a cat pun to the answer but answer factually: ' + value;
     const options = {
       method: 'POST',
       body: JSON.stringify({
@@ -70,8 +67,10 @@ const CatGPT = () => {
       );
       const addedCost = newCost + cost;
       setCost(addedCost);
+      setMessageSent(false);
     } catch (error) {
       console.error(error);
+      setMessageSent(false);
     }
   };
 

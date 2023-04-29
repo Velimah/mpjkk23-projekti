@@ -93,9 +93,10 @@ const MediaRow = ({file, style}) => {
     try {
       const token = localStorage.getItem('token');
       const fileId = {file_id: file.file_id};
-      await postFavourite(fileId, token);
+      const liked = await postFavourite(fileId, token);
       setRefreshLikes(true);
       setLikes((prevLikes) => prevLikes + 1);
+      console.log('liked', liked);
     } catch (error) {
       console.log(error.message);
     }
@@ -104,9 +105,10 @@ const MediaRow = ({file, style}) => {
   const deleteLike = async () => {
     try {
       const token = localStorage.getItem('token');
-      await deleteFavourite(file.file_id, token);
+      const notliked = await deleteFavourite(file.file_id, token);
       setRefreshLikes(false);
       setLikes((prevLikes) => prevLikes - 1);
+      console.log('notliked', notliked);
     } catch (error) {
       console.log(error.message);
     }
@@ -123,6 +125,16 @@ const MediaRow = ({file, style}) => {
     fetchProfilePicture();
     fetchRatings();
   }, []);
+
+  const [showText, setShowText] = useState(false);
+
+  const handleMouseOver = () => {
+    setShowText(true);
+  };
+
+  const handleMouseOut = () => {
+    setShowText(false);
+  };
 
   return (
     <Box component="div">
@@ -264,6 +276,8 @@ const MediaRow = ({file, style}) => {
                   aria-label="favoriteIcon"
                   onClick={refreshLikes ? deleteLike : doLike}
                   variant="contained"
+                  onMouseOver={handleMouseOver}
+                  onMouseOut={handleMouseOut}
                 >
                   {refreshLikes ? (
                     <FavoriteIcon
@@ -275,14 +289,22 @@ const MediaRow = ({file, style}) => {
                     />
                   )}
                   <Typography component="p" variant="body1">
-                    {refreshLikes ? 'Unlike' : 'Add a like'} ({likes}{' '}
-                    {likes > 1 ? 'likes' : 'like'})
+                    {refreshLikes
+                      ? showText
+                        ? 'Unlike'
+                        : ''
+                      : showText
+                      ? 'Add a like'
+                      : ''}
+                    {!showText
+                      ? `${likes} ${likes === 1 ? 'like' : 'likes'}`
+                      : null}
                   </Typography>
                 </IconButton>
               </Grid>
               <Grid item>
                 <Box>
-                  <IconButton aria-label="list">
+                  <IconButton aria-label="list" >
                     {ratingCount ? (
                       <>
                         <Star

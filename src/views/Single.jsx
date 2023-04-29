@@ -292,6 +292,22 @@ const Single = () => {
     fetchRatings();
   }, [refreshRating]);
 
+  // mouseovers for likes and ratings
+  const [showTextLikes, setShowTextLikes] = useState(false);
+  const [showTextRating, setShowTextRating] = useState(false);
+  const handleMouseOverRating = () => {
+    setShowTextRating(true);
+  };
+  const handleMouseOutRating = () => {
+    setShowTextRating(false);
+  };
+  const handleMouseOverLikes = () => {
+    setShowTextLikes(true);
+  };
+  const handleMouseOutLikes = () => {
+    setShowTextLikes(false);
+  };
+
   return (
     <>
       <Box sx={{maxWidth: 'md', margin: 'auto', my: 6}}>
@@ -375,6 +391,8 @@ const Single = () => {
                   aria-label="favoriteIcon"
                   onClick={refreshLikes ? deleteLike : doLike}
                   variant="contained"
+                  onMouseOver={handleMouseOverLikes}
+                  onMouseOut={handleMouseOutLikes}
                 >
                   {refreshLikes ? (
                     <FavoriteIcon
@@ -386,15 +404,27 @@ const Single = () => {
                     />
                   )}
                   <Typography component="p" variant="body1">
-                    {refreshLikes ? 'Unlike' : 'Add a like'} ({likes}{' '}
-                    {likes > 1 ? 'likes' : 'like'})
+                    {refreshLikes
+                      ? showTextLikes
+                        ? 'Unlike'
+                        : ''
+                      : showTextLikes
+                      ? 'Add a like'
+                      : ''}
+                    {!showTextLikes
+                      ? `${likes} ${likes === 1 ? 'like' : 'likes'}`
+                      : null}
                   </Typography>
                 </IconButton>
               </Grid>
 
               <Grid item>
                 {refreshRating ? (
-                  <IconButton onClick={doDeleteRating}>
+                  <IconButton
+                    onClick={doDeleteRating}
+                    onMouseOver={handleMouseOverRating}
+                    onMouseOut={handleMouseOutRating}
+                  >
                     <Rating
                       name="read-only"
                       size="large"
@@ -412,12 +442,18 @@ const Single = () => {
                       }
                     />
                     <Typography sx={{ml: 1}} component="p" variant="body1">
-                      {rating.toFixed(1)} ({ratingCount}{' '}
-                      {ratingCount > 1 ? 'ratings' : 'rating'})
+                      {showTextRating
+                        ? 'Remove rating'
+                        : `${rating.toFixed(1)} (${ratingCount} ${
+                            ratingCount === 1 ? 'rating' : 'ratings'
+                          })`}
                     </Typography>
                   </IconButton>
                 ) : (
-                  <IconButton>
+                  <IconButton
+                    onMouseOver={handleMouseOverRating}
+                    onMouseOut={handleMouseOutRating}
+                  >
                     <Rating
                       defaultValue={rating.toFixed(1)}
                       name="simple-controlled"
@@ -439,8 +475,11 @@ const Single = () => {
                     />
                     {ratingCount ? (
                       <Typography sx={{ml: 1}} component="p" variant="body1">
-                        {rating.toFixed(1)} ({ratingCount}{' '}
-                        {ratingCount > 1 ? 'ratings' : 'rating'})
+                        {showTextRating
+                          ? 'Add a rating'
+                          : `${rating.toFixed(1)} (${ratingCount} ${
+                              ratingCount === 1 ? 'rating' : 'ratings'
+                            })`}
                       </Typography>
                     ) : (
                       <Typography sx={{ml: 1}} component="p" variant="body1">
