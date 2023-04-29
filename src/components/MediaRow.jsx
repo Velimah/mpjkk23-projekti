@@ -7,13 +7,14 @@ import {
   IconButton,
   Avatar,
   useMediaQuery,
+  Rating,
 } from '@mui/material';
 import PropTypes from 'prop-types';
 import {Link} from 'react-router-dom';
 import {mediaUrl, appId, profilePlaceholder} from '../utils/variables';
 import {useContext, useEffect, useState} from 'react';
 import {MediaContext} from '../contexts/MediaContext';
-import {useFavourite, useUser, useTag} from '../hooks/ApiHooks';
+import {useFavourite, useUser, useTag, useRating} from '../hooks/ApiHooks';
 import {useTheme} from '@mui/material/styles';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
@@ -32,6 +33,7 @@ const MediaRow = ({file, style}) => {
   const [ratingCount, setRatingCount] = useState(0);
 
   const [refreshLikes, setRefreshLikes] = useState(false);
+  const [refreshRating, setRefreshRating] = useState(false);
 
   const {getUser} = useUser();
   const {postFavourite, deleteFavourite} = useFavourite();
@@ -114,26 +116,77 @@ const MediaRow = ({file, style}) => {
     }
   };
 
-  const fetchRatings = () => {
+  const fetchRatingsInitial = () => {
     setRatingCount(file.ratingInfo.length);
     setRating(file.averageRating);
   };
+
+  const fetchRatingsUpdate = async () => {
+    try {
+      const ratingInfo = await getRatingsById(file.file_id);
+      let sum = 0;
+      setRatingCount(ratingInfo.length);
+
+      ratingInfo.forEach((file) => {
+        sum += file.rating;
+        if (file.user_id === user.user_id) {
+          setRefreshRating(true);
+        }
+      });
+      const averageRating = sum / ratingInfo.length;
+      setRating(averageRating);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchRatingsUpdate();
+  }, [refreshRating]);
 
   useEffect(() => {
     fetchUser();
     fetchLikes();
     fetchProfilePicture();
-    fetchRatings();
+    fetchRatingsInitial();
   }, []);
 
-  const [showText, setShowText] = useState(false);
-
-  const handleMouseOver = () => {
-    setShowText(true);
+  const [showTextLikes, setShowTextLikes] = useState(false);
+  const [showTextRating, setShowTextRating] = useState(false);
+  const handleMouseOverRating = () => {
+    setShowTextRating(true);
+  };
+  const handleMouseOutRating = () => {
+    setShowTextRating(false);
+  };
+  const handleMouseOverLikes = () => {
+    setShowTextLikes(true);
+  };
+  const handleMouseOutLikes = () => {
+    setShowTextLikes(false);
+  };
+  const {postRating, deleteRating, getRatingsById} = useRating();
+  const doRating = async (value) => {
+    try {
+      const token = localStorage.getItem('token');
+      const data2 = {file_id: file.file_id, rating: value};
+      const ratingInfo = await postRating(data2, token);
+      console.log(ratingInfo);
+      setRefreshRating(!refreshRating);
+    } catch (error) {
+      console.log(error.message);
+    }
   };
 
-  const handleMouseOut = () => {
-    setShowText(false);
+  const doDeleteRating = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const ratingInfo = await deleteRating(file.file_id, token);
+      console.log(ratingInfo);
+      setRefreshRating(!refreshRating);
+    } catch (error) {
+      console.log(error.message);
+    }
   };
 
   return (
@@ -276,8 +329,8 @@ const MediaRow = ({file, style}) => {
                   aria-label="favoriteIcon"
                   onClick={refreshLikes ? deleteLike : doLike}
                   variant="contained"
-                  onMouseOver={handleMouseOver}
-                  onMouseOut={handleMouseOut}
+                  onMouseOver={handleMouseOverLikes}
+                  onMouseOut={handleMouseOutLikes}
                 >
                   {refreshLikes ? (
                     <FavoriteIcon
@@ -290,42 +343,142 @@ const MediaRow = ({file, style}) => {
                   )}
                   <Typography component="p" variant="body1">
                     {refreshLikes
-                      ? showText
+                      ? showTextLikes
                         ? 'Unlike'
                         : ''
-                      : showText
+                      : showTextLikes
                       ? 'Add a like'
                       : ''}
-                    {!showText
+                    {!showTextLikes
                       ? `${likes} ${likes === 1 ? 'like' : 'likes'}`
                       : null}
                   </Typography>
                 </IconButton>
               </Grid>
               <Grid item>
-                <Box>
-                  <IconButton aria-label="list" >
-                    {ratingCount ? (
-                      <>
-                        <Star
-                          sx={{color: '#7047A6', mr: 0.5, fontSize: '1.8rem'}}
-                        />
-                        <Typography component="p" variant="body1">
-                          {rating.toFixed(1)} ({ratingCount}{' '}
-                          {ratingCount > 1 ? 'ratings' : 'rating'})
-                        </Typography>
-                      </>
-                    ) : (
-                      <>
-                        <StarBorderOutlined
-                          sx={{color: '#7047A6', mr: 0.5, fontSize: '1.8rem'}}
-                        />
-                        <Typography component="p" variant="body1">
-                          No ratings yet
-                        </Typography>
-                      </>
-                    )}
-                  </IconButton>
+                <Box
+                  onMouseOver={handleMouseOverRating}
+                  onMouseOut={handleMouseOutRating}
+                >
+                  {showTextRating ? (
+                    <Grid
+                      item
+                      onMouseOver={handleMouseOverRating}
+                      onMouseOut={handleMouseOutRating}
+                    >
+                      {refreshRating ? (
+                        <IconButton
+                          onClick={doDeleteRating}
+                          onMouseOver={handleMouseOverRating}
+                          onMouseOut={handleMouseOutRating}
+                        >
+                          <Rating
+                            name="read-only"
+                            size="large"
+                            precision={0.2}
+                            defaultValue={rating.toFixed(1)}
+                            value={rating.toFixed(1)}
+                            readOnly
+                            icon={
+                              <Star
+                                sx={{color: '#7047A6', fontSize: '1.8rem'}}
+                              />
+                            }
+                            emptyIcon={
+                              <StarBorderOutlined
+                                sx={{color: '#7047A6', fontSize: '1.8rem'}}
+                              />
+                            }
+                          />
+                          <Typography
+                            sx={{ml: 1}}
+                            component="p"
+                            variant="body1"
+                          >
+                            {showTextRating
+                              ? 'Remove rating'
+                              : `${rating.toFixed(1)} (${ratingCount} ${
+                                  ratingCount === 1 ? 'rating' : 'ratings'
+                                })`}
+                          </Typography>
+                        </IconButton>
+                      ) : (
+                        <IconButton
+                          onMouseOver={handleMouseOverRating}
+                          onMouseOut={handleMouseOutRating}
+                        >
+                          <Rating
+                            defaultValue={rating.toFixed(1)}
+                            name="simple-controlled"
+                            size="large"
+                            value={rating.toFixed(1)}
+                            precision={1}
+                            onChange={(event, newValue) => {
+                              doRating(newValue);
+                            }}
+                            onClick={() => deleteRating}
+                            icon={
+                              <Star
+                                sx={{color: '#7047A6', fontSize: '1.8rem'}}
+                              />
+                            }
+                            emptyIcon={
+                              <StarBorderOutlined
+                                sx={{color: '#7047A6', fontSize: '1.8rem'}}
+                              />
+                            }
+                          />
+                          {ratingCount ? (
+                            <Typography
+                              sx={{ml: 1}}
+                              component="p"
+                              variant="body1"
+                            >
+                              {showTextRating
+                                ? 'Add a rating'
+                                : `${rating.toFixed(1)} (${ratingCount} ${
+                                    ratingCount === 1 ? 'rating' : 'ratings'
+                                  })`}
+                            </Typography>
+                          ) : (
+                            <Typography
+                              sx={{ml: 1}}
+                              component="p"
+                              variant="body1"
+                            >
+                              {' '}
+                              {showTextRating
+                                ? 'Add a rating'
+                                : 'No ratings yet'}
+                            </Typography>
+                          )}
+                        </IconButton>
+                      )}
+                    </Grid>
+                  ) : (
+                    <IconButton aria-label="list">
+                      {ratingCount ? (
+                        <>
+                          <Star
+                            sx={{color: '#7047A6', mr: 0.5, fontSize: '1.8rem'}}
+                          />
+                          <Typography component="p" variant="body1">
+                            {rating.toFixed(1)} ({ratingCount}{' '}
+                            {ratingCount > 1 ? 'ratings' : 'rating'})
+                          </Typography>
+                        </>
+                      ) : (
+                        <>
+                          <StarBorderOutlined
+                            sx={{color: '#7047A6', mr: 0.5, fontSize: '1.8rem'}}
+                          />
+                          <Typography component="p" variant="body1">
+                            No ratings yet
+                          </Typography>
+                        </>
+                      )}
+                    </IconButton>
+                  )}
                 </Box>
               </Grid>
             </Grid>
