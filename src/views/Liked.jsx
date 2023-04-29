@@ -3,15 +3,9 @@ import {useContext, useState, useEffect} from 'react';
 import {MediaContext} from '../contexts/MediaContext';
 import MediaTable from '../components/MediaTable';
 import {Container} from '@mui/system';
-import {useMedia} from '../hooks/ApiHooks';
 
 const Liked = () => {
   const {user, setUser} = useContext(MediaContext);
-  const {getMedia} = useMedia();
-
-  useEffect(() => {
-    getMedia();
-  }, []);
 
   const [userData, setData] = useState(() => {
     return user ?? JSON.parse(window.localStorage.getItem('user'));

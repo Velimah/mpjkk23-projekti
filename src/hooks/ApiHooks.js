@@ -46,7 +46,6 @@ const useMedia = (
   };
 
   const getMedia = async () => {
-    console.time('fetchPicturesTime');
     try {
       let files = await useTag().getTag(appId);
 
@@ -78,19 +77,15 @@ const useMedia = (
         file.ratingInfo = [{}];
       }
       setMediaArray(filesWithThumbnail);
-      getlikesAndRatingsToGetMedia(filesWithThumbnail);
-      console.timeEnd('fetchPicturesTime');
+      getlikesAndRatingsForGetMedia(filesWithThumbnail);
     } catch (error) {
       console.error('getMedia', error.message);
     }
   };
 
-  const getlikesAndRatingsToGetMedia = async (filesWithThumbnail) => {
-    console.time('fetchLikesAndRatingsTime');
+  const getlikesAndRatingsForGetMedia = async (filesWithThumbnail) => {
     try {
-      let fetchCount = 0;
       for (const file of filesWithThumbnail) {
-        fetchCount++;
         await sleep(5);
         const likes = await doFetch(
           baseUrl + 'favourites/file/' + file.file_id
@@ -99,7 +94,6 @@ const useMedia = (
       }
 
       for (const file of filesWithThumbnail) {
-        fetchCount++;
         await sleep(5);
         const fetchOptions = {
           method: 'GET',
@@ -122,9 +116,8 @@ const useMedia = (
         file.ratingInfo = rating;
         file.averageRating = averageRating;
       }
-      console.log('fetchCount', fetchCount);
-      console.timeEnd('fetchLikesAndRatingsTime');
       setMediaArray(filesWithThumbnail);
+      console.log('getMediaFetch', filesWithThumbnail);
     } catch (error) {
       console.error('getlikesAndRatings', error.message);
     }

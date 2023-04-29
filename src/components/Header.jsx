@@ -7,7 +7,6 @@ import {
   Container,
   Toolbar,
   Box,
-  Typography,
   useMediaQuery,
   Avatar,
   Tooltip,
@@ -67,22 +66,40 @@ const Header = () => {
                 cursor: 'pointer',
               }}
               alt="OnlyCats logo"
-              onClick={() => navigate('/home')}
+              onClick={() => {
+                if (location.pathname === '/home') {
+                  window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth',
+                  });
+                } else {
+                  navigate('/home');
+                }
+              }}
             />
-            <Typography
+            <Box
               variant="h1"
               noWrap
-              component={Link}
-              to="/home"
+              onClick={() => {
+                if (location.pathname === '/home') {
+                  window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth',
+                  });
+                } else {
+                  navigate('/home');
+                }
+              }}
               sx={{
                 mr: 2,
+                fontWeight: 600,
+                fontSize: '1.5rem',
                 display: {xs: 'flex', sm: 'none', md: 'flex'},
-                color: 'inherit',
-                textDecoration: 'none',
+                cursor: 'pointer',
               }}
             >
               OnlyCats
-            </Typography>
+            </Box>
           </Box>
           <Box sx={{flexGrow: 1, display: {xs: 'none', sm: 'flex'}}}>
             <Box as="nav" sx={{flexGrow: 1}}>

@@ -416,7 +416,7 @@ const MediaRow = ({file, style}) => {
                               <Star
                                 sx={{
                                   color: '#7047A6',
-                                  fontSize: {xs: '1.2rem', md: '1.8rem'},
+                                  fontSize: {xs: '1.2rem', sm: '1.8rem'},
                                 }}
                               />
                             }
@@ -424,7 +424,7 @@ const MediaRow = ({file, style}) => {
                               <StarBorderOutlined
                                 sx={{
                                   color: '#7047A6',
-                                  fontSize: {xs: '1.2rem', md: '1.8rem'},
+                                  fontSize: {xs: '1.2rem', sm: '1.8rem'},
                                 }}
                               />
                             }
@@ -460,7 +460,7 @@ const MediaRow = ({file, style}) => {
                               <Star
                                 sx={{
                                   color: '#7047A6',
-                                  fontSize: {xs: '1.4rem', md: '1.8rem'},
+                                  fontSize: {xs: '1.4rem', sm: '1.8rem'},
                                 }}
                               />
                             }
@@ -468,7 +468,7 @@ const MediaRow = ({file, style}) => {
                               <StarBorderOutlined
                                 sx={{
                                   color: '#7047A6',
-                                  fontSize: {xs: '1.4rem', md: '1.8rem'},
+                                  fontSize: {xs: '1.4rem', sm: '1.8rem'},
                                 }}
                               />
                             }
