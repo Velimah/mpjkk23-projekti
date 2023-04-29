@@ -194,7 +194,6 @@ const MediaRow = ({file, style}) => {
     fetchComments();
   }, []);
 
-  // mouseovers for likes and ratings
   const [showTextLikes, setShowTextLikes] = useState(false);
   const [showTextRating, setShowTextRating] = useState(false);
   const handleMouseOverRating = () => {
@@ -220,7 +219,12 @@ const MediaRow = ({file, style}) => {
         onClick={() => {
           setTargetUser(file);
         }}
-        sx={{borderBottom: style ? 0 : 1}}
+        sx={{
+          borderBottom: style ? 0 : 1,
+          '&:hover': {
+            filter: style ? 'brightness(90%)' : 'brightness(100%)',
+          },
+        }}
       >
         {/* LISTING style user profile */}
         {!style && (

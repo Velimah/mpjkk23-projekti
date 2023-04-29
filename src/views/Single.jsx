@@ -473,13 +473,9 @@ const Single = () => {
                         />
                       }
                     />
-                    {ratingCount ? (
+                    {showTextRating ? (
                       <Typography sx={{ml: 1}} component="p" variant="body1">
-                        {showTextRating
-                          ? 'Add a rating'
-                          : `${rating.toFixed(1)} (${ratingCount} ${
-                              ratingCount === 1 ? 'rating' : 'ratings'
-                            })`}
+                        Add a rating
                       </Typography>
                     ) : (
                       <Typography sx={{ml: 1}} component="p" variant="body1">
