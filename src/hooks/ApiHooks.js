@@ -86,7 +86,7 @@ const useMedia = (
   const getlikesAndRatingsForGetMedia = async (filesWithThumbnail) => {
     try {
       for (const file of filesWithThumbnail) {
-        await sleep(5);
+        await sleep(20);
         const likes = await doFetch(
           baseUrl + 'favourites/file/' + file.file_id
         );
@@ -94,7 +94,7 @@ const useMedia = (
       }
 
       for (const file of filesWithThumbnail) {
-        await sleep(5);
+        await sleep(20);
         const fetchOptions = {
           method: 'GET',
         };

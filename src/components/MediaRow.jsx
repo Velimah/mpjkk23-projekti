@@ -32,7 +32,7 @@ import {
 } from '@mui/icons-material';
 import {formatTime} from '../utils/UnitConversions';
 
-const MediaRow = ({file, style}) => {
+const MediaRow = ({file, style, mediaArray}) => {
   const theme = useTheme();
   const smallScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const {user, setTargetUser} = useContext(MediaContext);
@@ -192,7 +192,7 @@ const MediaRow = ({file, style}) => {
     fetchProfilePicture();
     fetchRatingsInitial();
     fetchComments();
-  }, []);
+  }, [mediaArray]);
 
   const [showTextLikes, setShowTextLikes] = useState(false);
   const [showTextRating, setShowTextRating] = useState(false);
@@ -335,6 +335,7 @@ const MediaRow = ({file, style}) => {
           // TODO: make 2 rows max desc, it is only 1 row now..
           <Grid sx={{px: {xs: 2, md: 0}, pb: 3}}>
             <Grid
+              sx={{pt: 1}}
               container
               direction="row"
               justifyContent="space-around"
@@ -348,11 +349,12 @@ const MediaRow = ({file, style}) => {
                   onClick={() => {
                     setTargetUser(file);
                   }}
+                  sx={{borderRadius: '20px'}}
                 >
                   <MessageOutlined
                     sx={{color: '#7047A6', mr: 1, fontSize: '1.6rem'}}
                   />
-                  <Typography component="p" variant="body1">
+                  <Typography component="p" variant="body1" sx={{p: 0}}>
                     {commentCount}
                   </Typography>
                 </IconButton>
@@ -364,6 +366,7 @@ const MediaRow = ({file, style}) => {
                   variant="contained"
                   onMouseOver={handleMouseOverLikes}
                   onMouseOut={handleMouseOutLikes}
+                  sx={{borderRadius: '20px'}}
                 >
                   {refreshLikes ? (
                     <FavoriteIcon
@@ -404,6 +407,7 @@ const MediaRow = ({file, style}) => {
                           onClick={doDeleteRating}
                           onMouseOver={handleMouseOverRating}
                           onMouseOut={handleMouseOutRating}
+                          sx={{borderRadius: '20px'}}
                         >
                           <Rating
                             name="read-only"
@@ -416,7 +420,7 @@ const MediaRow = ({file, style}) => {
                               <Star
                                 sx={{
                                   color: '#7047A6',
-                                  fontSize: {xs: '1.2rem', sm: '1.8rem'},
+                                  fontSize: {xs: '1.2rem', sm: '1.6rem'},
                                 }}
                               />
                             }
@@ -424,7 +428,7 @@ const MediaRow = ({file, style}) => {
                               <StarBorderOutlined
                                 sx={{
                                   color: '#7047A6',
-                                  fontSize: {xs: '1.2rem', sm: '1.8rem'},
+                                  fontSize: {xs: '1.2rem', sm: '1.6rem'},
                                 }}
                               />
                             }
@@ -446,6 +450,7 @@ const MediaRow = ({file, style}) => {
                           onMouseOver={handleMouseOverRating}
                           onMouseOut={handleMouseOutRating}
                           onClick={() => deleteRating}
+                          sx={{borderRadius: '20px'}}
                         >
                           <Rating
                             defaultValue={rating.toFixed(1)}
@@ -460,7 +465,7 @@ const MediaRow = ({file, style}) => {
                               <Star
                                 sx={{
                                   color: '#7047A6',
-                                  fontSize: {xs: '1.4rem', sm: '1.8rem'},
+                                  fontSize: {xs: '1.4rem', sm: '1.6rem'},
                                 }}
                               />
                             }
@@ -468,7 +473,7 @@ const MediaRow = ({file, style}) => {
                               <StarBorderOutlined
                                 sx={{
                                   color: '#7047A6',
-                                  fontSize: {xs: '1.4rem', sm: '1.8rem'},
+                                  fontSize: {xs: '1.4rem', sm: '1.6rem'},
                                 }}
                               />
                             }
@@ -501,11 +506,11 @@ const MediaRow = ({file, style}) => {
                       )}
                     </Grid>
                   ) : (
-                    <IconButton aria-label="list">
+                    <IconButton sx={{borderRadius: '20px'}}>
                       {refreshRating ? (
                         <>
                           <Star
-                            sx={{color: '#7047A6', mr: 0.5, fontSize: '1.8rem'}}
+                            sx={{color: '#7047A6', mr: 0.5, fontSize: '1.6rem'}}
                           />
                           <Typography component="p" variant="body1">
                             {rating.toFixed(1)} ({ratingCount}{' '}
@@ -515,7 +520,7 @@ const MediaRow = ({file, style}) => {
                       ) : (
                         <>
                           <StarBorderOutlined
-                            sx={{color: '#7047A6', mr: 0.5, fontSize: '1.8rem'}}
+                            sx={{color: '#7047A6', mr: 0.5, fontSize: '1.6rem'}}
                           />
                           <Typography component="p" variant="body1">
                             {ratingCount
@@ -572,8 +577,8 @@ const MediaRow = ({file, style}) => {
 
 MediaRow.propTypes = {
   file: PropTypes.object.isRequired,
-  deleteMedia: PropTypes.func.isRequired,
   style: PropTypes.bool.isRequired,
+  mediaArray: PropTypes.array.isRequired,
 };
 
 export default MediaRow;

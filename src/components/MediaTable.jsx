@@ -172,6 +172,7 @@ const MediaTable = ({
                         file={item}
                         deleteMedia={deleteMedia}
                         style={style}
+                        mediaArray={mediaArray}
                       />
                     );
                   })}
@@ -185,6 +186,7 @@ const MediaTable = ({
                         file={item}
                         deleteMedia={deleteMedia}
                         style={style}
+                        mediaArray={mediaArray}
                       />
                     );
                   })}
@@ -198,6 +200,7 @@ const MediaTable = ({
                         file={item}
                         deleteMedia={deleteMedia}
                         style={style}
+                        mediaArray={mediaArray}
                       />
                     );
                   })}
@@ -224,6 +227,7 @@ const MediaTable = ({
                         file={item}
                         deleteMedia={deleteMedia}
                         style={style}
+                        mediaArray={mediaArray}
                       />
                     );
                   })}
@@ -237,6 +241,7 @@ const MediaTable = ({
                         file={item}
                         deleteMedia={deleteMedia}
                         style={style}
+                        mediaArray={mediaArray}
                       />
                     );
                   })}
@@ -250,6 +255,7 @@ const MediaTable = ({
                         file={item}
                         deleteMedia={deleteMedia}
                         style={style}
+                        mediaArray={mediaArray}
                       />
                     );
                   })}
