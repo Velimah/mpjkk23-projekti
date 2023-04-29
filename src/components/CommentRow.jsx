@@ -92,7 +92,7 @@ const CommentRow = ({file, fetchComments}) => {
           sx={{p: 1, m: 1}}
           component={Link}
           variant="contained"
-          to="/userprofiles"
+          to={user.user_id === file.user_id ? '/profile' : '/userprofiles'}
           state={{file}}
           onClick={() => {
             setTargetUser(file);

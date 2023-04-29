@@ -35,6 +35,7 @@ import {formatTime} from '../utils/UnitConversions';
 const MediaRow = ({file, style, mediaArray}) => {
   const theme = useTheme();
   const smallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+  const mediumScreen = useMediaQuery(theme.breakpoints.down('md'));
   const {user, setTargetUser} = useContext(MediaContext);
   const description = JSON.parse(file.description);
   const {getUser} = useUser();
@@ -241,7 +242,7 @@ const MediaRow = ({file, style, mediaArray}) => {
             <Avatar
               aria-label="Profile"
               component={Link}
-              to="/userprofiles"
+              to={user.user_id === file.user_id ? '/profile' : '/userprofiles'}
               state={{file}}
               onClick={() => {
                 setTargetUser(file);
@@ -251,7 +252,7 @@ const MediaRow = ({file, style, mediaArray}) => {
             />
             <Typography
               component={Link}
-              to="/userprofiles"
+              to={user.user_id === file.user_id ? '/profile' : '/userprofiles'}
               state={{file}}
               onClick={() => {
                 setTargetUser(file);
@@ -359,158 +360,70 @@ const MediaRow = ({file, style, mediaArray}) => {
                   </Typography>
                 </IconButton>
               </Grid>
-              <Grid item>
-                <IconButton
-                  aria-label="favoriteIcon"
-                  onClick={refreshLikes ? deleteLike : doLike}
-                  variant="contained"
-                  onMouseOver={handleMouseOverLikes}
-                  onMouseOut={handleMouseOutLikes}
-                  sx={{borderRadius: '20px'}}
-                >
-                  {refreshLikes ? (
-                    <FavoriteIcon
-                      sx={{color: '#7047A6', mr: 1, fontSize: '1.6rem'}}
-                    />
-                  ) : (
-                    <FavoriteBorderIcon
-                      sx={{color: '#7047A6', mr: 1, fontSize: '1.6rem'}}
-                    />
-                  )}
-                  <Typography component="p" variant="body1">
-                    {refreshLikes
-                      ? showTextLikes
-                        ? 'Unlike'
-                        : ''
-                      : showTextLikes
-                      ? 'Add a like'
-                      : ''}
-                    {!showTextLikes
-                      ? `${likes} ${likes === 1 ? 'like' : 'likes'}`
-                      : null}
-                  </Typography>
-                </IconButton>
-              </Grid>
-              <Grid item>
-                <Box
-                  onMouseOver={handleMouseOverRating}
-                  onMouseOut={handleMouseOutRating}
-                >
-                  {showTextRating ? (
-                    <Grid
-                      item
-                      onMouseOver={handleMouseOverRating}
-                      onMouseOut={handleMouseOutRating}
-                    >
-                      {refreshRating ? (
-                        <IconButton
-                          onClick={doDeleteRating}
-                          onMouseOver={handleMouseOverRating}
-                          onMouseOut={handleMouseOutRating}
-                          sx={{borderRadius: '20px'}}
-                        >
-                          <Rating
-                            name="read-only"
-                            size="large"
-                            precision={0.2}
-                            defaultValue={rating.toFixed(1)}
-                            value={rating.toFixed(1)}
-                            readOnly
-                            icon={
-                              <Star
-                                sx={{
-                                  color: '#7047A6',
-                                  fontSize: {xs: '1.2rem', sm: '1.6rem'},
-                                }}
-                              />
-                            }
-                            emptyIcon={
-                              <StarBorderOutlined
-                                sx={{
-                                  color: '#7047A6',
-                                  fontSize: {xs: '1.2rem', sm: '1.6rem'},
-                                }}
-                              />
-                            }
-                          />
-                          <Typography
-                            sx={{ml: 1}}
-                            component="p"
-                            variant="body1"
-                          >
-                            {showTextRating
-                              ? 'Remove rating'
-                              : `${rating.toFixed(1)} (${ratingCount} ${
-                                  ratingCount === 1 ? 'rating' : 'ratings'
-                                })`}
-                          </Typography>
-                        </IconButton>
-                      ) : (
-                        <IconButton
-                          onMouseOver={handleMouseOverRating}
-                          onMouseOut={handleMouseOutRating}
-                          onClick={() => deleteRating}
-                          sx={{borderRadius: '20px'}}
-                        >
-                          <Rating
-                            defaultValue={rating.toFixed(1)}
-                            name="simple-controlled"
-                            size="large"
-                            value={rating.toFixed(1)}
-                            precision={1}
-                            onChange={(event, newValue) => {
-                              doRating(newValue);
-                            }}
-                            icon={
-                              <Star
-                                sx={{
-                                  color: '#7047A6',
-                                  fontSize: {xs: '1.4rem', sm: '1.6rem'},
-                                }}
-                              />
-                            }
-                            emptyIcon={
-                              <StarBorderOutlined
-                                sx={{
-                                  color: '#7047A6',
-                                  fontSize: {xs: '1.4rem', sm: '1.6rem'},
-                                }}
-                              />
-                            }
-                          />
-                          {ratingCount ? (
-                            <Typography
-                              sx={{ml: 1}}
-                              component="p"
-                              variant="body1"
-                            >
-                              {showTextRating
-                                ? 'Add a rating'
-                                : `${rating.toFixed(1)} (${ratingCount} ${
-                                    ratingCount === 1 ? 'rating' : 'ratings'
-                                  })`}
-                            </Typography>
-                          ) : (
-                            <Typography
-                              sx={{ml: 1}}
-                              component="p"
-                              variant="body1"
-                            >
-                              {' '}
-                              {showTextRating
-                                ? 'Add a rating'
-                                : 'No ratings yet'}
-                            </Typography>
-                          )}
-                        </IconButton>
-                      )}
-                    </Grid>
-                  ) : (
-                    <IconButton sx={{borderRadius: '20px'}}>
-                      {refreshRating ? (
+              {mediumScreen ? (
+                <Grid item>
+                  <IconButton
+                    aria-label="favoriteIcon"
+                    onClick={refreshLikes ? deleteLike : doLike}
+                    variant="contained"
+                  >
+                    {refreshLikes ? (
+                      <FavoriteIcon
+                        sx={{color: '#7047A6', mr: 1, fontSize: '1.6rem'}}
+                      />
+                    ) : (
+                      <FavoriteBorderIcon
+                        sx={{color: '#7047A6', mr: 1, fontSize: '1.6rem'}}
+                      />
+                    )}
+                    <Typography component="p" variant="body1">
+                      {refreshLikes ? 'Unlike' : 'Add a like'} ({likes}{' '}
+                      {likes > 1 ? 'likes' : 'like'})
+                    </Typography>
+                  </IconButton>
+                </Grid>
+              ) : (
+                <Grid item>
+                  <IconButton
+                    aria-label="favoriteIcon"
+                    onClick={refreshLikes ? deleteLike : doLike}
+                    variant="contained"
+                    onMouseOver={handleMouseOverLikes}
+                    onMouseOut={handleMouseOutLikes}
+                    sx={{borderRadius: '20px'}}
+                  >
+                    {refreshLikes ? (
+                      <FavoriteIcon
+                        sx={{color: '#7047A6', mr: 1, fontSize: '1.6rem'}}
+                      />
+                    ) : (
+                      <FavoriteBorderIcon
+                        sx={{color: '#7047A6', mr: 1, fontSize: '1.6rem'}}
+                      />
+                    )}
+                    <Typography component="p" variant="body1">
+                      {refreshLikes
+                        ? showTextLikes
+                          ? 'Unlike'
+                          : ''
+                        : showTextLikes
+                        ? 'Add a like'
+                        : ''}
+                      {!showTextLikes
+                        ? `${likes} ${likes === 1 ? 'like' : 'likes'}`
+                        : null}
+                    </Typography>
+                  </IconButton>
+                </Grid>
+              )}
+              {mediumScreen ? (
+                <Grid item>
+                  <Box>
+                    <IconButton aria-label="list">
+                      {ratingCount ? (
                         <>
                           <Star
-                            sx={{color: '#7047A6', mr: 0.5, fontSize: '1.6rem'}}
+                            sx={{color: '#7047A6', mr: 0.5, fontSize: '1.8rem'}}
                           />
                           <Typography component="p" variant="body1">
                             {rating.toFixed(1)} ({ratingCount}{' '}
@@ -520,21 +433,170 @@ const MediaRow = ({file, style, mediaArray}) => {
                       ) : (
                         <>
                           <StarBorderOutlined
-                            sx={{color: '#7047A6', mr: 0.5, fontSize: '1.6rem'}}
+                            sx={{color: '#7047A6', mr: 0.5, fontSize: '1.8rem'}}
                           />
                           <Typography component="p" variant="body1">
-                            {ratingCount
-                              ? `${rating.toFixed(1)} (${ratingCount} ${
-                                  ratingCount === 1 ? 'rating' : 'ratings'
-                                })`
-                              : 'No ratings yet'}
+                            No ratings yet
                           </Typography>
                         </>
                       )}
                     </IconButton>
-                  )}
-                </Box>
-              </Grid>
+                  </Box>
+                </Grid>
+              ) : (
+                <Grid item>
+                  <Box
+                    onMouseOver={handleMouseOverRating}
+                    onMouseOut={handleMouseOutRating}
+                  >
+                    {showTextRating ? (
+                      <Grid
+                        item
+                        onMouseOver={handleMouseOverRating}
+                        onMouseOut={handleMouseOutRating}
+                      >
+                        {refreshRating ? (
+                          <IconButton
+                            onClick={doDeleteRating}
+                            onMouseOver={handleMouseOverRating}
+                            onMouseOut={handleMouseOutRating}
+                            sx={{borderRadius: '20px'}}
+                          >
+                            <Rating
+                              name="read-only"
+                              size="large"
+                              precision={0.2}
+                              defaultValue={rating.toFixed(1)}
+                              value={rating.toFixed(1)}
+                              readOnly
+                              icon={
+                                <Star
+                                  sx={{
+                                    color: '#7047A6',
+                                    fontSize: {xs: '1.2rem', sm: '1.6rem'},
+                                  }}
+                                />
+                              }
+                              emptyIcon={
+                                <StarBorderOutlined
+                                  sx={{
+                                    color: '#7047A6',
+                                    fontSize: {xs: '1.2rem', sm: '1.6rem'},
+                                  }}
+                                />
+                              }
+                            />
+                            <Typography
+                              sx={{ml: 1}}
+                              component="p"
+                              variant="body1"
+                            >
+                              {showTextRating
+                                ? 'Remove rating'
+                                : `${rating.toFixed(1)} (${ratingCount} ${
+                                    ratingCount === 1 ? 'rating' : 'ratings'
+                                  })`}
+                            </Typography>
+                          </IconButton>
+                        ) : (
+                          <IconButton
+                            onMouseOver={handleMouseOverRating}
+                            onMouseOut={handleMouseOutRating}
+                            onClick={() => deleteRating}
+                            sx={{borderRadius: '20px'}}
+                          >
+                            <Rating
+                              defaultValue={rating.toFixed(1)}
+                              name="simple-controlled"
+                              size="large"
+                              value={rating.toFixed(1)}
+                              precision={1}
+                              onChange={(event, newValue) => {
+                                doRating(newValue);
+                              }}
+                              icon={
+                                <Star
+                                  sx={{
+                                    color: '#7047A6',
+                                    fontSize: {xs: '1.4rem', sm: '1.6rem'},
+                                  }}
+                                />
+                              }
+                              emptyIcon={
+                                <StarBorderOutlined
+                                  sx={{
+                                    color: '#7047A6',
+                                    fontSize: {xs: '1.4rem', sm: '1.6rem'},
+                                  }}
+                                />
+                              }
+                            />
+                            {ratingCount ? (
+                              <Typography
+                                sx={{ml: 1}}
+                                component="p"
+                                variant="body1"
+                              >
+                                {showTextRating
+                                  ? 'Add a rating'
+                                  : `${rating.toFixed(1)} (${ratingCount} ${
+                                      ratingCount === 1 ? 'rating' : 'ratings'
+                                    })`}
+                              </Typography>
+                            ) : (
+                              <Typography
+                                sx={{ml: 1}}
+                                component="p"
+                                variant="body1"
+                              >
+                                {' '}
+                                {showTextRating
+                                  ? 'Add a rating'
+                                  : 'No ratings yet'}
+                              </Typography>
+                            )}
+                          </IconButton>
+                        )}
+                      </Grid>
+                    ) : (
+                      <IconButton sx={{borderRadius: '20px'}}>
+                        {refreshRating ? (
+                          <>
+                            <Star
+                              sx={{
+                                color: '#7047A6',
+                                mr: 0.5,
+                                fontSize: '1.6rem',
+                              }}
+                            />
+                            <Typography component="p" variant="body1">
+                              {rating.toFixed(1)} ({ratingCount}{' '}
+                              {ratingCount > 1 ? 'ratings' : 'rating'})
+                            </Typography>
+                          </>
+                        ) : (
+                          <>
+                            <StarBorderOutlined
+                              sx={{
+                                color: '#7047A6',
+                                mr: 0.5,
+                                fontSize: '1.6rem',
+                              }}
+                            />
+                            <Typography component="p" variant="body1">
+                              {ratingCount
+                                ? `${rating.toFixed(1)} (${ratingCount} ${
+                                    ratingCount === 1 ? 'rating' : 'ratings'
+                                  })`
+                                : 'No ratings yet'}
+                            </Typography>
+                          </>
+                        )}
+                      </IconButton>
+                    )}
+                  </Box>
+                </Grid>
+              )}
             </Grid>
             <Grid item>
               <Typography
