@@ -29,18 +29,20 @@ const MediaTable = ({
     targetUserFilesOnly,
     myFavouritesOnly
   );
+  const theme = useTheme();
+  const smallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+
+  const [style, setStyle] = useState(true);
+  const [selectedOption, setSelectedOption] = useState('file_id');
+  const [arrayLength, setArrayLength] = useState(0);
 
   useEffect(() => {
     getMedia();
   }, []);
 
-  const [arrayLength, setArrayLength] = useState(0);
   useEffect(() => {
     setArrayLength(mediaArray.length);
   }, [mediaArray]);
-
-  const [style, setStyle] = useState(true);
-  const [selectedOption, setSelectedOption] = useState('file_id');
 
   const changeToGrid = () => {
     setStyle(true);
@@ -49,9 +51,6 @@ const MediaTable = ({
   const changeToList = () => {
     setStyle(false);
   };
-
-  const theme = useTheme();
-  const smallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
   const handleChange = (event) => {
     const value = event.target.value;

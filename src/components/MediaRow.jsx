@@ -37,22 +37,19 @@ const MediaRow = ({file, style}) => {
   const smallScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const {user, setTargetUser} = useContext(MediaContext);
   const description = JSON.parse(file.description);
-
-  const [owner, setOwner] = useState({username: ''});
-  const [likes, setLikes] = useState(0);
-  const [rating, setRating] = useState(0);
-  const [ratingCount, setRatingCount] = useState(0);
-  const [commentCount, setCommentCount] = useState(0);
-
-  const [refreshLikes, setRefreshLikes] = useState(false);
-  const [refreshRating, setRefreshRating] = useState(false);
-
   const {getUser} = useUser();
   const {postFavourite, deleteFavourite} = useFavourite();
   const {getTag} = useTag();
   const {postRating, deleteRating, getRatingsById} = useRating();
   const {getCommentsById} = useComment();
 
+  const [owner, setOwner] = useState({username: ''});
+  const [likes, setLikes] = useState(0);
+  const [rating, setRating] = useState(0);
+  const [ratingCount, setRatingCount] = useState(0);
+  const [commentCount, setCommentCount] = useState(0);
+  const [refreshLikes, setRefreshLikes] = useState(false);
+  const [refreshRating, setRefreshRating] = useState(false);
   const [profilePic, setProfilePic] = useState({
     filename: profilePlaceholder,
   });
@@ -123,7 +120,7 @@ const MediaRow = ({file, style}) => {
       const notliked = await deleteFavourite(file.file_id, token);
       setRefreshLikes(false);
       setLikes((prevLikes) => prevLikes - 1);
-      console.log('notliked', notliked);
+      console.log('unliked', notliked);
     } catch (error) {
       console.log(error.message);
     }
@@ -157,6 +154,29 @@ const MediaRow = ({file, style}) => {
     fetchRatingsUpdate();
   }, [refreshRating]);
 
+  const doRating = async (value) => {
+    try {
+      const token = localStorage.getItem('token');
+      const data2 = {file_id: file.file_id, rating: value};
+      const ratingInfo = await postRating(data2, token);
+      console.log('rated', ratingInfo);
+      setRefreshRating(!refreshRating);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const doDeleteRating = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const ratingInfo = await deleteRating(file.file_id, token);
+      console.log('unrated', ratingInfo);
+      setRefreshRating(!refreshRating);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   const fetchComments = async () => {
     try {
       const commentInfo = await getCommentsById(file.file_id);
@@ -174,6 +194,7 @@ const MediaRow = ({file, style}) => {
     fetchComments();
   }, []);
 
+  // mouseovers for likes and ratings
   const [showTextLikes, setShowTextLikes] = useState(false);
   const [showTextRating, setShowTextRating] = useState(false);
   const handleMouseOverRating = () => {
@@ -187,29 +208,6 @@ const MediaRow = ({file, style}) => {
   };
   const handleMouseOutLikes = () => {
     setShowTextLikes(false);
-  };
-
-  const doRating = async (value) => {
-    try {
-      const token = localStorage.getItem('token');
-      const data2 = {file_id: file.file_id, rating: value};
-      const ratingInfo = await postRating(data2, token);
-      console.log(ratingInfo);
-      setRefreshRating(!refreshRating);
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
-
-  const doDeleteRating = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      const ratingInfo = await deleteRating(file.file_id, token);
-      console.log(ratingInfo);
-      setRefreshRating(!refreshRating);
-    } catch (error) {
-      console.log(error.message);
-    }
   };
 
   return (
