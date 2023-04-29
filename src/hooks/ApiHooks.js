@@ -77,10 +77,15 @@ const useMedia = (
       for (const file of filesWithThumbnail) {
         fetchCount++;
         await sleep(5);
-        const likes = await doFetch(
-          baseUrl + 'favourites/file/' + file.file_id
-        );
-        file.likes = likes;
+
+        try {
+          const likes = await doFetch(
+            baseUrl + 'favourites/file/' + file.file_id
+          );
+          file.likes = likes;
+        } catch (error) {
+          console.error('getMedia', error.message);
+        }
       }
 
       for (const file of filesWithThumbnail) {
@@ -89,23 +94,27 @@ const useMedia = (
         const fetchOptions = {
           method: 'GET',
         };
-        const rating = await doFetch(
-          baseUrl + 'ratings/file/' + file.file_id,
-          fetchOptions
-        );
-        let sum = 0;
-        rating.forEach((r) => {
-          sum += r.rating;
-        });
-        let averageRating = sum / rating.length;
-        if (isNaN(averageRating)) {
-          averageRating = 0;
+        try {
+          const rating = await doFetch(
+            baseUrl + 'ratings/file/' + file.file_id,
+            fetchOptions
+          );
+          let sum = 0;
+          rating.forEach((r) => {
+            sum += r.rating;
+          });
+          let averageRating = sum / rating.length;
+          if (isNaN(averageRating)) {
+            averageRating = 0;
+          }
+          rating.forEach((r) => {
+            r.averageRating = averageRating;
+          });
+          file.ratingInfo = rating;
+          file.averageRating = averageRating;
+        } catch (error) {
+          console.error('getMedia', error.message);
         }
-        rating.forEach((r) => {
-          r.averageRating = averageRating;
-        });
-        file.ratingInfo = rating;
-        file.averageRating = averageRating;
       }
 
       setMediaArray(filesWithThumbnail);

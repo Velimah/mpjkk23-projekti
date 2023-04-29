@@ -78,7 +78,12 @@ const MediaTable = ({
                 {arrayLength} {arrayLength === 1 ? 'post' : 'posts'}
               </Typography>
             ) : null}
-            {!myFilesOnly && !targetUserFilesOnly ? (
+            {myFavouritesOnly ? (
+              <Typography component="h2" variant="h2" sx={{mb: 2}}>
+                {`Posts you have liked (${arrayLength})`}
+              </Typography>
+            ) : null}
+            {!myFilesOnly && !targetUserFilesOnly && !myFavouritesOnly ? (
               <Typography component="h2" variant="h2" sx={{mb: 2}}>
                 Discover cats
               </Typography>

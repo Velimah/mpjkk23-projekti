@@ -532,11 +532,11 @@ const MediaRow = ({file, style}) => {
                 component="p"
                 variant="body1"
                 sx={{
-                  maxHeight: '85px',
+                  maxHeight: '60px',
                   p: description.desc.length === 0 ? 0 : 1,
                   overflow: 'hidden',
                   display: '-webkit-box',
-                  WebkitLineClamp: 3,
+                  WebkitLineClamp: 2,
                   textOverflow: 'ellipsis',
                   WebkitBoxOrient: 'vertical',
                   whiteSpace: 'pre-wrap',
@@ -548,6 +548,7 @@ const MediaRow = ({file, style}) => {
                 <Button
                   variant="text"
                   component={Link}
+                  sx={{fontWeight: 600}}
                   to="/single"
                   state={{file}}
                   onClick={() => {

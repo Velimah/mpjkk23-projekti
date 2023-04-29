@@ -90,7 +90,7 @@ const Header = () => {
                 color={
                   location.pathname === '/home' ? 'primary' : 'blackMedium'
                 }
-                sx={{mr: 1}}
+                sx={{mr: 1, fontWeight: 600}}
                 component={Link}
                 to="/home"
               >
@@ -100,7 +100,7 @@ const Header = () => {
                 color={
                   location.pathname === '/search' ? 'primary' : 'blackMedium'
                 }
-                sx={{mr: 1}}
+                sx={{mr: 1, fontWeight: 600}}
                 component={Link}
                 to="/search"
               >
@@ -111,7 +111,7 @@ const Header = () => {
                   color={
                     location.pathname === '/liked' ? 'primary' : 'blackMedium'
                   }
-                  sx={{mr: 1}}
+                  sx={{mr: 1, fontWeight: 600}}
                   component={Link}
                   to="/liked"
                 >
@@ -131,6 +131,7 @@ const Header = () => {
                       p: '3px',
                       mr: 1,
                       backgroundColor: '#E3A7B6',
+                      boxShadow: 'rgba(149, 157, 165, 1) 0px 2px 6px',
                     }}
                   >
                     <PersonRounded />
@@ -142,7 +143,10 @@ const Header = () => {
                     aria-label="Profile"
                     component={Link}
                     to="/profile"
-                    sx={{mr: 1}}
+                    sx={{
+                      mr: 1,
+                      boxShadow: 'rgba(149, 157, 165, 1) 0px 2px 6px',
+                    }}
                   >
                     <PersonRounded />
                   </Avatar>
