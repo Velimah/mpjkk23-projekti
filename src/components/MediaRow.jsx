@@ -191,14 +191,27 @@ const MediaRow = ({file, style}) => {
 
   return (
     <Box component="div">
-      <ImageListItem className="post" sx={{borderBottom: style ? 0 : 1}}>
+      <ImageListItem
+        component={style ? Link : undefined}
+        variant="contained"
+        to="/single"
+        state={{file}}
+        onClick={() => {
+          setTargetUser(file);
+        }}
+        sx={{borderBottom: style ? 0 : 1}}
+      >
         {/* LISTING style user profile */}
         {!style && (
           <Grid
             container
             direction="row"
             alignItems="center"
-            sx={{px: smallScreen ? 2 : 'auto', pt: 3, pb: 2}}
+            sx={{
+              px: smallScreen ? 2 : 'auto',
+              pt: 3,
+              pb: 2,
+            }}
           >
             <Avatar
               aria-label="Profile"
@@ -246,74 +259,52 @@ const MediaRow = ({file, style}) => {
         )}
         {/* * GRID STYLE * */}
         {style === true ? (
-          <Box
-            component={Link}
-            variant="contained"
-            to="/single"
-            state={{file}}
-            onClick={() => {
-              setTargetUser(file);
-            }}
-            sx={{height: '100%', width: '100%', objectFit: 'cover'}}
-          >
-            <img
-              style={{
-                height: '100%',
-                width: '100%',
-                aspectRatio: '1 / 1',
-                objectFit: 'cover',
-                borderRadius: '5px',
-                filter: `brightness(${allData.filters.brightness}%)
+          <img
+            style={{
+              width: '100%',
+
+              aspectRatio: '1 / 1',
+              objectFit: 'cover',
+              borderRadius: '5px',
+              filter: `brightness(${allData.filters.brightness}%)
                        contrast(${allData.filters.contrast}%)
                        saturate(${allData.filters.saturation}%)
                        sepia(${allData.filters.sepia}%)`,
-              }}
-              src={
-                file.media_type === 'audio'
-                  ? 'onlycats_logo.png'
-                  : file.mime_type === 'image/webp' ||
-                    file.mime_type === 'image/avif'
-                  ? mediaUrl + file.filename
-                  : mediaUrl + file.thumbnails.w640
-              }
-              alt={file.title}
-            />
-          </Box>
+            }}
+            src={
+              file.media_type === 'audio'
+                ? 'onlycats_logo.png'
+                : file.mime_type === 'image/webp' ||
+                  file.mime_type === 'image/avif'
+                ? mediaUrl + file.filename
+                : mediaUrl + file.thumbnails.w640
+            }
+            alt={file.title}
+          />
         ) : (
           /* * LISTING STYLE * */
-          <Box
-            component={Link}
-            variant="contained"
-            to="/single"
-            state={{file}}
-            onClick={() => {
-              setTargetUser(file);
-            }}
-            sx={{height: '100%', width: '100%', objectFit: 'cover'}}
-          >
-            <img
-              style={{
-                height: '100%',
-                width: '100%',
-                aspectRatio: '1 / 1',
-                objectFit: 'cover',
-                borderRadius: smallScreen ? 0 : '5px',
-                filter: `brightness(${allData.filters.brightness}%)
+          <img
+            style={{
+              height: '100%',
+              width: '100%',
+              aspectRatio: '1 / 1',
+              objectFit: 'cover',
+              borderRadius: smallScreen ? 0 : '5px',
+              filter: `brightness(${allData.filters.brightness}%)
                        contrast(${allData.filters.contrast}%)
                        saturate(${allData.filters.saturation}%)
                        sepia(${allData.filters.sepia}%)`,
-              }}
-              src={
-                file.media_type === 'audio'
-                  ? 'onlycats_logo.png'
-                  : file.mime_type === 'image/webp' ||
-                    file.mime_type === 'image/avif'
-                  ? mediaUrl + file.filename
-                  : mediaUrl + file.thumbnails.w640
-              }
-              alt={file.title}
-            />
-          </Box>
+            }}
+            src={
+              file.media_type === 'audio'
+                ? 'onlycats_logo.png'
+                : file.mime_type === 'image/webp' ||
+                  file.mime_type === 'image/avif'
+                ? mediaUrl + file.filename
+                : mediaUrl + file.thumbnails.w640
+            }
+            alt={file.title}
+          />
         )}
         {!style && (
           // TODO: make 2 rows max desc, it is only 1 row now..
@@ -381,12 +372,18 @@ const MediaRow = ({file, style}) => {
                             readOnly
                             icon={
                               <Star
-                                sx={{color: '#7047A6', fontSize: '1.8rem'}}
+                                sx={{
+                                  color: '#7047A6',
+                                  fontSize: {xs: '1.2rem', md: '1.8rem'},
+                                }}
                               />
                             }
                             emptyIcon={
                               <StarBorderOutlined
-                                sx={{color: '#7047A6', fontSize: '1.8rem'}}
+                                sx={{
+                                  color: '#7047A6',
+                                  fontSize: {xs: '1.2rem', md: '1.8rem'},
+                                }}
                               />
                             }
                           />
@@ -419,12 +416,18 @@ const MediaRow = ({file, style}) => {
                             onClick={() => deleteRating}
                             icon={
                               <Star
-                                sx={{color: '#7047A6', fontSize: '1.8rem'}}
+                                sx={{
+                                  color: '#7047A6',
+                                  fontSize: {xs: '1.4rem', md: '1.8rem'},
+                                }}
                               />
                             }
                             emptyIcon={
                               <StarBorderOutlined
-                                sx={{color: '#7047A6', fontSize: '1.8rem'}}
+                                sx={{
+                                  color: '#7047A6',
+                                  fontSize: {xs: '1.4rem', md: '1.8rem'},
+                                }}
                               />
                             }
                           />

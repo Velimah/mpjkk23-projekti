@@ -204,12 +204,9 @@ const MediaTable = ({
             <ImageList
               sx={{
                 width: '100%',
-                height: '100%',
                 objectFit: 'contain',
               }}
               cols={smallScreen ? 3 : 4}
-              rowHeight={smallScreen ? 100 : 300}
-              gap={5}
               container
               direction="row"
               alignItems="stretch"
