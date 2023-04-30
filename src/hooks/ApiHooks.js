@@ -74,8 +74,9 @@ const useMedia = (
 
       for (const file of filesWithThumbnail) {
         file.likes = [{}];
-        file.ratingInfo = [{}];
+        file.ratings = [{}];
         file.comments = [{}];
+        file.averageRating = 0;
       }
       setMediaArray(filesWithThumbnail);
       getLikesRatingsComments(filesWithThumbnail);
@@ -99,22 +100,19 @@ const useMedia = (
         const fetchOptions = {
           method: 'GET',
         };
-        const rating = await doFetch(
+        const ratings = await doFetch(
           baseUrl + 'ratings/file/' + file.file_id,
           fetchOptions
         );
         let sum = 0;
-        rating.forEach((r) => {
+        ratings.forEach((r) => {
           sum += r.rating;
         });
-        let averageRating = sum / rating.length;
+        let averageRating = sum / ratings.length;
         if (isNaN(averageRating)) {
           averageRating = 0;
         }
-        rating.forEach((r) => {
-          r.averageRating = averageRating;
-        });
-        file.ratingInfo = rating;
+        file.ratings = ratings;
         file.averageRating = averageRating;
       }
 
@@ -129,7 +127,7 @@ const useMedia = (
         );
         file.comments = comments;
       }
-      setMediaArray(filesWithThumbnail);
+      setMediaArray([...filesWithThumbnail]);
       console.log('getMediaFetch', filesWithThumbnail);
     } catch (error) {
       console.error('getlikesAndRatings', error.message);

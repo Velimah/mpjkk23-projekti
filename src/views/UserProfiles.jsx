@@ -108,7 +108,7 @@ const UserProfiles = () => {
       let sum = 0;
       let count = 0;
       for (const data of mediaInfo) {
-        await sleep(200);
+        await sleep(20);
         const ratings = await getRatingsById(data.file_id);
         if (ratings.length !== 0) {
           for (const obj of ratings) {

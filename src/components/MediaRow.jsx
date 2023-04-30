@@ -139,10 +139,10 @@ const MediaRow = ({file, style, mediaArray}) => {
   };
 
   const fetchRatingsInitial = () => {
-    setRatingCount(file.ratingInfo.length);
+    setRatingCount(file.ratings.length);
     setRating(file.averageRating);
     if (user) {
-      file.ratingInfo.forEach((file) => {
+      file.ratings.forEach((file) => {
         if (file.user_id === user.user_id) {
           setRatingBoolean(true);
         }
@@ -201,10 +201,10 @@ const MediaRow = ({file, style, mediaArray}) => {
 
   useEffect(() => {
     fetchUser();
-    fetchLikesInitial();
     fetchProfilePicture();
-    fetchRatingsInitial();
     fetchComments();
+    fetchLikesInitial();
+    fetchRatingsInitial();
   }, [mediaArray]);
 
   const [likesHoverBoolean, setLikesHoverBoolean] = useState(false);
