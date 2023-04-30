@@ -27,8 +27,9 @@ const App = () => {
           <Route path="/single" element={<Single />} />
           <Route path="/search" element={<Search />} />
           <Route path="/userprofiles" element={<UserProfiles />} />
+          <Route path="/logout" element={<Logout />} />
           <Route
-            path="/Liked"
+            path="/liked"
             element={
               <ProtectedRoute>
                 <Liked />
@@ -75,7 +76,6 @@ const App = () => {
               </ProtectedRoute>
             }
           />
-          <Route path="/logout" element={<Logout />} />
         </Route>
       </Routes>
     </HashRouter>
