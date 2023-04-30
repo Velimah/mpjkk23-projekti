@@ -11,13 +11,16 @@ const ProtectedRoute = ({children}) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const userData = await getUserInfo();
-      console.log('userData', userData);
-      setIsAuthenticated(userData);
-      setLoaded(true);
+      try {
+        const userData = await getUserInfo();
+        setIsAuthenticated(userData);
+        setLoaded(true);
+      } catch (error) {
+        console.error(error.message);
+      }
     };
     fetchData();
-  }, []);
+  }, [children]);
 
   const getUserInfo = async () => {
     const userToken = localStorage.getItem('token');
@@ -27,13 +30,14 @@ const ProtectedRoute = ({children}) => {
     try {
       const userData = await getUserByToken(userToken);
       return Boolean(userData);
-    } catch (e) {
-      localStorage.clear();
+    } catch (error) {
+      console.error(error.message);
+      setLoaded(true);
       return false;
     }
   };
+
   if (loaded) {
-    console.log('isAuthenticated', isAuthenticated);
     if (isAuthenticated === null) {
       console.log('Unauthorized! Permission denied!');
       return null;
