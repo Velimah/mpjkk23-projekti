@@ -14,13 +14,7 @@ import {Link} from 'react-router-dom';
 import {mediaUrl, appId, profilePlaceholder} from '../utils/variables';
 import {useContext, useEffect, useState} from 'react';
 import {MediaContext} from '../contexts/MediaContext';
-import {
-  useFavourite,
-  useUser,
-  useTag,
-  useRating,
-  useComment,
-} from '../hooks/ApiHooks';
+import {useFavourite, useUser, useTag, useRating} from '../hooks/ApiHooks';
 import {useTheme} from '@mui/material/styles';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
@@ -161,7 +155,6 @@ const MediaRow = ({file, style, mediaArray}) => {
       const ratingInfo = await getRatingsById(file.file_id);
       let sum = 0;
       setRatingCount(ratingInfo.length);
-      console.log('ratunginfo', ratingInfo);
       if (user) {
         ratingInfo.forEach((file) => {
           sum += file.rating;
@@ -284,7 +277,7 @@ const MediaRow = ({file, style, mediaArray}) => {
                 textDecoration: 'none',
               }}
             >
-              {owner.username}
+              {owner.username || `User ${file.user_id}`}
             </Typography>
             <FiberManualRecord
               sx={{
@@ -552,7 +545,6 @@ const MediaRow = ({file, style, mediaArray}) => {
                             sx={{borderRadius: '20px'}}
                           >
                             <Rating
-                              defaultValue={rating?.toFixed(1)}
                               name="simple-controlled"
                               size="large"
                               value={rating?.toFixed(1)}

@@ -60,6 +60,8 @@ const MediaTable = ({
       setSelectedOption('likes');
     } else if (value === 3) {
       setSelectedOption('rating');
+    } else if (value === 4) {
+      setSelectedOption('comments');
     }
   };
 
@@ -74,17 +76,17 @@ const MediaTable = ({
             alignItems="center"
           >
             {myFilesOnly || targetUserFilesOnly ? (
-              <Typography component="h2" variant="h2" sx={{}}>
+              <Typography component="h2" variant="h2">
                 {arrayLength} {arrayLength === 1 ? 'post' : 'posts'}
               </Typography>
             ) : null}
             {myFavouritesOnly ? (
-              <Typography component="h2" variant="h2" sx={{}}>
+              <Typography component="h2" variant="h2">
                 {`Liked posts (${arrayLength})`}
               </Typography>
             ) : null}
             {!myFilesOnly && !targetUserFilesOnly && !myFavouritesOnly ? (
-              <Typography component="h2" variant="h2" sx={{}}>
+              <Typography component="h2" variant="h2">
                 Discover cats
               </Typography>
             ) : null}
@@ -100,6 +102,7 @@ const MediaTable = ({
                 <MenuItem value={1}>Newest</MenuItem>
                 <MenuItem value={2}>Most liked</MenuItem>
                 <MenuItem value={3}>Top rated</MenuItem>
+                <MenuItem value={4}>Most commented</MenuItem>
               </Select>
             </FormControl>
           </Grid>
@@ -163,6 +166,20 @@ const MediaTable = ({
               gap={0}
               sx={{width: smallScreen ? '100%' : '500px'}}
             >
+              {selectedOption === 'comments' &&
+                [...mediaArray]
+                  .sort((a, b) => b.comments.length - a.comments.length)
+                  .map((item, index) => {
+                    return (
+                      <MediaRow
+                        key={index}
+                        file={item}
+                        deleteMedia={deleteMedia}
+                        style={style}
+                        mediaArray={mediaArray}
+                      />
+                    );
+                  })}
               {selectedOption === 'rating' &&
                 [...mediaArray]
                   .sort((a, b) => b.averageRating - a.averageRating)
@@ -218,6 +235,20 @@ const MediaTable = ({
               direction="row"
               alignItems="stretch"
             >
+              {selectedOption === 'comments' &&
+                [...mediaArray]
+                  .sort((a, b) => b.comments.length - a.comments.length)
+                  .map((item, index) => {
+                    return (
+                      <MediaRow
+                        key={index}
+                        file={item}
+                        deleteMedia={deleteMedia}
+                        style={style}
+                        mediaArray={mediaArray}
+                      />
+                    );
+                  })}
               {selectedOption === 'rating' &&
                 [...mediaArray]
                   .sort((a, b) => b.averageRating - a.averageRating)
