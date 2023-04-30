@@ -39,18 +39,17 @@ const MediaRow = ({file, style, mediaArray}) => {
   const {user, setTargetUser} = useContext(MediaContext);
   const description = JSON.parse(file.description);
   const {getUser} = useUser();
-  const {postFavourite, deleteFavourite} = useFavourite();
+  const {postFavourite, deleteFavourite, getFavourites} = useFavourite();
   const {getTag} = useTag();
   const {postRating, deleteRating, getRatingsById} = useRating();
-  const {getCommentsById} = useComment();
 
   const [owner, setOwner] = useState({username: ''});
   const [likes, setLikes] = useState(0);
   const [rating, setRating] = useState(0);
   const [ratingCount, setRatingCount] = useState(0);
   const [commentCount, setCommentCount] = useState(0);
-  const [refreshLikes, setRefreshLikes] = useState(false);
-  const [refreshRating, setRefreshRating] = useState(false);
+  const [likesBoolean, setLikesBoolean] = useState(false);
+  const [ratingBoolean, setRatingBoolean] = useState(false);
   const [profilePic, setProfilePic] = useState({
     filename: profilePlaceholder,
   });
@@ -72,9 +71,11 @@ const MediaRow = ({file, style, mediaArray}) => {
 
   const fetchUser = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const ownerInfo = await getUser(file.user_id, token);
-      setOwner(ownerInfo);
+      if (user) {
+        const token = localStorage.getItem('token');
+        const ownerInfo = await getUser(file.user_id, token);
+        setOwner(ownerInfo);
+      }
     } catch (error) {
       console.error(error.message);
     }
@@ -93,13 +94,29 @@ const MediaRow = ({file, style, mediaArray}) => {
     }
   };
 
-  const fetchLikes = () => {
+  const fetchLikesInitial = () => {
     setLikes(file.likes.length);
-    file.likes.forEach((like) => {
-      if (like.user_id === user.user_id) {
-        setRefreshLikes(true);
-      }
-    });
+    if (user) {
+      file.likes.forEach((like) => {
+        if (like.user_id === user.user_id) {
+          setLikesBoolean(true);
+        }
+      });
+    }
+  };
+
+  const fetchLikes = async () => {
+    try {
+      const likeInfo = await getFavourites(file.file_id);
+      setLikes(likeInfo.length);
+      likeInfo.forEach((like) => {
+        if (like.user_id === user.user_id) {
+          setLikesBoolean(true);
+        }
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
   };
 
   const doLike = async () => {
@@ -107,8 +124,8 @@ const MediaRow = ({file, style, mediaArray}) => {
       const token = localStorage.getItem('token');
       const fileId = {file_id: file.file_id};
       const liked = await postFavourite(fileId, token);
-      setRefreshLikes(true);
-      setLikes((prevLikes) => prevLikes + 1);
+      setLikesBoolean(true);
+      fetchLikes();
       console.log('liked', liked);
     } catch (error) {
       console.log(error.message);
@@ -119,8 +136,8 @@ const MediaRow = ({file, style, mediaArray}) => {
     try {
       const token = localStorage.getItem('token');
       const notliked = await deleteFavourite(file.file_id, token);
-      setRefreshLikes(false);
-      setLikes((prevLikes) => prevLikes - 1);
+      setLikesBoolean(false);
+      fetchLikes();
       console.log('unliked', notliked);
     } catch (error) {
       console.log(error.message);
@@ -130,6 +147,13 @@ const MediaRow = ({file, style, mediaArray}) => {
   const fetchRatingsInitial = () => {
     setRatingCount(file.ratingInfo.length);
     setRating(file.averageRating);
+    if (user) {
+      file.ratingInfo.forEach((file) => {
+        if (file.user_id === user.user_id) {
+          setRatingBoolean(true);
+        }
+      });
+    }
   };
 
   const fetchRatingsUpdate = async () => {
@@ -137,13 +161,15 @@ const MediaRow = ({file, style, mediaArray}) => {
       const ratingInfo = await getRatingsById(file.file_id);
       let sum = 0;
       setRatingCount(ratingInfo.length);
-
-      ratingInfo.forEach((file) => {
-        sum += file.rating;
-        if (file.user_id === user.user_id) {
-          setRefreshRating(true);
-        }
-      });
+      console.log('ratunginfo', ratingInfo);
+      if (user) {
+        ratingInfo.forEach((file) => {
+          sum += file.rating;
+          if (file.user_id === user.user_id) {
+            setRatingBoolean(true);
+          }
+        });
+      }
       const averageRating = sum / ratingInfo.length;
       setRating(averageRating);
     } catch (error) {
@@ -151,17 +177,14 @@ const MediaRow = ({file, style, mediaArray}) => {
     }
   };
 
-  useEffect(() => {
-    fetchRatingsUpdate();
-  }, [refreshRating]);
-
   const doRating = async (value) => {
     try {
       const token = localStorage.getItem('token');
       const data2 = {file_id: file.file_id, rating: value};
       const ratingInfo = await postRating(data2, token);
       console.log('rated', ratingInfo);
-      setRefreshRating(!refreshRating);
+      setRatingBoolean(!ratingBoolean);
+      fetchRatingsUpdate();
     } catch (error) {
       console.log(error.message);
     }
@@ -172,42 +195,38 @@ const MediaRow = ({file, style, mediaArray}) => {
       const token = localStorage.getItem('token');
       const ratingInfo = await deleteRating(file.file_id, token);
       console.log('unrated', ratingInfo);
-      setRefreshRating(!refreshRating);
+      setRatingBoolean(!ratingBoolean);
+      fetchRatingsUpdate();
     } catch (error) {
       console.log(error.message);
     }
   };
 
-  const fetchComments = async () => {
-    try {
-      const commentInfo = await getCommentsById(file.file_id);
-      setCommentCount(commentInfo.length);
-    } catch (error) {
-      console.log(error.message);
-    }
+  const fetchComments = () => {
+    setCommentCount(file.comments.length);
   };
 
   useEffect(() => {
     fetchUser();
-    fetchLikes();
+    fetchLikesInitial();
     fetchProfilePicture();
     fetchRatingsInitial();
     fetchComments();
   }, [mediaArray]);
 
-  const [showTextLikes, setShowTextLikes] = useState(false);
-  const [showTextRating, setShowTextRating] = useState(false);
+  const [likesHoverBoolean, setLikesHoverBoolean] = useState(false);
+  const [ratingHoverBoolean, setRatingHoverBoolean] = useState(false);
   const handleMouseOverRating = () => {
-    setShowTextRating(true);
+    setRatingHoverBoolean(true);
   };
   const handleMouseOutRating = () => {
-    setShowTextRating(false);
+    setRatingHoverBoolean(false);
   };
   const handleMouseOverLikes = () => {
-    setShowTextLikes(true);
+    setLikesHoverBoolean(true);
   };
   const handleMouseOutLikes = () => {
-    setShowTextLikes(false);
+    setLikesHoverBoolean(false);
   };
 
   return (
@@ -242,7 +261,7 @@ const MediaRow = ({file, style, mediaArray}) => {
             <Avatar
               aria-label="Profile"
               component={Link}
-              to={user.user_id === file.user_id ? '/profile' : '/userprofiles'}
+              to={user?.user_id === file.user_id ? '/profile' : '/userprofiles'}
               state={{file}}
               onClick={() => {
                 setTargetUser(file);
@@ -252,7 +271,7 @@ const MediaRow = ({file, style, mediaArray}) => {
             />
             <Typography
               component={Link}
-              to={user.user_id === file.user_id ? '/profile' : '/userprofiles'}
+              to={user?.user_id === file.user_id ? '/profile' : '/userprofiles'}
               state={{file}}
               onClick={() => {
                 setTargetUser(file);
@@ -333,8 +352,7 @@ const MediaRow = ({file, style, mediaArray}) => {
           />
         )}
         {!style && (
-          // TODO: make 2 rows max desc, it is only 1 row now..
-          <Grid sx={{px: {xs: 2, md: 0}, pb: 3}}>
+          <Grid sx={{px: {xs: 1, md: 0}, pb: 3}}>
             <Grid
               sx={{pt: 1}}
               container
@@ -360,14 +378,21 @@ const MediaRow = ({file, style, mediaArray}) => {
                   </Typography>
                 </IconButton>
               </Grid>
+              {/* * MobileLikes * */}
               {mediumScreen ? (
                 <Grid item>
                   <IconButton
+                    sx={{borderRadius: '20px', px: 0}}
                     aria-label="favoriteIcon"
-                    onClick={refreshLikes ? deleteLike : doLike}
+                    onClick={() => {
+                      if (user) {
+                        likesBoolean ? deleteLike() : doLike();
+                      }
+                    }}
                     variant="contained"
                   >
-                    {refreshLikes ? (
+                    {/* * MobileLikes check if user has liked * */}
+                    {likesBoolean ? (
                       <FavoriteIcon
                         sx={{color: '#7047A6', mr: 1, fontSize: '1.6rem'}}
                       />
@@ -376,23 +401,31 @@ const MediaRow = ({file, style, mediaArray}) => {
                         sx={{color: '#7047A6', mr: 1, fontSize: '1.6rem'}}
                       />
                     )}
+                    {/* * MobileLikes show different text based on logged status * */}
                     <Typography component="p" variant="body1">
-                      {refreshLikes ? 'Unlike' : 'Add a like'} ({likes}{' '}
-                      {likes > 1 ? 'likes' : 'like'})
+                      {user && (likesBoolean ? 'Unlike' : 'Like')}{' '}
+                      {!user && `${likes} ${likes === 1 ? 'like' : 'likes'}`}
+                      {user && `(${likes} ${likes === 1 ? 'like' : 'likes'})`}
                     </Typography>
                   </IconButton>
                 </Grid>
               ) : (
                 <Grid item>
+                  {/* * DesktopLikes * */}
                   <IconButton
                     aria-label="favoriteIcon"
-                    onClick={refreshLikes ? deleteLike : doLike}
+                    onClick={() => {
+                      if (user) {
+                        likesBoolean ? deleteLike() : doLike();
+                      }
+                    }}
                     variant="contained"
                     onMouseOver={handleMouseOverLikes}
                     onMouseOut={handleMouseOutLikes}
                     sx={{borderRadius: '20px'}}
                   >
-                    {refreshLikes ? (
+                    {/* * DesktopLikes check if user has liked * */}
+                    {likesBoolean ? (
                       <FavoriteIcon
                         sx={{color: '#7047A6', mr: 1, fontSize: '1.6rem'}}
                       />
@@ -401,32 +434,36 @@ const MediaRow = ({file, style, mediaArray}) => {
                         sx={{color: '#7047A6', mr: 1, fontSize: '1.6rem'}}
                       />
                     )}
+                    {/* * MobileLikes show different text based on logged status and hover * */}
                     <Typography component="p" variant="body1">
-                      {refreshLikes
-                        ? showTextLikes
-                          ? 'Unlike'
-                          : ''
-                        : showTextLikes
-                        ? 'Add a like'
-                        : ''}
-                      {!showTextLikes
-                        ? `${likes} ${likes === 1 ? 'like' : 'likes'}`
-                        : null}
+                      {user &&
+                        (likesBoolean
+                          ? likesHoverBoolean
+                            ? 'Unlike'
+                            : ''
+                          : likesHoverBoolean
+                          ? 'Add a like'
+                          : '')}
+                      {user && likesHoverBoolean
+                        ? null
+                        : `${likes} ${likes === 1 ? 'like' : 'likes'}`}
                     </Typography>
                   </IconButton>
                 </Grid>
               )}
+              {/* * MobileRating * */}
               {mediumScreen ? (
                 <Grid item>
                   <Box>
-                    <IconButton aria-label="list">
+                    <IconButton sx={{borderRadius: '20px'}}>
+                      {/* * MobileRating check if there are ratings * */}
                       {ratingCount ? (
                         <>
                           <Star
                             sx={{color: '#7047A6', mr: 0.5, fontSize: '1.8rem'}}
                           />
                           <Typography component="p" variant="body1">
-                            {rating.toFixed(1)} ({ratingCount}{' '}
+                            {rating?.toFixed(1)} ({ratingCount}{' '}
                             {ratingCount > 1 ? 'ratings' : 'rating'})
                           </Typography>
                         </>
@@ -436,7 +473,7 @@ const MediaRow = ({file, style, mediaArray}) => {
                             sx={{color: '#7047A6', mr: 0.5, fontSize: '1.8rem'}}
                           />
                           <Typography component="p" variant="body1">
-                            No ratings yet
+                            No ratings
                           </Typography>
                         </>
                       )}
@@ -445,19 +482,29 @@ const MediaRow = ({file, style, mediaArray}) => {
                 </Grid>
               ) : (
                 <Grid item>
+                  {/* * DesktopRating * */}
                   <Box
-                    onMouseOver={handleMouseOverRating}
-                    onMouseOut={handleMouseOutRating}
+                    onMouseOver={() => {
+                      if (user) {
+                        handleMouseOverRating();
+                      }
+                    }}
+                    onMouseOut={() => {
+                      if (user) {
+                        handleMouseOutRating();
+                      }
+                    }}
                   >
-                    {showTextRating ? (
-                      <Grid
-                        item
-                        onMouseOver={handleMouseOverRating}
-                        onMouseOut={handleMouseOutRating}
-                      >
-                        {refreshRating ? (
+                    {ratingHoverBoolean ? (
+                      <Grid item>
+                        {ratingBoolean ? (
                           <IconButton
-                            onClick={doDeleteRating}
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              if (user) {
+                                doDeleteRating();
+                              }
+                            }}
                             onMouseOver={handleMouseOverRating}
                             onMouseOut={handleMouseOutRating}
                             sx={{borderRadius: '20px'}}
@@ -466,8 +513,8 @@ const MediaRow = ({file, style, mediaArray}) => {
                               name="read-only"
                               size="large"
                               precision={0.2}
-                              defaultValue={rating.toFixed(1)}
-                              value={rating.toFixed(1)}
+                              defaultValue={rating?.toFixed(1)}
+                              value={rating?.toFixed(1)}
                               readOnly
                               icon={
                                 <Star
@@ -491,9 +538,9 @@ const MediaRow = ({file, style, mediaArray}) => {
                               component="p"
                               variant="body1"
                             >
-                              {showTextRating
+                              {ratingHoverBoolean
                                 ? 'Remove rating'
-                                : `${rating.toFixed(1)} (${ratingCount} ${
+                                : `${rating?.toFixed(1)} (${ratingCount} ${
                                     ratingCount === 1 ? 'rating' : 'ratings'
                                   })`}
                             </Typography>
@@ -502,17 +549,19 @@ const MediaRow = ({file, style, mediaArray}) => {
                           <IconButton
                             onMouseOver={handleMouseOverRating}
                             onMouseOut={handleMouseOutRating}
-                            onClick={() => deleteRating}
                             sx={{borderRadius: '20px'}}
                           >
                             <Rating
-                              defaultValue={rating.toFixed(1)}
+                              defaultValue={rating?.toFixed(1)}
                               name="simple-controlled"
                               size="large"
-                              value={rating.toFixed(1)}
+                              value={rating?.toFixed(1)}
                               precision={1}
                               onChange={(event, newValue) => {
-                                doRating(newValue);
+                                event.stopPropagation();
+                                if (user) {
+                                  doRating(newValue);
+                                }
                               }}
                               icon={
                                 <Star
@@ -537,9 +586,9 @@ const MediaRow = ({file, style, mediaArray}) => {
                                 component="p"
                                 variant="body1"
                               >
-                                {showTextRating
+                                {ratingHoverBoolean
                                   ? 'Add a rating'
-                                  : `${rating.toFixed(1)} (${ratingCount} ${
+                                  : `${rating?.toFixed(1)} (${ratingCount} ${
                                       ratingCount === 1 ? 'rating' : 'ratings'
                                     })`}
                               </Typography>
@@ -550,9 +599,9 @@ const MediaRow = ({file, style, mediaArray}) => {
                                 variant="body1"
                               >
                                 {' '}
-                                {showTextRating
+                                {ratingHoverBoolean
                                   ? 'Add a rating'
-                                  : 'No ratings yet'}
+                                  : 'No ratings'}
                               </Typography>
                             )}
                           </IconButton>
@@ -560,7 +609,7 @@ const MediaRow = ({file, style, mediaArray}) => {
                       </Grid>
                     ) : (
                       <IconButton sx={{borderRadius: '20px'}}>
-                        {refreshRating ? (
+                        {ratingCount ? (
                           <>
                             <Star
                               sx={{
@@ -570,8 +619,8 @@ const MediaRow = ({file, style, mediaArray}) => {
                               }}
                             />
                             <Typography component="p" variant="body1">
-                              {rating.toFixed(1)} ({ratingCount}{' '}
-                              {ratingCount > 1 ? 'ratings' : 'rating'})
+                              {rating?.toFixed(1)} ({ratingCount}{' '}
+                              {ratingCount === 1 ? 'rating' : 'ratings'})
                             </Typography>
                           </>
                         ) : (
@@ -585,10 +634,10 @@ const MediaRow = ({file, style, mediaArray}) => {
                             />
                             <Typography component="p" variant="body1">
                               {ratingCount
-                                ? `${rating.toFixed(1)} (${ratingCount} ${
+                                ? `${rating?.toFixed(1)} (${ratingCount} ${
                                     ratingCount === 1 ? 'rating' : 'ratings'
                                   })`
-                                : 'No ratings yet'}
+                                : 'No ratings'}
                             </Typography>
                           </>
                         )}
@@ -615,20 +664,19 @@ const MediaRow = ({file, style, mediaArray}) => {
               >
                 {description.desc}
               </Typography>
-              {description.desc.length !== 0 && (
-                <Button
-                  variant="text"
-                  component={Link}
-                  sx={{fontWeight: 600}}
-                  to="/single"
-                  state={{file}}
-                  onClick={() => {
-                    setTargetUser(file);
-                  }}
-                >
-                  Show more
-                </Button>
-              )}
+
+              <Button
+                variant="text"
+                component={Link}
+                sx={{fontWeight: 600}}
+                to="/single"
+                state={{file}}
+                onClick={() => {
+                  setTargetUser(file);
+                }}
+              >
+                Show more
+              </Button>
             </Grid>
           </Grid>
         )}

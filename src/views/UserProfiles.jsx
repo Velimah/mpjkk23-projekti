@@ -177,11 +177,12 @@ const UserProfiles = () => {
           <Box
             display="flex"
             flexDirection="column"
+            textAlign="start"
             sx={{
               px: {xs: 2, md: 6},
               py: {xs: 1, md: 1},
               justifyContent: {xs: 'center', sm: 'center'},
-              alignItems: {xs: 'center', sm: 'center'},
+              alignItems: {xs: 'flex-start', sm: 'flex-start'},
             }}
           >
             <Typography component="p" variant="h1" sx={{mt: 1}}>
@@ -210,7 +211,11 @@ const UserProfiles = () => {
             component="p"
             variant="body3"
             alignSelf="center"
-            sx={{maxWidth: '700px', px: {xs: 4, sm: 2}, py: {xs: 2}}}
+            sx={{
+              maxWidth: '700px',
+              p: {xs: 3, md: 3},
+              fontSize: {xs: '1rem', md: '1.2rem'},
+            }}
           >
             {profileDescription}
           </Typography>

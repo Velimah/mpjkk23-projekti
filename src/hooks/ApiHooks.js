@@ -75,15 +75,16 @@ const useMedia = (
       for (const file of filesWithThumbnail) {
         file.likes = [{}];
         file.ratingInfo = [{}];
+        file.comments = [{}];
       }
       setMediaArray(filesWithThumbnail);
-      getlikesAndRatingsForGetMedia(filesWithThumbnail);
+      getLikesRatingsComments(filesWithThumbnail);
     } catch (error) {
       console.error('getMedia', error.message);
     }
   };
 
-  const getlikesAndRatingsForGetMedia = async (filesWithThumbnail) => {
+  const getLikesRatingsComments = async (filesWithThumbnail) => {
     try {
       for (const file of filesWithThumbnail) {
         await sleep(20);
@@ -115,6 +116,18 @@ const useMedia = (
         });
         file.ratingInfo = rating;
         file.averageRating = averageRating;
+      }
+
+      for (const file of filesWithThumbnail) {
+        await sleep(20);
+        const fetchOptions = {
+          method: 'GET',
+        };
+        const comments = await doFetch(
+          baseUrl + 'comments/file/' + file.file_id,
+          fetchOptions
+        );
+        file.comments = comments;
       }
       setMediaArray(filesWithThumbnail);
       console.log('getMediaFetch', filesWithThumbnail);

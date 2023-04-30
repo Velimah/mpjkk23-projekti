@@ -92,7 +92,7 @@ const CommentRow = ({file, fetchComments}) => {
           sx={{p: 1, m: 1}}
           component={Link}
           variant="contained"
-          to={user.user_id === file.user_id ? '/profile' : '/userprofiles'}
+          to={user?.user_id === file.user_id ? '/profile' : '/userprofiles'}
           state={{file}}
           onClick={() => {
             setTargetUser(file);
@@ -106,7 +106,7 @@ const CommentRow = ({file, fetchComments}) => {
         <Typography sx={{mb: 1}}>comment: {file.comment}</Typography>
         <Typography sx={{mb: 1}}>user_id: {file.user_id}</Typography>
         <Typography sx={{mb: 1}}>comment_id: {file.comment_id}</Typography>
-        {file.user_id === user.user_id && (
+        {file.user_id === user?.user_id && (
           <Button
             sx={{
               p: 1,

@@ -329,7 +329,7 @@ const Single = () => {
             component={Link}
             variant="contained"
             to={
-              userData.user_id === data.user_id ? '/profile' : '/userprofiles'
+              userData?.user_id === data.user_id ? '/profile' : '/userprofiles'
             }
             state={{data}}
             onClick={() => {
@@ -341,7 +341,7 @@ const Single = () => {
           <Typography component="h1" variant="h2" sx={{p: 2}}>
             Title: {data.title}
           </Typography>
-          {userData.user_id === owner.user_id && (
+          {userData?.user_id === owner.user_id && (
             <ButtonGroup>
               <Button variant="contained" onClick={doFileDelete}>
                 Delete

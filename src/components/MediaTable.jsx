@@ -31,9 +31,10 @@ const MediaTable = ({
   );
   const theme = useTheme();
   const smallScreen = useMediaQuery(theme.breakpoints.down('sm'));
-  const [style, setStyle] = useState(true);
   const [selectedOption, setSelectedOption] = useState('file_id');
   const [arrayLength, setArrayLength] = useState(0);
+
+  const [style, setStyle] = useState(true);
 
   useEffect(() => {
     getMedia();
@@ -73,17 +74,17 @@ const MediaTable = ({
             alignItems="center"
           >
             {myFilesOnly || targetUserFilesOnly ? (
-              <Typography component="h2" variant="h2" sx={{mb: 2}}>
+              <Typography component="h2" variant="h2" sx={{}}>
                 {arrayLength} {arrayLength === 1 ? 'post' : 'posts'}
               </Typography>
             ) : null}
             {myFavouritesOnly ? (
-              <Typography component="h2" variant="h2" sx={{mb: 2}}>
-                {`Posts you have liked (${arrayLength})`}
+              <Typography component="h2" variant="h2" sx={{}}>
+                {`Liked posts (${arrayLength})`}
               </Typography>
             ) : null}
             {!myFilesOnly && !targetUserFilesOnly && !myFavouritesOnly ? (
-              <Typography component="h2" variant="h2" sx={{mb: 2}}>
+              <Typography component="h2" variant="h2" sx={{}}>
                 Discover cats
               </Typography>
             ) : null}

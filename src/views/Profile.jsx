@@ -157,12 +157,12 @@ const Profile = () => {
           <Box
             display="flex"
             flexDirection="column"
-            textAlign="center"
+            textAlign="start"
             sx={{
-              px: {xs: 2, md: 6},
+              px: {xs: 3, md: 6},
               py: {xs: 1, md: 1},
               justifyContent: {xs: 'center', sm: 'center'},
-              alignItems: {xs: 'center', sm: 'flex-start'},
+              alignItems: {xs: 'flex-start', sm: 'flex-start'},
             }}
           >
             <Typography component="p" variant="h1" sx={{mt: 1}}>
@@ -191,7 +191,7 @@ const Profile = () => {
             flexDirection="column"
             justifyContent="center"
             sx={{
-              px: {xs: 2, sm: 2},
+              px: {xs: 3, sm: 2},
               pl: {xs: 0, sm: 2},
               py: {xs: 1, md: 1},
               width: {xs: '200px'},
@@ -221,7 +221,11 @@ const Profile = () => {
             component="p"
             variant="body3"
             alignSelf="center"
-            sx={{maxWidth: '700px', p: 4, pl: {xs: 4, md: 10}}}
+            sx={{
+              maxWidth: '700px',
+              p: {xs: 3, md: 3},
+              fontSize: {xs: '1rem', md: '1.2rem'},
+            }}
           >
             {profileDescription}
           </Typography>
