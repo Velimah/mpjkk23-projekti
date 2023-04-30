@@ -38,18 +38,13 @@ const ProtectedRoute = ({children}) => {
   };
 
   if (loaded) {
-    if (isAuthenticated === null) {
-      console.log('Unauthorized! Permission denied!');
-      return null;
-    } else if (!isAuthenticated) {
+    if (isAuthenticated) {
+      return children;
+    } else {
       console.log('Unauthorized! Permission denied!');
       localStorage.clear();
       return <Navigate to="/" replace />;
-    } else {
-      return children;
     }
-  } else {
-    return null;
   }
 };
 
