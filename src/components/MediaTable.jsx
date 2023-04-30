@@ -29,18 +29,20 @@ const MediaTable = ({
     targetUserFilesOnly,
     myFavouritesOnly
   );
+  const theme = useTheme();
+  const smallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+  const [selectedOption, setSelectedOption] = useState('file_id');
+  const [arrayLength, setArrayLength] = useState(0);
+
+  const [style, setStyle] = useState(true);
 
   useEffect(() => {
     getMedia();
   }, []);
 
-  const [arrayLength, setArrayLength] = useState(0);
   useEffect(() => {
     setArrayLength(mediaArray.length);
   }, [mediaArray]);
-
-  const [style, setStyle] = useState(true);
-  const [selectedOption, setSelectedOption] = useState('file_id');
 
   const changeToGrid = () => {
     setStyle(true);
@@ -50,9 +52,6 @@ const MediaTable = ({
     setStyle(false);
   };
 
-  const theme = useTheme();
-  const smallScreen = useMediaQuery(theme.breakpoints.down('sm'));
-
   const handleChange = (event) => {
     const value = event.target.value;
     if (value === 1) {
@@ -61,6 +60,8 @@ const MediaTable = ({
       setSelectedOption('likes');
     } else if (value === 3) {
       setSelectedOption('rating');
+    } else if (value === 4) {
+      setSelectedOption('comments');
     }
   };
 
@@ -75,12 +76,17 @@ const MediaTable = ({
             alignItems="center"
           >
             {myFilesOnly || targetUserFilesOnly ? (
-              <Typography component="h2" variant="h2" sx={{mb: 2}}>
+              <Typography component="h2" variant="h2">
                 {arrayLength} {arrayLength === 1 ? 'post' : 'posts'}
               </Typography>
             ) : null}
-            {!myFilesOnly && !targetUserFilesOnly ? (
-              <Typography component="h2" variant="h2" sx={{mb: 2}}>
+            {myFavouritesOnly ? (
+              <Typography component="h2" variant="h2">
+                {`Liked posts (${arrayLength})`}
+              </Typography>
+            ) : null}
+            {!myFilesOnly && !targetUserFilesOnly && !myFavouritesOnly ? (
+              <Typography component="h2" variant="h2">
                 Discover cats
               </Typography>
             ) : null}
@@ -96,6 +102,7 @@ const MediaTable = ({
                 <MenuItem value={1}>Newest</MenuItem>
                 <MenuItem value={2}>Most liked</MenuItem>
                 <MenuItem value={3}>Top rated</MenuItem>
+                <MenuItem value={4}>Most commented</MenuItem>
               </Select>
             </FormControl>
           </Grid>
@@ -159,6 +166,20 @@ const MediaTable = ({
               gap={0}
               sx={{width: smallScreen ? '100%' : '500px'}}
             >
+              {selectedOption === 'comments' &&
+                [...mediaArray]
+                  .sort((a, b) => b.comments.length - a.comments.length)
+                  .map((item, index) => {
+                    return (
+                      <MediaRow
+                        key={index}
+                        file={item}
+                        deleteMedia={deleteMedia}
+                        style={style}
+                        mediaArray={mediaArray}
+                      />
+                    );
+                  })}
               {selectedOption === 'rating' &&
                 [...mediaArray]
                   .sort((a, b) => b.averageRating - a.averageRating)
@@ -169,6 +190,7 @@ const MediaTable = ({
                         file={item}
                         deleteMedia={deleteMedia}
                         style={style}
+                        mediaArray={mediaArray}
                       />
                     );
                   })}
@@ -182,6 +204,7 @@ const MediaTable = ({
                         file={item}
                         deleteMedia={deleteMedia}
                         style={style}
+                        mediaArray={mediaArray}
                       />
                     );
                   })}
@@ -195,6 +218,7 @@ const MediaTable = ({
                         file={item}
                         deleteMedia={deleteMedia}
                         style={style}
+                        mediaArray={mediaArray}
                       />
                     );
                   })}
@@ -204,16 +228,27 @@ const MediaTable = ({
             <ImageList
               sx={{
                 width: '100%',
-                height: '100%',
                 objectFit: 'contain',
               }}
               cols={smallScreen ? 3 : 4}
-              rowHeight={smallScreen ? 100 : 300}
-              gap={5}
               container
               direction="row"
               alignItems="stretch"
             >
+              {selectedOption === 'comments' &&
+                [...mediaArray]
+                  .sort((a, b) => b.comments.length - a.comments.length)
+                  .map((item, index) => {
+                    return (
+                      <MediaRow
+                        key={index}
+                        file={item}
+                        deleteMedia={deleteMedia}
+                        style={style}
+                        mediaArray={mediaArray}
+                      />
+                    );
+                  })}
               {selectedOption === 'rating' &&
                 [...mediaArray]
                   .sort((a, b) => b.averageRating - a.averageRating)
@@ -224,6 +259,7 @@ const MediaTable = ({
                         file={item}
                         deleteMedia={deleteMedia}
                         style={style}
+                        mediaArray={mediaArray}
                       />
                     );
                   })}
@@ -237,6 +273,7 @@ const MediaTable = ({
                         file={item}
                         deleteMedia={deleteMedia}
                         style={style}
+                        mediaArray={mediaArray}
                       />
                     );
                   })}
@@ -250,6 +287,7 @@ const MediaTable = ({
                         file={item}
                         deleteMedia={deleteMedia}
                         style={style}
+                        mediaArray={mediaArray}
                       />
                     );
                   })}

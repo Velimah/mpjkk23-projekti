@@ -108,7 +108,7 @@ const UserProfiles = () => {
       let sum = 0;
       let count = 0;
       for (const data of mediaInfo) {
-        await sleep(200);
+        await sleep(20);
         const ratings = await getRatingsById(data.file_id);
         if (ratings.length !== 0) {
           for (const obj of ratings) {
@@ -144,7 +144,7 @@ const UserProfiles = () => {
             boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px',
             maxWidth: '1200px',
             width: '100%',
-            height: {xs: '150px', sm: '300px'},
+            height: {xs: '150px', md: '300px'},
             maxHeight: '300px',
           }}
         />
@@ -157,11 +157,10 @@ const UserProfiles = () => {
             borderColor: '#FFFFFF',
             borderWidth: '3px',
             position: 'relative',
-            height: {xs: '150px', sm: '175px', md: '200px'},
-            width: {xs: '150px', sm: '175px', md: '200px'},
-            top: {xs: '-75px', sm: '-100px', md: '-100px'},
-            left: {xs: '0', sm: '50px', md: '50px'},
-            margin: {xs: 'auto', sm: 'initial'},
+            height: {xs: '125px', sm: '150px', md: '200px'},
+            width: {xs: '125px', sm: '150px', md: '200px'},
+            top: {xs: '-100px', sm: '-125px', md: '-150px'},
+            left: {xs: '25px', sm: '50px', md: '50px'},
           }}
         />
         <Box
@@ -171,19 +170,19 @@ const UserProfiles = () => {
             maxWidth: '1000px',
             width: '100%',
             margin: 'auto',
-            mt: {xs: -8, sm: -23},
+            mt: {xs: -12, sm: -17, md: -23},
             flexDirection: {xs: 'row', sm: 'row'},
           }}
         >
           <Box
             display="flex"
             flexDirection="column"
-            textAlign="center"
+            textAlign="start"
             sx={{
               px: {xs: 2, md: 6},
               py: {xs: 1, md: 1},
               justifyContent: {xs: 'center', sm: 'center'},
-              alignItems: {xs: 'center', sm: 'center'},
+              alignItems: {xs: 'flex-start', sm: 'flex-start'},
             }}
           >
             <Typography component="p" variant="h1" sx={{mt: 1}}>
@@ -212,7 +211,11 @@ const UserProfiles = () => {
             component="p"
             variant="body3"
             alignSelf="center"
-            sx={{maxWidth: '700px', px: {xs: 4, sm: 2}, py: {xs: 2}}}
+            sx={{
+              maxWidth: '700px',
+              p: {xs: 3, md: 3},
+              fontSize: {xs: '1rem', md: '1.2rem'},
+            }}
           >
             {profileDescription}
           </Typography>

@@ -89,7 +89,7 @@ const Profile = () => {
       let sum = 0;
       let count = 0;
       for (const file of mediaInfo) {
-        await sleep(100);
+        await sleep(20);
         const ratings = await getRatingsById(file.file_id);
         if (ratings.length !== 0) {
           for (const obj of ratings) {
@@ -137,11 +137,10 @@ const Profile = () => {
             borderColor: '#FFFFFF',
             borderWidth: '3px',
             position: 'relative',
-            height: {xs: '150px', sm: '150px', md: '200px'},
-            width: {xs: '150px', sm: '150px', md: '200px'},
-            top: {xs: '-75px', sm: '-75px', md: '-100px'},
-            left: {xs: '0', sm: '50px', md: '50px'},
-            margin: {xs: 'auto', sm: 'initial'},
+            height: {xs: '125px', sm: '150px', md: '200px'},
+            width: {xs: '125px', sm: '150px', md: '200px'},
+            top: {xs: '-100px', sm: '-125px', md: '-150px'},
+            left: {xs: '25px', sm: '50px', md: '50px'},
           }}
         />
         <Box
@@ -151,19 +150,19 @@ const Profile = () => {
             maxWidth: '1000px',
             width: '100%',
             margin: 'auto',
-            mt: {xs: -8, md: -23},
+            mt: {xs: -12, sm: -17, md: -23},
             flexDirection: {xs: 'row', sm: 'row'},
           }}
         >
           <Box
             display="flex"
             flexDirection="column"
-            textAlign="center"
+            textAlign="start"
             sx={{
-              px: {xs: 2, md: 6},
+              px: {xs: 3, md: 6},
               py: {xs: 1, md: 1},
               justifyContent: {xs: 'center', sm: 'center'},
-              alignItems: {xs: 'center', sm: 'flex-start'},
+              alignItems: {xs: 'flex-start', sm: 'flex-start'},
             }}
           >
             <Typography component="p" variant="h1" sx={{mt: 1}}>
@@ -192,7 +191,7 @@ const Profile = () => {
             flexDirection="column"
             justifyContent="center"
             sx={{
-              px: {xs: 2, sm: 2},
+              px: {xs: 3, sm: 2},
               pl: {xs: 0, sm: 2},
               py: {xs: 1, md: 1},
               width: {xs: '200px'},
@@ -222,7 +221,11 @@ const Profile = () => {
             component="p"
             variant="body3"
             alignSelf="center"
-            sx={{maxWidth: '700px', p: 4, pl: {xs: 4, md: 10}}}
+            sx={{
+              maxWidth: '700px',
+              p: {xs: 3, md: 3},
+              fontSize: {xs: '1rem', md: '1.2rem'},
+            }}
           >
             {profileDescription}
           </Typography>

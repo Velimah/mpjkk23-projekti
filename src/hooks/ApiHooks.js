@@ -46,7 +46,6 @@ const useMedia = (
   };
 
   const getMedia = async () => {
-    console.time('myTimer');
     try {
       let files = await useTag().getTag(appId);
 
@@ -73,10 +72,23 @@ const useMedia = (
         })
       );
 
-      let fetchCount = 0;
       for (const file of filesWithThumbnail) {
-        fetchCount++;
-        await sleep(5);
+        file.likes = [{}];
+        file.ratings = [{}];
+        file.comments = [{}];
+        file.averageRating = 0;
+      }
+      setMediaArray(filesWithThumbnail);
+      getLikesRatingsComments(filesWithThumbnail);
+    } catch (error) {
+      console.error('getMedia', error.message);
+    }
+  };
+
+  const getLikesRatingsComments = async (filesWithThumbnail) => {
+    try {
+      for (const file of filesWithThumbnail) {
+        await sleep(20);
         const likes = await doFetch(
           baseUrl + 'favourites/file/' + file.file_id
         );
@@ -84,35 +96,41 @@ const useMedia = (
       }
 
       for (const file of filesWithThumbnail) {
-        fetchCount++;
-        await sleep(5);
+        await sleep(20);
         const fetchOptions = {
           method: 'GET',
         };
-        const rating = await doFetch(
+        const ratings = await doFetch(
           baseUrl + 'ratings/file/' + file.file_id,
           fetchOptions
         );
         let sum = 0;
-        rating.forEach((r) => {
+        ratings.forEach((r) => {
           sum += r.rating;
         });
-        let averageRating = sum / rating.length;
+        let averageRating = sum / ratings.length;
         if (isNaN(averageRating)) {
           averageRating = 0;
         }
-        rating.forEach((r) => {
-          r.averageRating = averageRating;
-        });
-        file.ratingInfo = rating;
+        file.ratings = ratings;
         file.averageRating = averageRating;
       }
 
-      setMediaArray(filesWithThumbnail);
-      console.log('fetchCount', fetchCount);
-      console.timeEnd('myTimer');
+      for (const file of filesWithThumbnail) {
+        await sleep(20);
+        const fetchOptions = {
+          method: 'GET',
+        };
+        const comments = await doFetch(
+          baseUrl + 'comments/file/' + file.file_id,
+          fetchOptions
+        );
+        file.comments = comments;
+      }
+      setMediaArray([...filesWithThumbnail]);
+      console.log('getMediaFetch', filesWithThumbnail);
     } catch (error) {
-      console.error('getMedia', error.message);
+      console.error('getlikesAndRatings', error.message);
     }
   };
 

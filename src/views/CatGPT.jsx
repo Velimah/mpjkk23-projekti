@@ -12,7 +12,6 @@ import {
   Paper,
 } from '@mui/material';
 import {MediaContext} from '../contexts/MediaContext';
-import {useNavigate} from 'react-router-dom';
 
 const CatGPT = () => {
   const [value, setValue] = useState('');
@@ -23,7 +22,6 @@ const CatGPT = () => {
   const [messageSent, setMessageSent] = useState(false);
   const [cost, setCost] = useState(0);
   const {user} = useContext(MediaContext);
-  const navigate = useNavigate();
 
   const createNewChat = () => {
     setMessage(null);
@@ -39,11 +37,8 @@ const CatGPT = () => {
 
   const getMessages = async () => {
     setMessageSent(true);
-    setTimeout(() => {
-      setMessageSent(false);
-    }, 5000);
     const catValue =
-      'Add a cat pun to the answer but answer factually:' + value;
+      'Add a cat pun to the answer but answer factually: ' + value;
     const options = {
       method: 'POST',
       body: JSON.stringify({
@@ -70,8 +65,10 @@ const CatGPT = () => {
       );
       const addedCost = newCost + cost;
       setCost(addedCost);
+      setMessageSent(false);
     } catch (error) {
       console.error(error);
+      setMessageSent(false);
     }
   };
 
@@ -121,7 +118,7 @@ const CatGPT = () => {
     <>
       <Container
         maxWidth="lg"
-        sx={{p: {xs: '6rem 0', sm: '2rem 1rem', md: '2rem 3rem'}}}
+        sx={{p: {xs: '4rem 0', sm: '2rem 1rem', md: '2rem 3rem'}}}
       >
         <Typography
           component="h1"
@@ -135,6 +132,10 @@ const CatGPT = () => {
             p: {xs: 0, sm: '1rem', md: '3rem'},
             borderRadius: '1.5rem',
             bgcolor: {xs: 'transparent', sm: '#FFFFFF'},
+            boxShadow: {
+              xs: 'none',
+              sm: '0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12)',
+            },
           }}
         >
           <Grid
@@ -211,10 +212,9 @@ const CatGPT = () => {
               textAlign="center"
               flexWrap="nowrap"
               sx={{
-                height: '70vh',
+                height: {xs: '75vh', md: '70vh'},
                 width: '100%',
                 maxWidth: '1000px',
-                pt: {xs: 7, sm: 0},
               }}
             >
               <List
@@ -250,7 +250,7 @@ const CatGPT = () => {
                         sx={{
                           height: '100%',
                           textAlign: 'left',
-                          fontSize: {xs: '0.8rem', sm: '1rem'},
+                          fontSize: {xs: '0.9rem', sm: '1.1rem'},
                         }}
                       >
                         {chat.role === 'assistant'
@@ -323,7 +323,10 @@ const CatGPT = () => {
                   display="flex"
                   justifyContent="center"
                   alignItems="center"
-                  sx={{flexDirection: {xs: 'column', md: 'row'}}}
+                  sx={{
+                    flexDirection: {xs: 'column', md: 'row'},
+                    display: {xs: 'none', md: 'flex'},
+                  }}
                 >
                   <Typography
                     component="p"
@@ -356,15 +359,6 @@ const CatGPT = () => {
             </Grid>
           </Grid>
         </Paper>
-        <Box display="flex" width="100%" justifyContent="center">
-          <Button
-            variant="contained"
-            sx={{mt: 3, width: '200px'}}
-            onClick={() => navigate('/home')}
-          >
-            Back
-          </Button>
-        </Box>
       </Container>
     </>
   );
