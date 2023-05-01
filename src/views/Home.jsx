@@ -2,11 +2,36 @@ import {Grid, Button, Typography} from '@mui/material';
 import {Box} from '@mui/system';
 import MediaTable from '../components/MediaTable';
 import {Link} from 'react-router-dom';
-import {useContext} from 'react';
+import {useContext, useEffect, useState} from 'react';
 import {MediaContext} from '../contexts/MediaContext';
+import {useMedia} from '../hooks/ApiHooks';
 
 const Home = () => {
-  const {user} = useContext(MediaContext);
+  const {user, setUser} = useContext(MediaContext);
+  const {getAllMediaById} = useMedia();
+
+  const [hasPictures, setHasPictures] = useState(false);
+  const [userData, setData] = useState(() => {
+    return user ?? JSON.parse(window.localStorage.getItem('user'));
+  });
+
+  useEffect(() => {
+    window.localStorage.setItem('user', JSON.stringify(userData));
+    setUser(userData);
+  }, [setData]);
+
+  const fetchMedia = async () => {
+    try {
+      const media = await getAllMediaById(userData.user_id);
+      media.length > 15 ? setHasPictures(true) : setHasPictures(false);
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchMedia();
+  }, []);
 
   return (
     <>
@@ -16,7 +41,11 @@ const Home = () => {
         direction="row"
         justifyContent="center"
         alignItems="center"
-        sx={{py: '60px', backgroundColor: '#E3A7B6'}}
+        sx={{
+          py: '60px',
+          backgroundColor: '#E3A7B6',
+          display: hasPictures ? 'none' : 'flex',
+        }}
       >
         <Grid item xs={5}>
           <Box sx={{maxWidth: '500px'}}>
