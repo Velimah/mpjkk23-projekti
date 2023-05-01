@@ -22,6 +22,9 @@ const Home = () => {
 
   const fetchMedia = async () => {
     try {
+      if (!userData) {
+        return;
+      }
       const media = await getAllMediaById(userData.user_id);
       media.length > 15 ? setHasPictures(true) : setHasPictures(false);
     } catch (error) {

@@ -35,7 +35,11 @@ const UploadProfilePicture = () => {
         setSelectedImage(profilePicture.filename);
       }
     } catch (error) {
-      console.error('No profile picture: ', error.message);
+      if (error.message === 'Tag not found') {
+        console.log('No profile picture');
+      } else {
+        console.error(error.message);
+      }
     }
   };
 

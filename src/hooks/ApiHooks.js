@@ -81,7 +81,7 @@ const useMedia = (
       setMediaArray(filesWithThumbnail);
       addLikesRatingsCommentsToGetMedia(filesWithThumbnail);
     } catch (error) {
-      console.error('getMedia', error.message);
+      console.error(error.message);
     }
   };
 
@@ -130,7 +130,7 @@ const useMedia = (
       setMediaArray([...filesWithThumbnail]);
       console.log('getMediaFetch', filesWithThumbnail);
     } catch (error) {
-      console.error('getlikesAndRatings', error.message);
+      console.error(error.message);
     }
   };
 

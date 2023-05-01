@@ -66,7 +66,11 @@ const UserProfiles = () => {
       profilePicture.filename = mediaUrl + profilePicture.filename;
       setProfilePic(profilePicture);
     } catch (error) {
-      console.error('No profile picture: ', error.message);
+      if (error.message === 'Tag not found') {
+        console.log('No background picture');
+      } else {
+        console.error(error.message);
+      }
     }
   };
 
@@ -79,7 +83,11 @@ const UserProfiles = () => {
       backgroundPicture.filename = mediaUrl + backgroundPicture.filename;
       setBackgroundPic(backgroundPicture);
     } catch (error) {
-      console.error('No background picture: ', error.message);
+      if (error.message === 'Tag not found') {
+        console.log('No background picture');
+      } else {
+        console.error(error.message);
+      }
     }
   };
 
@@ -93,7 +101,11 @@ const UserProfiles = () => {
         setprofileDescription(profileText.description);
       }
     } catch (error) {
-      console.error('No profile description: ', error.message);
+      if (error.message === 'Tag not found') {
+        console.log('No profile description');
+      } else {
+        console.error(error.message);
+      }
     }
   };
 

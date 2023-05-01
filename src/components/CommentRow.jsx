@@ -27,7 +27,11 @@ const CommentRow = ({file, fetchComments}) => {
       profilePicture.filename = mediaUrl + profilePicture.filename;
       setProfilePic(profilePicture);
     } catch (error) {
-      console.error('No profile picture: ', error.message);
+      if (error.message === 'Tag not found') {
+        console.log('No profile picture');
+      } else {
+        console.error(error.message);
+      }
     }
   };
 
