@@ -14,6 +14,9 @@ import {
 import {MediaContext} from '../contexts/MediaContext';
 
 const CatGPT = () => {
+  const {user} = useContext(MediaContext);
+
+  // useStates
   const [value, setValue] = useState('');
   const [message, setMessage] = useState(null);
   const [previousChats, setPreviousChats] = useState([]);
@@ -21,7 +24,6 @@ const CatGPT = () => {
   const [responseData, setRestponseData] = useState(null);
   const [messageSent, setMessageSent] = useState(false);
   const [cost, setCost] = useState(0);
-  const {user} = useContext(MediaContext);
 
   const createNewChat = () => {
     setMessage(null);
@@ -35,6 +37,7 @@ const CatGPT = () => {
     setValue('');
   };
 
+  // fetch to backend that gets chatpgt response
   const getMessages = async () => {
     setMessageSent(true);
     const catValue =
@@ -93,6 +96,7 @@ const CatGPT = () => {
     }
   }, [message, currentTitle]);
 
+  // scrolls to bottom of chat when new messages arrive
   const scrollPage = () => {
     if (document.querySelector('.scroller')) {
       const element = document.querySelector('.scroller');
@@ -103,6 +107,7 @@ const CatGPT = () => {
     }
   };
 
+  // timeout to append the new message to the chat before scrolling
   useEffect(() => {
     setTimeout(() => {
       scrollPage();

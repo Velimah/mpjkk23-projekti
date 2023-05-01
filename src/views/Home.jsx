@@ -11,10 +11,13 @@ const Home = () => {
   const {getAllMediaById} = useMedia();
 
   const [hasPictures, setHasPictures] = useState(false);
+
+  // checks for user and if null gets user information from localstorage
   const [userData, setData] = useState(() => {
     return user ?? JSON.parse(window.localStorage.getItem('user'));
   });
 
+  // when userData changes, saves userData to localstorage and updates userData
   useEffect(() => {
     window.localStorage.setItem('user', JSON.stringify(userData));
     setUser(userData);

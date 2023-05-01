@@ -21,10 +21,8 @@ const UserProfiles = () => {
   const {getUser} = useUser();
   const {state} = useLocation();
 
-  const [rating, setRating] = useState(0);
-  const [ratingCount, setRatingCount] = useState(0);
-
-  const [userData, setUserData] = useState(() => {
+  // checks for state and if null gets targetUser information from localstorage
+  const [targetUserData, setTargetUserData] = useState(() => {
     return (
       state?.data ??
       state?.file ??
@@ -32,11 +30,15 @@ const UserProfiles = () => {
     );
   });
 
+  // when targetUserData changes, saves targetUserData to localstorage and updates targetUserData
   useEffect(() => {
-    window.localStorage.setItem('targetUser', JSON.stringify(userData));
-    setTargetUser(userData);
-  }, [setUserData]);
+    window.localStorage.setItem('targetUser', JSON.stringify(targetUserData));
+    setTargetUser(targetUserData);
+  }, [setTargetUserData]);
 
+  // useStates
+  const [rating, setRating] = useState(0);
+  const [ratingCount, setRatingCount] = useState(0);
   const [profilePic, setProfilePic] = useState({
     filename: profilePlaceholder,
   });
@@ -51,8 +53,8 @@ const UserProfiles = () => {
     try {
       if (user) {
         const token = localStorage.getItem('token');
-        const userInfo = await getUser(userData.user_id, token);
-        setUserData(userInfo);
+        const userInfo = await getUser(targetUserData.user_id, token);
+        setTargetUserData(userInfo);
       }
     } catch (error) {
       console.error(error.message);
@@ -63,7 +65,7 @@ const UserProfiles = () => {
     try {
       if (user) {
         const profilePictures = await getTag(
-          appId + '_profilepicture_' + userData.user_id
+          appId + '_profilepicture_' + targetUserData.user_id
         );
         const profilePicture = profilePictures.pop();
         profilePicture.filename = mediaUrl + profilePicture.filename;
@@ -82,7 +84,7 @@ const UserProfiles = () => {
     try {
       if (user) {
         const backgroundPictures = await getTag(
-          appId + '_backgroundpicture_' + userData.user_id
+          appId + '_backgroundpicture_' + targetUserData.user_id
         );
         const backgroundPicture = backgroundPictures.pop();
         backgroundPicture.filename = mediaUrl + backgroundPicture.filename;
@@ -101,7 +103,7 @@ const UserProfiles = () => {
     try {
       if (user) {
         const profilePictures = await getTag(
-          appId + '_profilepicture_' + userData.user_id
+          appId + '_profilepicture_' + targetUserData.user_id
         );
         const profileText = profilePictures.pop();
         setprofileDescription(profileText.description);
@@ -122,7 +124,7 @@ const UserProfiles = () => {
   const fetchAllRatings = async () => {
     try {
       const token = localStorage.getItem('token');
-      const mediaInfo = await getAllMediaById(userData.user_id, token);
+      const mediaInfo = await getAllMediaById(targetUserData.user_id, token);
       let sum = 0;
       let count = 0;
       for (const data of mediaInfo) {
@@ -206,12 +208,12 @@ const UserProfiles = () => {
             }}
           >
             <Typography component="p" variant="h1" sx={{mt: 1}}>
-              {userData.full_name
-                ? userData.full_name
+              {targetUserData.full_name
+                ? targetUserData.full_name
                 : 'Has not set a full name'}
             </Typography>
             <Typography component="p" variant="body4" sx={{mt: 1}}>
-              {'@' + userData.username}
+              {'@' + targetUserData.username}
             </Typography>
             <Rating
               name="read-only"

@@ -23,19 +23,23 @@ const useMedia = (
   const [mediaArray, setMediaArray] = useState([]);
   const {user, setUser, targetUser, setTargetUser} = useContext(MediaContext);
 
+  // checks for user and if null gets user information from localstorage
   const [userData, setData] = useState(() => {
     return user ?? JSON.parse(window.localStorage.getItem('user'));
   });
 
+  // when userData changes, saves userData to localstorage and updates userData
   useEffect(() => {
     window.localStorage.setItem('user', JSON.stringify(userData));
     setUser(userData);
   }, [setData]);
 
+  // checks for targetUser and if null gets targetUser information from localstorage
   const [targetUserData, setTargetUserData] = useState(() => {
     return targetUser ?? JSON.parse(window.localStorage.getItem('targetUser'));
   });
 
+  // when targetUserData changes, saves targetUserData to localstorage and updates targetUserData
   useEffect(() => {
     window.localStorage.setItem('targetUser', JSON.stringify(targetUserData));
     setTargetUser(targetUserData);

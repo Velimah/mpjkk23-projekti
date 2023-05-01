@@ -102,10 +102,12 @@ const MediaTable = ({
                 Discover cats
               </Typography>
             ) : null}
-            <FormControl sx={{width: {xs: '150px', sm: '200px'}}}>
+            <FormControl
+              sx={{width: {xs: '150px', sm: '200px', textAlign: 'center'}}}
+            >
               <InputLabel id="select-label">Sort</InputLabel>
               <Select
-                sx={{borderRadius: '3rem'}}
+                sx={{borderRadius: '1.8rem'}}
                 defaultValue={1}
                 onChange={handleChange}
                 labelId="select-label"

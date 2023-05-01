@@ -22,12 +22,13 @@ import MediaTable from '../components/MediaTable';
 const Profile = () => {
   const {user, setUser} = useContext(MediaContext);
   const {getTag} = useTag();
-  const navigate = useNavigate();
   const {getRatingsById, deleteRating, getAllRatings} = useRating();
   const {getAllMediaByCurrentUser, deleteMedia} = useMedia();
   const {deleteComment, getCommentsByUser} = useComment();
   const {deleteFavourite, getUsersFavouritesByToken} = useFavourite();
+  const navigate = useNavigate();
 
+  // useStates
   const [profilePic, setProfilePic] = useState({
     filename: profilePlaceholder,
   });
@@ -40,14 +41,20 @@ const Profile = () => {
   const [rating, setRating] = useState(0);
   const [ratingCount, setRatingCount] = useState(0);
 
+  // checks for user and if null gets user information from localstorage
   const [userData, setData] = useState(() => {
     return user ?? JSON.parse(window.localStorage.getItem('user'));
   });
 
+  // when UserData changes, saves UserData to localstorage and updates UserData
   useEffect(() => {
     window.localStorage.setItem('user', JSON.stringify(userData));
     setUser(userData);
   }, [setData]);
+
+  const sleep = (ms) => {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  };
 
   const fetchProfilePicture = async () => {
     try {
@@ -97,10 +104,6 @@ const Profile = () => {
         console.error(error.message);
       }
     }
-  };
-
-  const sleep = (ms) => {
-    return new Promise((resolve) => setTimeout(resolve, ms));
   };
 
   const fetchAllRatings = async () => {
