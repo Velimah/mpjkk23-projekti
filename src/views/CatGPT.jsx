@@ -106,7 +106,7 @@ const CatGPT = () => {
   useEffect(() => {
     setTimeout(() => {
       scrollPage();
-    }, 1000);
+    }, 50);
   }, [responseData]);
 
   const currentChat = previousChats.filter(
@@ -216,6 +216,7 @@ const CatGPT = () => {
                 height: {xs: '75vh', md: '70vh'},
                 width: '100%',
                 maxWidth: '1000px',
+                flexWrap: 'nowrap',
               }}
             >
               <List

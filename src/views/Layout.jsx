@@ -1,6 +1,6 @@
 import {Outlet, useNavigate, useLocation} from 'react-router-dom';
 import {useUser} from '../hooks/ApiHooks';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {MediaContext} from '../contexts/MediaContext';
 import {createTheme, CssBaseline, ThemeProvider} from '@mui/material';
 import {themeOptions} from '../theme/themeOptions';
