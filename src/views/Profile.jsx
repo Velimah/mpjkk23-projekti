@@ -2,7 +2,14 @@ import {Avatar, Box, Button, Rating, Typography} from '@mui/material';
 import {useContext} from 'react';
 import {MediaContext} from '../contexts/MediaContext';
 import {useState, useEffect} from 'react';
-import {useMedia, useRating, useTag} from '../hooks/ApiHooks';
+import {
+  useComment,
+  useFavourite,
+  useMedia,
+  useRating,
+  useTag,
+  useUser,
+} from '../hooks/ApiHooks';
 import {
   appId,
   filePlaceholder,
@@ -16,8 +23,10 @@ const Profile = () => {
   const {user, setUser} = useContext(MediaContext);
   const {getTag} = useTag();
   const navigate = useNavigate();
-  const {getRatingsById} = useRating();
-  const {getAllMediaByCurrentUser} = useMedia();
+  const {getRatingsById, deleteRating, getAllRatings} = useRating();
+  const {getAllMediaByCurrentUser, deleteMedia} = useMedia();
+  const {deleteComment, getCommentsByUser} = useComment();
+  const {deleteFavourite, getUsersFavouritesByToken} = useFavourite();
 
   const [profilePic, setProfilePic] = useState({
     filename: profilePlaceholder,
@@ -118,22 +127,66 @@ const Profile = () => {
     }
   };
 
+  const deleteAllInformation = async () => {
+    if (
+      confirm('Are you sure you want to delete all your Infurrmation?') === true
+    ) {
+      try {
+        const token = localStorage.getItem('token');
+
+        const likesInfo = await getUsersFavouritesByToken(token);
+        for (const file of likesInfo) {
+          await sleep(5);
+          const deleteLikesInfo = await deleteFavourite(file.file_id, token);
+          console.log('deleteLikesInfo', deleteLikesInfo);
+        }
+        const commentsInfo = await getCommentsByUser(token);
+        for (const file of commentsInfo) {
+          await sleep(5);
+          const deleteCommentsInfo = await deleteComment(
+            file.comment_id,
+            token
+          );
+          console.log('deleteCommentsInfo', deleteCommentsInfo);
+        }
+
+        const ratingsInfo = await getAllRatings(token);
+        for (const file of ratingsInfo) {
+          await sleep(5);
+          const deleteRatingsInfo = await deleteRating(file.file_id, token);
+          console.log('deleteRatingsInfo', deleteRatingsInfo);
+        }
+
+        const mediaInfo = await getAllMediaByCurrentUser(token);
+        for (const file of mediaInfo) {
+          await sleep(20);
+          const deleteFileInfo = await deleteMedia(file.file_id, token);
+          console.log('deleteMedia', deleteFileInfo);
+        }
+        navigate(0);
+      } catch (error) {
+        console.log(error.message);
+      }
+    }
+  };
+
   useEffect(() => {
     fetchProfilePicture();
     fetchBackgroundPicture();
     fetchProfileDescription();
     fetchAllRatings();
-    console.log('fetching data profile');
   }, [userData]);
 
   return (
     <>
-      <Box sx={{maxWidth: '1200px', margin: 'auto', pt: {xs: 8, sm: 1, md: 1}}}>
+      <Box sx={{maxWidth: '1200px', margin: 'auto', pt: {xs: 8, sm: 0}}}>
         <Avatar
           src={backgroundPic.filename}
           alt="Logo"
           sx={{
             borderRadius: 0,
+            borderBottomLeftRadius: {xs: 0, lg: '2rem'},
+            borderBottomRightRadius: {xs: 0, lg: '2rem'},
             boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px',
             maxWidth: '1200px',
             width: '100%',
@@ -219,6 +272,13 @@ const Profile = () => {
               onClick={() => navigate('/profile/update')}
             >
               Edit Profile
+            </Button>
+            <Button
+              variant="contained"
+              sx={{mt: 2, mr: {xs: 0, sm: 0, backgroundColor: 'red'}}}
+              onClick={deleteAllInformation}
+            >
+              Delete Data
             </Button>
             <Button
               variant="outlined"

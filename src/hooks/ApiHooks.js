@@ -255,7 +255,17 @@ const useUser = () => {
     return available;
   };
 
-  return {postUser, getUserByToken, getCheckUser, getUser, putUser};
+  const deleteUser = async (id, token) => {
+    const fetchOptions = {
+      method: 'DELETE',
+      headers: {
+        'x-access-token': token,
+      },
+    };
+    return await doFetch(baseUrl + '/users/' + id, fetchOptions);
+  };
+
+  return {postUser, getUserByToken, getCheckUser, getUser, putUser, deleteUser};
 };
 
 const useAuthentication = () => {
@@ -385,7 +395,17 @@ const useComment = () => {
     return await doFetch(baseUrl + 'comments/file/' + id);
   };
 
-  return {postComment, deleteComment, getCommentsById};
+  const getCommentsByUser = async (token) => {
+    const fetchOptions = {
+      method: 'GET',
+      headers: {
+        'x-access-token': token,
+      },
+    };
+    return await doFetch(baseUrl + 'comments/', fetchOptions);
+  };
+
+  return {postComment, deleteComment, getCommentsById, getCommentsByUser};
 };
 
 const useRating = () => {

@@ -372,7 +372,7 @@ const Single = () => {
                        saturate(${allData.filters.saturation}%)
                        sepia(${allData.filters.sepia}%)`,
               backgroundImage:
-                data.media_type === 'audio' && `url('/vite.svg')`,
+                data.media_type === 'audio' && `url('onlycats_logo.png')`,
             }}
           />
           <CardContent>

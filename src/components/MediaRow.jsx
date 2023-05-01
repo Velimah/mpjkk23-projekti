@@ -304,10 +304,9 @@ const MediaRow = ({file, style, mediaArray}) => {
           <img
             style={{
               width: '100%',
-
               aspectRatio: '1 / 1',
               objectFit: 'cover',
-              borderRadius: '5px',
+              borderRadius: smallScreen ? '0.4rem' : '0.7rem',
               filter: `brightness(${allData.filters.brightness}%)
                        contrast(${allData.filters.contrast}%)
                        saturate(${allData.filters.saturation}%)

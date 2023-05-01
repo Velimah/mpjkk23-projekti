@@ -20,7 +20,10 @@ const Login = () => {
         minHeight: {sm: 'calc(100vh - 4rem)'},
       }}
     >
-      <Container maxWidth="lg" sx={{display: 'flex', justifyContent: 'center'}}>
+      <Container
+        maxWidth="lg"
+        sx={{display: 'flex', justifyContent: 'center', px: 3}}
+      >
         <Grid
           item
           xs={5}

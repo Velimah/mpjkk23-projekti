@@ -61,12 +61,14 @@ const UserProfiles = () => {
 
   const fetchProfilePicture = async () => {
     try {
-      const profilePictures = await getTag(
-        appId + '_profilepicture_' + userData.user_id
-      );
-      const profilePicture = profilePictures.pop();
-      profilePicture.filename = mediaUrl + profilePicture.filename;
-      setProfilePic(profilePicture);
+      if (user) {
+        const profilePictures = await getTag(
+          appId + '_profilepicture_' + userData.user_id
+        );
+        const profilePicture = profilePictures.pop();
+        profilePicture.filename = mediaUrl + profilePicture.filename;
+        setProfilePic(profilePicture);
+      }
     } catch (error) {
       if (error.message === 'Tag not found') {
         console.log('No background picture');
@@ -78,12 +80,14 @@ const UserProfiles = () => {
 
   const fetchBackgroundPicture = async () => {
     try {
-      const backgroundPictures = await getTag(
-        appId + '_backgroundpicture_' + userData.user_id
-      );
-      const backgroundPicture = backgroundPictures.pop();
-      backgroundPicture.filename = mediaUrl + backgroundPicture.filename;
-      setBackgroundPic(backgroundPicture);
+      if (user) {
+        const backgroundPictures = await getTag(
+          appId + '_backgroundpicture_' + userData.user_id
+        );
+        const backgroundPicture = backgroundPictures.pop();
+        backgroundPicture.filename = mediaUrl + backgroundPicture.filename;
+        setBackgroundPic(backgroundPicture);
+      }
     } catch (error) {
       if (error.message === 'Tag not found') {
         console.log('No background picture');
@@ -149,12 +153,14 @@ const UserProfiles = () => {
 
   return (
     <>
-      <Box sx={{maxWidth: '1200px', margin: 'auto', pt: {xs: 8, sm: 1, md: 1}}}>
+      <Box sx={{maxWidth: '1200px', margin: 'auto', pt: {xs: 8, sm: 0}}}>
         <Avatar
           src={backgroundPic.filename}
           alt="Logo"
           sx={{
             borderRadius: 0,
+            borderBottomLeftRadius: {xs: 0, lg: '2rem'},
+            borderBottomRightRadius: {xs: 0, lg: '2rem'},
             boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px',
             maxWidth: '1200px',
             width: '100%',
