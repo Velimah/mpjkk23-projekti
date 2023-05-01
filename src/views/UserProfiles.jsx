@@ -49,9 +49,11 @@ const UserProfiles = () => {
 
   const fetchUserData = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const userInfo = await getUser(userData.user_id, token);
-      setUserData(userInfo);
+      if (user) {
+        const token = localStorage.getItem('token');
+        const userInfo = await getUser(userData.user_id, token);
+        setUserData(userInfo);
+      }
     } catch (error) {
       console.error(error.message);
     }

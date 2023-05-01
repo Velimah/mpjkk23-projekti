@@ -27,10 +27,9 @@ const Layout = () => {
         }
       } catch (error) {
         console.error(error.message);
-        navigate('/home');
+        navigate('/logout');
       }
     }
-    navigate('/home');
   };
 
   useEffect(() => {

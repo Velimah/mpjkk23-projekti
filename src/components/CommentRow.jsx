@@ -37,9 +37,11 @@ const CommentRow = ({file, fetchComments}) => {
 
   const fetchUserInfo = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const userInfo = await getUser(file.user_id, token);
-      setUserInfo(userInfo);
+      if (user) {
+        const token = localStorage.getItem('token');
+        const userInfo = await getUser(file.user_id, token);
+        setUserInfo(userInfo);
+      }
     } catch (error) {
       console.error(error.message);
     }

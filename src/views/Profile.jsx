@@ -55,7 +55,6 @@ const Profile = () => {
         console.error(error.message);
       }
     }
-    }
   };
 
   const fetchBackgroundPicture = async () => {
