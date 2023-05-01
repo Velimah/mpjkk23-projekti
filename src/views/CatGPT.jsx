@@ -131,7 +131,7 @@ const CatGPT = () => {
         </Typography>
         <Paper
           sx={{
-            p: {xs: 0, sm: '1rem', md: '3rem'},
+            p: {xs: 0, sm: '1rem', md: '1rem'},
             borderRadius: '1.5rem',
             bgcolor: {xs: 'transparent', sm: '#FFFFFF'},
             boxShadow: {
@@ -229,6 +229,8 @@ const CatGPT = () => {
                     display: 'none',
                   },
                   scrollbarWidth: 'none',
+                  borderTopRightRadius: '0.5rem',
+                  borderTopLeftRadius: '0.5rem',
                 }}
                 className="feed"
               >
@@ -241,7 +243,7 @@ const CatGPT = () => {
                         p: 2,
                         mt: 2,
                         alignItems: 'start',
-                        borderRadius: {xs: 0, sm: 2},
+                        borderRadius: {xs: 0, sm: '0.5rem'},
                         display: {xs: 'block'},
                       }}
                       key={index}

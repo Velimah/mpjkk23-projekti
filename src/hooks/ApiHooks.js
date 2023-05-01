@@ -79,13 +79,13 @@ const useMedia = (
         file.averageRating = 0;
       }
       setMediaArray(filesWithThumbnail);
-      getLikesRatingsComments(filesWithThumbnail);
+      addLikesRatingsCommentsToGetMedia(filesWithThumbnail);
     } catch (error) {
       console.error('getMedia', error.message);
     }
   };
 
-  const getLikesRatingsComments = async (filesWithThumbnail) => {
+  const addLikesRatingsCommentsToGetMedia = async (filesWithThumbnail) => {
     try {
       for (const file of filesWithThumbnail) {
         await sleep(5);
