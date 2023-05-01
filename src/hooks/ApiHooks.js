@@ -21,7 +21,16 @@ const useMedia = (
   myFavouritesOnly = false
 ) => {
   const [mediaArray, setMediaArray] = useState([]);
-  const {user, targetUser, setTargetUser} = useContext(MediaContext);
+  const {user, setUser, targetUser, setTargetUser} = useContext(MediaContext);
+
+  const [userData, setData] = useState(() => {
+    return user ?? JSON.parse(window.localStorage.getItem('user'));
+  });
+
+  useEffect(() => {
+    window.localStorage.setItem('user', JSON.stringify(userData));
+    setUser(userData);
+  }, [setData]);
 
   const [targetUserData, setTargetUserData] = useState(() => {
     return targetUser ?? JSON.parse(window.localStorage.getItem('targetUser'));
@@ -41,7 +50,7 @@ const useMedia = (
       let files = await useTag().getTag(appId);
 
       if (myFilesOnly) {
-        files = files.filter((file) => file.user_id === user.user_id);
+        files = files.filter((file) => file.user_id === userData.user_id);
       }
       if (targetUserFilesOnly) {
         files = files.filter((file) => file.user_id === targetUserData.user_id);

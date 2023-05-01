@@ -84,7 +84,7 @@ const MediaRow = ({file, style, mediaArray}) => {
       profilePicture.filename = mediaUrl + profilePicture.filename;
       setProfilePic(profilePicture);
     } catch (error) {
-      console.error(error.message);
+      console.error('No profile picture: ', error.message);
     }
   };
 
@@ -244,8 +244,8 @@ const MediaRow = ({file, style, mediaArray}) => {
           <Grid
             container
             direction="row"
-            alignItems="center"
             sx={{
+              alignItems: 'center',
               px: smallScreen ? 2 : 'auto',
               pt: 3,
               pb: 2,
@@ -384,8 +384,8 @@ const MediaRow = ({file, style, mediaArray}) => {
                     }}
                     variant="contained"
                   >
-                    {/* * MobileLikes check if user has liked * */}
-                    {likesBoolean ? (
+                    {/* * MobileLikes check if user has liked or is not logged * */}
+                    {likesBoolean || !user ? (
                       <FavoriteIcon
                         sx={{color: '#7047A6', mr: 1, fontSize: '1.6rem'}}
                       />
@@ -417,8 +417,8 @@ const MediaRow = ({file, style, mediaArray}) => {
                     onMouseOut={handleMouseOutLikes}
                     sx={{borderRadius: '20px'}}
                   >
-                    {/* * DesktopLikes check if user has liked * */}
-                    {likesBoolean ? (
+                    {/* * DesktopLikes check if user has liked or is not logged * */}
+                    {likesBoolean || !user ? (
                       <FavoriteIcon
                         sx={{color: '#7047A6', mr: 1, fontSize: '1.6rem'}}
                       />
@@ -456,7 +456,7 @@ const MediaRow = ({file, style, mediaArray}) => {
                             sx={{color: '#7047A6', mr: 0.5, fontSize: '1.8rem'}}
                           />
                           <Typography component="p" variant="body1">
-                            {rating?.toFixed(1)} ({ratingCount}{' '}
+                            {Number(rating?.toFixed(1))} ({ratingCount}{' '}
                             {ratingCount > 1 ? 'ratings' : 'rating'})
                           </Typography>
                         </>
@@ -506,8 +506,8 @@ const MediaRow = ({file, style, mediaArray}) => {
                               name="read-only"
                               size="large"
                               precision={0.2}
-                              defaultValue={rating?.toFixed(1)}
-                              value={rating?.toFixed(1)}
+                              defaultValue={Number(rating?.toFixed(1))}
+                              value={Number(rating?.toFixed(1))}
                               readOnly
                               icon={
                                 <Star
@@ -533,7 +533,9 @@ const MediaRow = ({file, style, mediaArray}) => {
                             >
                               {ratingHoverBoolean
                                 ? 'Remove rating'
-                                : `${rating?.toFixed(1)} (${ratingCount} ${
+                                : `${Number(
+                                    rating?.toFixed(1)
+                                  )} (${ratingCount} ${
                                     ratingCount === 1 ? 'rating' : 'ratings'
                                   })`}
                             </Typography>
@@ -547,7 +549,7 @@ const MediaRow = ({file, style, mediaArray}) => {
                             <Rating
                               name="simple-controlled"
                               size="large"
-                              value={rating?.toFixed(1)}
+                              value={Number(rating?.toFixed(1))}
                               precision={1}
                               onChange={(event, newValue) => {
                                 event.stopPropagation();
@@ -580,7 +582,9 @@ const MediaRow = ({file, style, mediaArray}) => {
                               >
                                 {ratingHoverBoolean
                                   ? 'Add a rating'
-                                  : `${rating?.toFixed(1)} (${ratingCount} ${
+                                  : `${Number(
+                                      rating?.toFixed(1)
+                                    )} (${ratingCount} ${
                                       ratingCount === 1 ? 'rating' : 'ratings'
                                     })`}
                               </Typography>
@@ -611,7 +615,7 @@ const MediaRow = ({file, style, mediaArray}) => {
                               }}
                             />
                             <Typography component="p" variant="body1">
-                              {rating?.toFixed(1)} ({ratingCount}{' '}
+                              {Number(rating?.toFixed(1))} ({ratingCount}{' '}
                               {ratingCount === 1 ? 'rating' : 'ratings'})
                             </Typography>
                           </>
@@ -626,7 +630,9 @@ const MediaRow = ({file, style, mediaArray}) => {
                             />
                             <Typography component="p" variant="body1">
                               {ratingCount
-                                ? `${rating?.toFixed(1)} (${ratingCount} ${
+                                ? `${Number(
+                                    rating?.toFixed(1)
+                                  )} (${ratingCount} ${
                                     ratingCount === 1 ? 'rating' : 'ratings'
                                   })`
                                 : 'No ratings'}

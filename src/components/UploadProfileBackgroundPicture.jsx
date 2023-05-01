@@ -27,7 +27,7 @@ const UploadProfileBackgroundPicture = () => {
         setSelectedImage(backGroundPicture.filename);
       }
     } catch (error) {
-      console.error(error.message);
+      console.error('No background picture: ', error.message);
     }
   };
 

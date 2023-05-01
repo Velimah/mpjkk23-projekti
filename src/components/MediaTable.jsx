@@ -77,7 +77,7 @@ const MediaTable = ({
           >
             {myFilesOnly || targetUserFilesOnly ? (
               <Typography
-                sx={{fontSize: {xs: '1.2rem', sm: '1..5rem'}}}
+                sx={{fontSize: {xs: '1.2rem', sm: '1.5rem'}}}
                 component="h2"
                 variant="h2"
               >
@@ -174,11 +174,7 @@ const MediaTable = ({
         >
           {/* * LIST STYLE * */}
           {style === false ? (
-            <ImageList
-              cols={1}
-              gap={0}
-              sx={{width: smallScreen ? '100%' : '500px'}}
-            >
+            <ImageList cols={1} gap={0} sx={{width: {sx: '100%', sm: '500px'}}}>
               {selectedOption === 'comments' &&
                 [...mediaArray]
                   .sort((a, b) => b.comments.length - a.comments.length)
@@ -246,7 +242,6 @@ const MediaTable = ({
               cols={smallScreen ? 3 : 4}
               container
               direction="row"
-              alignItems="stretch"
             >
               {selectedOption === 'comments' &&
                 [...mediaArray]

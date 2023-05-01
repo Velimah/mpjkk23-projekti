@@ -97,7 +97,12 @@ const Home = () => {
             {!user && (
               <Typography component="p" textAlign="center">
                 Already have an account?{' '}
-                <Button variant="text" component={Link} to="/">
+                <Button
+                  sx={{fontWeight: 600}}
+                  variant="text"
+                  component={Link}
+                  to="/"
+                >
                   Log in
                 </Button>
               </Typography>

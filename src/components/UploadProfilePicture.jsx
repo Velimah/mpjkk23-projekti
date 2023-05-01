@@ -35,7 +35,7 @@ const UploadProfilePicture = () => {
         setSelectedImage(profilePicture.filename);
       }
     } catch (error) {
-      console.error(error.message);
+      console.error('No profile picture: ', error.message);
     }
   };
 

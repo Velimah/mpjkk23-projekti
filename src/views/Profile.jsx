@@ -49,7 +49,7 @@ const Profile = () => {
       profilePicture.filename = mediaUrl + profilePicture.filename;
       setProfilePic(profilePicture);
     } catch (error) {
-      console.error(error.message);
+      console.error('No profile picture: ', error.message);
     }
   };
 
@@ -62,7 +62,7 @@ const Profile = () => {
       backgroundPicture.filename = mediaUrl + backgroundPicture.filename;
       setBackgroundPic(backgroundPicture);
     } catch (error) {
-      console.error(error.message);
+      console.error('No background picture: ', error.message);
     }
   };
 
@@ -74,7 +74,7 @@ const Profile = () => {
       const profileText = profilePictures.pop();
       setprofileDescription(profileText.description);
     } catch (error) {
-      console.error(error.message);
+      console.error('No profile description: ', error.message);
     }
   };
 
@@ -178,9 +178,9 @@ const Profile = () => {
               name="read-only"
               size="large"
               precision={0.5}
-              value={rating.toFixed(2)}
+              value={Number(rating.toFixed(2))}
               readOnly
-              sx={{mt: 1}}
+              sx={{mt: 1, color: '#7047A6', mr: 0.5, fontSize: '1.8rem'}}
             />
             <Typography component="legend">
               {rating.toFixed(2)} ({ratingCount} ratings)

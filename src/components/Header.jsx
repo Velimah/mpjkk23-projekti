@@ -40,7 +40,7 @@ const Header = () => {
         setProfilePic(profilePicture);
       }
     } catch (error) {
-      console.error(error.message);
+      console.error('No profile picture: ', error.message);
     }
   };
 
@@ -79,7 +79,6 @@ const Header = () => {
             />
             <Box
               variant="h1"
-              noWrap
               onClick={() => {
                 if (location.pathname === '/home') {
                   window.scrollTo({

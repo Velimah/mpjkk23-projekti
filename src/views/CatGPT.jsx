@@ -94,11 +94,13 @@ const CatGPT = () => {
   }, [message, currentTitle]);
 
   const scrollPage = () => {
-    const element = document.querySelector('.scroller');
-    element.scrollIntoView({
-      behavior: 'smooth',
-      block: 'end',
-    });
+    if (document.querySelector('.scroller')) {
+      const element = document.querySelector('.scroller');
+      element.scrollIntoView({
+        behavior: 'smooth',
+        block: 'end',
+      });
+    }
   };
 
   useEffect(() => {
@@ -141,9 +143,9 @@ const CatGPT = () => {
           <Grid
             container
             direction="row"
-            flexWrap="nowrap"
             sx={{
               width: '100%',
+              flexWrap: 'nowrap',
             }}
           >
             <Grid
@@ -210,7 +212,6 @@ const CatGPT = () => {
               justifyContent="space-between"
               alignItems="center"
               textAlign="center"
-              flexWrap="nowrap"
               sx={{
                 height: {xs: '75vh', md: '70vh'},
                 width: '100%',

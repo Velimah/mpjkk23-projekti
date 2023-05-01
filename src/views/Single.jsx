@@ -131,7 +131,7 @@ const Single = () => {
       profilePicture.filename = mediaUrl + profilePicture.filename;
       setProfilePic(profilePicture);
     } catch (error) {
-      console.error(error.message);
+      console.error('No profile picture: ', error.message);
     }
   };
 
