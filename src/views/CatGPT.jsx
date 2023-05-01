@@ -240,7 +240,8 @@ const CatGPT = () => {
                       sx={{
                         backgroundColor:
                           chat.role === 'assistant' ? '#F4DCE1' : '#F4DCE1',
-                        p: 2,
+                        px: 3,
+                        py: 2,
                         mt: 2,
                         alignItems: 'start',
                         borderRadius: {xs: 0, sm: '0.5rem'},
@@ -254,7 +255,7 @@ const CatGPT = () => {
                         sx={{
                           height: '100%',
                           textAlign: 'left',
-                          fontSize: {xs: '0.9rem', sm: '1.1rem'},
+                          fontSize: {xs: '1rem', sm: '1.1rem'},
                         }}
                       >
                         {chat.role === 'assistant'
@@ -267,7 +268,7 @@ const CatGPT = () => {
                         sx={{
                           textAlign: 'left',
                           margin: '0 10px',
-                          fontSize: {xs: '0.8rem', sm: '1rem'},
+                          fontSize: {xs: '0.9rem', sm: '1rem'},
                         }}
                       >
                         {chat.content}
