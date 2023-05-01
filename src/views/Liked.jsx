@@ -1,21 +1,8 @@
 import React from 'react';
-import {useContext, useState, useEffect} from 'react';
-import {MediaContext} from '../contexts/MediaContext';
 import MediaTable from '../components/MediaTable';
 import {Container} from '@mui/system';
 
 const Liked = () => {
-  const {user, setUser} = useContext(MediaContext);
-
-  const [userData, setData] = useState(() => {
-    return user ?? JSON.parse(window.localStorage.getItem('user'));
-  });
-
-  useEffect(() => {
-    window.localStorage.setItem('user', JSON.stringify(userData));
-    setUser(userData);
-  }, [setData]);
-
   return (
     <>
       <Container

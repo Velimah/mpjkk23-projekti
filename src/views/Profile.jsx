@@ -13,20 +13,11 @@ import {useNavigate} from 'react-router-dom';
 import MediaTable from '../components/MediaTable';
 
 const Profile = () => {
-  const {user, setUser} = useContext(MediaContext);
+  const {user} = useContext(MediaContext);
   const {getTag} = useTag();
   const navigate = useNavigate();
   const {getRatingsById} = useRating();
   const {getAllMediaByCurrentUser} = useMedia();
-
-  const [userData, setData] = useState(() => {
-    return user ?? JSON.parse(window.localStorage.getItem('user'));
-  });
-
-  useEffect(() => {
-    window.localStorage.setItem('user', JSON.stringify(userData));
-    setUser(userData);
-  }, [setData]);
 
   const [profilePic, setProfilePic] = useState({
     filename: profilePlaceholder,
@@ -43,7 +34,7 @@ const Profile = () => {
   const fetchProfilePicture = async () => {
     try {
       const profilePictures = await getTag(
-        appId + '_profilepicture_' + userData.user_id
+        appId + '_profilepicture_' + user.user_id
       );
       const profilePicture = profilePictures.pop();
       profilePicture.filename = mediaUrl + profilePicture.filename;
@@ -56,7 +47,7 @@ const Profile = () => {
   const fetchBackgroundPicture = async () => {
     try {
       const backgroundPictures = await getTag(
-        appId + '_backgroundpicture_' + userData.user_id
+        appId + '_backgroundpicture_' + user.user_id
       );
       const backgroundPicture = backgroundPictures.pop();
       backgroundPicture.filename = mediaUrl + backgroundPicture.filename;
@@ -69,7 +60,7 @@ const Profile = () => {
   const fetchProfileDescription = async () => {
     try {
       const profilePictures = await getTag(
-        appId + '_profilepicture_' + userData.user_id
+        appId + '_profilepicture_' + user.user_id
       );
       const profileText = profilePictures.pop();
       setprofileDescription(profileText.description);
@@ -166,12 +157,10 @@ const Profile = () => {
             }}
           >
             <Typography component="p" variant="h1" sx={{mt: 1}}>
-              {userData.full_name
-                ? userData.full_name
-                : 'Has not set a full name'}
+              {user.full_name ? user.full_name : 'Has not set a full name'}
             </Typography>
             <Typography component="p" variant="body4" sx={{mt: 1}}>
-              {'@' + userData.username}
+              {'@' + user.username}
             </Typography>
             <Rating
               name="read-only"

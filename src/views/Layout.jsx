@@ -1,6 +1,6 @@
 import {Outlet, useNavigate, useLocation} from 'react-router-dom';
 import {useUser} from '../hooks/ApiHooks';
-import React, {useContext, useEffect} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {MediaContext} from '../contexts/MediaContext';
 import {createTheme, CssBaseline, ThemeProvider} from '@mui/material';
 import {themeOptions} from '../theme/themeOptions';
@@ -8,10 +8,19 @@ import MobileNavigation from '../components/MobileNavigation';
 import Header from '../components/Header';
 
 const Layout = () => {
-  const {setUser} = useContext(MediaContext);
+  const {setUser, user} = useContext(MediaContext);
   const {getUserByToken} = useUser();
   const navigate = useNavigate();
   const location = useLocation();
+
+  const [userData, setData] = useState(() => {
+    return user ?? JSON.parse(window.localStorage.getItem('user'));
+  });
+
+  useEffect(() => {
+    window.localStorage.setItem('user', JSON.stringify(userData));
+    setUser(userData);
+  }, [setData]);
 
   const getUserInfo = async () => {
     const userToken = localStorage.getItem('token');

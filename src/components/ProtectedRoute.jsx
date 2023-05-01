@@ -41,9 +41,8 @@ const ProtectedRoute = ({children}) => {
     if (isAuthenticated) {
       return children;
     } else {
-      console.log('Unauthorized! Permission denied!');
-      localStorage.clear();
-      return <Navigate to="/" replace />;
+      console.log('Unauthorized! Purrission denied!');
+      return <Navigate to="/logout" replace />;
     }
   }
 };

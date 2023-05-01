@@ -1,17 +1,8 @@
-import {
-  Grid,
-  Button,
-  Typography,
-  Container,
-  InputLabel,
-  Select,
-  FormControl,
-  MenuItem,
-} from '@mui/material';
+import {Grid, Button, Typography} from '@mui/material';
 import {Box} from '@mui/system';
 import MediaTable from '../components/MediaTable';
 import {Link} from 'react-router-dom';
-import {useContext, useState} from 'react';
+import {useContext} from 'react';
 import {MediaContext} from '../contexts/MediaContext';
 
 const Home = () => {
