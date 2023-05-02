@@ -8,7 +8,6 @@ import {
   Container,
   useMediaQuery,
   Chip,
-  Tooltip,
 } from '@mui/material';
 import {Link, useLocation, useNavigate} from 'react-router-dom';
 import {mediaUrl, appId} from '../utils/variables';
@@ -340,70 +339,64 @@ const Single = () => {
         <Grid
           container
           direction="row"
-          justifyContent="space-between"
           alignItems="center"
+          justifyContent="center"
         >
-          <Grid container direction="column" xs={5} alignItems="center">
-            <Tooltip title={refreshLikes ? 'Remove like' : 'Add like'}>
-              <IconButton
-                aria-label="favoriteIcon"
-                onClick={refreshLikes ? deleteLike : doLike}
-                onMouseOver={handleMouseOverLikes}
-                onMouseOut={handleMouseOutLikes}
-                variant="contained"
-                sx={{m: 'auto'}}
-              >
-                {refreshLikes ? (
-                  <FavoriteRounded sx={{color: '#7047A6', fontSize: '2rem'}} />
-                ) : (
-                  <FavoriteBorderRounded
-                    sx={{color: '#7047A6', fontSize: '2rem'}}
-                  />
-                )}
-              </IconButton>
-            </Tooltip>
+          <Grid item xs={5} align="center">
+            <IconButton
+              aria-label="favoriteIcon"
+              onClick={refreshLikes ? deleteLike : doLike}
+              onMouseOver={handleMouseOverLikes}
+              onMouseOut={handleMouseOutLikes}
+              variant="contained"
+              sx={{m: 'auto'}}
+            >
+              {refreshLikes ? (
+                <FavoriteRounded sx={{color: '#7047A6', fontSize: '2rem'}} />
+              ) : (
+                <FavoriteBorderRounded
+                  sx={{color: '#7047A6', fontSize: '2rem'}}
+                />
+              )}
+            </IconButton>
             <Typography component="p" variant="caption">
               {refreshLikes
                 ? showTextLikes
                   ? 'Unlike'
                   : ''
                 : showTextLikes
-                ? 'Add a like'
+                ? 'Add like'
                 : ''}
               {!showTextLikes
                 ? `${likes} ${likes === 1 ? 'like' : 'likes'}`
                 : null}
             </Typography>
           </Grid>
-          <Grid container direction="column" xs={7} alignItems="center">
+          <Grid item xs={7} align="center">
             {refreshRating ? (
               <>
-                <Tooltip title="Remove rating">
-                  <IconButton
-                    onClick={doDeleteRating}
-                    onMouseOver={handleMouseOverRating}
-                    onMouseOut={handleMouseOutRating}
-                  >
-                    <Rating
-                      name="read-only"
-                      size="large"
-                      precision={0.2}
-                      defaultValue={parseInt(rating.toFixed(1))}
-                      value={parseInt(rating.toFixed(1))}
-                      readOnly
-                      icon={
-                        <StarRounded
-                          sx={{color: '#7047A6', fontSize: '2rem'}}
-                        />
-                      }
-                      emptyIcon={
-                        <StarBorderRounded
-                          sx={{color: '#7047A6', fontSize: '2rem'}}
-                        />
-                      }
-                    />
-                  </IconButton>
-                </Tooltip>
+                <IconButton
+                  onClick={doDeleteRating}
+                  onMouseOver={handleMouseOverRating}
+                  onMouseOut={handleMouseOutRating}
+                >
+                  <Rating
+                    name="read-only"
+                    size="large"
+                    precision={0.2}
+                    defaultValue={parseInt(rating.toFixed(1))}
+                    value={parseInt(rating.toFixed(1))}
+                    readOnly
+                    icon={
+                      <StarRounded sx={{color: '#7047A6', fontSize: '2rem'}} />
+                    }
+                    emptyIcon={
+                      <StarBorderRounded
+                        sx={{color: '#7047A6', fontSize: '2rem'}}
+                      />
+                    }
+                  />
+                </IconButton>
                 <Typography sx={{ml: 1}} component="p" variant="caption">
                   {showTextRating
                     ? 'Remove rating'
@@ -414,34 +407,30 @@ const Single = () => {
               </>
             ) : (
               <>
-                <Tooltip title="Add rating">
-                  <IconButton
-                    onClick={() => deleteRating}
-                    onMouseOver={handleMouseOverRating}
-                    onMouseOut={handleMouseOutRating}
-                  >
-                    <Rating
-                      defaultValue={parseInt(rating.toFixed(1))}
-                      name="simple-controlled"
-                      size="large"
-                      value={parseInt(rating.toFixed(1))}
-                      precision={1}
-                      onChange={(event, newValue) => {
-                        doRating(newValue);
-                      }}
-                      icon={
-                        <StarRounded
-                          sx={{color: '#7047A6', fontSize: '2rem'}}
-                        />
-                      }
-                      emptyIcon={
-                        <StarBorderRounded
-                          sx={{color: '#7047A6', fontSize: '2rem'}}
-                        />
-                      }
-                    />
-                  </IconButton>
-                </Tooltip>
+                <IconButton
+                  onClick={() => deleteRating}
+                  onMouseOver={handleMouseOverRating}
+                  onMouseOut={handleMouseOutRating}
+                >
+                  <Rating
+                    defaultValue={parseInt(rating.toFixed(1))}
+                    name="simple-controlled"
+                    size="large"
+                    value={parseInt(rating.toFixed(1))}
+                    precision={1}
+                    onChange={(event, newValue) => {
+                      doRating(newValue);
+                    }}
+                    icon={
+                      <StarRounded sx={{color: '#7047A6', fontSize: '2rem'}} />
+                    }
+                    emptyIcon={
+                      <StarBorderRounded
+                        sx={{color: '#7047A6', fontSize: '2rem'}}
+                      />
+                    }
+                  />
+                </IconButton>
                 {ratingCount ? (
                   <Typography sx={{ml: 1}} component="p" variant="caption">
                     {rating.toFixed(1)} ({ratingCount}
