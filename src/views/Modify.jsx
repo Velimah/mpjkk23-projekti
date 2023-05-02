@@ -23,7 +23,7 @@ const Modify = () => {
   const navigate = useNavigate();
   const {state} = useLocation();
   if (state === null) navigate('/home');
-  const file = state.data;
+  const file = state.file;
   const [tags, setTags] = useState([]);
   const [dialogOpen, setDialogOpen] = useState(false);
   const {putMedia} = useMedia();
@@ -297,20 +297,22 @@ const Modify = () => {
                     />
                   )}
                 /> */}
-                <Box sx={tags.length > 0 ? {mb: 4} : {mb: 0}}>
-                  <Typography component="p" variant="subtitle2">
-                    Added tags:
-                  </Typography>
-                  {tags.map((tag) => (
-                    <Chip
-                      variant="outlined"
-                      color="primary"
-                      key={tag}
-                      label={tag}
-                      sx={{mr: 1, mt: 1}}
-                    />
-                  ))}
-                </Box>
+                {tags.length > 0 && (
+                  <Box sx={{mb: 4}}>
+                    <Typography component="p" variant="subtitle2">
+                      Added keywords:
+                    </Typography>
+                    {tags.map((tag) => (
+                      <Chip
+                        variant="outlined"
+                        color="primary"
+                        key={tag}
+                        label={tag}
+                        sx={{mr: 1, mt: 1}}
+                      />
+                    ))}
+                  </Box>
+                )}
                 <Button
                   variant="contained"
                   fullWidth

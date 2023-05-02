@@ -1,28 +1,17 @@
 import {
-  Card,
-  CardMedia,
   Typography,
   Box,
   Grid,
   Button,
-  CardContent,
   Rating,
-  Avatar,
   IconButton,
-  ButtonGroup,
+  Container,
   useMediaQuery,
+  Chip,
 } from '@mui/material';
-import {Link, useLocation} from 'react-router-dom';
-import {mediaUrl, appId, profilePlaceholder} from '../utils/variables';
-import {useNavigate} from 'react-router-dom';
-import {
-  useFavourite,
-  useUser,
-  useComment,
-  useMedia,
-  useRating,
-  useTag,
-} from '../hooks/ApiHooks';
+import {Link, useLocation, useNavigate} from 'react-router-dom';
+import {mediaUrl, appId} from '../utils/variables';
+import {useFavourite, useComment, useRating, useTag} from '../hooks/ApiHooks';
 import {useContext, useEffect, useState} from 'react';
 import {MediaContext} from '../contexts/MediaContext';
 import CommentRow from '../components/CommentRow';
@@ -30,44 +19,42 @@ import {TextValidator, ValidatorForm} from 'react-material-ui-form-validator';
 import useForm from '../hooks/FormHooks';
 import {commentErrorMessages} from '../utils/errorMessages';
 import {commentValidators} from '../utils/validator';
-import {formatTime, formatSize} from '../utils/UnitConversions';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import {Star, StarBorderOutlined} from '@mui/icons-material';
-import {styled} from '@mui/material/styles';
-import {useTheme} from '@emotion/react';
+import {
+  ChevronLeftRounded,
+  FavoriteBorderRounded,
+  FavoriteRounded,
+  SendRounded,
+  StarBorderRounded,
+  StarRounded,
+} from '@mui/icons-material';
+import UserHeader from '../components/UserHeader';
 
 const Single = () => {
-  const {user, setTargetUser} = useContext(MediaContext);
+  const {user} = useContext(MediaContext);
 
-  const [owner, setOwner] = useState({username: ''});
   const [likes, setLikes] = useState(0);
   const [rating, setRating] = useState(0);
   const [commentCount, setCommentCount] = useState(0);
   const [ratingCount, setRatingCount] = useState(0);
   const [commentArray, setCommentArray] = useState([]);
   const [tagArray, setTagArray] = useState([]);
-  const [mediaInfo, setMediaInfo] = useState({});
+  const [showComments, setShowComments] = useState(3);
 
   const [refreshLikes, setRefreshLikes] = useState(false);
   const [refreshComments, setRefreshComments] = useState(false);
   const [refreshRating, setRefreshRating] = useState(false);
 
-  const [profilePic, setProfilePic] = useState({
-    filename: profilePlaceholder,
-  });
+  const extraSmallScreen = useMediaQuery((theme) =>
+    theme.breakpoints.down('sm')
+  );
 
-  const theme = useTheme();
-  const mediumScreen = useMediaQuery(theme.breakpoints.down('md'));
+  const navigate = useNavigate();
 
-  const {getMediaById, deleteMedia} = useMedia();
-  const {getUser} = useUser();
   const {getFavourites, postFavourite, deleteFavourite} = useFavourite();
   const {postComment, getCommentsById} = useComment();
   const {postRating, deleteRating, getRatingsById} = useRating();
-  const {getTag, getTagsByFileId} = useTag();
+  const {getTagsByFileId} = useTag();
 
-  const navigate = useNavigate();
   const {state} = useLocation();
 
   // checks for targetUser and if null gets targetUser information from localstorage
@@ -116,48 +103,12 @@ const Single = () => {
       break;
   }
 
-  const fetchUser = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      const ownerInfo = await getUser(data.user_id, token);
-      setOwner(ownerInfo);
-    } catch (error) {
-      console.error(error.message);
-    }
-  };
-
-  const fetchProfilePicture = async () => {
-    try {
-      const profilePictures = await getTag(
-        appId + '_profilepicture_' + data.user_id
-      );
-      const profilePicture = profilePictures.pop();
-      profilePicture.filename = mediaUrl + profilePicture.filename;
-      setProfilePic(profilePicture);
-    } catch (error) {
-      if (error.message === 'Tag not found') {
-        return;
-      } else {
-        console.error(error.message);
-      }
-    }
-  };
-
-  const fetchMediaInfo = async () => {
-    try {
-      const mediaInfo = await getMediaById(data.file_id);
-      setMediaInfo(mediaInfo);
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
-
   const fetchLikes = async () => {
     try {
       const likeInfo = await getFavourites(data.file_id);
       setLikes(likeInfo.length);
       likeInfo.forEach((like) => {
-        if (like.user_id === userData.user_id) {
+        if (user && like.user_id === user.user_id) {
           setRefreshLikes(true);
         }
       });
@@ -186,9 +137,6 @@ const Single = () => {
   };
 
   useEffect(() => {
-    fetchUser();
-    fetchProfilePicture();
-    fetchMediaInfo();
     fetchLikes();
     fetchComments();
     fetchRatings();
@@ -198,9 +146,13 @@ const Single = () => {
   const doLike = async () => {
     try {
       const token = localStorage.getItem('token');
-      const fileId = {file_id: data.file_id};
-      await postFavourite(fileId, token);
-      setRefreshLikes(true);
+      if (token) {
+        const fileId = {file_id: data.file_id};
+        await postFavourite(fileId, token);
+        setRefreshLikes(true);
+      } else {
+        alert('You need to login to add like.');
+      }
     } catch (error) {
       console.log(error.message);
     }
@@ -213,8 +165,10 @@ const Single = () => {
   const deleteLike = async () => {
     try {
       const token = localStorage.getItem('token');
-      await deleteFavourite(data.file_id, token);
-      setRefreshLikes(false);
+      if (token) {
+        await deleteFavourite(data.file_id, token);
+        setRefreshLikes(false);
+      }
     } catch (error) {
       console.log(error.message);
     }
@@ -223,10 +177,12 @@ const Single = () => {
   const doComment = async () => {
     try {
       const token = localStorage.getItem('token');
-      const data2 = {file_id: data.file_id, comment: inputs.comment};
-      const commentInfo = await postComment(data2, token);
-      alert(commentInfo.message);
-      setRefreshComments(!refreshComments);
+      if (token) {
+        const data2 = {file_id: data.file_id, comment: inputs.comment};
+        const commentInfo = await postComment(data2, token);
+        alert(commentInfo.message);
+        setRefreshComments(!refreshComments);
+      }
     } catch (error) {
       console.log(error.message);
     }
@@ -248,10 +204,14 @@ const Single = () => {
   const doRating = async (value) => {
     try {
       const token = localStorage.getItem('token');
-      const data2 = {file_id: data.file_id, rating: value};
-      const ratingInfo = await postRating(data2, token);
-      console.log(ratingInfo);
-      setRefreshRating(!refreshRating);
+      if (token) {
+        const data2 = {file_id: data.file_id, rating: value};
+        const ratingInfo = await postRating(data2, token);
+        console.log(ratingInfo);
+        setRefreshRating(!refreshRating);
+      } else {
+        alert('You need to login to add rating.');
+      }
     } catch (error) {
       console.log(error.message);
     }
@@ -260,25 +220,13 @@ const Single = () => {
   const doDeleteRating = async () => {
     try {
       const token = localStorage.getItem('token');
-      const ratingInfo = await deleteRating(data.file_id, token);
-      console.log(ratingInfo);
-      setRefreshRating(!refreshRating);
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
-
-  const doFileDelete = async () => {
-    try {
-      const sure = confirm('Are you sure you want to delete this file?');
-      if (sure) {
-        const token = localStorage.getItem('token');
-        const deleteResult = await deleteMedia(data.file_id, token);
-        console.log(deleteResult);
-        navigate(-1);
+      if (token) {
+        const ratingInfo = await deleteRating(data.file_id, token);
+        console.log(ratingInfo);
+        setRefreshRating(!refreshRating);
       }
     } catch (error) {
-      console.log(error);
+      console.log(error.message);
     }
   };
 
@@ -290,7 +238,7 @@ const Single = () => {
 
       ratingInfo.forEach((file) => {
         sum += file.rating;
-        if (file.user_id === userData.user_id) {
+        if (user && file.user_id === user.user_id) {
           setRefreshRating(true);
         }
       });
@@ -323,311 +271,271 @@ const Single = () => {
 
   return (
     <>
-      <Box sx={{maxWidth: 'md', margin: 'auto', my: 6}}>
-        <Card>
-          <Avatar
-            src={profilePic.filename}
-            sx={{width: 200, height: 200, borderRadius: '100%'}}
-          />
-          <Typography component="h2" variant="h2" sx={{p: 2}}>
-            Username: {owner.username}
-          </Typography>
-          <Button
-            sx={{p: 1, m: 1}}
-            component={Link}
-            variant="contained"
-            to={
-              userData?.user_id === data.user_id ? '/profile' : '/userprofiles'
-            }
-            state={{data}}
-            onClick={() => {
-              setTargetUser(data);
-            }}
-          >
-            View profile
-          </Button>
-          <Typography component="h1" variant="h2" sx={{p: 2}}>
-            Title: {data.title}
-          </Typography>
-          {userData?.user_id === owner.user_id && (
-            <ButtonGroup>
-              <Button variant="contained" onClick={doFileDelete}>
-                Delete
-              </Button>
+      <Container maxWidth="sm" sx={{mt: {xs: 8, sm: 3}, px: {xs: 4, sm: 0}}}>
+        {user ? (
+          <>
+            <Button
+              startIcon={<ChevronLeftRounded />}
+              size="small"
+              component={Link}
+              onClick={() => navigate(-1)}
+              sx={{mb: 2}}
+            >
+              Go back
+            </Button>
+            <UserHeader file={data} postSettings={true} />
+          </>
+        ) : (
+          <Grid container alignItems="center" sx={{my: 1}}>
+            <Grid item xs={8}>
               <Button
+                startIcon={<ChevronLeftRounded />}
+                size="small"
                 component={Link}
-                variant="contained"
-                to="/modify"
-                state={{data}}
+                onClick={() => navigate(-1)}
               >
-                Modify
+                Go back
               </Button>
-            </ButtonGroup>
-          )}
-          <CardMedia
-            controls={true}
-            poster={mediaUrl + data.screenshot}
-            component={componentType}
+            </Grid>
+            <Grid item xs={true}>
+              <UserHeader file={data} postSettings={true} />
+            </Grid>
+          </Grid>
+        )}
+      </Container>
+      <Container maxWidth="sm" sx={{p: {xs: 0}}}>
+        {componentType === 'img' && (
+          <img
             src={mediaUrl + data.filename}
-            title={data.title}
-            sx={{
+            style={{
+              width: '100%',
+              height: '100%',
+              borderRadius: extraSmallScreen ? 0 : '1.25rem',
+              aspectRatio: '1 / 1',
+              objectFit: 'cover',
               filter: `brightness(${allData.filters.brightness}%)
-                       contrast(${allData.filters.contrast}%)
-                       saturate(${allData.filters.saturation}%)
-                       sepia(${allData.filters.sepia}%)`,
-              backgroundImage:
-                data.media_type === 'audio' && `url('onlycats_logo.png')`,
+        contrast(${allData.filters.contrast}%)
+        saturate(${allData.filters.saturation}%)
+        sepia(${allData.filters.sepia}%)`,
             }}
           />
-          <CardContent>
-            <Typography component="h2" variant="h6" sx={{p: 2}}>
-              Description: {allData.desc}
-            </Typography>
-            <Typography component="h2" variant="h6" sx={{p: 2}}>
-              Time added: {formatTime(mediaInfo.time_added)}
-            </Typography>
-            <Typography component="h2" variant="h6" sx={{p: 2}}>
-              Filesize: {formatSize(mediaInfo.filesize)} Mediatype:
-              {mediaInfo.media_type} Mimetype: {mediaInfo.mime_type}
-            </Typography>
-            <Typography component="h2" variant="h6" sx={{p: 2}}>
-              Tags:{' '}
-              {tagArray.length > 0 &&
-                tagArray.map((tag) => {
-                  if (tag.tag !== appId) {
-                    return tag.tag.replace(appId + '_', '') + ' ';
-                  }
-                })}
-            </Typography>
-
-            <Grid container>
-              {mediumScreen ? (
-                <Grid item>
-                  <IconButton
-                    aria-label="favoriteIcon"
-                    onClick={refreshLikes ? deleteLike : doLike}
-                    variant="contained"
-                  >
-                    {refreshLikes ? (
-                      <FavoriteIcon
-                        sx={{color: '#7047A6', mr: 1, fontSize: '1.6rem'}}
-                      />
-                    ) : (
-                      <FavoriteBorderIcon
-                        sx={{color: '#7047A6', mr: 1, fontSize: '1.6rem'}}
-                      />
-                    )}
-                    <Typography component="p" variant="body1">
-                      {refreshLikes ? 'Unlike' : 'Add a like'} ({likes}{' '}
-                      {likes > 1 ? 'likes' : 'like'})
-                    </Typography>
-                  </IconButton>
-                </Grid>
-              ) : (
-                <Grid item>
-                  <IconButton
-                    aria-label="favoriteIcon"
-                    onClick={refreshLikes ? deleteLike : doLike}
-                    variant="contained"
-                    onMouseOver={handleMouseOverLikes}
-                    onMouseOut={handleMouseOutLikes}
-                  >
-                    {refreshLikes ? (
-                      <FavoriteIcon
-                        sx={{color: '#7047A6', mr: 1, fontSize: '1.6rem'}}
-                      />
-                    ) : (
-                      <FavoriteBorderIcon
-                        sx={{color: '#7047A6', mr: 1, fontSize: '1.6rem'}}
-                      />
-                    )}
-                    <Typography component="p" variant="body1">
-                      {refreshLikes
-                        ? showTextLikes
-                          ? 'Unlike'
-                          : ''
-                        : showTextLikes
-                        ? 'Add a like'
-                        : ''}
-                      {!showTextLikes
-                        ? `${likes} ${likes === 1 ? 'like' : 'likes'}`
-                        : null}
-                    </Typography>
-                  </IconButton>
-                </Grid>
-              )}
-              {mediumScreen ? (
-                <Grid item>
-                  {refreshRating ? (
-                    <IconButton onClick={doDeleteRating}>
-                      <Rating
-                        name="read-only"
-                        size="large"
-                        precision={0.2}
-                        defaultValue={rating.toFixed(1)}
-                        value={rating.toFixed(1)}
-                        readOnly
-                        icon={
-                          <Star sx={{color: '#7047A6', fontSize: '1.8rem'}} />
-                        }
-                        emptyIcon={
-                          <StarBorderOutlined
-                            sx={{color: '#7047A6', fontSize: '1.8rem'}}
-                          />
-                        }
-                      />
-                      <Typography sx={{ml: 1}} component="p" variant="body1">
-                        {rating.toFixed(1)} ({ratingCount}{' '}
-                        {ratingCount > 1 ? 'ratings' : 'rating'})
-                      </Typography>
-                    </IconButton>
-                  ) : (
-                    <IconButton>
-                      <Rating
-                        defaultValue={rating.toFixed(1)}
-                        name="simple-controlled"
-                        size="large"
-                        value={rating.toFixed(1)}
-                        precision={1}
-                        onChange={(event, newValue) => {
-                          doRating(newValue);
-                        }}
-                        onClick={() => deleteRating}
-                        icon={
-                          <Star sx={{color: '#7047A6', fontSize: '1.8rem'}} />
-                        }
-                        emptyIcon={
-                          <StarBorderOutlined
-                            sx={{color: '#7047A6', fontSize: '1.8rem'}}
-                          />
-                        }
-                      />
-                      {ratingCount ? (
-                        <Typography sx={{ml: 1}} component="p" variant="body1">
-                          {rating.toFixed(1)} ({ratingCount}{' '}
-                          {ratingCount > 1 ? 'ratings' : 'rating'})
-                        </Typography>
-                      ) : (
-                        <Typography sx={{ml: 1}} component="p" variant="body1">
-                          No ratings yet
-                        </Typography>
-                      )}
-                    </IconButton>
-                  )}
-                </Grid>
-              ) : (
-                <Grid item>
-                  {refreshRating ? (
-                    <IconButton
-                      onClick={doDeleteRating}
-                      onMouseOver={handleMouseOverRating}
-                      onMouseOut={handleMouseOutRating}
-                    >
-                      <Rating
-                        name="read-only"
-                        size="large"
-                        precision={0.2}
-                        defaultValue={rating.toFixed(1)}
-                        value={rating.toFixed(1)}
-                        readOnly
-                        icon={
-                          <Star sx={{color: '#7047A6', fontSize: '1.8rem'}} />
-                        }
-                        emptyIcon={
-                          <StarBorderOutlined
-                            sx={{color: '#7047A6', fontSize: '1.8rem'}}
-                          />
-                        }
-                      />
-                      <Typography sx={{ml: 1}} component="p" variant="body1">
-                        {showTextRating
-                          ? 'Remove rating'
-                          : `${rating.toFixed(1)} (${ratingCount} ${
-                              ratingCount === 1 ? 'rating' : 'ratings'
-                            })`}
-                      </Typography>
-                    </IconButton>
-                  ) : (
-                    <IconButton
-                      onMouseOver={handleMouseOverRating}
-                      onMouseOut={handleMouseOutRating}
-                    >
-                      <Rating
-                        defaultValue={rating.toFixed(1)}
-                        name="simple-controlled"
-                        size="large"
-                        value={rating.toFixed(1)}
-                        precision={1}
-                        onChange={(event, newValue) => {
-                          doRating(newValue);
-                        }}
-                        onClick={() => deleteRating}
-                        icon={
-                          <Star sx={{color: '#7047A6', fontSize: '1.8rem'}} />
-                        }
-                        emptyIcon={
-                          <StarBorderOutlined
-                            sx={{color: '#7047A6', fontSize: '1.8rem'}}
-                          />
-                        }
-                      />
-                      {showTextRating ? (
-                        <Typography sx={{ml: 1}} component="p" variant="body1">
-                          Add a rating
-                        </Typography>
-                      ) : (
-                        <Typography sx={{ml: 1}} component="p" variant="body1">
-                          No ratings yet
-                        </Typography>
-                      )}
-                    </IconButton>
-                  )}
-                </Grid>
-              )}
-            </Grid>
-          </CardContent>
-        </Card>
-        <Box display="flex" width="100%" justifyContent="center">
-          <Button
-            variant="contained"
-            sx={{m: 5, width: '200px'}}
-            onClick={() => navigate('/home')}
+        )}
+        {componentType === 'video' && (
+          <video
+            controls
+            style={{
+              width: '100%',
+              height: '100%',
+              borderRadius: extraSmallScreen ? 0 : '1.25rem',
+              aspectRatio: '1 / 1',
+              objectFit: 'cover',
+            }}
           >
-            Back
-          </Button>
+            <source src={mediaUrl + data.filename}></source>
+          </video>
+        )}
+      </Container>
+      <Container maxWidth="sm" sx={{mb: {xs: 10, sm: 2}, px: {xs: 4, sm: 0}}}>
+        <Grid
+          container
+          direction="row"
+          alignItems="center"
+          justifyContent="center"
+        >
+          <Grid item xs={5} align="center">
+            <IconButton
+              aria-label="favoriteIcon"
+              onClick={refreshLikes ? deleteLike : doLike}
+              onMouseOver={handleMouseOverLikes}
+              onMouseOut={handleMouseOutLikes}
+              variant="contained"
+              sx={{m: 'auto'}}
+            >
+              {refreshLikes ? (
+                <FavoriteRounded sx={{color: '#7047A6', fontSize: '2rem'}} />
+              ) : (
+                <FavoriteBorderRounded
+                  sx={{color: '#7047A6', fontSize: '2rem'}}
+                />
+              )}
+            </IconButton>
+            <Typography component="p" variant="caption">
+              {refreshLikes
+                ? showTextLikes
+                  ? 'Unlike'
+                  : ''
+                : showTextLikes
+                ? 'Add like'
+                : ''}
+              {!showTextLikes
+                ? `${likes} ${likes === 1 ? 'like' : 'likes'}`
+                : null}
+            </Typography>
+          </Grid>
+          <Grid item xs={7} align="center">
+            {refreshRating ? (
+              <>
+                <IconButton
+                  onClick={doDeleteRating}
+                  onMouseOver={handleMouseOverRating}
+                  onMouseOut={handleMouseOutRating}
+                >
+                  <Rating
+                    name="read-only"
+                    size="large"
+                    precision={0.2}
+                    defaultValue={parseInt(rating.toFixed(1))}
+                    value={parseInt(rating.toFixed(1))}
+                    readOnly
+                    icon={
+                      <StarRounded sx={{color: '#7047A6', fontSize: '2rem'}} />
+                    }
+                    emptyIcon={
+                      <StarBorderRounded
+                        sx={{color: '#7047A6', fontSize: '2rem'}}
+                      />
+                    }
+                  />
+                </IconButton>
+                <Typography sx={{ml: 1}} component="p" variant="caption">
+                  {showTextRating
+                    ? 'Remove rating'
+                    : `${rating.toFixed(1)} (${ratingCount} ${
+                        ratingCount === 1 ? 'rating' : 'ratings'
+                      })`}
+                </Typography>
+              </>
+            ) : (
+              <>
+                <IconButton
+                  onClick={() => deleteRating}
+                  onMouseOver={handleMouseOverRating}
+                  onMouseOut={handleMouseOutRating}
+                >
+                  <Rating
+                    defaultValue={parseInt(rating.toFixed(1))}
+                    name="simple-controlled"
+                    size="large"
+                    value={parseInt(rating.toFixed(1))}
+                    precision={1}
+                    onChange={(event, newValue) => {
+                      doRating(newValue);
+                    }}
+                    icon={
+                      <StarRounded sx={{color: '#7047A6', fontSize: '2rem'}} />
+                    }
+                    emptyIcon={
+                      <StarBorderRounded
+                        sx={{color: '#7047A6', fontSize: '2rem'}}
+                      />
+                    }
+                  />
+                </IconButton>
+                {ratingCount ? (
+                  <Typography sx={{ml: 1}} component="p" variant="caption">
+                    {rating.toFixed(1)} ({ratingCount}
+                    {ratingCount > 1 ? ' ratings' : ' rating'})
+                  </Typography>
+                ) : (
+                  <Typography sx={{ml: 1}} component="p" variant="caption">
+                    No ratings yet
+                  </Typography>
+                )}
+              </>
+            )}
+          </Grid>
+        </Grid>
+        <Box sx={{my: 3}}>
+          <Typography component="p" variant="body1">
+            {allData.desc}
+          </Typography>
         </Box>
-
-        <ValidatorForm onSubmit={handleSubmit}>
-          <TextValidator
-            fullWidth
-            margin="dense"
-            name="comment"
-            placeholder="Comment"
-            onChange={handleInputChange}
-            value={inputs.comment}
-            validators={commentValidators.comment}
-            errorMessages={commentErrorMessages.comment}
-          />
-          <Button variant="contained" sx={{my: 2}} type="submit">
-            Comment
-          </Button>
-        </ValidatorForm>
-        <Typography>Comments ({commentCount})</Typography>
-
-        <div>
+        {/* TODO: Link to search page */}
+        {tagArray.length > 1 && (
+          <Box sx={{my: 3}}>
+            {tagArray.map((tag, index) => {
+              if (tag.tag !== appId) {
+                return (
+                  <Chip
+                    variant="outlined"
+                    color="primary"
+                    key={index}
+                    label={tag.tag.replace(appId + '_', '') + ' '}
+                    sx={{mr: 1, mt: 1}}
+                  />
+                );
+              }
+            })}
+          </Box>
+        )}
+        <Box sx={{my: 3}}>
+          <Typography component="h2" variant="h4" sx={{mb: 3}}>
+            Comments ({commentCount})
+          </Typography>
+          {commentCount === 0 && (
+            <Typography component="p" variant="body1" sx={{mb: 3}}>
+              No comments added.
+            </Typography>
+          )}
           {commentArray
             .map((item, index) => {
-              return (
-                <CommentRow
-                  key={index}
-                  file={item}
-                  fetchComments={fetchComments}
-                />
-              );
+              if (index < showComments) {
+                return (
+                  <CommentRow
+                    key={index}
+                    file={item}
+                    fetchComments={fetchComments}
+                  />
+                );
+              }
             })
             .reverse()}
-        </div>
-      </Box>
+          {commentCount > showComments && (
+            <Button
+              sx={{width: '100%', my: 1}}
+              onClick={() => setShowComments(showComments + 3)}
+            >
+              Show more comments
+            </Button>
+          )}
+          <ValidatorForm onSubmit={handleSubmit}>
+            <Grid
+              container
+              alignItems="flex-start"
+              justifyContent="space-between"
+              spacing={1}
+              sx={{mt: 1}}
+            >
+              <Grid item xs={true}>
+                <TextValidator
+                  fullWidth
+                  name="comment"
+                  placeholder="Write a comment..."
+                  label="Comment"
+                  onChange={handleInputChange}
+                  value={inputs.comment}
+                  validators={commentValidators.comment}
+                  errorMessages={commentErrorMessages.comment}
+                  disabled={!user}
+                  helperText={!user && 'You need to login to add comment.'}
+                  size="small"
+                />
+              </Grid>
+              <Grid item xs="auto">
+                <Button
+                  variant="contained"
+                  type="submit"
+                  aria-label="Send comment"
+                  disabled={!user}
+                  sx={{borderRadius: '4px', minWidth: '40px', width: '40px'}}
+                >
+                  <SendRounded />
+                </Button>
+              </Grid>
+            </Grid>
+          </ValidatorForm>
+        </Box>
+      </Container>
     </>
   );
 };
