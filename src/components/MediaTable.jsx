@@ -9,6 +9,7 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  Box,
 } from '@mui/material';
 import {useMedia} from '../hooks/ApiHooks';
 import MediaRow from './MediaRow';
@@ -69,15 +70,14 @@ const MediaTable = ({
     <>
       <Grid sx={{py: 3}}>
         <Container>
-          <Grid
-            container
-            direction="row"
-            justifyContent="space-between"
-            alignItems="center"
-          >
+          <Box display="flex" justifyContent="space-around" alignItems="center">
             {myFilesOnly || targetUserFilesOnly ? (
               <Typography
-                sx={{fontSize: {xs: '1.2rem', sm: '1.5rem'}}}
+                sx={{
+                  fontSize: {xs: '1.2rem', sm: '1.5rem'},
+                  width: '150px',
+                  textAlign: 'center',
+                }}
                 component="h2"
                 variant="h2"
               >
@@ -86,7 +86,14 @@ const MediaTable = ({
             ) : null}
             {myFavouritesOnly ? (
               <Typography
-                sx={{fontSize: {xs: '1.2rem', sm: '1.5rem'}}}
+                sx={{
+                  fontSize: {
+                    xs: '1.2rem',
+                    sm: '1.5rem',
+                    width: '150px',
+                    textAlign: 'center',
+                  },
+                }}
                 component="h2"
                 variant="h2"
               >
@@ -95,7 +102,14 @@ const MediaTable = ({
             ) : null}
             {!myFilesOnly && !targetUserFilesOnly && !myFavouritesOnly ? (
               <Typography
-                sx={{fontSize: {xs: '1.2rem', sm: '1.5rem'}}}
+                sx={{
+                  fontSize: {
+                    xs: '1.2rem',
+                    sm: '1.5rem',
+                    width: '150px',
+                    textAlign: 'center',
+                  },
+                }}
                 component="h2"
                 variant="h2"
               >
@@ -119,14 +133,15 @@ const MediaTable = ({
                 <MenuItem value={4}>Most commented</MenuItem>
               </Select>
             </FormControl>
-          </Grid>
+          </Box>
         </Container>
       </Grid>
       <Container maxWidth="lg" sx={{padding: smallScreen ? 0 : 'auto'}}>
         <Grid
           container
           direction="row"
-          justifyContent="flex-start"
+          justifyContent={'center'}
+          mb={style && 1}
           alignItems="stretch"
           wrap="nowrap"
         >
@@ -175,7 +190,7 @@ const MediaTable = ({
         >
           {/* * LIST STYLE * */}
           {style === false ? (
-            <ImageList cols={1} gap={0} sx={{width: {sx: '100%', sm: '550px'}}}>
+            <ImageList cols={1} gap={0} sx={{width: {sx: '100%', sm: '500px'}}}>
               {selectedOption === 'comments' &&
                 [...mediaArray]
                   .sort((a, b) => b.comments.length - a.comments.length)
@@ -241,8 +256,6 @@ const MediaTable = ({
                 objectFit: 'contain',
               }}
               cols={smallScreen ? 3 : 4}
-              rowHeight={smallScreen ? 100 : 300}
-              gap={5}
               direction="row"
             >
               {selectedOption === 'comments' &&

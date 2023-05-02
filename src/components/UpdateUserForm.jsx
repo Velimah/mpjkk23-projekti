@@ -80,9 +80,16 @@ const UpdateUserForm = () => {
           width: '100%',
           pl: {xs: 3, sm: 1, md: 3},
           pr: {xs: 3, sm: 0},
-          mt: {xs: 0, sm: 2, md: 8},
+          mt: {xs: 0, sm: 2, md: 5},
         }}
       >
+        <Typography
+          component="p"
+          variant="body1"
+          sx={{textAlign: 'center', fontSize: '0.9rem'}}
+        >
+          Fill the fields that you want to update
+        </Typography>
         <ValidatorForm onSubmit={handleSubmit} noValidate>
           <TextValidator
             fullWidth

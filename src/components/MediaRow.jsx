@@ -195,6 +195,7 @@ const MediaRow = ({file, style, mediaArray}) => {
         my: style ? 0 : 1,
         mx: style ? 0 : {sx: 0, md: 1},
         backgroundColor: style ? 'transparent' : '#FFFFFF',
+        borderRadius: style ? 0 : 3,
       }}
       elevation={style ? 0 : 4}
     >
@@ -243,27 +244,36 @@ const MediaRow = ({file, style, mediaArray}) => {
           />
         ) : (
           /* * LISTING STYLE * */
-          <img
-            style={{
-              height: '100%',
-              width: '100%',
-              aspectRatio: '1 / 1',
-              objectFit: 'cover',
-              filter: `brightness(${allData.filters.brightness}%)
+          <Box
+            component={Link}
+            onClick={() => {
+              setTargetUser(file);
+            }}
+            state={{file}}
+            to="/single"
+          >
+            <img
+              style={{
+                height: '100%',
+                width: '100%',
+                aspectRatio: '1 / 1',
+                objectFit: 'cover',
+                filter: `brightness(${allData.filters.brightness}%)
                        contrast(${allData.filters.contrast}%)
                        saturate(${allData.filters.saturation}%)
                        sepia(${allData.filters.sepia}%)`,
-            }}
-            src={
-              file.media_type === 'audio'
-                ? 'onlycats_logo.png'
-                : file.mime_type === 'image/webp' ||
-                  file.mime_type === 'image/avif'
-                ? mediaUrl + file.filename
-                : mediaUrl + file.thumbnails.w640
-            }
-            alt={file.title}
-          />
+              }}
+              src={
+                file.media_type === 'audio'
+                  ? 'onlycats_logo.png'
+                  : file.mime_type === 'image/webp' ||
+                    file.mime_type === 'image/avif'
+                  ? mediaUrl + file.filename
+                  : mediaUrl + file.thumbnails.w640
+              }
+              alt={file.title}
+            />
+          </Box>
         )}
         {!style && (
           <Grid sx={{p: 2, py: 1}}>
@@ -295,7 +305,7 @@ const MediaRow = ({file, style, mediaArray}) => {
               {mediumScreen ? (
                 <Grid item>
                   <IconButton
-                    sx={{borderRadius: '20px', px: 0}}
+                    sx={{borderRadius: '2rem', px: 0}}
                     aria-label="favoriteIcon"
                     onClick={() => {
                       if (user) {
@@ -335,15 +345,25 @@ const MediaRow = ({file, style, mediaArray}) => {
                     variant="contained"
                     onMouseOver={handleMouseOverLikes}
                     onMouseOut={handleMouseOutLikes}
-                    sx={{borderRadius: '20px'}}
+                    sx={{borderRadius: '2rem'}}
                   >
-                    {/* * DesktopLikes check if user has liked or is not logged * */}
-                    {likesBoolean || !user ? (
+                    {likesBoolean && likesHoverBoolean && (
+                      <FavoriteBorderRounded
+                        sx={{color: '#7047A6', mr: 1, fontSize: '1.6rem'}}
+                      />
+                    )}
+                    {!likesBoolean && likesHoverBoolean && (
                       <FavoriteRounded
                         sx={{color: '#7047A6', mr: 1, fontSize: '1.6rem'}}
                       />
-                    ) : (
+                    )}
+                    {!likesBoolean && !likesHoverBoolean && (
                       <FavoriteBorderRounded
+                        sx={{color: '#7047A6', mr: 1, fontSize: '1.6rem'}}
+                      />
+                    )}
+                    {likesBoolean && !likesHoverBoolean && (
+                      <FavoriteRounded
                         sx={{color: '#7047A6', mr: 1, fontSize: '1.6rem'}}
                       />
                     )}
@@ -368,7 +388,7 @@ const MediaRow = ({file, style, mediaArray}) => {
               {mediumScreen ? (
                 <Grid item>
                   <Box>
-                    <IconButton sx={{borderRadius: '20px'}}>
+                    <IconButton sx={{borderRadius: '2rem'}}>
                       {/* * MobileRating check if there are ratings * */}
                       {ratingCount ? (
                         <>

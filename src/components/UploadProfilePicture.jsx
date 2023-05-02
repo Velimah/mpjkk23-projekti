@@ -134,12 +134,7 @@ const UploadProfilePicture = () => {
         }}
       />
       <ValidatorForm onSubmit={handleSubmit} noValidate>
-        <Box
-          display="flex"
-          flexDirection="column"
-          justifyContent="flex-end"
-          sx={{}}
-        >
+        <Box display="flex" flexDirection="column" justifyContent="flex-end">
           <InputLabel
             sx={{
               position: 'relative',
@@ -150,7 +145,7 @@ const UploadProfilePicture = () => {
               px: 2,
               height: '100%',
               backgroundColor: '#ACCC7F',
-              borderRadius: '0.5rem',
+              borderRadius: '2rem',
               cursor: 'pointer',
               width: 'fit-content',
               '&:hover': {
@@ -180,7 +175,6 @@ const UploadProfilePicture = () => {
             }}
           >
             <TextValidator
-              sx={{}}
               fullWidth
               multiline
               rows={6}

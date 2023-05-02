@@ -136,7 +136,7 @@ const CatGPT = () => {
         </Typography>
         <Paper
           sx={{
-            p: {xs: 0, sm: '1rem', md: '1rem'},
+            p: {xs: 0, sm: '1rem', md: '1.5rem'},
             borderRadius: '1.5rem',
             bgcolor: {xs: 'transparent', sm: '#FFFFFF'},
             boxShadow: {
@@ -159,7 +159,7 @@ const CatGPT = () => {
               alignItems="center"
               justifyContent="flex-start"
               sx={{
-                height: '70vh',
+                height: '100%',
                 maxWidth: '200px',
                 display: {xs: 'none', sm: 'block'},
                 pr: {xs: 1, sm: 3},
@@ -218,7 +218,7 @@ const CatGPT = () => {
               alignItems="center"
               textAlign="center"
               sx={{
-                height: {xs: '75vh', md: '70vh'},
+                height: {xs: '78vh', sm: '78vh', md: '77vh'},
                 width: '100%',
                 maxWidth: '1000px',
                 flexWrap: 'nowrap',
@@ -303,10 +303,6 @@ const CatGPT = () => {
                     variant="outlined"
                     label="Ask Mr. Mittens a question!"
                     type="text"
-                    sx={{
-                      boxShadow:
-                        '0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12)',
-                    }}
                     value={value}
                     onChange={(e) => setValue(e.target.value)}
                   />
@@ -369,6 +365,17 @@ const CatGPT = () => {
             </Grid>
           </Grid>
         </Paper>
+        {/*
+        <Box display="flex" width="100%" justifyContent="center">
+          <Button
+            variant="contained"
+            sx={{mt: 4, mb: {xs: 9, sm: 0}, width: '200px'}}
+            onClick={() => navigate('/profile')}
+          >
+            Back
+          </Button>
+        </Box>
+        */}
       </Container>
     </>
   );
