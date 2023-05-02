@@ -1,27 +1,21 @@
-import {Box, Grid, Typography} from '@mui/material';
+import {Grid, Paper, Typography} from '@mui/material';
 import PropTypes from 'prop-types';
-import {useState, useEffect, useContext} from 'react';
+import {useContext} from 'react';
 import UserHeader from './UserHeader';
 import {MediaContext} from '../contexts/MediaContext';
 
-const CommentRow = ({file, fetchComments}) => {
-  const [refreshData, setRefreshData] = useState(false);
+const CommentRow = ({file, refreshData, setRefreshData}) => {
   const {user} = useContext(MediaContext);
 
-  useEffect(() => {
-    fetchComments();
-  }, [refreshData]);
-
   return (
-    <Box
+    <Paper
       sx={{
         p: 2,
         my: 2,
-        backgroundColor: '#F4DCE1',
+        backgroundColor: '#E3A7B6',
         borderRadius: '1.25rem',
-        boxShadow:
-          '0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14)',
       }}
+      elevation={0}
     >
       {user ? (
         <>
@@ -52,13 +46,14 @@ const CommentRow = ({file, fetchComments}) => {
           </Grid>
         </Grid>
       )}
-    </Box>
+    </Paper>
   );
 };
 
 CommentRow.propTypes = {
   file: PropTypes.object.isRequired,
-  fetchComments: PropTypes.func.isRequired,
+  refreshData: PropTypes.bool,
+  setRefreshData: PropTypes.func,
 };
 
 export default CommentRow;

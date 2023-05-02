@@ -28,9 +28,11 @@ import {
   StarRounded,
 } from '@mui/icons-material';
 import UserHeader from '../components/UserHeader';
+import AlertDialog from '../components/AlertDialog';
 
 const Single = () => {
-  const {user} = useContext(MediaContext);
+  const {user, setToastSnackbar, setToastSnackbarOpen} =
+    useContext(MediaContext);
 
   const [likes, setLikes] = useState(0);
   const [rating, setRating] = useState(0);
@@ -39,6 +41,8 @@ const Single = () => {
   const [commentArray, setCommentArray] = useState([]);
   const [tagArray, setTagArray] = useState([]);
   const [showComments, setShowComments] = useState(3);
+  const [likeFailedDialogOpen, setLikeFailedDialogOpen] = useState(false);
+  const [ratingFailedDialogOpen, setRatingFailedDialogOpen] = useState(false);
 
   const [refreshLikes, setRefreshLikes] = useState(false);
   const [refreshComments, setRefreshComments] = useState(false);
@@ -90,7 +94,7 @@ const Single = () => {
   try {
     allData = JSON.parse(data.description);
   } catch (error) {
-    console.log(allData);
+    console.error(allData);
   }
 
   let componentType = 'img';
@@ -113,7 +117,7 @@ const Single = () => {
         }
       });
     } catch (error) {
-      console.log(error.message);
+      console.error(error.message);
     }
   };
 
@@ -121,9 +125,9 @@ const Single = () => {
     try {
       const commentInfo = await getCommentsById(data.file_id);
       setCommentCount(commentInfo.length);
-      return setCommentArray(commentInfo);
+      setCommentArray(commentInfo);
     } catch (error) {
-      console.log(error.message);
+      console.error(error.message);
     }
   };
 
@@ -132,7 +136,7 @@ const Single = () => {
       const tagInfo = await getTagsByFileId(data.file_id);
       setTagArray(tagInfo);
     } catch (error) {
-      console.log(error.message);
+      console.error(error.message);
     }
   };
 
@@ -151,10 +155,15 @@ const Single = () => {
         await postFavourite(fileId, token);
         setRefreshLikes(true);
       } else {
-        alert('You need to login to add like.');
+        setLikeFailedDialogOpen(true);
       }
     } catch (error) {
-      console.log(error.message);
+      setToastSnackbar({
+        severity: 'error',
+        message: 'Something went wrong - Please try again later.',
+      });
+      setToastSnackbarOpen(true);
+      console.error(error.message);
     }
   };
 
@@ -170,7 +179,12 @@ const Single = () => {
         setRefreshLikes(false);
       }
     } catch (error) {
-      console.log(error.message);
+      setToastSnackbar({
+        severity: 'error',
+        message: 'Something went wrong - Please try again later.',
+      });
+      setToastSnackbarOpen(true);
+      console.error(error.message);
     }
   };
 
@@ -180,11 +194,17 @@ const Single = () => {
       if (token) {
         const data2 = {file_id: data.file_id, comment: inputs.comment};
         const commentInfo = await postComment(data2, token);
-        alert(commentInfo.message);
+        setToastSnackbar({severity: 'success', message: commentInfo.message});
+        setToastSnackbarOpen(true);
         setRefreshComments(!refreshComments);
       }
     } catch (error) {
-      console.log(error.message);
+      setToastSnackbar({
+        severity: 'error',
+        message: 'Something went wrong - Please try again later.',
+      });
+      setToastSnackbarOpen(true);
+      console.error(error.message);
     }
   };
 
@@ -210,10 +230,15 @@ const Single = () => {
         console.log(ratingInfo);
         setRefreshRating(!refreshRating);
       } else {
-        alert('You need to login to add rating.');
+        setRatingFailedDialogOpen(true);
       }
     } catch (error) {
-      console.log(error.message);
+      setToastSnackbar({
+        severity: 'error',
+        message: 'Something went wrong - Please try again later.',
+      });
+      setToastSnackbarOpen(true);
+      console.error(error.message);
     }
   };
 
@@ -226,7 +251,12 @@ const Single = () => {
         setRefreshRating(!refreshRating);
       }
     } catch (error) {
-      console.log(error.message);
+      setToastSnackbar({
+        severity: 'error',
+        message: 'Something went wrong - Please try again later.',
+      });
+      setToastSnackbarOpen(true);
+      console.error(error.message);
     }
   };
 
@@ -245,7 +275,7 @@ const Single = () => {
       const averageRating = sum / ratingInfo.length;
       setRating(averageRating);
     } catch (error) {
-      console.log(error.message);
+      console.error(error.message);
     }
   };
 
@@ -455,6 +485,17 @@ const Single = () => {
                 )}
               </>
             )}
+
+            <AlertDialog
+              content={'You need to be logged in to add like.'}
+              dialogOpen={likeFailedDialogOpen}
+              setDialogOpen={setLikeFailedDialogOpen}
+            />
+            <AlertDialog
+              content={'You need to be logged in to add rating.'}
+              dialogOpen={ratingFailedDialogOpen}
+              setDialogOpen={setRatingFailedDialogOpen}
+            />
           </Grid>
         </Grid>
         <Box sx={{my: 3}}>
@@ -489,6 +530,28 @@ const Single = () => {
               No comments added.
             </Typography>
           )}
+          {commentArray
+            .map((item, index) => {
+              if (index < showComments) {
+                return (
+                  <CommentRow
+                    key={index}
+                    file={item}
+                    refreshData={refreshComments}
+                    setRefreshData={setRefreshComments}
+                  />
+                );
+              }
+            })
+            .reverse()}
+          {commentCount > showComments && (
+            <Button
+              sx={{width: '100%', my: 1}}
+              onClick={() => setShowComments(showComments + 6)}
+            >
+              Show more comments
+            </Button>
+          )}
           <ValidatorForm onSubmit={handleSubmit}>
             <Grid
               container
@@ -509,7 +572,6 @@ const Single = () => {
                   errorMessages={commentErrorMessages.comment}
                   disabled={!user}
                   helperText={!user && 'You need to login to add comment.'}
-                  size="small"
                 />
               </Grid>
               <Grid item xs="auto">
@@ -518,34 +580,19 @@ const Single = () => {
                   type="submit"
                   aria-label="Send comment"
                   disabled={!user}
-                  sx={{borderRadius: '4px', minWidth: '40px', width: '40px'}}
+                  sx={{
+                    borderRadius: '0.75rem',
+                    minWidth: '56px',
+                    width: '56px',
+                    py: '16px',
+                  }}
+                  size="large"
                 >
                   <SendRounded />
                 </Button>
               </Grid>
             </Grid>
           </ValidatorForm>
-          {commentArray
-            .map((item, index) => {
-              if (index < showComments) {
-                return (
-                  <CommentRow
-                    key={index}
-                    file={item}
-                    fetchComments={fetchComments}
-                  />
-                );
-              }
-            })
-            .reverse()}
-          {commentCount > showComments && (
-            <Button
-              sx={{width: '100%', my: 1}}
-              onClick={() => setShowComments(showComments + 3)}
-            >
-              Show more comments
-            </Button>
-          )}
         </Box>
       </Container>
     </>

@@ -2,5 +2,5 @@ button:focus {
   outline: none !important;
 }
 .MuiOutlinedInput-notchedOutline {
-  border-radius: 2rem !important;
+  border-radius: 0.75rem !important;
 }

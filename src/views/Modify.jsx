@@ -16,18 +16,25 @@ import {mediaUrl, appId} from '../utils/variables';
 import {ValidatorForm, TextValidator} from 'react-material-ui-form-validator';
 import {uploadErrorMessages} from '../utils/errorMessages';
 import {uploadValidators} from '../utils/validator';
-import {useEffect, useState} from 'react';
+import {useContext, useEffect, useState} from 'react';
 import AlertDialog from '../components/AlertDialog';
+import {MediaContext} from '../contexts/MediaContext';
 
 const Modify = () => {
   const navigate = useNavigate();
-  const {state} = useLocation();
-  if (state === null) navigate('/home');
-  const file = state.file;
-  const [tags, setTags] = useState([]);
-  const [dialogOpen, setDialogOpen] = useState(false);
+
   const {putMedia} = useMedia();
   const {getTagsByFileId} = useTag();
+  const {setToastSnackbar, setToastSnackbarOpen} = useContext(MediaContext);
+  const {state} = useLocation();
+
+  if (state === null) navigate('/home');
+
+  const file = state.file;
+
+  const [tags, setTags] = useState([]);
+  const [cancelModifyDialogOpen, setCancelModifyDialogOpen] = useState(false);
+
   // FOR DELETING TAGS AND ADDING NEW (if the api would't need admin permission)
   // const [originalTags, setOriginalTags] = useState([]);
   const extraSmallScreen = useMediaQuery((theme) =>
@@ -132,15 +139,21 @@ const Modify = () => {
       //   }
       // }
 
-      console.log(modifyResult);
+      setToastSnackbar({severity: 'success', message: modifyResult.message});
+      setToastSnackbarOpen(true);
       navigate('/single', {state: file});
     } catch (error) {
-      alert(error.message);
+      setToastSnackbar({
+        severity: 'error',
+        message: 'Something went wrong - Please try again later.',
+      });
+      setToastSnackbarOpen(true);
+      console.error(error.message);
     }
   };
 
-  const handleDialogYes = () => {
-    setDialogOpen(false);
+  const handleCancelModify = () => {
+    setCancelModifyDialogOpen(false);
     navigate('/single', {state: file});
   };
 
@@ -318,13 +331,15 @@ const Modify = () => {
                   fullWidth
                   type="submit"
                   sx={{mb: 2}}
+                  size="large"
                 >
                   Update
                 </Button>
                 <Button
                   variant="outlined"
                   fullWidth
-                  onClick={() => setDialogOpen(true)}
+                  onClick={() => setCancelModifyDialogOpen(true)}
+                  size="large"
                 >
                   Cancel
                 </Button>
@@ -336,9 +351,9 @@ const Modify = () => {
       <AlertDialog
         title={'Are you sure you want to cancel modifying this post?'}
         content={'All your work will be lost.'}
-        dialogOpen={dialogOpen}
-        setDialogOpen={setDialogOpen}
-        functionToDo={handleDialogYes}
+        dialogOpen={cancelModifyDialogOpen}
+        setDialogOpen={setCancelModifyDialogOpen}
+        functionToDo={handleCancelModify}
       />
     </Container>
   );

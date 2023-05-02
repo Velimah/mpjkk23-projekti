@@ -24,6 +24,7 @@ import {
 } from '../utils/variables';
 import {useNavigate} from 'react-router-dom';
 import MediaTable from '../components/MediaTable';
+import AlertDialog from '../components/AlertDialog';
 
 const Profile = () => {
   const {user, setUser} = useContext(MediaContext);
@@ -46,6 +47,8 @@ const Profile = () => {
   );
   const [rating, setRating] = useState(0);
   const [ratingCount, setRatingCount] = useState(0);
+  const [deleteAllInformationDialogOpen, setDeleteAllInformationDialogOpen] =
+    useState(false);
 
   // checks for user and if null gets user information from localstorage
   const [userData, setData] = useState(() => {
@@ -140,45 +143,39 @@ const Profile = () => {
   };
 
   const deleteAllInformation = async () => {
-    if (
-      confirm('Are you sure you want to delete all your Infurrmation?') === true
-    ) {
-      try {
-        const token = localStorage.getItem('token');
+    setDeleteAllInformationDialogOpen(false);
+    try {
+      const token = localStorage.getItem('token');
 
-        const likesInfo = await getUsersFavouritesByToken(token);
-        for (const file of likesInfo) {
-          await sleep(5);
-          const deleteLikesInfo = await deleteFavourite(file.file_id, token);
-          console.log('deleteLikesInfo', deleteLikesInfo);
-        }
-        const commentsInfo = await getCommentsByUser(token);
-        for (const file of commentsInfo) {
-          await sleep(5);
-          const deleteCommentsInfo = await deleteComment(
-            file.comment_id,
-            token
-          );
-          console.log('deleteCommentsInfo', deleteCommentsInfo);
-        }
-
-        const ratingsInfo = await getAllRatings(token);
-        for (const file of ratingsInfo) {
-          await sleep(5);
-          const deleteRatingsInfo = await deleteRating(file.file_id, token);
-          console.log('deleteRatingsInfo', deleteRatingsInfo);
-        }
-
-        const mediaInfo = await getAllMediaByCurrentUser(token);
-        for (const file of mediaInfo) {
-          await sleep(20);
-          const deleteFileInfo = await deleteMedia(file.file_id, token);
-          console.log('deleteMedia', deleteFileInfo);
-        }
-        navigate(0);
-      } catch (error) {
-        console.log(error.message);
+      const likesInfo = await getUsersFavouritesByToken(token);
+      for (const file of likesInfo) {
+        await sleep(5);
+        const deleteLikesInfo = await deleteFavourite(file.file_id, token);
+        console.log('deleteLikesInfo', deleteLikesInfo);
       }
+      const commentsInfo = await getCommentsByUser(token);
+      for (const file of commentsInfo) {
+        await sleep(5);
+        const deleteCommentsInfo = await deleteComment(file.comment_id, token);
+        console.log('deleteCommentsInfo', deleteCommentsInfo);
+      }
+
+      const ratingsInfo = await getAllRatings(token);
+      for (const file of ratingsInfo) {
+        await sleep(5);
+        const deleteRatingsInfo = await deleteRating(file.file_id, token);
+        console.log('deleteRatingsInfo', deleteRatingsInfo);
+      }
+
+      const mediaInfo = await getAllMediaByCurrentUser(token);
+      for (const file of mediaInfo) {
+        await sleep(20);
+        const deleteFileInfo = await deleteMedia(file.file_id, token);
+        console.log('deleteMedia', deleteFileInfo);
+      }
+      navigate(0);
+    } catch (error) {
+      console.log(error.message);
     }
   };
 
@@ -260,7 +257,6 @@ const Profile = () => {
               {rating.toFixed(2)} ({ratingCount} ratings)
             </Typography>
           </Box>
-
           <Box
             display="flex"
             flexDirection="column"
@@ -295,7 +291,7 @@ const Profile = () => {
                   },
                 },
               }}
-              onClick={deleteAllInformation}
+              onClick={() => setDeleteAllInformationDialogOpen(true)}
             >
               Delete Data
             </Button>
@@ -306,6 +302,15 @@ const Profile = () => {
             >
               Logout
             </Button>
+            <AlertDialog
+              title={'Are you sure you want to delete all your information?'}
+              content={
+                'This will delete all your posts, added likes and ratings and comments, and they will be lost permanently.'
+              }
+              functionToDo={deleteAllInformation}
+              dialogOpen={deleteAllInformationDialogOpen}
+              setDialogOpen={setDeleteAllInformationDialogOpen}
+            />
           </Box>
         </Box>
         <Box display="flex" flexDirection="column" justifyContent="center">
