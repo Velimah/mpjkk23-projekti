@@ -1,10 +1,11 @@
-import {Box, Button, Grid} from '@mui/material';
+import {Avatar, Box, Button, Grid, InputLabel} from '@mui/material';
 import useForm from '../hooks/FormHooks';
 import {useContext, useState, useEffect} from 'react';
 import {useMedia, useTag} from '../hooks/ApiHooks';
 import {appId, mediaUrl} from '../utils/variables';
 import {ValidatorForm, TextValidator} from 'react-material-ui-form-validator';
 import {MediaContext} from '../contexts/MediaContext';
+import {AddAPhoto} from '@mui/icons-material';
 
 const UploadProfileBackgroundPicture = () => {
   const {user} = useContext(MediaContext);
@@ -74,36 +75,83 @@ const UploadProfileBackgroundPicture = () => {
   const {handleSubmit} = useForm(doUpload);
 
   return (
-    <Box sx={{maxWidth: 'md', margin: 'auto'}}>
-      <Grid container direction={'column'} justifyContent="center" sx={{mt: 2}}>
-        <Grid item xs={5} sx={{mt: 0}}>
-          <img
-            src={selectedImage}
-            alt="preview"
-            style={{
-              width: '900px',
-              height: '300px',
-              objectFit: 'cover',
-            }}
-          ></img>
-        </Grid>
-        <Grid item xs={5} sx={{}}>
-          <ValidatorForm onSubmit={handleSubmit} noValidate>
+    <Grid
+      container
+      direction={'column'}
+      justifyContent="center"
+      sx={{flexWrap: 'nowrap'}}
+    >
+      <Grid item sx={{mt: 0}}>
+        <Avatar
+          src={selectedImage}
+          alt="Logo"
+          sx={{
+            borderRadius: {xs: 0, sm: '2rem'},
+            boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px',
+            maxWidth: '1200px',
+            width: '100%',
+            height: {xs: '150px', md: '300px'},
+            maxHeight: '300px',
+          }}
+        />
+      </Grid>
+      <Grid item>
+        <ValidatorForm
+          onSubmit={handleSubmit}
+          noValidate
+          sx={{display: 'flex'}}
+        >
+          <Box
+            display="flex"
+            justifyContent="flex-end"
+            sx={{position: 'relative', top: '-55px', left: '-15px'}}
+          >
+            <InputLabel
+              sx={{
+                py: 1,
+                pb: '0.3rem',
+                px: 2,
+                height: '100%',
+                backgroundColor: '#ACCC7F',
+                borderRadius: '0.5rem',
+                cursor: 'pointer',
+                fontSize: '1rem',
+                '&:hover': {
+                  backgroundColor: '#8FB361',
+                  color: '#000000',
+                  transition: 'background-color 0.2s, color 0.2s',
+                },
+                boxShadow:
+                  '0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12)',
+              }}
+              htmlFor="bg-upload"
+            >
+              <AddAPhoto />
+            </InputLabel>
             <TextValidator
-              fullWidth
-              sx={{mb: 1}}
+              sx={{display: 'none'}}
+              id="bg-upload"
+              style={{maxWidth: '400px', width: '100%'}}
               onChange={handleFileChange}
               type="file"
               name="file"
               accept="image/*, video/*, audio/*"
             />
-            <Button variant="contained" fullWidth type="submit">
-              Update Background Picture
-            </Button>
-          </ValidatorForm>
-        </Grid>
+            <label htmlFor="contained-button-file">
+              <Button
+                sx={{ml: 1}}
+                variant="contained"
+                color="primary"
+                component="span"
+                type="submit"
+              >
+                Update
+              </Button>
+            </label>
+          </Box>
+        </ValidatorForm>
       </Grid>
-    </Box>
+    </Grid>
   );
 };
 
