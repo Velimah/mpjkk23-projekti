@@ -251,7 +251,6 @@ const MediaRow = ({file, style}) => {
           </Box>
         )}
         {!style && (
-          // TODO: make 2 rows max desc, it is only 1 row now..
           <Grid sx={{px: {xs: 2, md: 0}, pb: 3}}>
             <Grid
               container

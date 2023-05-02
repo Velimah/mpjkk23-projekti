@@ -22,35 +22,28 @@ import {appId} from '../utils/variables';
 
 const MediaTable = ({
   myFilesOnly = false,
-  searchQuery,
   targetUserFilesOnly = false,
   myFavouritesOnly = false,
+  searchQuery,
 }) => {
   const {mediaArray, deleteMedia, getMedia} = useMedia(
     myFilesOnly,
     targetUserFilesOnly,
-    myFavouritesOnly
+    myFavouritesOnly,
+    searchQuery
   );
 
   useEffect(() => {
     getMedia();
-  }, []);
+  }, [searchQuery]);
 
   const [arrayLength, setArrayLength] = useState(0);
   useEffect(() => {
     setArrayLength(mediaArray.length);
-  }, [mediaArray]);
+  }, []);
 
   const [style, setStyle] = useState(true);
   const [selectedOption, setSelectedOption] = useState('file_id');
-
-  const {getMediaById} = useMedia();
-
-  const {getTag} = useTag();
-
-  const [refreshArray, setRefreshArray] = useState(mediaArray);
-
-  const [style, setStyle] = useState(true);
 
   const changeToGrid = () => {
     setStyle(true);
@@ -74,30 +67,14 @@ const MediaTable = ({
     }
   };
 
-  const fetchMediaByIdWithTag = async () => {
-    try {
-      const search = [];
-      for (const file of await getTag(appId + searchQuery)) {
-        search.push(await getMediaById(file.file_id));
-      }
-      setRefreshArray(search);
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
-
-  useEffect(() => {
-    fetchMediaByIdWithTag();
-  }, []);
-
   return (
     <>
       <Grid sx={{mt: 3, mb: 3}}>
-        <Container>
+        <Container maxWidth="lg">
           <Grid
             container
             direction="row"
-            justifyContent="space-around"
+            justifyContent="space-between"
             alignItems="center"
           >
             {myFilesOnly || targetUserFilesOnly ? (

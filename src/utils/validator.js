@@ -33,7 +33,7 @@ const commentValidators = {
 };
 
 const searchValidators = {
-  search: ['matchRegexp:^[a-z-äöå]+$'],
+  search: ['isEmptyOrMin2', 'matchRegexp:^[a-z-äöå]+$'],
 };
 
 export {

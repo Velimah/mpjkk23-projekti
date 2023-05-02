@@ -18,7 +18,8 @@ const doFetch = async (url, options) => {
 const useMedia = (
   myFilesOnly = false,
   targetUserFilesOnly = false,
-  myFavouritesOnly = false
+  myFavouritesOnly = false,
+  searchQuery
 ) => {
   const [mediaArray, setMediaArray] = useState([]);
   const {user, targetUser, setUser, setTargetUser} = useContext(MediaContext);
@@ -66,6 +67,9 @@ const useMedia = (
             return likedFile.file_id === file.file_id;
           });
         });
+      }
+      if (searchQuery) {
+        files = await useTag().getTag(appId + '_' + searchQuery);
       }
       const filesWithThumbnail = await Promise.all(
         files.map(async (file) => {

@@ -2,38 +2,70 @@ import {
   Grid,
   TextField,
   Container,
-  FormControl,
-  InputLabel,
-  Select,
-  Typography,
-  MenuItem,
   IconButton,
   InputAdornment,
+  Button,
+  Typography,
 } from '@mui/material';
 import PropTypes from 'prop-types';
-import React, {useState} from 'react';
+import {useState, useEffect} from 'react';
 import MediaTable from '../components/MediaTable';
 import SearchIcon from '@mui/icons-material/Search';
 import {searchValidators} from '../utils/validator';
 import {searchErrorMessages} from '../utils/errorMessages';
-import useForm from '../hooks/FormHooks';
-import Skeleton from '@mui/material/Skeleton';
+import {MediaContext} from '../contexts/MediaContext';
+import {useContext} from 'react';
 
 const Search = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [updatedSearchQuery, setUpdatedSearchQuery] = useState(searchQuery);
   const [refreshSearch, setRefreshSearch] = useState(false);
+  const [latestSearches, setLatestSearches] = useState(() => {
+    // getting stored value
+    const saved =
+      localStorage.getItem('searchHistory') === null
+        ? localStorage.setItem('searchHistory', JSON.stringify(' '))
+        : localStorage.getItem('searchHistory');
+    const initialValue = JSON.parse(saved);
+    return initialValue || '';
+  });
 
-  const loading = false;
-
+  // Save new query
   const handleChange = (e) => {
     setSearchQuery(e.target.value);
   };
 
-  const sendSearchQuery = () => {
-    setUpdatedSearchQuery('_' + searchQuery);
-    setRefreshSearch(!refreshSearch);
+  // Refresh MediaTable with new query
+  const handleClick = () => {
+    setUpdatedSearchQuery(searchQuery);
+    searchQuery === '' ? setRefreshSearch(false) : setRefreshSearch(true);
   };
+
+  useEffect(() => {
+    console.log('refresh');
+    // only allow three max searches
+    // loop through localstorage to check if its the same search keyword
+    // if (localStorage.getItem('searchHistory') === null) {
+    const oldQuery = JSON.parse(localStorage.getItem('searchHistory')).match(
+      /\S+/g
+    );
+
+    if (!localStorage.getItem('searchHistory') === null) {
+      // if new keyword hasn't already been searched, add it into search histoty
+      if (!oldQuery.includes(searchQuery)) {
+        console.log('yesy');
+        const newQuery =
+          JSON.parse(localStorage.getItem('searchHistory')) + ' ' + searchQuery;
+        localStorage.setItem('searchHistory', JSON.stringify(newQuery));
+
+        setLatestSearches(newQuery);
+      }
+    } else {
+      localStorage.setItem('searchHistory', JSON.stringify(searchQuery));
+    }
+
+    // }
+  }, [updatedSearchQuery]);
 
   return (
     <>
@@ -42,13 +74,13 @@ const Search = () => {
         direction="row"
         justifyContent="center"
         alignItems="stretch"
-        sx={{py: '60px', backgroundColor: '#E3A7B6'}}
+        sx={{pt: '100px'}}
       >
         <TextField
           id="filled-search"
           label="Search by keyword"
           type="search"
-          variant="filled"
+          variant="outlined"
           validators={searchValidators.search}
           errorMessages={searchErrorMessages.search}
           InputProps={{
@@ -57,36 +89,25 @@ const Search = () => {
           onChange={handleChange}
           value={searchQuery}
         />
-        <IconButton
-          aria-label="search"
-          onClick={sendSearchQuery}
-          sx={{backgroundColor: '#7047A6'}}
-        >
-          <SearchIcon color="white" />
-        </IconButton>
+        <Button aria-label="search" onClick={handleClick}>
+          <SearchIcon color="#7047A6" />
+        </Button>
       </Grid>
-
+      <Grid
+        container
+        direction="row"
+        justifyContent="center"
+        alignItems="stretch"
+        sx={{pt: '100px'}}
+      >
+        <Typography component="h2" variant="h2" sx={{mb: 2}}>
+          Latest
+        </Typography>
+        <Typography component="p" variant="body1">
+          {latestSearches}
+        </Typography>
+      </Grid>
       <Grid sx={{mt: '50px', mb: '100px'}}>
-        <Container>
-          <Grid
-            container
-            direction="row"
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <Typography component="h2" variant="h2" sx={{mb: 2}}>
-              Search results
-            </Typography>
-            <FormControl sx={{width: 150}}>
-              <InputLabel id="select-label">Sort</InputLabel>
-              <Select labelId="select-label" id="select" value={1} label="Sort">
-                <MenuItem value={1}>Newest</MenuItem>
-                <MenuItem value={2}>Most liked</MenuItem>
-                <MenuItem value={3}>Top rated</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-        </Container>
         {refreshSearch && <MediaTable searchQuery={updatedSearchQuery} />}
       </Grid>
     </>
@@ -94,7 +115,7 @@ const Search = () => {
 };
 
 Search.propTypes = {
-  searchQuery: PropTypes.any.isRequired,
+  searchQuery: PropTypes.string,
 };
 
 export default Search;
