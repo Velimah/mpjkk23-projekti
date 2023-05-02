@@ -5,27 +5,25 @@ import {
   Typography,
   Grid,
   IconButton,
-  Avatar,
   useMediaQuery,
   Rating,
   Paper,
 } from '@mui/material';
 import PropTypes from 'prop-types';
 import {Link} from 'react-router-dom';
-import {mediaUrl, appId, profilePlaceholder} from '../utils/variables';
+import {mediaUrl} from '../utils/variables';
 import {useContext, useEffect, useState} from 'react';
 import {MediaContext} from '../contexts/MediaContext';
-import {useFavourite, useUser, useTag, useRating} from '../hooks/ApiHooks';
+import {useFavourite, useRating} from '../hooks/ApiHooks';
 import {useTheme} from '@mui/material/styles';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import FavoriteIcon from '@mui/icons-material/Favorite';
 import {
-  FiberManualRecord,
-  MessageOutlined,
-  Star,
-  StarBorderOutlined,
+  FavoriteBorderRounded,
+  FavoriteRounded,
+  MessageRounded,
+  StarBorderRounded,
+  StarRounded,
 } from '@mui/icons-material';
-import {formatTime} from '../utils/UnitConversions';
+import UserHeader from './UserHeader';
 
 const MediaRow = ({file, style, mediaArray}) => {
   const theme = useTheme();
@@ -33,21 +31,15 @@ const MediaRow = ({file, style, mediaArray}) => {
   const mediumScreen = useMediaQuery(theme.breakpoints.down('md'));
   const {user, setTargetUser} = useContext(MediaContext);
   const description = JSON.parse(file.description);
-  const {getUser} = useUser();
   const {postFavourite, deleteFavourite, getFavourites} = useFavourite();
-  const {getTag} = useTag();
   const {postRating, deleteRating, getRatingsById} = useRating();
 
-  const [owner, setOwner] = useState({username: ''});
   const [likes, setLikes] = useState(0);
   const [rating, setRating] = useState(0);
   const [ratingCount, setRatingCount] = useState(0);
   const [commentCount, setCommentCount] = useState(0);
   const [likesBoolean, setLikesBoolean] = useState(false);
   const [ratingBoolean, setRatingBoolean] = useState(false);
-  const [profilePic, setProfilePic] = useState({
-    filename: profilePlaceholder,
-  });
 
   let allData = {
     desc: file.description,
@@ -63,35 +55,6 @@ const MediaRow = ({file, style, mediaArray}) => {
   } catch (error) {
     console.log(allData);
   }
-
-  const fetchUser = async () => {
-    try {
-      if (user) {
-        const token = localStorage.getItem('token');
-        const ownerInfo = await getUser(file.user_id, token);
-        setOwner(ownerInfo);
-      }
-    } catch (error) {
-      console.error(error.message);
-    }
-  };
-
-  const fetchProfilePicture = async () => {
-    try {
-      const profilePictures = await getTag(
-        appId + '_profilepicture_' + file.user_id
-      );
-      const profilePicture = profilePictures.pop();
-      profilePicture.filename = mediaUrl + profilePicture.filename;
-      setProfilePic(profilePicture);
-    } catch (error) {
-      if (error.message === 'Tag not found') {
-        return;
-      } else {
-        console.error(error.message);
-      }
-    }
-  };
 
   const fetchLikesInitial = () => {
     setLikes(file.likes.length);
@@ -205,8 +168,6 @@ const MediaRow = ({file, style, mediaArray}) => {
   };
 
   useEffect(() => {
-    fetchUser();
-    fetchProfilePicture();
     fetchComments();
     fetchLikesInitial();
     fetchRatingsInitial();
@@ -255,57 +216,9 @@ const MediaRow = ({file, style, mediaArray}) => {
       >
         {/* LISTING style user profile */}
         {!style && (
-          <Grid
-            container
-            direction="row"
-            sx={{
-              alignItems: 'center',
-              p: 2,
-            }}
-          >
-            <Avatar
-              aria-label="Profile"
-              component={Link}
-              to={user?.user_id === file.user_id ? '/profile' : '/userprofiles'}
-              state={{file}}
-              onClick={() => {
-                setTargetUser(file);
-              }}
-              sx={{boxShadow: 3, width: 45, height: 45}}
-              src={profilePic.filename}
-            />
-            <Typography
-              component={Link}
-              to={user?.user_id === file.user_id ? '/profile' : '/userprofiles'}
-              state={{file}}
-              onClick={() => {
-                setTargetUser(file);
-              }}
-              variant="h1"
-              sx={{
-                pl: 2,
-                fontSize: '1.3rem',
-                color: 'inherit',
-                textDecoration: 'none',
-              }}
-            >
-              {owner.username || `User ${file.user_id}`}
-            </Typography>
-            <FiberManualRecord
-              sx={{
-                m: 2,
-                fontSize: '0.4rem',
-              }}
-            ></FiberManualRecord>
-            <Typography
-              variant="body1"
-              sx={{
-                fontSize: '1.3rem',
-              }}
-            >
-              {formatTime(file.time_added)}
-            </Typography>
-          </Grid>
+          <Box sx={user ? {mt: 2, mx: 3} : {my: 2, mx: 3}}>
+            <UserHeader file={file} postSettings={true}></UserHeader>
+          </Box>
         )}
         {/* * GRID STYLE * */}
         {style === true ? (
@@ -372,7 +285,7 @@ const MediaRow = ({file, style, mediaArray}) => {
                   }}
                   sx={{borderRadius: '20px'}}
                 >
-                  <MessageOutlined
+                  <MessageRounded
                     sx={{color: '#7047A6', mr: 1, fontSize: '1.6rem'}}
                   />
                   <Typography component="p" variant="body1" sx={{p: 0}}>
@@ -395,11 +308,11 @@ const MediaRow = ({file, style, mediaArray}) => {
                   >
                     {/* * MobileLikes check if user has liked or is not logged * */}
                     {likesBoolean || !user ? (
-                      <FavoriteIcon
+                      <FavoriteRounded
                         sx={{color: '#7047A6', mr: 1, fontSize: '1.6rem'}}
                       />
                     ) : (
-                      <FavoriteBorderIcon
+                      <FavoriteBorderRounded
                         sx={{color: '#7047A6', mr: 1, fontSize: '1.6rem'}}
                       />
                     )}
@@ -428,11 +341,11 @@ const MediaRow = ({file, style, mediaArray}) => {
                   >
                     {/* * DesktopLikes check if user has liked or is not logged * */}
                     {likesBoolean || !user ? (
-                      <FavoriteIcon
+                      <FavoriteRounded
                         sx={{color: '#7047A6', mr: 1, fontSize: '1.6rem'}}
                       />
                     ) : (
-                      <FavoriteBorderIcon
+                      <FavoriteBorderRounded
                         sx={{color: '#7047A6', mr: 1, fontSize: '1.6rem'}}
                       />
                     )}
@@ -461,7 +374,7 @@ const MediaRow = ({file, style, mediaArray}) => {
                       {/* * MobileRating check if there are ratings * */}
                       {ratingCount ? (
                         <>
-                          <Star
+                          <StarRounded
                             sx={{color: '#7047A6', mr: 0.5, fontSize: '1.8rem'}}
                           />
                           <Typography component="p" variant="body1">
@@ -471,7 +384,7 @@ const MediaRow = ({file, style, mediaArray}) => {
                         </>
                       ) : (
                         <>
-                          <StarBorderOutlined
+                          <StarBorderRounded
                             sx={{color: '#7047A6', mr: 0.5, fontSize: '1.8rem'}}
                           />
                           <Typography component="p" variant="body1">
@@ -511,7 +424,7 @@ const MediaRow = ({file, style, mediaArray}) => {
                             onMouseOut={handleMouseOutRating}
                             sx={{borderRadius: '20px'}}
                           >
-                            <Star
+                            <StarRounded
                               sx={{
                                 color: '#7047A6',
                                 fontSize: {xs: '1.2rem', sm: '1.6rem'},
@@ -549,7 +462,7 @@ const MediaRow = ({file, style, mediaArray}) => {
                                 }
                               }}
                               icon={
-                                <Star
+                                <StarRounded
                                   sx={{
                                     color: '#7047A6',
                                     fontSize: {xs: '1.4rem', sm: '1.6rem'},
@@ -557,7 +470,7 @@ const MediaRow = ({file, style, mediaArray}) => {
                                 />
                               }
                               emptyIcon={
-                                <StarBorderOutlined
+                                <StarBorderRounded
                                   sx={{
                                     color: '#7047A6',
                                     fontSize: {xs: '1.4rem', sm: '1.6rem'},
@@ -598,7 +511,7 @@ const MediaRow = ({file, style, mediaArray}) => {
                       <IconButton sx={{borderRadius: '20px'}}>
                         {ratingCount ? (
                           <>
-                            <Star
+                            <StarRounded
                               sx={{
                                 color: '#7047A6',
                                 mr: 0.5,
@@ -612,7 +525,7 @@ const MediaRow = ({file, style, mediaArray}) => {
                           </>
                         ) : (
                           <>
-                            <StarBorderOutlined
+                            <StarBorderRounded
                               sx={{
                                 color: '#7047A6',
                                 mr: 0.5,

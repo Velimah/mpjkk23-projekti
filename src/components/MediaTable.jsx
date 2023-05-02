@@ -72,7 +72,7 @@ const MediaTable = ({
           <Grid
             container
             direction="row"
-            justifyContent="space-around"
+            justifyContent="space-between"
             alignItems="center"
           >
             {myFilesOnly || targetUserFilesOnly ? (
@@ -102,9 +102,7 @@ const MediaTable = ({
                 Discover cats
               </Typography>
             ) : null}
-            <FormControl
-              sx={{width: {xs: '150px', sm: '200px', textAlign: 'center'}}}
-            >
+            <FormControl sx={{width: {xs: '150px', textAlign: 'center'}}}>
               <InputLabel id="select-label">Sort</InputLabel>
               <Select
                 sx={{borderRadius: '1.8rem'}}
@@ -113,6 +111,7 @@ const MediaTable = ({
                 labelId="select-label"
                 id="select"
                 label="Sort"
+                size="small"
               >
                 <MenuItem value={1}>Newest</MenuItem>
                 <MenuItem value={2}>Most liked</MenuItem>
