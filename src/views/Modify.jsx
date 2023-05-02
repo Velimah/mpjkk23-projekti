@@ -22,14 +22,18 @@ import {MediaContext} from '../contexts/MediaContext';
 
 const Modify = () => {
   const navigate = useNavigate();
-  const {state} = useLocation();
-  if (state === null) navigate('/home');
-  const file = state.file;
-  const [tags, setTags] = useState([]);
-  const [dialogOpen, setDialogOpen] = useState(false);
+
   const {putMedia} = useMedia();
   const {getTagsByFileId} = useTag();
   const {setSnackbar, setSnackbarOpen} = useContext(MediaContext);
+  const {state} = useLocation();
+
+  if (state === null) navigate('/home');
+
+  const file = state.file;
+
+  const [tags, setTags] = useState([]);
+  const [cancelModifyDialogOpen, setCancelModifyDialogOpen] = useState(false);
 
   // FOR DELETING TAGS AND ADDING NEW (if the api would't need admin permission)
   // const [originalTags, setOriginalTags] = useState([]);
@@ -148,8 +152,8 @@ const Modify = () => {
     }
   };
 
-  const handleDialogYes = () => {
-    setDialogOpen(false);
+  const handleCancelModify = () => {
+    setCancelModifyDialogOpen(false);
     navigate('/single', {state: file});
   };
 
@@ -333,7 +337,7 @@ const Modify = () => {
                 <Button
                   variant="outlined"
                   fullWidth
-                  onClick={() => setDialogOpen(true)}
+                  onClick={() => setCancelModifyDialogOpen(true)}
                 >
                   Cancel
                 </Button>
@@ -345,9 +349,9 @@ const Modify = () => {
       <AlertDialog
         title={'Are you sure you want to cancel modifying this post?'}
         content={'All your work will be lost.'}
-        dialogOpen={dialogOpen}
-        setDialogOpen={setDialogOpen}
-        functionToDo={handleDialogYes}
+        dialogOpen={cancelModifyDialogOpen}
+        setDialogOpen={setCancelModifyDialogOpen}
+        functionToDo={handleCancelModify}
       />
     </Container>
   );

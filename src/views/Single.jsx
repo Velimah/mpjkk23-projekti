@@ -40,8 +40,8 @@ const Single = () => {
   const [commentArray, setCommentArray] = useState([]);
   const [tagArray, setTagArray] = useState([]);
   const [showComments, setShowComments] = useState(3);
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [dialogContent, setDialogContent] = useState('');
+  const [likeFailedDialogOpen, setLikeFailedDialogOpen] = useState(false);
+  const [ratingFailedDialogOpen, setRatingFailedDialogOpen] = useState(false);
 
   const [refreshLikes, setRefreshLikes] = useState(false);
   const [refreshComments, setRefreshComments] = useState(false);
@@ -124,7 +124,7 @@ const Single = () => {
     try {
       const commentInfo = await getCommentsById(data.file_id);
       setCommentCount(commentInfo.length);
-      return setCommentArray(commentInfo);
+      return setCommentArray(commentInfo.reverse());
     } catch (error) {
       console.error(error.message);
     }
@@ -154,8 +154,7 @@ const Single = () => {
         await postFavourite(fileId, token);
         setRefreshLikes(true);
       } else {
-        setDialogContent('You need to be logged in to add like.');
-        setDialogOpen(true);
+        setLikeFailedDialogOpen(true);
       }
     } catch (error) {
       setSnackbar({
@@ -230,8 +229,7 @@ const Single = () => {
         console.log(ratingInfo);
         setRefreshRating(!refreshRating);
       } else {
-        setDialogContent('You need to be logged in to add rating.');
-        setDialogOpen(true);
+        setRatingFailedDialogOpen(true);
       }
     } catch (error) {
       setSnackbar({
@@ -474,10 +472,16 @@ const Single = () => {
                 )}
               </>
             )}
+
             <AlertDialog
-              content={dialogContent}
-              dialogOpen={dialogOpen}
-              setDialogOpen={setDialogOpen}
+              content={'You need to be logged in to add like.'}
+              dialogOpen={likeFailedDialogOpen}
+              setDialogOpen={setLikeFailedDialogOpen}
+            />
+            <AlertDialog
+              content={'You need to be logged in to add rating.'}
+              dialogOpen={ratingFailedDialogOpen}
+              setDialogOpen={setRatingFailedDialogOpen}
             />
           </Grid>
         </Grid>
@@ -513,19 +517,17 @@ const Single = () => {
               No comments added.
             </Typography>
           )}
-          {commentArray
-            .map((item, index) => {
-              if (index < showComments) {
-                return (
-                  <CommentRow
-                    key={index}
-                    file={item}
-                    fetchComments={fetchComments}
-                  />
-                );
-              }
-            })
-            .reverse()}
+          {commentArray.map((item, index) => {
+            if (index < showComments) {
+              return (
+                <CommentRow
+                  key={index}
+                  file={item}
+                  fetchComments={fetchComments}
+                />
+              );
+            }
+          })}
           {commentCount > showComments && (
             <Button
               sx={{width: '100%', my: 1}}

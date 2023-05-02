@@ -27,10 +27,10 @@ import UserHeader from './UserHeader';
 
 const MediaRow = ({file, style, mediaArray}) => {
   const theme = useTheme();
-  const smallScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const mediumScreen = useMediaQuery(theme.breakpoints.down('md'));
-  const {user, setTargetUser} = useContext(MediaContext);
   const description = JSON.parse(file.description);
+
+  const {user, setTargetUser} = useContext(MediaContext);
   const {postFavourite, deleteFavourite, getFavourites} = useFavourite();
   const {postRating, deleteRating, getRatingsById} = useRating();
 
@@ -195,10 +195,8 @@ const MediaRow = ({file, style, mediaArray}) => {
         my: style ? 0 : 1,
         mx: style ? 0 : {sx: 0, md: 1},
         backgroundColor: style ? 'transparent' : '#FFFFFF',
-        boxShadow: style
-          ? 'none'
-          : 'boxShadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12)',
       }}
+      elevation={style ? 0 : 4}
     >
       <ImageListItem
         component={style ? Link : undefined}
@@ -227,7 +225,7 @@ const MediaRow = ({file, style, mediaArray}) => {
               width: '100%',
               aspectRatio: '1 / 1',
               objectFit: 'cover',
-              borderRadius: smallScreen ? '0.3rem' : '0.6rem',
+              borderRadius: 12,
               filter: `brightness(${allData.filters.brightness}%)
                        contrast(${allData.filters.contrast}%)
                        saturate(${allData.filters.saturation}%)

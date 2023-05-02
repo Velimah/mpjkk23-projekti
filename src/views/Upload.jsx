@@ -31,7 +31,7 @@ const Upload = () => {
   const [file, setFile] = useState(null);
   const [tags, setTags] = useState([]);
   const [fileError, setFileError] = useState({isError: false, message: ''});
-  const [dialogOpen, setDialogOpen] = useState(false);
+  const [cancelUploadDialogOpen, setCancelUploadDialogOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState(filePlaceholder);
   const [upload, setUpload] = useState(false);
 
@@ -162,8 +162,8 @@ const Upload = () => {
     setTags(newTags);
   };
 
-  const handleDialogYes = () => {
-    setDialogOpen(false);
+  const handleCancelModify = () => {
+    setCancelUploadDialogOpen(false);
     navigate(-1);
   };
 
@@ -369,7 +369,7 @@ const Upload = () => {
                 <Button
                   variant="outlined"
                   fullWidth
-                  onClick={() => setDialogOpen(true)}
+                  onClick={() => setCancelUploadDialogOpen(true)}
                   disabled={upload}
                 >
                   Cancel
@@ -382,9 +382,9 @@ const Upload = () => {
       <AlertDialog
         title={'Are you sure you want to cancel creating a new post?'}
         content={'All your work will be lost.'}
-        dialogOpen={dialogOpen}
-        setDialogOpen={setDialogOpen}
-        functionToDo={handleDialogYes}
+        dialogOpen={cancelUploadDialogOpen}
+        setDialogOpen={setCancelUploadDialogOpen}
+        functionToDo={handleCancelModify}
       />
     </Container>
   );
