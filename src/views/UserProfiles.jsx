@@ -1,4 +1,4 @@
-import {Avatar, Box, Button, Rating, Typography} from '@mui/material';
+import {Avatar, Box, Container, Rating, Typography} from '@mui/material';
 import {useContext} from 'react';
 import {MediaContext} from '../contexts/MediaContext';
 import {useState, useEffect} from 'react';
@@ -9,13 +9,12 @@ import {
   mediaUrl,
   profilePlaceholder,
 } from '../utils/variables';
-import {useLocation, useNavigate} from 'react-router-dom';
+import {useLocation} from 'react-router-dom';
 import MediaTable from '../components/MediaTable';
 
 const UserProfiles = () => {
   const {user, setTargetUser} = useContext(MediaContext);
   const {getTag} = useTag();
-  const navigate = useNavigate();
   const {getRatingsById} = useRating();
   const {getAllMediaById} = useMedia();
   const {getUser} = useUser();
@@ -158,12 +157,12 @@ const UserProfiles = () => {
 
   return (
     <>
-      <Box maxWidth="lg" sx={{margin: 'auto', pt: {xs: 8, sm: 0, md: 6}}}>
+      <Container maxWidth="lg" sx={{p: {xs: '6rem 0', sm: '3rem 3rem'}}}>
         <Avatar
           src={backgroundPic.filename}
           alt="Logo"
           sx={{
-            borderRadius: {xs: 0, md: '2rem'},
+            borderRadius: {xs: 0, sm: '2rem'},
             boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px',
             width: '100%',
             height: {xs: '150px', md: '300px'},
@@ -242,17 +241,8 @@ const UserProfiles = () => {
             {profileDescription}
           </Typography>
         </Box>
-      </Box>
-      <MediaTable targetUserFilesOnly={true} />
-      <Box display="flex" width="100%" justifyContent="center">
-        <Button
-          variant="contained"
-          sx={{m: 5, width: '200px'}}
-          onClick={() => navigate('/home')}
-        >
-          Back
-        </Button>
-      </Box>
+        <MediaTable targetUserFilesOnly={true} />
+      </Container>
     </>
   );
 };

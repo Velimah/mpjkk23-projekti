@@ -17,8 +17,10 @@ const CommentRow = ({file, fetchComments}) => {
       sx={{
         p: 2,
         my: 2,
-        backgroundColor: '#E3A7B6',
-        borderRadius: '25px',
+        backgroundColor: '#F4DCE1',
+        borderRadius: '1.25rem',
+        boxShadow:
+          '0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12)',
       }}
     >
       {user ? (

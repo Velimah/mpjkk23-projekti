@@ -242,8 +242,6 @@ const MediaTable = ({
                 objectFit: 'contain',
               }}
               cols={smallScreen ? 3 : 4}
-              rowHeight={smallScreen ? 100 : 300}
-              gap={5}
               direction="row"
             >
               {selectedOption === 'comments' &&

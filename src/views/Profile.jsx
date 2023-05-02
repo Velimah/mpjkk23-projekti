@@ -1,4 +1,11 @@
-import {Avatar, Box, Button, Rating, Typography} from '@mui/material';
+import {
+  Avatar,
+  Box,
+  Button,
+  Container,
+  Rating,
+  Typography,
+} from '@mui/material';
 import {useContext} from 'react';
 import {MediaContext} from '../contexts/MediaContext';
 import {useState, useEffect} from 'react';
@@ -184,12 +191,12 @@ const Profile = () => {
 
   return (
     <>
-      <Box maxWidth="lg" sx={{margin: 'auto', pt: {xs: 8, sm: 0, md: 6}}}>
+      <Container maxWidth="lg" sx={{p: {xs: '6rem 0', sm: '3rem 3rem'}}}>
         <Avatar
           src={backgroundPic.filename}
           alt="Logo"
           sx={{
-            borderRadius: {xs: 0, md: '2rem'},
+            borderRadius: {xs: 0, sm: '2rem'},
             boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px',
             width: '100%',
             height: {xs: '150px', md: '300px'},
@@ -270,7 +277,6 @@ const Profile = () => {
               sx={{
                 mt: 2,
                 mr: {xs: 0, sm: 0},
-                fontSize: {xs: '0.8rem', sm: '0.9rem'},
               }}
               onClick={() => navigate('/profile/update')}
             >
@@ -316,17 +322,8 @@ const Profile = () => {
             {profileDescription}
           </Typography>
         </Box>
-      </Box>
-      <MediaTable myFilesOnly={true} />
-      <Box display="flex" width="100%" justifyContent="center">
-        <Button
-          variant="contained"
-          sx={{m: 5, width: '200px'}}
-          onClick={() => navigate('/home')}
-        >
-          Back
-        </Button>
-      </Box>
+        <MediaTable myFilesOnly={true} />
+      </Container>
     </>
   );
 };

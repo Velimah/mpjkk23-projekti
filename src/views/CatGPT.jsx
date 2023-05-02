@@ -12,9 +12,11 @@ import {
   Paper,
 } from '@mui/material';
 import {MediaContext} from '../contexts/MediaContext';
+import {useNavigate} from 'react-router-dom';
 
 const CatGPT = () => {
   const {user} = useContext(MediaContext);
+  const navigate = useNavigate();
 
   // useStates
   const [value, setValue] = useState('');
@@ -136,7 +138,7 @@ const CatGPT = () => {
         </Typography>
         <Paper
           sx={{
-            p: {xs: 0, sm: '1rem', md: '1rem'},
+            p: {xs: 0, sm: '1rem', md: '1.5rem'},
             borderRadius: '1.5rem',
             bgcolor: {xs: 'transparent', sm: '#FFFFFF'},
             boxShadow: {
@@ -159,7 +161,7 @@ const CatGPT = () => {
               alignItems="center"
               justifyContent="flex-start"
               sx={{
-                height: '70vh',
+                height: '100%',
                 maxWidth: '200px',
                 display: {xs: 'none', sm: 'block'},
                 pr: {xs: 1, sm: 3},
@@ -218,7 +220,7 @@ const CatGPT = () => {
               alignItems="center"
               textAlign="center"
               sx={{
-                height: {xs: '75vh', md: '70vh'},
+                height: {xs: '78vh', sm: '78vh', md: '77vh'},
                 width: '100%',
                 maxWidth: '1000px',
                 flexWrap: 'nowrap',
@@ -369,6 +371,17 @@ const CatGPT = () => {
             </Grid>
           </Grid>
         </Paper>
+        {/*
+        <Box display="flex" width="100%" justifyContent="center">
+          <Button
+            variant="contained"
+            sx={{mt: 4, mb: {xs: 9, sm: 0}, width: '200px'}}
+            onClick={() => navigate('/profile')}
+          >
+            Back
+          </Button>
+        </Box>
+        */}
       </Container>
     </>
   );

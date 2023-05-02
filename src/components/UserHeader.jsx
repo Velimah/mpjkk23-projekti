@@ -158,15 +158,25 @@ const UserHeader = ({
               fontSize: '0.25rem',
             }}
           />
-          <Chip label={formatTime(file.time_added)} size="small" />
+          <Chip label={formatTime(file.time_added)} size="medium" />
         </Stack>
       ) : (
-        <Chip label={formatTime(file.time_added)} size="small" />
+        <Chip label={formatTime(file.time_added)} size="medium" />
       )}
       {comment && user && file.user_id === user.user_id && (
         <Tooltip title="Delete comment">
-          <IconButton component={Link} onClick={doDeleteComment}>
-            <DeleteRounded />
+          <IconButton
+            sx={{borderRadius: '2rem'}}
+            component={Link}
+            onClick={doDeleteComment}
+          >
+            <DeleteRounded
+              sx={{
+                '&:hover': {
+                  color: 'red',
+                },
+              }}
+            />
           </IconButton>
         </Tooltip>
       )}
