@@ -127,7 +127,8 @@ const MediaTable = ({
         <Grid
           container
           direction="row"
-          justifyContent="flex-start"
+          justifyContent={'center'}
+          mb={style && 1}
           alignItems="stretch"
           wrap="nowrap"
         >

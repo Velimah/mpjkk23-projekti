@@ -124,12 +124,7 @@ const UploadProfilePicture = () => {
         }}
       />
       <ValidatorForm onSubmit={handleSubmit} noValidate>
-        <Box
-          display="flex"
-          flexDirection="column"
-          justifyContent="flex-end"
-          sx={{}}
-        >
+        <Box display="flex" flexDirection="column" justifyContent="flex-end">
           <InputLabel
             sx={{
               position: 'relative',

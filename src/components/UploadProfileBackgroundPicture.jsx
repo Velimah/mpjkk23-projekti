@@ -1,4 +1,4 @@
-import {Avatar, Box, Button, Grid, InputLabel} from '@mui/material';
+import {Avatar, Box, Button, InputLabel} from '@mui/material';
 import useForm from '../hooks/FormHooks';
 import {useContext, useState, useEffect} from 'react';
 import {useMedia, useTag} from '../hooks/ApiHooks';
@@ -75,32 +75,21 @@ const UploadProfileBackgroundPicture = () => {
   const {handleSubmit} = useForm(doUpload);
 
   return (
-    <Grid
-      container
-      direction={'column'}
-      justifyContent="center"
-      sx={{flexWrap: 'nowrap'}}
-    >
-      <Grid item sx={{mt: 0}}>
-        <Avatar
-          src={selectedImage}
-          alt="Logo"
-          sx={{
-            borderRadius: {xs: 0, sm: '2rem'},
-            boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px',
-            maxWidth: '1200px',
-            width: '100%',
-            height: {xs: '150px', md: '300px'},
-            maxHeight: '300px',
-          }}
-        />
-      </Grid>
-      <Grid item>
-        <ValidatorForm
-          onSubmit={handleSubmit}
-          noValidate
-          sx={{display: 'flex'}}
-        >
+    <Box direction={'column'} justifyContent="center" sx={{flexWrap: 'nowrap'}}>
+      <Avatar
+        src={selectedImage}
+        alt="Logo"
+        sx={{
+          borderRadius: {xs: 0, sm: '2rem'},
+          boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px',
+          maxWidth: '1200px',
+          width: '100%',
+          height: {xs: '150px', md: '300px'},
+          maxHeight: '300px',
+        }}
+      />
+      <Box>
+        <ValidatorForm onSubmit={handleSubmit} noValidate>
           <Box
             display="flex"
             justifyContent="flex-end"
@@ -137,21 +126,13 @@ const UploadProfileBackgroundPicture = () => {
               name="file"
               accept="image/*, video/*, audio/*"
             />
-            <label htmlFor="contained-button-file">
-              <Button
-                sx={{ml: 1}}
-                variant="contained"
-                color="primary"
-                component="span"
-                type="submit"
-              >
-                Update
-              </Button>
-            </label>
+            <Button sx={{ml: 1}} variant="contained" type="submit">
+              Update
+            </Button>
           </Box>
         </ValidatorForm>
-      </Grid>
-    </Grid>
+      </Box>
+    </Box>
   );
 };
 
