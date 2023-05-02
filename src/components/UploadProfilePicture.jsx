@@ -1,4 +1,4 @@
-import {Avatar, Box, Button, Grid, InputLabel} from '@mui/material';
+import {Avatar, Box, Button, InputLabel} from '@mui/material';
 import useForm from '../hooks/FormHooks';
 import {useContext, useEffect, useState} from 'react';
 import {useMedia, useTag} from '../hooks/ApiHooks';
@@ -140,7 +140,7 @@ const UploadProfilePicture = () => {
               px: 2,
               height: '100%',
               backgroundColor: '#ACCC7F',
-              borderRadius: '0.5rem',
+              borderRadius: '2rem',
               cursor: 'pointer',
               width: 'fit-content',
               '&:hover': {
@@ -170,7 +170,6 @@ const UploadProfilePicture = () => {
             }}
           >
             <TextValidator
-              sx={{}}
               fullWidth
               multiline
               rows={6}

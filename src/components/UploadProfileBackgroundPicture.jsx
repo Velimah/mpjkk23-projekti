@@ -113,7 +113,7 @@ const UploadProfileBackgroundPicture = () => {
                 px: 2,
                 height: '100%',
                 backgroundColor: '#ACCC7F',
-                borderRadius: '0.5rem',
+                borderRadius: '2rem',
                 cursor: 'pointer',
                 fontSize: '1rem',
                 '&:hover': {

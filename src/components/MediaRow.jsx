@@ -28,7 +28,6 @@ import {
   StarBorderOutlined,
 } from '@mui/icons-material';
 import {formatTime} from '../utils/UnitConversions';
-import UserHeader from './UserHeader';
 
 const MediaRow = ({file, style, mediaArray}) => {
   const theme = useTheme();
@@ -437,13 +436,23 @@ const MediaRow = ({file, style, mediaArray}) => {
                     onMouseOut={handleMouseOutLikes}
                     sx={{borderRadius: '2rem'}}
                   >
-                    {/* * DesktopLikes check if user has liked or is not logged * */}
-                    {likesBoolean || !user ? (
+                    {likesBoolean && likesHoverBoolean && (
+                      <FavoriteBorderIcon
+                        sx={{color: '#7047A6', mr: 1, fontSize: '1.6rem'}}
+                      />
+                    )}
+                    {!likesBoolean && likesHoverBoolean && (
                       <FavoriteIcon
                         sx={{color: '#7047A6', mr: 1, fontSize: '1.6rem'}}
                       />
-                    ) : (
+                    )}
+                    {!likesBoolean && !likesHoverBoolean && (
                       <FavoriteBorderIcon
+                        sx={{color: '#7047A6', mr: 1, fontSize: '1.6rem'}}
+                      />
+                    )}
+                    {likesBoolean && !likesHoverBoolean && (
+                      <FavoriteIcon
                         sx={{color: '#7047A6', mr: 1, fontSize: '1.6rem'}}
                       />
                     )}

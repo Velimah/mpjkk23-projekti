@@ -12,11 +12,9 @@ import {
   Paper,
 } from '@mui/material';
 import {MediaContext} from '../contexts/MediaContext';
-import {useNavigate} from 'react-router-dom';
 
 const CatGPT = () => {
   const {user} = useContext(MediaContext);
-  const navigate = useNavigate();
 
   // useStates
   const [value, setValue] = useState('');
@@ -305,10 +303,6 @@ const CatGPT = () => {
                     variant="outlined"
                     label="Ask Mr. Mittens a question!"
                     type="text"
-                    sx={{
-                      boxShadow:
-                        '0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12)',
-                    }}
                     value={value}
                     onChange={(e) => setValue(e.target.value)}
                   />
