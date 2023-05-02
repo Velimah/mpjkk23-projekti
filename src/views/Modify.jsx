@@ -25,7 +25,7 @@ const Modify = () => {
 
   const {putMedia} = useMedia();
   const {getTagsByFileId} = useTag();
-  const {setSnackbar, setSnackbarOpen} = useContext(MediaContext);
+  const {setToastSnackbar, setToastSnackbarOpen} = useContext(MediaContext);
   const {state} = useLocation();
 
   if (state === null) navigate('/home');
@@ -139,15 +139,15 @@ const Modify = () => {
       //   }
       // }
 
-      setSnackbar({severity: 'success', message: modifyResult.message});
-      setSnackbarOpen(true);
+      setToastSnackbar({severity: 'success', message: modifyResult.message});
+      setToastSnackbarOpen(true);
       navigate('/single', {state: file});
     } catch (error) {
-      setSnackbar({
+      setToastSnackbar({
         severity: 'error',
-        message: 'Something went wrong - Try again later.',
+        message: 'Something went wrong - Please try again later.',
       });
-      setSnackbarOpen(true);
+      setToastSnackbarOpen(true);
       console.error(error.message);
     }
   };

@@ -24,7 +24,7 @@ import AlertDialog from '../components/AlertDialog';
 import {MediaContext} from '../contexts/MediaContext';
 
 const Upload = () => {
-  const {setSnackbar, setSnackbarOpen} = useContext(MediaContext);
+  const {setToastSnackbar, setToastSnackbarOpen} = useContext(MediaContext);
   const {postMedia} = useMedia();
   const {postTag} = useTag();
 
@@ -90,18 +90,18 @@ const Upload = () => {
         console.log(tagResult);
       }
 
-      setSnackbar({severity: 'success', message: uploadResult.message});
-      setSnackbarOpen(true);
+      setToastSnackbar({severity: 'success', message: uploadResult.message});
+      setToastSnackbarOpen(true);
 
       // Navigate back to home
       navigate('/home');
     } catch (error) {
       setUpload(false);
-      setSnackbar({
+      setToastSnackbar({
         severity: 'error',
-        message: 'Something went wrong - Try again later.',
+        message: 'Something went wrong - Please try again later.',
       });
-      setSnackbarOpen(true);
+      setToastSnackbarOpen(true);
       console.error(error.message);
     }
   };

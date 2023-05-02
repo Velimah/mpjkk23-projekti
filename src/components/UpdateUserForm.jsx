@@ -9,7 +9,7 @@ import {MediaContext} from '../contexts/MediaContext';
 
 const UpdateUserForm = () => {
   const {putUser, getCheckUser} = useUser();
-  const {setSnackbar, setSnackbarOpen} = useContext(MediaContext);
+  const {setToastSnackbar, setToastSnackbarOpen} = useContext(MediaContext);
 
   const initValues = {
     username: '',
@@ -37,11 +37,11 @@ const UpdateUserForm = () => {
         delete withoutConfirm.full_name;
       }
       const userResult = await putUser(withoutConfirm, token);
-      setSnackbar({severity: 'success', message: userResult.message});
-      setSnackbarOpen(true);
+      setToastSnackbar({severity: 'success', message: userResult.message});
+      setToastSnackbarOpen(true);
     } catch (error) {
-      setSnackbar({severity: 'error', message: error.message});
-      setSnackbarOpen(true);
+      setToastSnackbar({severity: 'error', message: error.message});
+      setToastSnackbarOpen(true);
     }
   };
 

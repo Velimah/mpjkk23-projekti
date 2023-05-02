@@ -2,22 +2,23 @@ import React, {useContext} from 'react';
 import {Snackbar, Alert} from '@mui/material';
 import {MediaContext} from '../contexts/MediaContext';
 
-const Toast = (props) => {
-  const {snackbar, snackbarOpen, setSnackbarOpen} = useContext(MediaContext);
+const ToastSnackbar = (props) => {
+  const {toastSnackbar, toastSnackbarOpen, setToastSnackbarOpen} =
+    useContext(MediaContext);
 
   const handleSnackbarClose = () => {
-    setSnackbarOpen(false);
+    setToastSnackbarOpen(false);
   };
 
   return (
     <Snackbar
-      open={snackbarOpen}
+      open={toastSnackbarOpen}
       autoHideDuration={4000}
       onClose={handleSnackbarClose}
       sx={{bottom: {xs: 74, sm: 20}}}
     >
       <Alert
-        severity={snackbar && snackbar.severity}
+        severity={toastSnackbar && toastSnackbar.severity}
         onClose={handleSnackbarClose}
         sx={{
           width: '100%',
@@ -25,12 +26,12 @@ const Toast = (props) => {
         }}
         elevation={6}
       >
-        {snackbar && snackbar.message}
+        {toastSnackbar && toastSnackbar.message}
       </Alert>
     </Snackbar>
   );
 };
 
-Toast.propTypes = {};
+ToastSnackbar.propTypes = {};
 
-export default Toast;
+export default ToastSnackbar;

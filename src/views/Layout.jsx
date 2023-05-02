@@ -6,7 +6,7 @@ import {createTheme, CssBaseline, ThemeProvider} from '@mui/material';
 import {themeOptions} from '../theme/themeOptions';
 import MobileNavigation from '../components/MobileNavigation';
 import Header from '../components/Header';
-import Toast from '../components/Toast';
+import ToastSnackbar from '../components/ToastSnackbar';
 
 const Layout = () => {
   const {setUser} = useContext(MediaContext);
@@ -45,7 +45,7 @@ const Layout = () => {
       <Header />
       <MobileNavigation />
       <main>
-        <Toast />
+        <ToastSnackbar />
         <Outlet />
       </main>
     </ThemeProvider>

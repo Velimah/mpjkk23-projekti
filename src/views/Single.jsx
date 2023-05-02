@@ -31,7 +31,8 @@ import UserHeader from '../components/UserHeader';
 import AlertDialog from '../components/AlertDialog';
 
 const Single = () => {
-  const {user, setSnackbar, setSnackbarOpen} = useContext(MediaContext);
+  const {user, setToastSnackbar, setToastSnackbarOpen} =
+    useContext(MediaContext);
 
   const [likes, setLikes] = useState(0);
   const [rating, setRating] = useState(0);
@@ -124,7 +125,7 @@ const Single = () => {
     try {
       const commentInfo = await getCommentsById(data.file_id);
       setCommentCount(commentInfo.length);
-      return setCommentArray(commentInfo.reverse());
+      setCommentArray(commentInfo);
     } catch (error) {
       console.error(error.message);
     }
@@ -157,11 +158,11 @@ const Single = () => {
         setLikeFailedDialogOpen(true);
       }
     } catch (error) {
-      setSnackbar({
+      setToastSnackbar({
         severity: 'error',
-        message: 'Something went wrong - Try again later.',
+        message: 'Something went wrong - Please try again later.',
       });
-      setSnackbarOpen(true);
+      setToastSnackbarOpen(true);
       console.error(error.message);
     }
   };
@@ -178,11 +179,11 @@ const Single = () => {
         setRefreshLikes(false);
       }
     } catch (error) {
-      setSnackbar({
+      setToastSnackbar({
         severity: 'error',
-        message: 'Something went wrong - Try again later.',
+        message: 'Something went wrong - Please try again later.',
       });
-      setSnackbarOpen(true);
+      setToastSnackbarOpen(true);
       console.error(error.message);
     }
   };
@@ -193,16 +194,16 @@ const Single = () => {
       if (token) {
         const data2 = {file_id: data.file_id, comment: inputs.comment};
         const commentInfo = await postComment(data2, token);
-        setSnackbar({severity: 'success', message: commentInfo.message});
-        setSnackbarOpen(true);
+        setToastSnackbar({severity: 'success', message: commentInfo.message});
+        setToastSnackbarOpen(true);
         setRefreshComments(!refreshComments);
       }
     } catch (error) {
-      setSnackbar({
+      setToastSnackbar({
         severity: 'error',
-        message: 'Something went wrong - Try again later.',
+        message: 'Something went wrong - Please try again later.',
       });
-      setSnackbarOpen(true);
+      setToastSnackbarOpen(true);
       console.error(error.message);
     }
   };
@@ -232,11 +233,11 @@ const Single = () => {
         setRatingFailedDialogOpen(true);
       }
     } catch (error) {
-      setSnackbar({
+      setToastSnackbar({
         severity: 'error',
-        message: 'Something went wrong - Try again later.',
+        message: 'Something went wrong - Please try again later.',
       });
-      setSnackbarOpen(true);
+      setToastSnackbarOpen(true);
       console.error(error.message);
     }
   };
@@ -250,11 +251,11 @@ const Single = () => {
         setRefreshRating(!refreshRating);
       }
     } catch (error) {
-      setSnackbar({
+      setToastSnackbar({
         severity: 'error',
-        message: 'Something went wrong - Try again later.',
+        message: 'Something went wrong - Please try again later.',
       });
-      setSnackbarOpen(true);
+      setToastSnackbarOpen(true);
       console.error(error.message);
     }
   };
@@ -517,21 +518,24 @@ const Single = () => {
               No comments added.
             </Typography>
           )}
-          {commentArray.map((item, index) => {
-            if (index < showComments) {
-              return (
-                <CommentRow
-                  key={index}
-                  file={item}
-                  fetchComments={fetchComments}
-                />
-              );
-            }
-          })}
+          {commentArray
+            .map((item, index) => {
+              if (index < showComments) {
+                return (
+                  <CommentRow
+                    key={index}
+                    file={item}
+                    refreshData={refreshComments}
+                    setRefreshData={setRefreshComments}
+                  />
+                );
+              }
+            })
+            .reverse()}
           {commentCount > showComments && (
             <Button
               sx={{width: '100%', my: 1}}
-              onClick={() => setShowComments(showComments + 3)}
+              onClick={() => setShowComments(showComments + 6)}
             >
               Show more comments
             </Button>

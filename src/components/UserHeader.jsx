@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 import {
   Avatar,
@@ -31,7 +31,7 @@ const UserHeader = ({
   refreshData = false,
   setRefreshData = null,
 }) => {
-  const {user, setTargetUser, setSnackbar, setSnackbarOpen} =
+  const {user, setTargetUser, setToastSnackbar, setToastSnackbarOpen} =
     useContext(MediaContext);
   const {getUser} = useUser();
   const {getTag} = useTag();
@@ -56,16 +56,16 @@ const UserHeader = ({
       const token = localStorage.getItem('token');
       if (token) {
         const deleteResult = await deleteMedia(file.file_id, token);
-        setSnackbar({severity: 'success', message: deleteResult.message});
-        setSnackbarOpen(true);
+        setToastSnackbar({severity: 'success', message: deleteResult.message});
+        setToastSnackbarOpen(true);
         navigate('/home');
       }
     } catch (error) {
-      setSnackbar({
+      setToastSnackbar({
         severity: 'error',
-        message: 'Something went wrong - Try again later.',
+        message: 'Something went wrong - Please try again later.',
       });
-      setSnackbarOpen(true);
+      setToastSnackbarOpen(true);
       console.error(error);
     }
   };
@@ -95,6 +95,11 @@ const UserHeader = ({
     }
   };
 
+  useEffect(() => {
+    fetchProfilePicture();
+    fetchUserInfo();
+  }, [refreshData]);
+
   useState(() => {
     fetchProfilePicture();
     fetchUserInfo();
@@ -106,16 +111,16 @@ const UserHeader = ({
       const token = localStorage.getItem('token');
       if (token) {
         const commentInfo = await deleteComment(file.comment_id, token);
-        setSnackbar({severity: 'success', message: commentInfo.message});
-        setSnackbarOpen(true);
+        setToastSnackbar({severity: 'success', message: commentInfo.message});
+        setToastSnackbarOpen(true);
         setRefreshData(!refreshData);
       }
     } catch (error) {
-      setSnackbar({
+      setToastSnackbar({
         severity: 'error',
-        message: 'Something went wrong - Try again later.',
+        message: 'Something went wrong - Please try again later.',
       });
-      setSnackbarOpen(true);
+      setToastSnackbarOpen(true);
       console.error(error.message);
     }
   };

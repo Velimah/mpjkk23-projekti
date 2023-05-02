@@ -11,7 +11,7 @@ import {MediaContext} from '../contexts/MediaContext';
 
 const RegisterForm = ({toggle}) => {
   const {postUser, getCheckUser} = useUser();
-  const {setSnackbar, setSnackbarOpen} = useContext(MediaContext);
+  const {setToastSnackbar, setToastSnackbarOpen} = useContext(MediaContext);
   const [showPassword, setShowPassword] = useState(false);
 
   const initValues = {
@@ -27,15 +27,15 @@ const RegisterForm = ({toggle}) => {
       const withoutConfirm = {...inputs};
       delete withoutConfirm.confirm;
       const userResult = await postUser(withoutConfirm);
-      setSnackbar({severity: 'success', message: userResult.message});
-      setSnackbarOpen(true);
+      setToastSnackbar({severity: 'success', message: userResult.message});
+      setToastSnackbarOpen(true);
       toggle();
     } catch (error) {
-      setSnackbar({
+      setToastSnackbar({
         severity: 'error',
         message: error.message,
       });
-      setSnackbarOpen(true);
+      setToastSnackbarOpen(true);
       console.error(error.message);
     }
   };

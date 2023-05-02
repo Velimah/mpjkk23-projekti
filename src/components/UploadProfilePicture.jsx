@@ -10,7 +10,8 @@ import {updateProfilePictureErrorMessages} from '../utils/errorMessages';
 import {AddAPhoto} from '@mui/icons-material';
 
 const UploadProfilePicture = () => {
-  const {user, setSnackbar, setSnackbarOpen} = useContext(MediaContext);
+  const {user, setToastSnackbar, setToastSnackbarOpen} =
+    useContext(MediaContext);
   const {getTag, postTag} = useTag();
   const {postMedia} = useMedia();
 
@@ -68,17 +69,17 @@ const UploadProfilePicture = () => {
         token
       );
       console.log(tagResult);
-      setSnackbar({
+      setToastSnackbar({
         severity: 'success',
         message: 'Profile picture updated successfully',
       });
-      setSnackbarOpen(true);
+      setToastSnackbarOpen(true);
     } catch (error) {
-      setSnackbar({
+      setToastSnackbar({
         severity: 'error',
         message: 'Something went wrong - Please try again later.',
       });
-      setSnackbarOpen(true);
+      setToastSnackbarOpen(true);
       console.error(error.message);
     }
   };
