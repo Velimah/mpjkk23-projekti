@@ -262,7 +262,7 @@ const MediaRow = ({file, style, mediaArray}) => {
             direction="row"
             alignItems="center"
             justifyContent={user ? 'space-between' : 'flex-end'}
-            sx={user && {p: 2}}
+            sx={user && {m: 2}}
           >
             {user ? (
               <Stack direction="row" alignItems="center" spacing={1}>
@@ -303,7 +303,11 @@ const MediaRow = ({file, style, mediaArray}) => {
                 <Chip label={formatTime(file.time_added)} size="small" />
               </Stack>
             ) : (
-              <Chip label={formatTime(file.time_added)} size="small" />
+              <Chip
+                label={formatTime(file.time_added)}
+                size="small"
+                sx={{m: 2}}
+              />
             )}
           </Stack>
         )}
