@@ -22,6 +22,7 @@ import {useComment, useMedia, useTag, useUser} from '../hooks/ApiHooks';
 import {appId, mediaUrl, profilePlaceholder} from '../utils/variables';
 import {formatTime} from '../utils/UnitConversions';
 import {Link, useNavigate} from 'react-router-dom';
+import AlertDialog from './AlertDialog';
 
 const UserHeader = ({
   file,
@@ -30,34 +31,42 @@ const UserHeader = ({
   refreshData = false,
   setRefreshData = null,
 }) => {
-  const {user, setTargetUser} = useContext(MediaContext);
+  const {user, setTargetUser, setSnackbar, setSnackbarOpen} =
+    useContext(MediaContext);
   const {getUser} = useUser();
   const {getTag} = useTag();
   const {deleteComment} = useComment();
   const {deleteMedia} = useMedia();
+
+  const [userInfo, setUserInfo] = useState('');
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [deleteFileDialogOpen, setDeleteFileDialogOpen] = useState(false);
+  const [deleteCommentDialogOpen, setDeleteCommentDialogOpen] = useState(false);
   const [profilePic, setProfilePic] = useState({
     filename: profilePlaceholder,
   });
-  const [userInfo, setUserInfo] = useState('');
-  const [anchorEl, setAnchorEl] = useState(null);
 
   const postSettingsOpen = Boolean(anchorEl);
 
   const navigate = useNavigate();
 
   const doDeleteFile = async () => {
+    setDeleteFileDialogOpen(false);
     try {
-      const sure = confirm('Are you sure you want to delete this file?');
-      if (sure) {
-        const token = localStorage.getItem('token');
-        if (token) {
-          const deleteResult = await deleteMedia(file.file_id, token);
-          console.log(deleteResult);
-          navigate('/home');
-        }
+      const token = localStorage.getItem('token');
+      if (token) {
+        const deleteResult = await deleteMedia(file.file_id, token);
+        setSnackbar({severity: 'success', message: deleteResult.message});
+        setSnackbarOpen(true);
+        navigate('/home');
       }
     } catch (error) {
-      console.log(error);
+      setSnackbar({
+        severity: 'error',
+        message: 'Something went wrong - Try again later.',
+      });
+      setSnackbarOpen(true);
+      console.error(error);
     }
   };
 
@@ -92,18 +101,22 @@ const UserHeader = ({
   }, []);
 
   const doDeleteComment = async () => {
-    const sure = confirm('Are you sure?');
-    if (sure) {
-      try {
-        const token = localStorage.getItem('token');
-        if (token) {
-          const commentInfo = await deleteComment(file.comment_id, token);
-          alert(commentInfo.message);
-          setRefreshData(!refreshData);
-        }
-      } catch (error) {
-        console.log(error.message);
+    setDeleteCommentDialogOpen(false);
+    try {
+      const token = localStorage.getItem('token');
+      if (token) {
+        const commentInfo = await deleteComment(file.comment_id, token);
+        setSnackbar({severity: 'success', message: commentInfo.message});
+        setSnackbarOpen(true);
+        setRefreshData(!refreshData);
       }
+    } catch (error) {
+      setSnackbar({
+        severity: 'error',
+        message: 'Something went wrong - Try again later.',
+      });
+      setSnackbarOpen(true);
+      console.error(error.message);
     }
   };
 
@@ -164,11 +177,25 @@ const UserHeader = ({
         <Chip label={formatTime(file.time_added)} size="small" />
       )}
       {comment && user && file.user_id === user.user_id && (
-        <Tooltip title="Delete comment">
-          <IconButton component={Link} onClick={doDeleteComment}>
-            <DeleteRounded />
-          </IconButton>
-        </Tooltip>
+        <>
+          <Tooltip title="Delete comment">
+            <IconButton
+              component={Link}
+              onClick={() => {
+                setDeleteCommentDialogOpen(true);
+              }}
+            >
+              <DeleteRounded />
+            </IconButton>
+          </Tooltip>
+          <AlertDialog
+            title={'Are you sure you want to delete this comment?'}
+            content={'If you delete this comment it will be lost permanently.'}
+            functionToDo={doDeleteComment}
+            dialogOpen={deleteCommentDialogOpen}
+            setDialogOpen={setDeleteCommentDialogOpen}
+          />
+        </>
       )}
       {postSettings && user && file.user_id === user.user_id && (
         <>
@@ -198,13 +225,24 @@ const UserHeader = ({
               </ListItemIcon>
               Modify post
             </MenuItem>
-            <MenuItem onClick={doDeleteFile}>
+            <MenuItem
+              onClick={() => {
+                setDeleteFileDialogOpen(true);
+              }}
+            >
               <ListItemIcon>
                 <DeleteRounded fontSize="small" />
               </ListItemIcon>
               Delete post
             </MenuItem>
           </Menu>
+          <AlertDialog
+            title={'Are you sure you want to delete this post?'}
+            content={'If you delete this post it will be lost permanently.'}
+            functionToDo={doDeleteFile}
+            dialogOpen={deleteFileDialogOpen}
+            setDialogOpen={setDeleteFileDialogOpen}
+          />
         </>
       )}
     </Stack>

@@ -10,11 +10,11 @@ import {
 } from '@mui/material';
 
 const AlertDialog = ({
-  title,
+  title = false,
   content,
   dialogOpen,
   setDialogOpen,
-  functionToDo,
+  functionToDo = false,
 }) => {
   const handleNo = () => {
     setDialogOpen(false);
@@ -27,13 +27,19 @@ const AlertDialog = ({
       onClose={() => setDialogOpen(false)}
       aria-describedby="alert-dialog-slide-description"
     >
-      <DialogTitle>{title}</DialogTitle>
+      {title && <DialogTitle>{title}</DialogTitle>}
       <DialogContent>
         <DialogContentText>{content}</DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={functionToDo}>Yes</Button>
-        <Button onClick={handleNo}>No</Button>
+        {!functionToDo ? (
+          <Button onClick={handleNo}>OK</Button>
+        ) : (
+          <>
+            <Button onClick={functionToDo}>Yes</Button>
+            <Button onClick={handleNo}>No</Button>
+          </>
+        )}
       </DialogActions>
     </Dialog>
   );
@@ -44,7 +50,7 @@ AlertDialog.propTypes = {
   content: PropTypes.string.isRequired,
   dialogOpen: PropTypes.bool.isRequired,
   setDialogOpen: PropTypes.func.isRequired,
-  functionToDo: PropTypes.func.isRequired,
+  functionToDo: PropTypes.func,
 };
 
 export default AlertDialog;

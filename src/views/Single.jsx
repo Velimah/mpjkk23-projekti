@@ -28,9 +28,10 @@ import {
   StarRounded,
 } from '@mui/icons-material';
 import UserHeader from '../components/UserHeader';
+import AlertDialog from '../components/AlertDialog';
 
 const Single = () => {
-  const {user} = useContext(MediaContext);
+  const {user, setSnackbar, setSnackbarOpen} = useContext(MediaContext);
 
   const [likes, setLikes] = useState(0);
   const [rating, setRating] = useState(0);
@@ -39,6 +40,8 @@ const Single = () => {
   const [commentArray, setCommentArray] = useState([]);
   const [tagArray, setTagArray] = useState([]);
   const [showComments, setShowComments] = useState(3);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [dialogContent, setDialogContent] = useState('');
 
   const [refreshLikes, setRefreshLikes] = useState(false);
   const [refreshComments, setRefreshComments] = useState(false);
@@ -90,7 +93,7 @@ const Single = () => {
   try {
     allData = JSON.parse(data.description);
   } catch (error) {
-    console.log(allData);
+    console.error(allData);
   }
 
   let componentType = 'img';
@@ -113,7 +116,7 @@ const Single = () => {
         }
       });
     } catch (error) {
-      console.log(error.message);
+      console.error(error.message);
     }
   };
 
@@ -123,7 +126,7 @@ const Single = () => {
       setCommentCount(commentInfo.length);
       return setCommentArray(commentInfo);
     } catch (error) {
-      console.log(error.message);
+      console.error(error.message);
     }
   };
 
@@ -132,7 +135,7 @@ const Single = () => {
       const tagInfo = await getTagsByFileId(data.file_id);
       setTagArray(tagInfo);
     } catch (error) {
-      console.log(error.message);
+      console.error(error.message);
     }
   };
 
@@ -151,10 +154,16 @@ const Single = () => {
         await postFavourite(fileId, token);
         setRefreshLikes(true);
       } else {
-        alert('You need to login to add like.');
+        setDialogContent('You need to be logged in to add like.');
+        setDialogOpen(true);
       }
     } catch (error) {
-      console.log(error.message);
+      setSnackbar({
+        severity: 'error',
+        message: 'Something went wrong - Try again later.',
+      });
+      setSnackbarOpen(true);
+      console.error(error.message);
     }
   };
 
@@ -170,7 +179,12 @@ const Single = () => {
         setRefreshLikes(false);
       }
     } catch (error) {
-      console.log(error.message);
+      setSnackbar({
+        severity: 'error',
+        message: 'Something went wrong - Try again later.',
+      });
+      setSnackbarOpen(true);
+      console.error(error.message);
     }
   };
 
@@ -180,11 +194,17 @@ const Single = () => {
       if (token) {
         const data2 = {file_id: data.file_id, comment: inputs.comment};
         const commentInfo = await postComment(data2, token);
-        alert(commentInfo.message);
+        setSnackbar({severity: 'success', message: commentInfo.message});
+        setSnackbarOpen(true);
         setRefreshComments(!refreshComments);
       }
     } catch (error) {
-      console.log(error.message);
+      setSnackbar({
+        severity: 'error',
+        message: 'Something went wrong - Try again later.',
+      });
+      setSnackbarOpen(true);
+      console.error(error.message);
     }
   };
 
@@ -210,10 +230,16 @@ const Single = () => {
         console.log(ratingInfo);
         setRefreshRating(!refreshRating);
       } else {
-        alert('You need to login to add rating.');
+        setDialogContent('You need to be logged in to add rating.');
+        setDialogOpen(true);
       }
     } catch (error) {
-      console.log(error.message);
+      setSnackbar({
+        severity: 'error',
+        message: 'Something went wrong - Try again later.',
+      });
+      setSnackbarOpen(true);
+      console.error(error.message);
     }
   };
 
@@ -226,7 +252,12 @@ const Single = () => {
         setRefreshRating(!refreshRating);
       }
     } catch (error) {
-      console.log(error.message);
+      setSnackbar({
+        severity: 'error',
+        message: 'Something went wrong - Try again later.',
+      });
+      setSnackbarOpen(true);
+      console.error(error.message);
     }
   };
 
@@ -245,7 +276,7 @@ const Single = () => {
       const averageRating = sum / ratingInfo.length;
       setRating(averageRating);
     } catch (error) {
-      console.log(error.message);
+      console.error(error.message);
     }
   };
 
@@ -443,6 +474,11 @@ const Single = () => {
                 )}
               </>
             )}
+            <AlertDialog
+              content={dialogContent}
+              dialogOpen={dialogOpen}
+              setDialogOpen={setDialogOpen}
+            />
           </Grid>
         </Grid>
         <Box sx={{my: 3}}>

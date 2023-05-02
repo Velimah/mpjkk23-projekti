@@ -8,7 +8,7 @@ import {MediaContext} from '../contexts/MediaContext';
 import {AddAPhoto} from '@mui/icons-material';
 
 const UploadProfileBackgroundPicture = () => {
-  const {user} = useContext(MediaContext);
+  const {user, setSnackbar, setSnackbarOpen} = useContext(MediaContext);
   const {postMedia} = useMedia();
   const {postTag, getTag} = useTag();
 
@@ -56,9 +56,18 @@ const UploadProfileBackgroundPicture = () => {
       );
       console.log(uploadResult);
       console.log(tagResult);
-      alert('Background picture updated!');
+      setSnackbar({
+        severity: 'success',
+        message: 'Background picture successfully',
+      });
+      setSnackbarOpen(true);
     } catch (error) {
-      alert(error.message);
+      setSnackbar({
+        severity: 'error',
+        message: 'Something went wrong - Please try again later.',
+      });
+      setSnackbarOpen(true);
+      console.error(error.message);
     }
   };
 

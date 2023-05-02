@@ -1,4 +1,4 @@
-import {Avatar, Box, Button, Grid, InputLabel} from '@mui/material';
+import {Avatar, Box, Button, InputLabel} from '@mui/material';
 import useForm from '../hooks/FormHooks';
 import {useContext, useEffect, useState} from 'react';
 import {useMedia, useTag} from '../hooks/ApiHooks';
@@ -10,7 +10,7 @@ import {updateProfilePictureErrorMessages} from '../utils/errorMessages';
 import {AddAPhoto} from '@mui/icons-material';
 
 const UploadProfilePicture = () => {
-  const {user} = useContext(MediaContext);
+  const {user, setSnackbar, setSnackbarOpen} = useContext(MediaContext);
   const {getTag, postTag} = useTag();
   const {postMedia} = useMedia();
 
@@ -68,9 +68,18 @@ const UploadProfilePicture = () => {
         token
       );
       console.log(tagResult);
-      alert('Profile picture updated!');
+      setSnackbar({
+        severity: 'success',
+        message: 'Profile picture updated successfully',
+      });
+      setSnackbarOpen(true);
     } catch (error) {
-      alert(error.message);
+      setSnackbar({
+        severity: 'error',
+        message: 'Something went wrong - Please try again later.',
+      });
+      setSnackbarOpen(true);
+      console.error(error.message);
     }
   };
 

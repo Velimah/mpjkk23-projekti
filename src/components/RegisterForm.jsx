@@ -5,11 +5,13 @@ import {InputAdornment, IconButton, Button} from '@mui/material';
 import {ValidatorForm, TextValidator} from 'react-material-ui-form-validator';
 import {registerErrorMessages} from '../utils/errorMessages';
 import {registerValidators} from '../utils/validator';
-import {useEffect, useState} from 'react';
+import {useContext, useEffect, useState} from 'react';
 import {Visibility, VisibilityOff} from '@mui/icons-material';
+import {MediaContext} from '../contexts/MediaContext';
 
 const RegisterForm = ({toggle}) => {
   const {postUser, getCheckUser} = useUser();
+  const {setSnackbar, setSnackbarOpen} = useContext(MediaContext);
   const [showPassword, setShowPassword] = useState(false);
 
   const initValues = {
@@ -25,10 +27,16 @@ const RegisterForm = ({toggle}) => {
       const withoutConfirm = {...inputs};
       delete withoutConfirm.confirm;
       const userResult = await postUser(withoutConfirm);
-      alert(userResult.message);
+      setSnackbar({severity: 'success', message: userResult.message});
+      setSnackbarOpen(true);
       toggle();
-    } catch (e) {
-      console.error(e.message);
+    } catch (error) {
+      setSnackbar({
+        severity: 'error',
+        message: error.message,
+      });
+      setSnackbarOpen(true);
+      console.error(error.message);
     }
   };
 
@@ -45,8 +53,8 @@ const RegisterForm = ({toggle}) => {
     ValidatorForm.addValidationRule('isUsernameAvailable', async (value) => {
       try {
         return await getCheckUser(inputs.username);
-      } catch (e) {
-        alert(e.message);
+      } catch (error) {
+        console.error(error.message);
       }
     });
     ValidatorForm.addValidationRule('isEmptyOrMin2', (value) => {

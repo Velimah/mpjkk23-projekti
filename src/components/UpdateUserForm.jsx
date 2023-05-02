@@ -1,13 +1,15 @@
 import useForm from '../hooks/FormHooks';
 import {useUser} from '../hooks/ApiHooks';
-import {Box, Button, Grid} from '@mui/material';
+import {Box, Button} from '@mui/material';
 import {ValidatorForm, TextValidator} from 'react-material-ui-form-validator';
 import {updateUserErrorMessages} from '../utils/errorMessages';
 import {updateUserValidators} from '../utils/validator';
-import {useEffect} from 'react';
+import {useContext, useEffect} from 'react';
+import {MediaContext} from '../contexts/MediaContext';
 
 const UpdateUserForm = () => {
   const {putUser, getCheckUser} = useUser();
+  const {setSnackbar, setSnackbarOpen} = useContext(MediaContext);
 
   const initValues = {
     username: '',
@@ -35,10 +37,11 @@ const UpdateUserForm = () => {
         delete withoutConfirm.full_name;
       }
       const userResult = await putUser(withoutConfirm, token);
-
-      alert(userResult.message);
-    } catch (e) {
-      alert(e.message);
+      setSnackbar({severity: 'success', message: userResult.message});
+      setSnackbarOpen(true);
+    } catch (error) {
+      setSnackbar({severity: 'error', message: error.message});
+      setSnackbarOpen(true);
     }
   };
 
@@ -55,8 +58,8 @@ const UpdateUserForm = () => {
       if (value === '') return true;
       try {
         return await getCheckUser(inputs.username);
-      } catch (e) {
-        alert(e.message);
+      } catch (error) {
+        console.error(error.message);
       }
     });
     ValidatorForm.addValidationRule('isEmptyOrMin5', (value) => {

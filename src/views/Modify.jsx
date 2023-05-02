@@ -16,8 +16,9 @@ import {mediaUrl, appId} from '../utils/variables';
 import {ValidatorForm, TextValidator} from 'react-material-ui-form-validator';
 import {uploadErrorMessages} from '../utils/errorMessages';
 import {uploadValidators} from '../utils/validator';
-import {useEffect, useState} from 'react';
+import {useContext, useEffect, useState} from 'react';
 import AlertDialog from '../components/AlertDialog';
+import {MediaContext} from '../contexts/MediaContext';
 
 const Modify = () => {
   const navigate = useNavigate();
@@ -28,6 +29,8 @@ const Modify = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const {putMedia} = useMedia();
   const {getTagsByFileId} = useTag();
+  const {setSnackbar, setSnackbarOpen} = useContext(MediaContext);
+
   // FOR DELETING TAGS AND ADDING NEW (if the api would't need admin permission)
   // const [originalTags, setOriginalTags] = useState([]);
   const extraSmallScreen = useMediaQuery((theme) =>
@@ -132,10 +135,16 @@ const Modify = () => {
       //   }
       // }
 
-      console.log(modifyResult);
+      setSnackbar({severity: 'success', message: modifyResult.message});
+      setSnackbarOpen(true);
       navigate('/single', {state: file});
     } catch (error) {
-      alert(error.message);
+      setSnackbar({
+        severity: 'error',
+        message: 'Something went wrong - Try again later.',
+      });
+      setSnackbarOpen(true);
+      console.error(error.message);
     }
   };
 

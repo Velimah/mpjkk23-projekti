@@ -10,7 +10,7 @@ import {InputAdornment, IconButton, Button} from '@mui/material';
 import {Visibility, VisibilityOff} from '@mui/icons-material';
 
 const LoginForm = () => {
-  const {setUser} = useContext(MediaContext);
+  const {setUser, setSnackbar, setSnackbarOpen} = useContext(MediaContext);
   const {postLogin} = useAuthentication();
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
@@ -25,9 +25,13 @@ const LoginForm = () => {
       const loginResult = await postLogin(inputs);
       localStorage.setItem('token', loginResult.token);
       setUser(loginResult.user);
+      setSnackbar({severity: 'success', message: loginResult.message});
+      setSnackbarOpen(true);
       navigate('/home');
-    } catch (e) {
-      console.error(e.message);
+    } catch (error) {
+      setSnackbar({severity: 'error', message: error.message});
+      setSnackbarOpen(true);
+      console.error(error.message);
     }
   };
 

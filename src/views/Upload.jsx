@@ -13,7 +13,7 @@ import {
   CircularProgress,
 } from '@mui/material';
 import useForm from '../hooks/FormHooks';
-import {useEffect, useRef, useState} from 'react';
+import {useContext, useEffect, useRef, useState} from 'react';
 import {useMedia, useTag} from '../hooks/ApiHooks';
 import {useNavigate} from 'react-router-dom';
 import {appId, filePlaceholder} from '../utils/variables';
@@ -21,21 +21,27 @@ import {ValidatorForm, TextValidator} from 'react-material-ui-form-validator';
 import {uploadErrorMessages} from '../utils/errorMessages';
 import {uploadValidators} from '../utils/validator';
 import AlertDialog from '../components/AlertDialog';
+import {MediaContext} from '../contexts/MediaContext';
 
 const Upload = () => {
+  const {setSnackbar, setSnackbarOpen} = useContext(MediaContext);
+  const {postMedia} = useMedia();
+  const {postTag} = useTag();
+
   const [file, setFile] = useState(null);
   const [tags, setTags] = useState([]);
   const [fileError, setFileError] = useState({isError: false, message: ''});
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState(filePlaceholder);
   const [upload, setUpload] = useState(false);
-  const {postMedia} = useMedia();
-  const {postTag} = useTag();
+
   const navigate = useNavigate();
   const videoRef = useRef();
+
   const extraSmallScreen = useMediaQuery((theme) =>
     theme.breakpoints.down('sm')
   );
+
   const initValues = {
     title: 'Cat post',
     description: '',
@@ -83,11 +89,19 @@ const Upload = () => {
         const tagResult = await postTag(tag, token);
         console.log(tagResult);
       }
+
+      setSnackbar({severity: 'success', message: uploadResult.message});
+      setSnackbarOpen(true);
+
       // Navigate back to home
       navigate('/home');
     } catch (error) {
       setUpload(false);
-      alert('Something went wrong.');
+      setSnackbar({
+        severity: 'error',
+        message: 'Something went wrong - Try again later.',
+      });
+      setSnackbarOpen(true);
       console.error(error.message);
     }
   };

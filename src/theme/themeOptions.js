@@ -132,6 +132,20 @@ const themeOptions = {
         },
       },
     },
+    MuiAlert: {
+      styleOverrides: {
+        root: {
+          borderRadius: 12,
+        },
+      },
+    },
+    MuiDialog: {
+      styleOverrides: {
+        root: {
+          borderRadius: 12,
+        },
+      },
+    },
   },
 };
 
