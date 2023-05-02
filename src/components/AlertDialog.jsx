@@ -40,11 +40,11 @@ const AlertDialog = ({
 };
 
 AlertDialog.propTypes = {
-  title: PropTypes.string,
-  content: PropTypes.string,
-  dialogOpen: PropTypes.bool,
-  setDialogOpen: PropTypes.func,
-  functionToDo: PropTypes.func,
+  title: PropTypes.string.isRequired,
+  content: PropTypes.string.isRequired,
+  dialogOpen: PropTypes.bool.isRequired,
+  setDialogOpen: PropTypes.func.isRequired,
+  functionToDo: PropTypes.func.isRequired,
 };
 
 export default AlertDialog;
