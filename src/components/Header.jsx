@@ -40,7 +40,14 @@ const Header = () => {
         setProfilePic(profilePicture);
       }
     } catch (error) {
-      console.error(error.message);
+      if (error.message === 'Tag not found') {
+        console.log('No profile picture');
+        setProfilePic({
+          filename: profilePlaceholder,
+        });
+      } else {
+        console.error(error.message);
+      }
     }
   };
 
@@ -79,7 +86,6 @@ const Header = () => {
             />
             <Box
               variant="h1"
-              noWrap
               onClick={() => {
                 if (location.pathname === '/home') {
                   window.scrollTo({

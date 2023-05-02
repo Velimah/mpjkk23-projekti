@@ -27,15 +27,21 @@ const CommentRow = ({file, fetchComments}) => {
       profilePicture.filename = mediaUrl + profilePicture.filename;
       setProfilePic(profilePicture);
     } catch (error) {
-      console.error(error.message);
+      if (error.message === 'Tag not found') {
+        console.log('No profile picture');
+      } else {
+        console.error(error.message);
+      }
     }
   };
 
   const fetchUserInfo = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const userInfo = await getUser(file.user_id, token);
-      setUserInfo(userInfo);
+      if (user) {
+        const token = localStorage.getItem('token');
+        const userInfo = await getUser(file.user_id, token);
+        setUserInfo(userInfo);
+      }
     } catch (error) {
       console.error(error.message);
     }

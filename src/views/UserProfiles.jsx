@@ -21,10 +21,8 @@ const UserProfiles = () => {
   const {getUser} = useUser();
   const {state} = useLocation();
 
-  const [rating, setRating] = useState(0);
-  const [ratingCount, setRatingCount] = useState(0);
-
-  const [userData, setUserData] = useState(() => {
+  // checks for state and if null gets targetUser information from localstorage
+  const [targetUserData, setTargetUserData] = useState(() => {
     return (
       state?.data ??
       state?.file ??
@@ -32,11 +30,15 @@ const UserProfiles = () => {
     );
   });
 
+  // when targetUserData changes, saves targetUserData to localstorage and updates targetUserData
   useEffect(() => {
-    window.localStorage.setItem('targetUser', JSON.stringify(userData));
-    setTargetUser(userData);
-  }, [setUserData]);
+    window.localStorage.setItem('targetUser', JSON.stringify(targetUserData));
+    setTargetUser(targetUserData);
+  }, [setTargetUserData]);
 
+  // useStates
+  const [rating, setRating] = useState(0);
+  const [ratingCount, setRatingCount] = useState(0);
   const [profilePic, setProfilePic] = useState({
     filename: profilePlaceholder,
   });
@@ -49,9 +51,11 @@ const UserProfiles = () => {
 
   const fetchUserData = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const userInfo = await getUser(userData.user_id, token);
-      setUserData(userInfo);
+      if (user) {
+        const token = localStorage.getItem('token');
+        const userInfo = await getUser(targetUserData.user_id, token);
+        setTargetUserData(userInfo);
+      }
     } catch (error) {
       console.error(error.message);
     }
@@ -59,27 +63,39 @@ const UserProfiles = () => {
 
   const fetchProfilePicture = async () => {
     try {
-      const profilePictures = await getTag(
-        appId + '_profilepicture_' + userData.user_id
-      );
-      const profilePicture = profilePictures.pop();
-      profilePicture.filename = mediaUrl + profilePicture.filename;
-      setProfilePic(profilePicture);
+      if (user) {
+        const profilePictures = await getTag(
+          appId + '_profilepicture_' + targetUserData.user_id
+        );
+        const profilePicture = profilePictures.pop();
+        profilePicture.filename = mediaUrl + profilePicture.filename;
+        setProfilePic(profilePicture);
+      }
     } catch (error) {
-      console.error(error.message);
+      if (error.message === 'Tag not found') {
+        console.log('No background picture');
+      } else {
+        console.error(error.message);
+      }
     }
   };
 
   const fetchBackgroundPicture = async () => {
     try {
-      const backgroundPictures = await getTag(
-        appId + '_backgroundpicture_' + userData.user_id
-      );
-      const backgroundPicture = backgroundPictures.pop();
-      backgroundPicture.filename = mediaUrl + backgroundPicture.filename;
-      setBackgroundPic(backgroundPicture);
+      if (user) {
+        const backgroundPictures = await getTag(
+          appId + '_backgroundpicture_' + targetUserData.user_id
+        );
+        const backgroundPicture = backgroundPictures.pop();
+        backgroundPicture.filename = mediaUrl + backgroundPicture.filename;
+        setBackgroundPic(backgroundPicture);
+      }
     } catch (error) {
-      console.error(error.message);
+      if (error.message === 'Tag not found') {
+        console.log('No background picture');
+      } else {
+        console.error(error.message);
+      }
     }
   };
 
@@ -87,13 +103,17 @@ const UserProfiles = () => {
     try {
       if (user) {
         const profilePictures = await getTag(
-          appId + '_profilepicture_' + userData.user_id
+          appId + '_profilepicture_' + targetUserData.user_id
         );
         const profileText = profilePictures.pop();
         setprofileDescription(profileText.description);
       }
     } catch (error) {
-      console.error(error.message);
+      if (error.message === 'Tag not found') {
+        console.log('No profile description');
+      } else {
+        console.error(error.message);
+      }
     }
   };
 
@@ -104,7 +124,7 @@ const UserProfiles = () => {
   const fetchAllRatings = async () => {
     try {
       const token = localStorage.getItem('token');
-      const mediaInfo = await getAllMediaById(userData.user_id, token);
+      const mediaInfo = await getAllMediaById(targetUserData.user_id, token);
       let sum = 0;
       let count = 0;
       for (const data of mediaInfo) {
@@ -118,7 +138,10 @@ const UserProfiles = () => {
         }
       }
       setRatingCount(count);
-      const average = sum / count;
+      let average = sum / count;
+      if (isNaN(average)) {
+        average = 0;
+      }
       setRating(average);
     } catch (error) {
       console.log(error.message);
@@ -135,12 +158,14 @@ const UserProfiles = () => {
 
   return (
     <>
-      <Box sx={{maxWidth: '1200px', margin: 'auto', pt: {xs: 8, sm: 1, md: 1}}}>
+      <Box sx={{maxWidth: '1200px', margin: 'auto', pt: {xs: 8, sm: 0}}}>
         <Avatar
           src={backgroundPic.filename}
           alt="Logo"
           sx={{
             borderRadius: 0,
+            borderBottomLeftRadius: {xs: 0, lg: '2rem'},
+            borderBottomRightRadius: {xs: 0, lg: '2rem'},
             boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px',
             maxWidth: '1200px',
             width: '100%',
@@ -186,20 +211,20 @@ const UserProfiles = () => {
             }}
           >
             <Typography component="p" variant="h1" sx={{mt: 1}}>
-              {userData.full_name
-                ? userData.full_name
+              {targetUserData.full_name
+                ? targetUserData.full_name
                 : 'Has not set a full name'}
             </Typography>
             <Typography component="p" variant="body4" sx={{mt: 1}}>
-              {'@' + userData.username}
+              {'@' + targetUserData.username}
             </Typography>
             <Rating
               name="read-only"
               size="large"
               precision={0.5}
-              value={rating.toFixed(2)}
+              value={Number(rating.toFixed(2))}
               readOnly
-              sx={{mt: 1}}
+              sx={{mt: 1, color: '#7047A6', mr: 0.5, fontSize: '1.8rem'}}
             />
             <Typography component="legend">
               {rating.toFixed(2)} ({ratingCount} ratings)

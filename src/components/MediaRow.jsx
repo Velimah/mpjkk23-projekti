@@ -8,6 +8,7 @@ import {
   Avatar,
   useMediaQuery,
   Rating,
+  Paper,
 } from '@mui/material';
 import PropTypes from 'prop-types';
 import {Link} from 'react-router-dom';
@@ -84,7 +85,11 @@ const MediaRow = ({file, style, mediaArray}) => {
       profilePicture.filename = mediaUrl + profilePicture.filename;
       setProfilePic(profilePicture);
     } catch (error) {
-      console.error(error.message);
+      if (error.message === 'Tag not found') {
+        console.log('No profile picture');
+      } else {
+        console.error(error.message);
+      }
     }
   };
 
@@ -223,7 +228,17 @@ const MediaRow = ({file, style, mediaArray}) => {
   };
 
   return (
-    <Box component="div">
+    <Paper
+      component="div"
+      sx={{
+        my: style ? 0 : 1,
+        mx: style ? 0 : {sx: 0, md: 1},
+        backgroundColor: style ? 'transparent' : '#FFFFFF',
+        boxShadow: style
+          ? 'none'
+          : 'boxShadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12)',
+      }}
+    >
       <ImageListItem
         component={style ? Link : undefined}
         variant="contained"
@@ -233,7 +248,6 @@ const MediaRow = ({file, style, mediaArray}) => {
           setTargetUser(file);
         }}
         sx={{
-          borderBottom: style ? 0 : 1,
           '&:hover': {
             filter: style ? 'brightness(90%)' : 'brightness(100%)',
           },
@@ -244,11 +258,9 @@ const MediaRow = ({file, style, mediaArray}) => {
           <Grid
             container
             direction="row"
-            alignItems="center"
             sx={{
-              px: smallScreen ? 2 : 'auto',
-              pt: 3,
-              pb: 2,
+              alignItems: 'center',
+              p: 2,
             }}
           >
             <Avatar
@@ -259,7 +271,7 @@ const MediaRow = ({file, style, mediaArray}) => {
               onClick={() => {
                 setTargetUser(file);
               }}
-              sx={{ml: 1, boxShadow: 3, width: 45, height: 45}}
+              sx={{boxShadow: 3, width: 45, height: 45}}
               src={profilePic.filename}
             />
             <Typography
@@ -300,10 +312,9 @@ const MediaRow = ({file, style, mediaArray}) => {
           <img
             style={{
               width: '100%',
-
               aspectRatio: '1 / 1',
               objectFit: 'cover',
-              borderRadius: '5px',
+              borderRadius: smallScreen ? '0.3rem' : '0.6rem',
               filter: `brightness(${allData.filters.brightness}%)
                        contrast(${allData.filters.contrast}%)
                        saturate(${allData.filters.saturation}%)
@@ -327,7 +338,6 @@ const MediaRow = ({file, style, mediaArray}) => {
               width: '100%',
               aspectRatio: '1 / 1',
               objectFit: 'cover',
-              borderRadius: smallScreen ? 0 : '5px',
               filter: `brightness(${allData.filters.brightness}%)
                        contrast(${allData.filters.contrast}%)
                        saturate(${allData.filters.saturation}%)
@@ -345,9 +355,8 @@ const MediaRow = ({file, style, mediaArray}) => {
           />
         )}
         {!style && (
-          <Grid sx={{px: {xs: 1, md: 0}, pb: 3}}>
+          <Grid sx={{p: 2, py: 1}}>
             <Grid
-              sx={{pt: 1}}
               container
               direction="row"
               justifyContent="space-around"
@@ -384,8 +393,8 @@ const MediaRow = ({file, style, mediaArray}) => {
                     }}
                     variant="contained"
                   >
-                    {/* * MobileLikes check if user has liked * */}
-                    {likesBoolean ? (
+                    {/* * MobileLikes check if user has liked or is not logged * */}
+                    {likesBoolean || !user ? (
                       <FavoriteIcon
                         sx={{color: '#7047A6', mr: 1, fontSize: '1.6rem'}}
                       />
@@ -417,8 +426,8 @@ const MediaRow = ({file, style, mediaArray}) => {
                     onMouseOut={handleMouseOutLikes}
                     sx={{borderRadius: '20px'}}
                   >
-                    {/* * DesktopLikes check if user has liked * */}
-                    {likesBoolean ? (
+                    {/* * DesktopLikes check if user has liked or is not logged * */}
+                    {likesBoolean || !user ? (
                       <FavoriteIcon
                         sx={{color: '#7047A6', mr: 1, fontSize: '1.6rem'}}
                       />
@@ -456,7 +465,7 @@ const MediaRow = ({file, style, mediaArray}) => {
                             sx={{color: '#7047A6', mr: 0.5, fontSize: '1.8rem'}}
                           />
                           <Typography component="p" variant="body1">
-                            {rating?.toFixed(1)} ({ratingCount}{' '}
+                            {Number(rating?.toFixed(1))} ({ratingCount}{' '}
                             {ratingCount > 1 ? 'ratings' : 'rating'})
                           </Typography>
                         </>
@@ -502,29 +511,11 @@ const MediaRow = ({file, style, mediaArray}) => {
                             onMouseOut={handleMouseOutRating}
                             sx={{borderRadius: '20px'}}
                           >
-                            <Rating
-                              name="read-only"
-                              size="large"
-                              precision={0.2}
-                              defaultValue={rating?.toFixed(1)}
-                              value={rating?.toFixed(1)}
-                              readOnly
-                              icon={
-                                <Star
-                                  sx={{
-                                    color: '#7047A6',
-                                    fontSize: {xs: '1.2rem', sm: '1.6rem'},
-                                  }}
-                                />
-                              }
-                              emptyIcon={
-                                <StarBorderOutlined
-                                  sx={{
-                                    color: '#7047A6',
-                                    fontSize: {xs: '1.2rem', sm: '1.6rem'},
-                                  }}
-                                />
-                              }
+                            <Star
+                              sx={{
+                                color: '#7047A6',
+                                fontSize: {xs: '1.2rem', sm: '1.6rem'},
+                              }}
                             />
                             <Typography
                               sx={{ml: 1}}
@@ -533,7 +524,9 @@ const MediaRow = ({file, style, mediaArray}) => {
                             >
                               {ratingHoverBoolean
                                 ? 'Remove rating'
-                                : `${rating?.toFixed(1)} (${ratingCount} ${
+                                : `${Number(
+                                    rating?.toFixed(1)
+                                  )} (${ratingCount} ${
                                     ratingCount === 1 ? 'rating' : 'ratings'
                                   })`}
                             </Typography>
@@ -547,7 +540,7 @@ const MediaRow = ({file, style, mediaArray}) => {
                             <Rating
                               name="simple-controlled"
                               size="large"
-                              value={rating?.toFixed(1)}
+                              value={Number(rating?.toFixed(1))}
                               precision={1}
                               onChange={(event, newValue) => {
                                 event.stopPropagation();
@@ -580,7 +573,9 @@ const MediaRow = ({file, style, mediaArray}) => {
                               >
                                 {ratingHoverBoolean
                                   ? 'Add a rating'
-                                  : `${rating?.toFixed(1)} (${ratingCount} ${
+                                  : `${Number(
+                                      rating?.toFixed(1)
+                                    )} (${ratingCount} ${
                                       ratingCount === 1 ? 'rating' : 'ratings'
                                     })`}
                               </Typography>
@@ -611,7 +606,7 @@ const MediaRow = ({file, style, mediaArray}) => {
                               }}
                             />
                             <Typography component="p" variant="body1">
-                              {rating?.toFixed(1)} ({ratingCount}{' '}
+                              {Number(rating?.toFixed(1))} ({ratingCount}{' '}
                               {ratingCount === 1 ? 'rating' : 'ratings'})
                             </Typography>
                           </>
@@ -626,7 +621,9 @@ const MediaRow = ({file, style, mediaArray}) => {
                             />
                             <Typography component="p" variant="body1">
                               {ratingCount
-                                ? `${rating?.toFixed(1)} (${ratingCount} ${
+                                ? `${Number(
+                                    rating?.toFixed(1)
+                                  )} (${ratingCount} ${
                                     ratingCount === 1 ? 'rating' : 'ratings'
                                   })`
                                 : 'No ratings'}
@@ -673,7 +670,7 @@ const MediaRow = ({file, style, mediaArray}) => {
           </Grid>
         )}
       </ImageListItem>
-    </Box>
+    </Paper>
   );
 };
 

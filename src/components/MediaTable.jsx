@@ -67,7 +67,7 @@ const MediaTable = ({
 
   return (
     <>
-      <Grid sx={{mt: 3, mb: 3}}>
+      <Grid sx={{py: 3}}>
         <Container>
           <Grid
             container
@@ -76,23 +76,38 @@ const MediaTable = ({
             alignItems="center"
           >
             {myFilesOnly || targetUserFilesOnly ? (
-              <Typography component="h2" variant="h2">
+              <Typography
+                sx={{fontSize: {xs: '1.2rem', sm: '1.5rem'}}}
+                component="h2"
+                variant="h2"
+              >
                 {arrayLength} {arrayLength === 1 ? 'post' : 'posts'}
               </Typography>
             ) : null}
             {myFavouritesOnly ? (
-              <Typography component="h2" variant="h2">
+              <Typography
+                sx={{fontSize: {xs: '1.2rem', sm: '1.5rem'}}}
+                component="h2"
+                variant="h2"
+              >
                 {`Liked posts (${arrayLength})`}
               </Typography>
             ) : null}
             {!myFilesOnly && !targetUserFilesOnly && !myFavouritesOnly ? (
-              <Typography component="h2" variant="h2">
+              <Typography
+                sx={{fontSize: {xs: '1.2rem', sm: '1.5rem'}}}
+                component="h2"
+                variant="h2"
+              >
                 Discover cats
               </Typography>
             ) : null}
-            <FormControl sx={{width: 150}}>
+            <FormControl
+              sx={{width: {xs: '150px', sm: '200px', textAlign: 'center'}}}
+            >
               <InputLabel id="select-label">Sort</InputLabel>
               <Select
+                sx={{borderRadius: '1.8rem'}}
                 defaultValue={1}
                 onChange={handleChange}
                 labelId="select-label"
@@ -161,11 +176,7 @@ const MediaTable = ({
         >
           {/* * LIST STYLE * */}
           {style === false ? (
-            <ImageList
-              cols={1}
-              gap={0}
-              sx={{width: smallScreen ? '100%' : '500px'}}
-            >
+            <ImageList cols={1} gap={0} sx={{width: {sx: '100%', sm: '600px'}}}>
               {selectedOption === 'comments' &&
                 [...mediaArray]
                   .sort((a, b) => b.comments.length - a.comments.length)
@@ -231,9 +242,7 @@ const MediaTable = ({
                 objectFit: 'contain',
               }}
               cols={smallScreen ? 3 : 4}
-              container
               direction="row"
-              alignItems="stretch"
             >
               {selectedOption === 'comments' &&
                 [...mediaArray]

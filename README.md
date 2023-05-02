@@ -1,9 +1,11 @@
-Mediapalvelut ja käyttäjäkokemus TX00CS26-3007 Project
+Mediapalvelut ja käyttäjäkokemus TX00CS26-3007
 
-Members: Catrina Koskinen, Kerttu Kamula, Veli-Matti Heino
+Project: OnlyCats
 
 Instagram style media sharing application for cat lovers
 
-React.js, Material UI
+Members: Catrina Koskinen, Kerttu Kamula, Veli-Matti Heino
 
-Open [https://users.metropolia.fi/~velimah/mediapalvelut_projekti/](https://users.metropolia.fi/~velimah/mediapalvelut_projekti/) to view it in the browser.
+React.js, Material UI, Vite
+
+Open [https://users.metropolia.fi/~velimah/mediapalvelut_projekti/](https://users.metropolia.fi/~velimah/mediapalvelut_projekti/) to view the project in browser.

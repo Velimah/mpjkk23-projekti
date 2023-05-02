@@ -21,21 +21,25 @@ const useMedia = (
   myFavouritesOnly = false
 ) => {
   const [mediaArray, setMediaArray] = useState([]);
-  const {user, targetUser, setUser, setTargetUser} = useContext(MediaContext);
+  const {user, setUser, targetUser, setTargetUser} = useContext(MediaContext);
 
+  // checks for user and if null gets user information from localstorage
   const [userData, setData] = useState(() => {
     return user ?? JSON.parse(window.localStorage.getItem('user'));
   });
 
+  // when userData changes, saves userData to localstorage and updates userData
   useEffect(() => {
     window.localStorage.setItem('user', JSON.stringify(userData));
     setUser(userData);
   }, [setData]);
 
+  // checks for targetUser and if null gets targetUser information from localstorage
   const [targetUserData, setTargetUserData] = useState(() => {
     return targetUser ?? JSON.parse(window.localStorage.getItem('targetUser'));
   });
 
+  // when targetUserData changes, saves targetUserData to localstorage and updates targetUserData
   useEffect(() => {
     window.localStorage.setItem('targetUser', JSON.stringify(targetUserData));
     setTargetUser(targetUserData);
@@ -79,16 +83,16 @@ const useMedia = (
         file.averageRating = 0;
       }
       setMediaArray(filesWithThumbnail);
-      getLikesRatingsComments(filesWithThumbnail);
+      addLikesRatingsCommentsToGetMedia(filesWithThumbnail);
     } catch (error) {
-      console.error('getMedia', error.message);
+      console.error(error.message);
     }
   };
 
-  const getLikesRatingsComments = async (filesWithThumbnail) => {
+  const addLikesRatingsCommentsToGetMedia = async (filesWithThumbnail) => {
     try {
       for (const file of filesWithThumbnail) {
-        await sleep(20);
+        await sleep(5);
         const likes = await doFetch(
           baseUrl + 'favourites/file/' + file.file_id
         );
@@ -96,7 +100,7 @@ const useMedia = (
       }
 
       for (const file of filesWithThumbnail) {
-        await sleep(20);
+        await sleep(5);
         const fetchOptions = {
           method: 'GET',
         };
@@ -117,7 +121,7 @@ const useMedia = (
       }
 
       for (const file of filesWithThumbnail) {
-        await sleep(20);
+        await sleep(5);
         const fetchOptions = {
           method: 'GET',
         };
@@ -130,7 +134,7 @@ const useMedia = (
       setMediaArray([...filesWithThumbnail]);
       console.log('getMediaFetch', filesWithThumbnail);
     } catch (error) {
-      console.error('getlikesAndRatings', error.message);
+      console.error(error.message);
     }
   };
 
@@ -255,7 +259,17 @@ const useUser = () => {
     return available;
   };
 
-  return {postUser, getUserByToken, getCheckUser, getUser, putUser};
+  const deleteUser = async (id, token) => {
+    const fetchOptions = {
+      method: 'DELETE',
+      headers: {
+        'x-access-token': token,
+      },
+    };
+    return await doFetch(baseUrl + '/users/' + id, fetchOptions);
+  };
+
+  return {postUser, getUserByToken, getCheckUser, getUser, putUser, deleteUser};
 };
 
 const useAuthentication = () => {
@@ -385,7 +399,17 @@ const useComment = () => {
     return await doFetch(baseUrl + 'comments/file/' + id);
   };
 
-  return {postComment, deleteComment, getCommentsById};
+  const getCommentsByUser = async (token) => {
+    const fetchOptions = {
+      method: 'GET',
+      headers: {
+        'x-access-token': token,
+      },
+    };
+    return await doFetch(baseUrl + 'comments/', fetchOptions);
+  };
+
+  return {postComment, deleteComment, getCommentsById, getCommentsByUser};
 };
 
 const useRating = () => {

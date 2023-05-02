@@ -14,6 +14,9 @@ import {
 import {MediaContext} from '../contexts/MediaContext';
 
 const CatGPT = () => {
+  const {user} = useContext(MediaContext);
+
+  // useStates
   const [value, setValue] = useState('');
   const [message, setMessage] = useState(null);
   const [previousChats, setPreviousChats] = useState([]);
@@ -21,7 +24,6 @@ const CatGPT = () => {
   const [responseData, setRestponseData] = useState(null);
   const [messageSent, setMessageSent] = useState(false);
   const [cost, setCost] = useState(0);
-  const {user} = useContext(MediaContext);
 
   const createNewChat = () => {
     setMessage(null);
@@ -35,6 +37,7 @@ const CatGPT = () => {
     setValue('');
   };
 
+  // fetch to backend that gets chatpgt response
   const getMessages = async () => {
     setMessageSent(true);
     const catValue =
@@ -93,18 +96,22 @@ const CatGPT = () => {
     }
   }, [message, currentTitle]);
 
+  // scrolls to bottom of chat when new messages arrive
   const scrollPage = () => {
-    const element = document.querySelector('.scroller');
-    element.scrollIntoView({
-      behavior: 'smooth',
-      block: 'end',
-    });
+    if (document.querySelector('.scroller')) {
+      const element = document.querySelector('.scroller');
+      element.scrollIntoView({
+        behavior: 'smooth',
+        block: 'end',
+      });
+    }
   };
 
+  // timeout to append the new message to the chat before scrolling
   useEffect(() => {
     setTimeout(() => {
       scrollPage();
-    }, 1000);
+    }, 50);
   }, [responseData]);
 
   const currentChat = previousChats.filter(
@@ -129,7 +136,7 @@ const CatGPT = () => {
         </Typography>
         <Paper
           sx={{
-            p: {xs: 0, sm: '1rem', md: '3rem'},
+            p: {xs: 0, sm: '1rem', md: '1rem'},
             borderRadius: '1.5rem',
             bgcolor: {xs: 'transparent', sm: '#FFFFFF'},
             boxShadow: {
@@ -141,9 +148,9 @@ const CatGPT = () => {
           <Grid
             container
             direction="row"
-            flexWrap="nowrap"
             sx={{
               width: '100%',
+              flexWrap: 'nowrap',
             }}
           >
             <Grid
@@ -210,11 +217,11 @@ const CatGPT = () => {
               justifyContent="space-between"
               alignItems="center"
               textAlign="center"
-              flexWrap="nowrap"
               sx={{
                 height: {xs: '75vh', md: '70vh'},
                 width: '100%',
                 maxWidth: '1000px',
+                flexWrap: 'nowrap',
               }}
             >
               <List
@@ -227,6 +234,8 @@ const CatGPT = () => {
                     display: 'none',
                   },
                   scrollbarWidth: 'none',
+                  borderTopRightRadius: '0.5rem',
+                  borderTopLeftRadius: '0.5rem',
                 }}
                 className="feed"
               >
@@ -236,10 +245,11 @@ const CatGPT = () => {
                       sx={{
                         backgroundColor:
                           chat.role === 'assistant' ? '#F4DCE1' : '#F4DCE1',
-                        p: 2,
+                        px: 3,
+                        py: 2,
                         mt: 2,
                         alignItems: 'start',
-                        borderRadius: {xs: 0, sm: 2},
+                        borderRadius: {xs: 0, sm: '0.5rem'},
                         display: {xs: 'block'},
                       }}
                       key={index}
@@ -250,7 +260,7 @@ const CatGPT = () => {
                         sx={{
                           height: '100%',
                           textAlign: 'left',
-                          fontSize: {xs: '0.9rem', sm: '1.1rem'},
+                          fontSize: {xs: '1rem', sm: '1.1rem'},
                         }}
                       >
                         {chat.role === 'assistant'
@@ -263,7 +273,7 @@ const CatGPT = () => {
                         sx={{
                           textAlign: 'left',
                           margin: '0 10px',
-                          fontSize: {xs: '0.8rem', sm: '1rem'},
+                          fontSize: {xs: '0.9rem', sm: '1rem'},
                         }}
                       >
                         {chat.content}

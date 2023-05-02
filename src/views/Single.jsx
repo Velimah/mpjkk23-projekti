@@ -70,18 +70,22 @@ const Single = () => {
   const navigate = useNavigate();
   const {state} = useLocation();
 
+  // checks for targetUser and if null gets targetUser information from localstorage
   const [data, setData] = useState(() => {
     return state?.file ?? JSON.parse(window.localStorage.getItem('targetUser'));
   });
 
+  // when data changes, saves data to localstorage and updates data
   useEffect(() => {
     window.localStorage.setItem('targetUser', JSON.stringify(data));
   }, [setData]);
 
+  // checks for user and if null gets user information from localstorage
   const [userData, setUserData] = useState(() => {
     return user ?? JSON.parse(window.localStorage.getItem('user'));
   });
 
+  // when tUserData changes, saves UserData to localstorage and updates UserData
   useEffect(() => {
     window.localStorage.setItem('user', JSON.stringify(userData));
     setUserData(userData);
@@ -131,7 +135,11 @@ const Single = () => {
       profilePicture.filename = mediaUrl + profilePicture.filename;
       setProfilePic(profilePicture);
     } catch (error) {
-      console.error(error.message);
+      if (error.message === 'Tag not found') {
+        console.log('No profile picture');
+      } else {
+        console.error(error.message);
+      }
     }
   };
 
@@ -368,7 +376,7 @@ const Single = () => {
                        saturate(${allData.filters.saturation}%)
                        sepia(${allData.filters.sepia}%)`,
               backgroundImage:
-                data.media_type === 'audio' && `url('/vite.svg')`,
+                data.media_type === 'audio' && `url('onlycats_logo.png')`,
             }}
           />
           <CardContent>
