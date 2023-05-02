@@ -176,7 +176,7 @@ const MediaTable = ({
         >
           {/* * LIST STYLE * */}
           {style === false ? (
-            <ImageList cols={1} gap={0} sx={{width: {sx: '100%', sm: '600px'}}}>
+            <ImageList cols={1} gap={0} sx={{width: {sx: '100%', sm: '550px'}}}>
               {selectedOption === 'comments' &&
                 [...mediaArray]
                   .sort((a, b) => b.comments.length - a.comments.length)

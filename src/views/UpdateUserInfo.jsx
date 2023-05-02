@@ -1,4 +1,12 @@
-import {Box, Button, Grid, Typography} from '@mui/material';
+import {
+  Box,
+  Button,
+  Container,
+  Grid,
+  Typography,
+  Paper,
+  useMediaQuery,
+} from '@mui/material';
 import {useContext} from 'react';
 import {MediaContext} from '../contexts/MediaContext';
 import {useNavigate} from 'react-router-dom';
@@ -10,34 +18,38 @@ const UpdateUserInfo = () => {
   const {user} = useContext(MediaContext);
   const navigate = useNavigate();
 
+  const extraSmallScreen = useMediaQuery((theme) =>
+    theme.breakpoints.down('sm')
+  );
+
   return (
     <>
       {user && (
         <>
-          <Box sx={{maxWidth: 'md', margin: 'auto'}}>
+          <Container maxWidth="lg" sx={{p: {xs: '6rem 0', sm: '3rem 3rem'}}}>
             <Typography
               component="h1"
-              variant="h2"
+              variant="h1"
               textAlign="center"
-              sx={{my: 6}}
+              sx={{mb: 3}}
             >
               Update User info
             </Typography>
-            <Grid container justifyContent="center">
-              <UploadProfileBackgroundPicture />
-              <UploadProfilePicture />
-              <UpdateUserForm />
-            </Grid>
-            <Box display="flex" width="100%" justifyContent="center">
-              <Button
-                variant="contained"
-                sx={{m: 5, width: '200px'}}
-                onClick={() => navigate('/home')}
-              >
-                Back
-              </Button>
-            </Box>
-          </Box>
+            <Paper
+              sx={{
+                p: {xs: 0, sm: '3rem'},
+                borderRadius: '1.5rem',
+                bgcolor: {xs: 'transparent', sm: '#FFFFFF'},
+              }}
+              elevation={extraSmallScreen ? 0 : 6}
+            >
+              <Grid container justifyContent="center">
+                <UploadProfileBackgroundPicture />
+                <UploadProfilePicture />
+                <UpdateUserForm />
+              </Grid>
+            </Paper>
+          </Container>
         </>
       )}
     </>
