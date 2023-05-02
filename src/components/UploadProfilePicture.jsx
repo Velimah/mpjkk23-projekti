@@ -100,7 +100,13 @@ const UploadProfilePicture = () => {
       display="flex"
       flexDirection="column"
       justifyContent="flex-start"
-      sx={{flexWrap: 'nowrap', maxWidth: '50%'}}
+      sx={{
+        flexWrap: 'nowrap',
+        width: '100%',
+        pl: {xs: 3, sm: 0},
+        pr: {xs: 3, sm: 1, md: 3},
+        mb: {xs: '-80px', sm: 0},
+      }}
     >
       <Avatar
         src={selectedImage}
@@ -114,7 +120,7 @@ const UploadProfilePicture = () => {
           height: {xs: '125px', sm: '125', md: '200px'},
           width: {xs: '125px', sm: '125', md: '200px'},
           top: {xs: '-100px', sm: '-125px', md: '-150px'},
-          left: {xs: '25px', sm: '50px', md: '50px'},
+          left: {xs: '0px', sm: '50px', md: '50px'},
         }}
       />
       <ValidatorForm onSubmit={handleSubmit} noValidate>
@@ -128,7 +134,7 @@ const UploadProfilePicture = () => {
             sx={{
               position: 'relative',
               top: {xs: '-140px', sm: '-165px', md: '-190px'},
-              left: {xs: '90px', sm: '115px', md: '170px'},
+              left: {xs: '65px', sm: '115px', md: '170px'},
               py: 1,
               pb: '0.3rem',
               px: 2,
@@ -157,20 +163,29 @@ const UploadProfilePicture = () => {
             name="file"
             accept="image/*, video/*, audio/*"
           />
-          <TextValidator
-            multiline
-            maxRows={4}
-            margin="dense"
-            name="description"
-            label="Profile description"
-            onChange={handleInputChange}
-            value={inputs.description}
-            validators={updateProfilePictureValidators.description}
-            errorMessages={updateProfilePictureErrorMessages.description}
-          />
-          <Button variant="contained" fullWidth type="submit">
-            Update Profile Picture and Description
-          </Button>
+          <Box
+            sx={{
+              position: 'relative',
+              top: {xs: '-120px', sm: '-150px', md: '-180px'},
+            }}
+          >
+            <TextValidator
+              sx={{}}
+              fullWidth
+              multiline
+              rows={6}
+              margin="dense"
+              name="description"
+              label="Profile description"
+              onChange={handleInputChange}
+              value={inputs.description}
+              validators={updateProfilePictureValidators.description}
+              errorMessages={updateProfilePictureErrorMessages.description}
+            />
+            <Button sx={{mt: 1}} variant="contained" fullWidth type="submit">
+              Update Avatar and Description
+            </Button>
+          </Box>
         </Box>
       </ValidatorForm>
     </Box>

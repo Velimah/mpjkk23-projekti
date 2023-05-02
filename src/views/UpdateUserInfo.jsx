@@ -44,7 +44,10 @@ const UpdateUserInfo = () => {
               elevation={extraSmallScreen ? 0 : 6}
             >
               <UploadProfileBackgroundPicture />
-              <Box display="flex" sx={{mt: 2}}>
+              <Box
+                display="flex"
+                sx={{flexDirection: {xs: 'column', sm: 'row'}}}
+              >
                 <UploadProfilePicture />
                 <UpdateUserForm />
               </Box>

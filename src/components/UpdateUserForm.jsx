@@ -1,6 +1,6 @@
 import useForm from '../hooks/FormHooks';
 import {useUser} from '../hooks/ApiHooks';
-import {Button, Grid} from '@mui/material';
+import {Box, Button, Grid} from '@mui/material';
 import {ValidatorForm, TextValidator} from 'react-material-ui-form-validator';
 import {updateUserErrorMessages} from '../utils/errorMessages';
 import {updateUserValidators} from '../utils/validator';
@@ -72,7 +72,14 @@ const UpdateUserForm = () => {
 
   return (
     <>
-      <Grid container direction={'column'} sx={{maxWidth: 'sm', mt: 5}}>
+      <Box
+        sx={{
+          width: '100%',
+          pl: {xs: 3, sm: 1, md: 3},
+          pr: {xs: 3, sm: 0},
+          mt: {xs: 0, sm: 2, md: 8},
+        }}
+      >
         <ValidatorForm onSubmit={handleSubmit} noValidate>
           <TextValidator
             fullWidth
@@ -127,16 +134,11 @@ const UpdateUserForm = () => {
             validators={updateUserValidators.fullName}
             errorMessages={updateUserErrorMessages.fullName}
           />
-          <Button
-            fullWidth
-            variant="contained"
-            sx={{mt: 1, mb: 1}}
-            type="submit"
-          >
+          <Button fullWidth variant="contained" sx={{mt: 1}} type="submit">
             Update user info
           </Button>
         </ValidatorForm>
-      </Grid>
+      </Box>
     </>
   );
 };

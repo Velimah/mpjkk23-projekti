@@ -145,7 +145,7 @@ const UploadProfileBackgroundPicture = () => {
                 component="span"
                 type="submit"
               >
-                Upload
+                Update
               </Button>
             </label>
           </Box>
