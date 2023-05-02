@@ -73,7 +73,7 @@ const UserProfiles = () => {
       }
     } catch (error) {
       if (error.message === 'Tag not found') {
-        console.log('No background picture');
+        return;
       } else {
         console.error(error.message);
       }
@@ -92,7 +92,7 @@ const UserProfiles = () => {
       }
     } catch (error) {
       if (error.message === 'Tag not found') {
-        console.log('No background picture');
+        return;
       } else {
         console.error(error.message);
       }
@@ -110,7 +110,7 @@ const UserProfiles = () => {
       }
     } catch (error) {
       if (error.message === 'Tag not found') {
-        console.log('No profile description');
+        return;
       } else {
         console.error(error.message);
       }

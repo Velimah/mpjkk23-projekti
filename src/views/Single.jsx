@@ -136,7 +136,7 @@ const Single = () => {
       setProfilePic(profilePicture);
     } catch (error) {
       if (error.message === 'Tag not found') {
-        console.log('No profile picture');
+        return;
       } else {
         console.error(error.message);
       }

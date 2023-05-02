@@ -41,10 +41,10 @@ const Header = () => {
       }
     } catch (error) {
       if (error.message === 'Tag not found') {
-        console.log('No profile picture');
         setProfilePic({
           filename: profilePlaceholder,
         });
+        return;
       } else {
         console.error(error.message);
       }
