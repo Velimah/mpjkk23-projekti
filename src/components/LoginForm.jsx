@@ -85,7 +85,13 @@ const LoginForm = () => {
           }}
         />
 
-        <Button fullWidth variant="contained" type="submit" sx={{mt: 1}}>
+        <Button
+          fullWidth
+          variant="contained"
+          type="submit"
+          sx={{mt: 1}}
+          size="large"
+        >
           Login
         </Button>
       </ValidatorForm>

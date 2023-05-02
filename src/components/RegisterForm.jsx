@@ -156,7 +156,13 @@ const RegisterForm = ({toggle}) => {
             ),
           }}
         />
-        <Button fullWidth variant="contained" sx={{mt: 1}} type="submit">
+        <Button
+          fullWidth
+          variant="contained"
+          sx={{mt: 1}}
+          type="submit"
+          size="large"
+        >
           Register
         </Button>
       </ValidatorForm>

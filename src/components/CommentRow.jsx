@@ -1,4 +1,4 @@
-import {Box, Grid, Typography} from '@mui/material';
+import {Grid, Paper, Typography} from '@mui/material';
 import PropTypes from 'prop-types';
 import {useContext} from 'react';
 import UserHeader from './UserHeader';
@@ -8,15 +8,14 @@ const CommentRow = ({file, refreshData, setRefreshData}) => {
   const {user} = useContext(MediaContext);
 
   return (
-    <Box
+    <Paper
       sx={{
         p: 2,
         my: 2,
-        backgroundColor: '#F4DCE1',
+        backgroundColor: '#E3A7B6',
         borderRadius: '1.25rem',
-        boxShadow:
-          '0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14)',
       }}
+      elevation={0}
     >
       {user ? (
         <>
@@ -47,7 +46,7 @@ const CommentRow = ({file, refreshData, setRefreshData}) => {
           </Grid>
         </Grid>
       )}
-    </Box>
+    </Paper>
   );
 };
 

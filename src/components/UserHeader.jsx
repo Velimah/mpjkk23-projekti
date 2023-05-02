@@ -186,18 +186,17 @@ const UserHeader = ({
           <Tooltip title="Delete comment">
             <IconButton
               component={Link}
-              sx={{borderRadius: '2rem'}}
+              sx={{
+                borderRadius: '2rem',
+                '&:hover': {
+                  color: '#B00020',
+                },
+              }}
               onClick={() => {
                 setDeleteCommentDialogOpen(true);
               }}
             >
-              <DeleteRounded
-                sx={{
-                  '&:hover': {
-                    color: 'red',
-                  },
-                }}
-              />
+              <DeleteRounded />
             </IconButton>
           </Tooltip>
           <AlertDialog

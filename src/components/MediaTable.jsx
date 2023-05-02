@@ -70,7 +70,11 @@ const MediaTable = ({
     <>
       <Grid sx={{py: 3}}>
         <Container>
-          <Box display="flex" justifyContent="space-around" alignItems="center">
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+          >
             {myFilesOnly || targetUserFilesOnly ? (
               <Typography
                 sx={{
@@ -107,7 +111,6 @@ const MediaTable = ({
                     xs: '1.2rem',
                     sm: '1.5rem',
                     width: '150px',
-                    textAlign: 'center',
                   },
                 }}
                 component="h2"
@@ -116,10 +119,10 @@ const MediaTable = ({
                 Discover cats
               </Typography>
             ) : null}
-            <FormControl sx={{width: {xs: '150px', textAlign: 'center'}}}>
+            <FormControl sx={{width: {xs: '124px', textAlign: 'center'}}}>
               <InputLabel id="select-label">Sort</InputLabel>
               <Select
-                sx={{borderRadius: '1.8rem'}}
+                sx={{borderRadius: '100%'}}
                 defaultValue={1}
                 onChange={handleChange}
                 labelId="select-label"
@@ -140,7 +143,7 @@ const MediaTable = ({
         <Grid
           container
           direction="row"
-          justifyContent={'center'}
+          justifyContent="flex-start"
           mb={style && 1}
           alignItems="stretch"
           wrap="nowrap"

@@ -60,6 +60,7 @@ const Header = () => {
       elevation={extraSmallScreen ? 0 : 6}
       position={extraSmallScreen ? 'absolute' : 'sticky'}
       color={extraSmallScreen ? 'transparent' : 'white'}
+      sx={{borderRadius: 0}}
     >
       <Container maxWidth="lg">
         <Toolbar sx={{justifyContent: {xs: 'center'}}} disableGutters>

@@ -69,7 +69,7 @@ const Home = () => {
               borderRadius: '25px',
               backgroundColor: '#FDF7F4',
               boxShadow: 3,
-              p: '2rem',
+              p: 4,
               m: '0 1rem',
               maxWidth: '22rem',
             }}

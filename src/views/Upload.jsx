@@ -355,6 +355,7 @@ const Upload = () => {
                   type="submit"
                   sx={{mb: 2}}
                   disabled={upload}
+                  size="large"
                 >
                   {upload ? 'Uploading...' : 'Upload'}
                   {upload && (
@@ -371,6 +372,7 @@ const Upload = () => {
                   fullWidth
                   onClick={() => setCancelUploadDialogOpen(true)}
                   disabled={upload}
+                  size="large"
                 >
                   Cancel
                 </Button>

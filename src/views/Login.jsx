@@ -22,7 +22,7 @@ const Login = () => {
     >
       <Container
         maxWidth="lg"
-        sx={{display: 'flex', justifyContent: 'center', px: 3}}
+        sx={{display: 'flex', justifyContent: 'center', px: {xs: 4, sm: 0}}}
       >
         <Grid
           item
@@ -45,7 +45,7 @@ const Login = () => {
             borderRadius: {xs: 0, sm: '25px'},
             backgroundColor: '#FDF7F4',
             boxShadow: {xs: 0, sm: 3},
-            p: {xs: 0, sm: '2rem'},
+            p: {xs: 0, sm: 4},
             m: {xs: '8rem 0', sm: '0 1rem'},
             maxWidth: {sm: '480px'},
           }}

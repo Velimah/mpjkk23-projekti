@@ -572,7 +572,6 @@ const Single = () => {
                   errorMessages={commentErrorMessages.comment}
                   disabled={!user}
                   helperText={!user && 'You need to login to add comment.'}
-                  size="small"
                 />
               </Grid>
               <Grid item xs="auto">
@@ -581,34 +580,19 @@ const Single = () => {
                   type="submit"
                   aria-label="Send comment"
                   disabled={!user}
-                  sx={{borderRadius: '4px', minWidth: '40px', width: '40px'}}
+                  sx={{
+                    borderRadius: '0.75rem',
+                    minWidth: '56px',
+                    width: '56px',
+                    py: '16px',
+                  }}
+                  size="large"
                 >
                   <SendRounded />
                 </Button>
               </Grid>
             </Grid>
           </ValidatorForm>
-          {commentArray
-            .map((item, index) => {
-              if (index < showComments) {
-                return (
-                  <CommentRow
-                    key={index}
-                    file={item}
-                    fetchComments={fetchComments}
-                  />
-                );
-              }
-            })
-            .reverse()}
-          {commentCount > showComments && (
-            <Button
-              sx={{width: '100%', my: 1}}
-              onClick={() => setShowComments(showComments + 3)}
-            >
-              Show more comments
-            </Button>
-          )}
         </Box>
       </Container>
     </>

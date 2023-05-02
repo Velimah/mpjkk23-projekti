@@ -331,6 +331,7 @@ const Modify = () => {
                   fullWidth
                   type="submit"
                   sx={{mb: 2}}
+                  size="large"
                 >
                   Update
                 </Button>
@@ -338,6 +339,7 @@ const Modify = () => {
                   variant="outlined"
                   fullWidth
                   onClick={() => setCancelModifyDialogOpen(true)}
+                  size="large"
                 >
                   Cancel
                 </Button>
