@@ -16,15 +16,20 @@ const Layout = () => {
   const getUserInfo = async () => {
     const userToken = localStorage.getItem('token');
     if (userToken) {
-      const userData = await getUserByToken(userToken);
-      if (userData) {
-        setUser(userData);
-        const target = location.pathname === '/' ? '/home' : location.pathname;
-        navigate(target);
-        return;
+      try {
+        const userData = await getUserByToken(userToken);
+        if (userData) {
+          setUser(userData);
+          const target =
+            location.pathname === '/' ? '/home' : location.pathname;
+          navigate(target);
+          return;
+        }
+      } catch (error) {
+        console.error(error.message);
+        navigate('/logout');
       }
     }
-    navigate('/home');
   };
 
   useEffect(() => {

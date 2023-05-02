@@ -21,26 +21,33 @@ const useMedia = (
   myFavouritesOnly = false
 ) => {
   const [mediaArray, setMediaArray] = useState([]);
-  const {user, update, targetUser, setUser, setTargetUser} =
-    useContext(MediaContext);
+  const {user, setUser, targetUser, setTargetUser} = useContext(MediaContext);
 
+  // checks for user and if null gets user information from localstorage
   const [userData, setData] = useState(() => {
     return user ?? JSON.parse(window.localStorage.getItem('user'));
   });
 
+  // when userData changes, saves userData to localstorage and updates userData
   useEffect(() => {
     window.localStorage.setItem('user', JSON.stringify(userData));
     setUser(userData);
   }, [setData]);
 
+  // checks for targetUser and if null gets targetUser information from localstorage
   const [targetUserData, setTargetUserData] = useState(() => {
     return targetUser ?? JSON.parse(window.localStorage.getItem('targetUser'));
   });
 
+  // when targetUserData changes, saves targetUserData to localstorage and updates targetUserData
   useEffect(() => {
     window.localStorage.setItem('targetUser', JSON.stringify(targetUserData));
     setTargetUser(targetUserData);
   }, [setTargetUserData]);
+
+  const sleep = (ms) => {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  };
 
   const getMedia = async () => {
     try {
@@ -68,19 +75,68 @@ const useMedia = (
           return await doFetch(baseUrl + 'media/' + file.file_id);
         })
       );
+
+      for (const file of filesWithThumbnail) {
+        file.likes = [{}];
+        file.ratings = [{}];
+        file.comments = [{}];
+        file.averageRating = 0;
+      }
       setMediaArray(filesWithThumbnail);
+      addLikesRatingsCommentsToGetMedia(filesWithThumbnail);
     } catch (error) {
-      console.error('getMedia', error.message);
+      console.error(error.message);
     }
   };
 
-  useEffect(() => {
+  const addLikesRatingsCommentsToGetMedia = async (filesWithThumbnail) => {
     try {
-      getMedia();
+      for (const file of filesWithThumbnail) {
+        await sleep(5);
+        const likes = await doFetch(
+          baseUrl + 'favourites/file/' + file.file_id
+        );
+        file.likes = likes;
+      }
+
+      for (const file of filesWithThumbnail) {
+        await sleep(5);
+        const fetchOptions = {
+          method: 'GET',
+        };
+        const ratings = await doFetch(
+          baseUrl + 'ratings/file/' + file.file_id,
+          fetchOptions
+        );
+        let sum = 0;
+        ratings.forEach((r) => {
+          sum += r.rating;
+        });
+        let averageRating = sum / ratings.length;
+        if (isNaN(averageRating)) {
+          averageRating = 0;
+        }
+        file.ratings = ratings;
+        file.averageRating = averageRating;
+      }
+
+      for (const file of filesWithThumbnail) {
+        await sleep(5);
+        const fetchOptions = {
+          method: 'GET',
+        };
+        const comments = await doFetch(
+          baseUrl + 'comments/file/' + file.file_id,
+          fetchOptions
+        );
+        file.comments = comments;
+      }
+      setMediaArray([...filesWithThumbnail]);
+      console.log('getMediaFetch', filesWithThumbnail);
     } catch (error) {
-      console.log(error.message);
+      console.error(error.message);
     }
-  }, [update]);
+  };
 
   const getAllMediaByCurrentUser = async (token) => {
     const fetchOptions = {
@@ -144,6 +200,7 @@ const useMedia = (
 
   return {
     mediaArray,
+    getMedia,
     postMedia,
     deleteMedia,
     putMedia,
@@ -202,7 +259,17 @@ const useUser = () => {
     return available;
   };
 
-  return {postUser, getUserByToken, getCheckUser, getUser, putUser};
+  const deleteUser = async (id, token) => {
+    const fetchOptions = {
+      method: 'DELETE',
+      headers: {
+        'x-access-token': token,
+      },
+    };
+    return await doFetch(baseUrl + '/users/' + id, fetchOptions);
+  };
+
+  return {postUser, getUserByToken, getCheckUser, getUser, putUser, deleteUser};
 };
 
 const useAuthentication = () => {
@@ -332,7 +399,17 @@ const useComment = () => {
     return await doFetch(baseUrl + 'comments/file/' + id);
   };
 
-  return {postComment, deleteComment, getCommentsById};
+  const getCommentsByUser = async (token) => {
+    const fetchOptions = {
+      method: 'GET',
+      headers: {
+        'x-access-token': token,
+      },
+    };
+    return await doFetch(baseUrl + 'comments/', fetchOptions);
+  };
+
+  return {postComment, deleteComment, getCommentsById, getCommentsByUser};
 };
 
 const useRating = () => {

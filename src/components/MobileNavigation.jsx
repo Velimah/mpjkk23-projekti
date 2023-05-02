@@ -15,10 +15,12 @@ import {
   PersonRounded,
   LoginRounded,
   AddRounded,
+  QuestionAnswerRounded,
 } from '@mui/icons-material';
 
 const loggedNavLinks = [
   {page: 'Liked', to: '/liked', icon: <FavoriteRounded />},
+  {page: 'CatGPT', to: '/catgpt', icon: <QuestionAnswerRounded />},
   {page: 'Profile', to: '/profile', icon: <PersonRounded />},
 ];
 

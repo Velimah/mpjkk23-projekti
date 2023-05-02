@@ -12,9 +12,11 @@ import {
   Paper,
 } from '@mui/material';
 import {MediaContext} from '../contexts/MediaContext';
-import {useNavigate} from 'react-router-dom';
 
 const CatGPT = () => {
+  const {user} = useContext(MediaContext);
+
+  // useStates
   const [value, setValue] = useState('');
   const [message, setMessage] = useState(null);
   const [previousChats, setPreviousChats] = useState([]);
@@ -22,8 +24,6 @@ const CatGPT = () => {
   const [responseData, setRestponseData] = useState(null);
   const [messageSent, setMessageSent] = useState(false);
   const [cost, setCost] = useState(0);
-  const {user} = useContext(MediaContext);
-  const navigate = useNavigate();
 
   const createNewChat = () => {
     setMessage(null);
@@ -37,13 +37,11 @@ const CatGPT = () => {
     setValue('');
   };
 
+  // fetch to backend that gets chatpgt response
   const getMessages = async () => {
     setMessageSent(true);
-    setTimeout(() => {
-      setMessageSent(false);
-    }, 5000);
     const catValue =
-      'Add a cat pun to the answer but answer factually:' + value;
+      'Add a cat pun to the answer but answer factually: ' + value;
     const options = {
       method: 'POST',
       body: JSON.stringify({
@@ -70,8 +68,10 @@ const CatGPT = () => {
       );
       const addedCost = newCost + cost;
       setCost(addedCost);
+      setMessageSent(false);
     } catch (error) {
       console.error(error);
+      setMessageSent(false);
     }
   };
 
@@ -96,18 +96,22 @@ const CatGPT = () => {
     }
   }, [message, currentTitle]);
 
+  // scrolls to bottom of chat when new messages arrive
   const scrollPage = () => {
-    const element = document.querySelector('.scroller');
-    element.scrollIntoView({
-      behavior: 'smooth',
-      block: 'end',
-    });
+    if (document.querySelector('.scroller')) {
+      const element = document.querySelector('.scroller');
+      element.scrollIntoView({
+        behavior: 'smooth',
+        block: 'end',
+      });
+    }
   };
 
+  // timeout to append the new message to the chat before scrolling
   useEffect(() => {
     setTimeout(() => {
       scrollPage();
-    }, 1000);
+    }, 50);
   }, [responseData]);
 
   const currentChat = previousChats.filter(
@@ -121,7 +125,7 @@ const CatGPT = () => {
     <>
       <Container
         maxWidth="lg"
-        sx={{p: {xs: '6rem 0', sm: '2rem 1rem', md: '2rem 3rem'}}}
+        sx={{p: {xs: '4rem 0', sm: '2rem 1rem', md: '2rem 3rem'}}}
       >
         <Typography
           component="h1"
@@ -132,17 +136,21 @@ const CatGPT = () => {
         </Typography>
         <Paper
           sx={{
-            p: {xs: 0, sm: '1rem', md: '3rem'},
+            p: {xs: 0, sm: '1rem', md: '1rem'},
             borderRadius: '1.5rem',
             bgcolor: {xs: 'transparent', sm: '#FFFFFF'},
+            boxShadow: {
+              xs: 'none',
+              sm: '0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12)',
+            },
           }}
         >
           <Grid
             container
             direction="row"
-            flexWrap="nowrap"
             sx={{
               width: '100%',
+              flexWrap: 'nowrap',
             }}
           >
             <Grid
@@ -209,12 +217,11 @@ const CatGPT = () => {
               justifyContent="space-between"
               alignItems="center"
               textAlign="center"
-              flexWrap="nowrap"
               sx={{
-                height: '70vh',
+                height: {xs: '75vh', md: '70vh'},
                 width: '100%',
                 maxWidth: '1000px',
-                pt: {xs: 7, sm: 0},
+                flexWrap: 'nowrap',
               }}
             >
               <List
@@ -227,6 +234,8 @@ const CatGPT = () => {
                     display: 'none',
                   },
                   scrollbarWidth: 'none',
+                  borderTopRightRadius: '0.5rem',
+                  borderTopLeftRadius: '0.5rem',
                 }}
                 className="feed"
               >
@@ -236,10 +245,11 @@ const CatGPT = () => {
                       sx={{
                         backgroundColor:
                           chat.role === 'assistant' ? '#F4DCE1' : '#F4DCE1',
-                        p: 2,
+                        px: 3,
+                        py: 2,
                         mt: 2,
                         alignItems: 'start',
-                        borderRadius: {xs: 0, sm: 2},
+                        borderRadius: {xs: 0, sm: '0.5rem'},
                         display: {xs: 'block'},
                       }}
                       key={index}
@@ -250,7 +260,7 @@ const CatGPT = () => {
                         sx={{
                           height: '100%',
                           textAlign: 'left',
-                          fontSize: {xs: '0.8rem', sm: '1rem'},
+                          fontSize: {xs: '1rem', sm: '1.1rem'},
                         }}
                       >
                         {chat.role === 'assistant'
@@ -263,7 +273,7 @@ const CatGPT = () => {
                         sx={{
                           textAlign: 'left',
                           margin: '0 10px',
-                          fontSize: {xs: '0.8rem', sm: '1rem'},
+                          fontSize: {xs: '0.9rem', sm: '1rem'},
                         }}
                       >
                         {chat.content}
@@ -323,7 +333,10 @@ const CatGPT = () => {
                   display="flex"
                   justifyContent="center"
                   alignItems="center"
-                  sx={{flexDirection: {xs: 'column', md: 'row'}}}
+                  sx={{
+                    flexDirection: {xs: 'column', md: 'row'},
+                    display: {xs: 'none', md: 'flex'},
+                  }}
                 >
                   <Typography
                     component="p"
@@ -356,15 +369,6 @@ const CatGPT = () => {
             </Grid>
           </Grid>
         </Paper>
-        <Box display="flex" width="100%" justifyContent="center">
-          <Button
-            variant="contained"
-            sx={{mt: 3, width: '200px'}}
-            onClick={() => navigate('/home')}
-          >
-            Back
-          </Button>
-        </Box>
       </Container>
     </>
   );

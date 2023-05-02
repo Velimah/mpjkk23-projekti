@@ -58,18 +58,22 @@ const Single = () => {
 
   const {state} = useLocation();
 
+  // checks for targetUser and if null gets targetUser information from localstorage
   const [data, setData] = useState(() => {
     return state?.file ?? JSON.parse(window.localStorage.getItem('targetUser'));
   });
 
+  // when data changes, saves data to localstorage and updates data
   useEffect(() => {
     window.localStorage.setItem('targetUser', JSON.stringify(data));
   }, [setData]);
 
+  // checks for user and if null gets user information from localstorage
   const [userData, setUserData] = useState(() => {
     return user ?? JSON.parse(window.localStorage.getItem('user'));
   });
 
+  // when tUserData changes, saves UserData to localstorage and updates UserData
   useEffect(() => {
     window.localStorage.setItem('user', JSON.stringify(userData));
     setUserData(userData);
@@ -250,6 +254,22 @@ const Single = () => {
     fetchRatings();
   }, [refreshRating]);
 
+  // mouseovers for likes and ratings
+  const [showTextLikes, setShowTextLikes] = useState(false);
+  const [showTextRating, setShowTextRating] = useState(false);
+  const handleMouseOverRating = () => {
+    setShowTextRating(true);
+  };
+  const handleMouseOutRating = () => {
+    setShowTextRating(false);
+  };
+  const handleMouseOverLikes = () => {
+    setShowTextLikes(true);
+  };
+  const handleMouseOutLikes = () => {
+    setShowTextLikes(false);
+  };
+
   return (
     <>
       <Container maxWidth="sm" sx={{mt: {xs: 8, sm: 3}, px: {xs: 4, sm: 0}}}>
@@ -328,6 +348,8 @@ const Single = () => {
               <IconButton
                 aria-label="favoriteIcon"
                 onClick={refreshLikes ? deleteLike : doLike}
+                onMouseOver={handleMouseOverLikes}
+                onMouseOut={handleMouseOutLikes}
                 variant="contained"
                 sx={{m: 'auto'}}
               >
@@ -341,15 +363,27 @@ const Single = () => {
               </IconButton>
             </Tooltip>
             <Typography component="p" variant="caption">
-              {refreshLikes ? 'Unlike' : 'Add a like'} ({likes}{' '}
-              {likes > 1 ? 'likes' : 'like'})
+              {refreshLikes
+                ? showTextLikes
+                  ? 'Unlike'
+                  : ''
+                : showTextLikes
+                ? 'Add a like'
+                : ''}
+              {!showTextLikes
+                ? `${likes} ${likes === 1 ? 'like' : 'likes'}`
+                : null}
             </Typography>
           </Grid>
           <Grid container direction="column" xs={7} alignItems="center">
             {refreshRating ? (
               <>
                 <Tooltip title="Remove rating">
-                  <IconButton onClick={doDeleteRating}>
+                  <IconButton
+                    onClick={doDeleteRating}
+                    onMouseOver={handleMouseOverRating}
+                    onMouseOut={handleMouseOutRating}
+                  >
                     <Rating
                       name="read-only"
                       size="large"
@@ -371,14 +405,21 @@ const Single = () => {
                   </IconButton>
                 </Tooltip>
                 <Typography sx={{ml: 1}} component="p" variant="caption">
-                  {rating.toFixed(1)} ({ratingCount}
-                  {ratingCount > 1 ? ' ratings' : ' rating'})
+                  {showTextRating
+                    ? 'Remove rating'
+                    : `${rating.toFixed(1)} (${ratingCount} ${
+                        ratingCount === 1 ? 'rating' : 'ratings'
+                      })`}
                 </Typography>
               </>
             ) : (
               <>
                 <Tooltip title="Add rating">
-                  <IconButton onClick={() => deleteRating}>
+                  <IconButton
+                    onClick={() => deleteRating}
+                    onMouseOver={handleMouseOverRating}
+                    onMouseOut={handleMouseOutRating}
+                  >
                     <Rating
                       defaultValue={parseInt(rating.toFixed(1))}
                       name="simple-controlled"
