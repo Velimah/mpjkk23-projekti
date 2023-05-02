@@ -176,7 +176,7 @@ const MediaTable = ({
         >
           {/* * LIST STYLE * */}
           {style === false ? (
-            <ImageList cols={1} gap={0} sx={{width: {sx: '100%', sm: '550px'}}}>
+            <ImageList cols={1} gap={0} sx={{width: {sx: '100%', sm: '500px'}}}>
               {selectedOption === 'comments' &&
                 [...mediaArray]
                   .sort((a, b) => b.comments.length - a.comments.length)
@@ -242,8 +242,6 @@ const MediaTable = ({
                 objectFit: 'contain',
               }}
               cols={smallScreen ? 3 : 4}
-              rowHeight={smallScreen ? 100 : 300}
-              gap={5}
               direction="row"
             >
               {selectedOption === 'comments' &&

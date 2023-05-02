@@ -165,8 +165,18 @@ const UserHeader = ({
       )}
       {comment && user && file.user_id === user.user_id && (
         <Tooltip title="Delete comment">
-          <IconButton component={Link} onClick={doDeleteComment}>
-            <DeleteRounded />
+          <IconButton
+            sx={{borderRadius: '2rem'}}
+            component={Link}
+            onClick={doDeleteComment}
+          >
+            <DeleteRounded
+              sx={{
+                '&:hover': {
+                  color: 'red',
+                },
+              }}
+            />
           </IconButton>
         </Tooltip>
       )}

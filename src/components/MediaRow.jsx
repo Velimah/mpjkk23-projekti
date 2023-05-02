@@ -9,6 +9,8 @@ import {
   useMediaQuery,
   Rating,
   Paper,
+  Chip,
+  Stack,
 } from '@mui/material';
 import PropTypes from 'prop-types';
 import {Link} from 'react-router-dom';
@@ -26,6 +28,7 @@ import {
   StarBorderOutlined,
 } from '@mui/icons-material';
 import {formatTime} from '../utils/UnitConversions';
+import UserHeader from './UserHeader';
 
 const MediaRow = ({file, style, mediaArray}) => {
   const theme = useTheme();
@@ -234,6 +237,7 @@ const MediaRow = ({file, style, mediaArray}) => {
         my: style ? 0 : 1,
         mx: style ? 0 : {sx: 0, md: 1},
         backgroundColor: style ? 'transparent' : '#FFFFFF',
+        borderRadius: style ? 0 : 3,
         boxShadow: style
           ? 'none'
           : 'boxShadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12)',
@@ -255,58 +259,56 @@ const MediaRow = ({file, style, mediaArray}) => {
       >
         {/* LISTING style user profile */}
         {!style && (
-          <Grid
-            container
+          <Stack
             direction="row"
-            sx={{
-              alignItems: 'center',
-              p: 2,
-            }}
+            alignItems="center"
+            justifyContent={user ? 'space-between' : 'flex-end'}
+            sx={user && {p: 2}}
           >
-            <Avatar
-              aria-label="Profile"
-              component={Link}
-              to={user?.user_id === file.user_id ? '/profile' : '/userprofiles'}
-              state={{file}}
-              onClick={() => {
-                setTargetUser(file);
-              }}
-              sx={{boxShadow: 3, width: 45, height: 45}}
-              src={profilePic.filename}
-            />
-            <Typography
-              component={Link}
-              to={user?.user_id === file.user_id ? '/profile' : '/userprofiles'}
-              state={{file}}
-              onClick={() => {
-                setTargetUser(file);
-              }}
-              variant="h1"
-              sx={{
-                pl: 2,
-                fontSize: '1.3rem',
-                color: 'inherit',
-                textDecoration: 'none',
-              }}
-            >
-              {owner.username || `User ${file.user_id}`}
-            </Typography>
-            <FiberManualRecord
-              sx={{
-                m: 2,
-                fontSize: '0.4rem',
-              }}
-            ></FiberManualRecord>
-            <Typography
-              variant="body1"
-              sx={{
-                fontSize: '1.3rem',
-              }}
-            >
-              {formatTime(file.time_added)}
-            </Typography>
-          </Grid>
+            {user ? (
+              <Stack direction="row" alignItems="center" spacing={1}>
+                <Stack
+                  direction="row"
+                  alignItems="center"
+                  spacing={1}
+                  component={Link}
+                  to={
+                    user && file.user_id === user.user_id
+                      ? '/profile'
+                      : '/userprofiles'
+                  }
+                  state={{file}}
+                  onClick={() => {
+                    setTargetUser(file);
+                  }}
+                  aria-label="Link to user's profile"
+                  sx={{
+                    color: 'inherit',
+                    textDecoration: 'none',
+                  }}
+                >
+                  <Avatar
+                    src={profilePic.filename}
+                    alt="User's profile picture"
+                    sx={{width: 45, height: 45, boxShadow: 3}}
+                  />
+                  <Typography component="span" variant="h6">
+                    {owner.username}
+                  </Typography>
+                </Stack>
+                <FiberManualRecord
+                  sx={{
+                    fontSize: '0.25rem',
+                  }}
+                />
+                <Chip label={formatTime(file.time_added)} size="small" />
+              </Stack>
+            ) : (
+              <Chip label={formatTime(file.time_added)} size="small" />
+            )}
+          </Stack>
         )}
+
         {/* * GRID STYLE * */}
         {style === true ? (
           <img
@@ -332,27 +334,36 @@ const MediaRow = ({file, style, mediaArray}) => {
           />
         ) : (
           /* * LISTING STYLE * */
-          <img
-            style={{
-              height: '100%',
-              width: '100%',
-              aspectRatio: '1 / 1',
-              objectFit: 'cover',
-              filter: `brightness(${allData.filters.brightness}%)
+          <Box
+            component={Link}
+            onClick={() => {
+              setTargetUser(file);
+            }}
+            state={{file}}
+            to="/single"
+          >
+            <img
+              style={{
+                height: '100%',
+                width: '100%',
+                aspectRatio: '1 / 1',
+                objectFit: 'cover',
+                filter: `brightness(${allData.filters.brightness}%)
                        contrast(${allData.filters.contrast}%)
                        saturate(${allData.filters.saturation}%)
                        sepia(${allData.filters.sepia}%)`,
-            }}
-            src={
-              file.media_type === 'audio'
-                ? 'onlycats_logo.png'
-                : file.mime_type === 'image/webp' ||
-                  file.mime_type === 'image/avif'
-                ? mediaUrl + file.filename
-                : mediaUrl + file.thumbnails.w640
-            }
-            alt={file.title}
-          />
+              }}
+              src={
+                file.media_type === 'audio'
+                  ? 'onlycats_logo.png'
+                  : file.mime_type === 'image/webp' ||
+                    file.mime_type === 'image/avif'
+                  ? mediaUrl + file.filename
+                  : mediaUrl + file.thumbnails.w640
+              }
+              alt={file.title}
+            />
+          </Box>
         )}
         {!style && (
           <Grid sx={{p: 2, py: 1}}>
@@ -384,7 +395,7 @@ const MediaRow = ({file, style, mediaArray}) => {
               {mediumScreen ? (
                 <Grid item>
                   <IconButton
-                    sx={{borderRadius: '20px', px: 0}}
+                    sx={{borderRadius: '2rem', px: 0}}
                     aria-label="favoriteIcon"
                     onClick={() => {
                       if (user) {
@@ -424,7 +435,7 @@ const MediaRow = ({file, style, mediaArray}) => {
                     variant="contained"
                     onMouseOver={handleMouseOverLikes}
                     onMouseOut={handleMouseOutLikes}
-                    sx={{borderRadius: '20px'}}
+                    sx={{borderRadius: '2rem'}}
                   >
                     {/* * DesktopLikes check if user has liked or is not logged * */}
                     {likesBoolean || !user ? (
@@ -457,7 +468,7 @@ const MediaRow = ({file, style, mediaArray}) => {
               {mediumScreen ? (
                 <Grid item>
                   <Box>
-                    <IconButton sx={{borderRadius: '20px'}}>
+                    <IconButton sx={{borderRadius: '2rem'}}>
                       {/* * MobileRating check if there are ratings * */}
                       {ratingCount ? (
                         <>
