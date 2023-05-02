@@ -5,6 +5,7 @@ import {useMedia, useTag} from '../hooks/ApiHooks';
 import {appId, mediaUrl} from '../utils/variables';
 import {ValidatorForm, TextValidator} from 'react-material-ui-form-validator';
 import {MediaContext} from '../contexts/MediaContext';
+import {AddAPhoto} from '@mui/icons-material';
 
 const UploadProfileBackgroundPicture = () => {
   const {user} = useContext(MediaContext);
@@ -107,28 +108,29 @@ const UploadProfileBackgroundPicture = () => {
           >
             <InputLabel
               sx={{
-                py: '0.65rem',
-                px: '1rem',
+                py: 1,
+                pb: '0.3rem',
+                px: 2,
                 height: '100%',
-                backgroundColor: '#FFFFFF',
+                backgroundColor: '#ACCC7F',
                 borderRadius: '0.5rem',
                 cursor: 'pointer',
                 fontSize: '1rem',
                 '&:hover': {
-                  backgroundColor: '#ACCC7F',
+                  backgroundColor: '#8FB361',
                   color: '#000000',
                   transition: 'background-color 0.2s, color 0.2s',
                 },
                 boxShadow:
                   '0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12)',
               }}
-              htmlFor="image_uploads"
+              htmlFor="bg-upload"
             >
-              Choose a Picture
+              <AddAPhoto />
             </InputLabel>
             <TextValidator
               sx={{display: 'none'}}
-              id="image_uploads"
+              id="bg-upload"
               style={{maxWidth: '400px', width: '100%'}}
               onChange={handleFileChange}
               type="file"

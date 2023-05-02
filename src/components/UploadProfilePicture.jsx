@@ -1,4 +1,4 @@
-import {Box, Button, Grid} from '@mui/material';
+import {Avatar, Box, Button, Grid, InputLabel} from '@mui/material';
 import useForm from '../hooks/FormHooks';
 import {useContext, useEffect, useState} from 'react';
 import {useMedia, useTag} from '../hooks/ApiHooks';
@@ -7,6 +7,7 @@ import {ValidatorForm, TextValidator} from 'react-material-ui-form-validator';
 import {MediaContext} from '../contexts/MediaContext';
 import {updateProfilePictureValidators} from '../utils/validator';
 import {updateProfilePictureErrorMessages} from '../utils/errorMessages';
+import {AddAPhoto} from '@mui/icons-material';
 
 const UploadProfilePicture = () => {
   const {user} = useContext(MediaContext);
@@ -95,48 +96,83 @@ const UploadProfilePicture = () => {
   }, [inputs]);
 
   return (
-    <Box sx={{maxWidth: 'md', margin: 'auto'}}>
-      <Grid container direction={'column'} justifyContent="center" sx={{mt: 2}}>
-        <Grid item xs={5} sx={{mt: 0}}>
-          <img
-            src={selectedImage}
-            alt="preview"
-            style={{
-              width: '300px',
-              height: '300px',
-              objectFit: 'cover',
-              borderRadius: '100%',
+    <Box
+      display="flex"
+      flexDirection="column"
+      justifyContent="flex-start"
+      sx={{flexWrap: 'nowrap', maxWidth: '50%'}}
+    >
+      <Avatar
+        src={selectedImage}
+        alt="Logo"
+        sx={{
+          boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px',
+          borderStyle: 'solid',
+          borderColor: '#FFFFFF',
+          borderWidth: '3px',
+          position: 'relative',
+          height: {xs: '125px', sm: '125', md: '200px'},
+          width: {xs: '125px', sm: '125', md: '200px'},
+          top: {xs: '-100px', sm: '-125px', md: '-150px'},
+          left: {xs: '25px', sm: '50px', md: '50px'},
+        }}
+      />
+      <ValidatorForm onSubmit={handleSubmit} noValidate>
+        <Box
+          display="flex"
+          flexDirection="column"
+          justifyContent="flex-end"
+          sx={{}}
+        >
+          <InputLabel
+            sx={{
+              position: 'relative',
+              top: {xs: '-140px', sm: '-165px', md: '-190px'},
+              left: {xs: '90px', sm: '115px', md: '170px'},
+              py: 1,
+              pb: '0.3rem',
+              px: 2,
+              height: '100%',
+              backgroundColor: '#ACCC7F',
+              borderRadius: '0.5rem',
+              cursor: 'pointer',
+              width: 'fit-content',
+              '&:hover': {
+                backgroundColor: '#8FB361',
+                color: '#000000',
+                transition: 'background-color 0.2s, color 0.2s',
+              },
+              boxShadow:
+                '0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12)',
             }}
-          ></img>
-        </Grid>
-        <Grid item xs={5} sx={{}}>
-          <ValidatorForm onSubmit={handleSubmit} noValidate>
-            <TextValidator
-              fullWidth
-              sx={{mb: 1}}
-              onChange={handleFileChange}
-              type="file"
-              name="file"
-              accept="image/*, video/*, audio/*"
-            />
-            <TextValidator
-              multiline
-              maxRows={4}
-              fullWidth
-              margin="dense"
-              name="description"
-              label="Profile description"
-              onChange={handleInputChange}
-              value={inputs.description}
-              validators={updateProfilePictureValidators.description}
-              errorMessages={updateProfilePictureErrorMessages.description}
-            />
-            <Button variant="contained" fullWidth type="submit">
-              Update Profile Picture and Description
-            </Button>
-          </ValidatorForm>
-        </Grid>
-      </Grid>
+            htmlFor="profilepic-upload"
+          >
+            <AddAPhoto />
+          </InputLabel>
+          <TextValidator
+            sx={{display: 'none'}}
+            id="profilepic-upload"
+            onChange={handleFileChange}
+            type="file"
+            name="file"
+            accept="image/*, video/*, audio/*"
+          />
+          <TextValidator
+            multiline
+            maxRows={4}
+            margin="dense"
+            name="description"
+            label="Profile description"
+            onChange={handleInputChange}
+            value={inputs.description}
+            validators={updateProfilePictureValidators.description}
+            errorMessages={updateProfilePictureErrorMessages.description}
+          />
+          <Button variant="contained" fullWidth type="submit">
+            Update Profile Picture and Description
+          </Button>
+        </Box>
+      </ValidatorForm>
     </Box>
   );
 };
