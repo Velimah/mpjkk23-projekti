@@ -4,3 +4,6 @@ button:focus {
 .MuiOutlinedInput-notchedOutline {
   border-radius: 2rem !important;
 }
+.MuiButtonBase-root:hover {
+  background-color: rgba(112, 71, 166, 0.08) !important;
+}
