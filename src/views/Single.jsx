@@ -9,7 +9,7 @@ import {
   useMediaQuery,
   Chip,
 } from '@mui/material';
-import {Link, useLocation, useNavigate} from 'react-router-dom';
+import {Link, useLocation} from 'react-router-dom';
 import {mediaUrl, appId} from '../utils/variables';
 import {useFavourite, useComment, useRating, useTag} from '../hooks/ApiHooks';
 import {useContext, useEffect, useState} from 'react';
@@ -51,8 +51,6 @@ const Single = () => {
   const extraSmallScreen = useMediaQuery((theme) =>
     theme.breakpoints.down('sm')
   );
-
-  const navigate = useNavigate();
 
   const {getFavourites, postFavourite, deleteFavourite} = useFavourite();
   const {postComment, getCommentsById} = useComment();
@@ -308,7 +306,7 @@ const Single = () => {
               startIcon={<ChevronLeftRounded />}
               size="small"
               component={Link}
-              onClick={() => navigate(-1)}
+              to="/home"
               sx={{mb: 2}}
             >
               Go back
@@ -322,7 +320,7 @@ const Single = () => {
                 startIcon={<ChevronLeftRounded />}
                 size="small"
                 component={Link}
-                onClick={() => navigate(-1)}
+                to="/home"
               >
                 Go back
               </Button>
