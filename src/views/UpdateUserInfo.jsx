@@ -1,22 +1,12 @@
-import {
-  Box,
-  Button,
-  Container,
-  Grid,
-  Typography,
-  Paper,
-  useMediaQuery,
-} from '@mui/material';
+import {Box, Container, Typography, Paper, useMediaQuery} from '@mui/material';
 import {useContext} from 'react';
 import {MediaContext} from '../contexts/MediaContext';
-import {useNavigate} from 'react-router-dom';
 import UpdateUserForm from '../components/UpdateUserForm';
 import UploadProfilePicture from '../components/UploadProfilePicture';
 import UploadProfileBackgroundPicture from '../components/UploadProfileBackgroundPicture';
 
 const UpdateUserInfo = () => {
   const {user} = useContext(MediaContext);
-  const navigate = useNavigate();
 
   const extraSmallScreen = useMediaQuery((theme) =>
     theme.breakpoints.down('sm')
@@ -33,7 +23,7 @@ const UpdateUserInfo = () => {
               textAlign="center"
               sx={{mb: 3}}
             >
-              Update User info
+              Update your profile
             </Typography>
             <Paper
               sx={{

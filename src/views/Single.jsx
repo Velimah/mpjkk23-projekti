@@ -349,9 +349,17 @@ const Single = () => {
               onMouseOver={handleMouseOverLikes}
               onMouseOut={handleMouseOutLikes}
               variant="contained"
-              sx={{m: 'auto'}}
+              sx={{m: 'auto', borderRadius: '2rem'}}
             >
               {refreshLikes ? (
+                showTextLikes ? (
+                  <FavoriteBorderRounded
+                    sx={{color: '#7047A6', fontSize: '2rem'}}
+                  />
+                ) : (
+                  <FavoriteRounded sx={{color: '#7047A6', fontSize: '2rem'}} />
+                )
+              ) : showTextLikes ? (
                 <FavoriteRounded sx={{color: '#7047A6', fontSize: '2rem'}} />
               ) : (
                 <FavoriteBorderRounded
@@ -379,6 +387,7 @@ const Single = () => {
                   onClick={doDeleteRating}
                   onMouseOver={handleMouseOverRating}
                   onMouseOut={handleMouseOutRating}
+                  sx={{m: 'auto', borderRadius: '2rem'}}
                 >
                   <Rating
                     name="read-only"

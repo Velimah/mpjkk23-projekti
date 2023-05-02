@@ -234,6 +234,7 @@ const MediaRow = ({file, style, mediaArray}) => {
         my: style ? 0 : 1,
         mx: style ? 0 : {sx: 0, md: 1},
         backgroundColor: style ? 'transparent' : '#FFFFFF',
+        borderRadius: style ? 0 : 3,
         boxShadow: style
           ? 'none'
           : 'boxShadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12)',
@@ -384,7 +385,7 @@ const MediaRow = ({file, style, mediaArray}) => {
               {mediumScreen ? (
                 <Grid item>
                   <IconButton
-                    sx={{borderRadius: '20px', px: 0}}
+                    sx={{borderRadius: '2rem', px: 0}}
                     aria-label="favoriteIcon"
                     onClick={() => {
                       if (user) {
@@ -424,7 +425,7 @@ const MediaRow = ({file, style, mediaArray}) => {
                     variant="contained"
                     onMouseOver={handleMouseOverLikes}
                     onMouseOut={handleMouseOutLikes}
-                    sx={{borderRadius: '20px'}}
+                    sx={{borderRadius: '2rem'}}
                   >
                     {/* * DesktopLikes check if user has liked or is not logged * */}
                     {likesBoolean || !user ? (
@@ -457,7 +458,7 @@ const MediaRow = ({file, style, mediaArray}) => {
               {mediumScreen ? (
                 <Grid item>
                   <Box>
-                    <IconButton sx={{borderRadius: '20px'}}>
+                    <IconButton sx={{borderRadius: '2rem'}}>
                       {/* * MobileRating check if there are ratings * */}
                       {ratingCount ? (
                         <>

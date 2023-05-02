@@ -158,16 +158,13 @@ const UserProfiles = () => {
 
   return (
     <>
-      <Box sx={{maxWidth: '1200px', margin: 'auto', pt: {xs: 8, sm: 0}}}>
+      <Box maxWidth="lg" sx={{margin: 'auto', pt: {xs: 8, sm: 0, md: 6}}}>
         <Avatar
           src={backgroundPic.filename}
           alt="Logo"
           sx={{
-            borderRadius: 0,
-            borderBottomLeftRadius: {xs: 0, lg: '2rem'},
-            borderBottomRightRadius: {xs: 0, lg: '2rem'},
+            borderRadius: {xs: 0, md: '2rem'},
             boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px',
-            maxWidth: '1200px',
             width: '100%',
             height: {xs: '150px', md: '300px'},
             maxHeight: '300px',
