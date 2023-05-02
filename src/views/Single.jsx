@@ -335,7 +335,10 @@ const Single = () => {
           </video>
         )}
       </Container>
-      <Container maxWidth="sm" sx={{mb: {xs: 10, sm: 2}, px: {xs: 4, sm: 0}}}>
+      <Container
+        maxWidth="sm"
+        sx={{mb: {xs: 10, sm: 2}, px: {xs: 4, sm: 0}, pb: {sm: 6}}}
+      >
         <Grid
           container
           direction="row"
@@ -486,27 +489,6 @@ const Single = () => {
               No comments added.
             </Typography>
           )}
-          {commentArray
-            .map((item, index) => {
-              if (index < showComments) {
-                return (
-                  <CommentRow
-                    key={index}
-                    file={item}
-                    fetchComments={fetchComments}
-                  />
-                );
-              }
-            })
-            .reverse()}
-          {commentCount > showComments && (
-            <Button
-              sx={{width: '100%', my: 1}}
-              onClick={() => setShowComments(showComments + 3)}
-            >
-              Show more comments
-            </Button>
-          )}
           <ValidatorForm onSubmit={handleSubmit}>
             <Grid
               container
@@ -543,6 +525,27 @@ const Single = () => {
               </Grid>
             </Grid>
           </ValidatorForm>
+          {commentArray
+            .map((item, index) => {
+              if (index < showComments) {
+                return (
+                  <CommentRow
+                    key={index}
+                    file={item}
+                    fetchComments={fetchComments}
+                  />
+                );
+              }
+            })
+            .reverse()}
+          {commentCount > showComments && (
+            <Button
+              sx={{width: '100%', my: 1}}
+              onClick={() => setShowComments(showComments + 3)}
+            >
+              Show more comments
+            </Button>
+          )}
         </Box>
       </Container>
     </>

@@ -158,10 +158,10 @@ const UserHeader = ({
               fontSize: '0.25rem',
             }}
           />
-          <Chip label={formatTime(file.time_added)} size="medium" />
+          <Chip label={formatTime(file.time_added)} size="small" />
         </Stack>
       ) : (
-        <Chip label={formatTime(file.time_added)} size="medium" />
+        <Chip label={formatTime(file.time_added)} size="small" />
       )}
       {comment && user && file.user_id === user.user_id && (
         <Tooltip title="Delete comment">
