@@ -9,6 +9,7 @@ const ProtectedRoute = ({children}) => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
   const [loaded, setLoaded] = useState(false);
 
+  // runs when a protected route is loaded, checks if user is authenticated and sets state to run Auth check
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -22,6 +23,7 @@ const ProtectedRoute = ({children}) => {
     fetchData();
   }, [children]);
 
+  // checks for token and then fetches user data and returns true if token is valid
   const getUserInfo = async () => {
     const userToken = localStorage.getItem('token');
     if (!userToken) {
@@ -37,6 +39,7 @@ const ProtectedRoute = ({children}) => {
     }
   };
 
+  // when use status is checked, returns children if user is authenticated, otherwise redirects to logout
   if (loaded) {
     if (isAuthenticated) {
       return children;

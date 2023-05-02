@@ -8,7 +8,6 @@ import {
   useMedia,
   useRating,
   useTag,
-  useUser,
 } from '../hooks/ApiHooks';
 import {
   appId,
@@ -123,7 +122,10 @@ const Profile = () => {
         }
       }
       setRatingCount(count);
-      const average = sum / count;
+      let average = sum / count;
+      if (isNaN(average)) {
+        average = 0;
+      }
       setRating(average);
     } catch (error) {
       console.log(error.message);
@@ -278,7 +280,17 @@ const Profile = () => {
             </Button>
             <Button
               variant="contained"
-              sx={{mt: 2, mr: {xs: 0, sm: 0, backgroundColor: 'red'}}}
+              sx={{
+                mt: 2,
+                mr: {
+                  xs: 0,
+                  sm: 0,
+                  backgroundColor: 'red',
+                  '&:hover': {
+                    backgroundColor: 'FireBrick',
+                  },
+                },
+              }}
               onClick={deleteAllInformation}
             >
               Delete Data

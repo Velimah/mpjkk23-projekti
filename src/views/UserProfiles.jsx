@@ -138,7 +138,10 @@ const UserProfiles = () => {
         }
       }
       setRatingCount(count);
-      const average = sum / count;
+      let average = sum / count;
+      if (isNaN(average)) {
+        average = 0;
+      }
       setRating(average);
     } catch (error) {
       console.log(error.message);

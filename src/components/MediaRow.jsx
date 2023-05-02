@@ -8,6 +8,7 @@ import {
   Avatar,
   useMediaQuery,
   Rating,
+  Paper,
 } from '@mui/material';
 import PropTypes from 'prop-types';
 import {Link} from 'react-router-dom';
@@ -227,7 +228,17 @@ const MediaRow = ({file, style, mediaArray}) => {
   };
 
   return (
-    <Box component="div">
+    <Paper
+      component="div"
+      sx={{
+        my: style ? 0 : 1,
+        mx: style ? 0 : {sx: 0, md: 1},
+        backgroundColor: style ? 'transparent' : '#FFFFFF',
+        boxShadow: style
+          ? 'none'
+          : 'boxShadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12)',
+      }}
+    >
       <ImageListItem
         component={style ? Link : undefined}
         variant="contained"
@@ -237,7 +248,6 @@ const MediaRow = ({file, style, mediaArray}) => {
           setTargetUser(file);
         }}
         sx={{
-          borderBottom: style ? 0 : 1,
           '&:hover': {
             filter: style ? 'brightness(90%)' : 'brightness(100%)',
           },
@@ -250,9 +260,7 @@ const MediaRow = ({file, style, mediaArray}) => {
             direction="row"
             sx={{
               alignItems: 'center',
-              px: smallScreen ? 2 : 'auto',
-              pt: 3,
-              pb: 2,
+              p: 2,
             }}
           >
             <Avatar
@@ -263,7 +271,7 @@ const MediaRow = ({file, style, mediaArray}) => {
               onClick={() => {
                 setTargetUser(file);
               }}
-              sx={{ml: 1, boxShadow: 3, width: 45, height: 45}}
+              sx={{boxShadow: 3, width: 45, height: 45}}
               src={profilePic.filename}
             />
             <Typography
@@ -306,7 +314,7 @@ const MediaRow = ({file, style, mediaArray}) => {
               width: '100%',
               aspectRatio: '1 / 1',
               objectFit: 'cover',
-              borderRadius: smallScreen ? '0.4rem' : '0.7rem',
+              borderRadius: smallScreen ? '0.3rem' : '0.6rem',
               filter: `brightness(${allData.filters.brightness}%)
                        contrast(${allData.filters.contrast}%)
                        saturate(${allData.filters.saturation}%)
@@ -330,7 +338,6 @@ const MediaRow = ({file, style, mediaArray}) => {
               width: '100%',
               aspectRatio: '1 / 1',
               objectFit: 'cover',
-              borderRadius: smallScreen ? 0 : '5px',
               filter: `brightness(${allData.filters.brightness}%)
                        contrast(${allData.filters.contrast}%)
                        saturate(${allData.filters.saturation}%)
@@ -348,9 +355,8 @@ const MediaRow = ({file, style, mediaArray}) => {
           />
         )}
         {!style && (
-          <Grid sx={{px: {xs: 1, md: 0}, pb: 3}}>
+          <Grid sx={{p: 2, py: 1}}>
             <Grid
-              sx={{pt: 1}}
               container
               direction="row"
               justifyContent="space-around"
@@ -505,29 +511,11 @@ const MediaRow = ({file, style, mediaArray}) => {
                             onMouseOut={handleMouseOutRating}
                             sx={{borderRadius: '20px'}}
                           >
-                            <Rating
-                              name="read-only"
-                              size="large"
-                              precision={0.2}
-                              defaultValue={Number(rating?.toFixed(1))}
-                              value={Number(rating?.toFixed(1))}
-                              readOnly
-                              icon={
-                                <Star
-                                  sx={{
-                                    color: '#7047A6',
-                                    fontSize: {xs: '1.2rem', sm: '1.6rem'},
-                                  }}
-                                />
-                              }
-                              emptyIcon={
-                                <StarBorderOutlined
-                                  sx={{
-                                    color: '#7047A6',
-                                    fontSize: {xs: '1.2rem', sm: '1.6rem'},
-                                  }}
-                                />
-                              }
+                            <Star
+                              sx={{
+                                color: '#7047A6',
+                                fontSize: {xs: '1.2rem', sm: '1.6rem'},
+                              }}
                             />
                             <Typography
                               sx={{ml: 1}}
@@ -682,7 +670,7 @@ const MediaRow = ({file, style, mediaArray}) => {
           </Grid>
         )}
       </ImageListItem>
-    </Box>
+    </Paper>
   );
 };
 
