@@ -2,10 +2,15 @@ import {
   Grid,
   TextField,
   Container,
-  IconButton,
   InputAdornment,
   Button,
   Typography,
+  List,
+  ListItem,
+  ListItemText,
+  Icon,
+  ListItemButton,
+  useMediaQuery,
 } from '@mui/material';
 import PropTypes from 'prop-types';
 import {useState, useEffect} from 'react';
@@ -13,26 +18,32 @@ import MediaTable from '../components/MediaTable';
 import SearchIcon from '@mui/icons-material/Search';
 import {searchValidators} from '../utils/validator';
 import {searchErrorMessages} from '../utils/errorMessages';
-import {MediaContext} from '../contexts/MediaContext';
-import {useContext} from 'react';
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+import {useTheme} from '@emotion/react';
+import {useTag} from '../hooks/ApiHooks';
+import {appId} from '../utils/variables';
 
 const Search = () => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [updatedSearchQuery, setUpdatedSearchQuery] = useState(searchQuery);
+  const [updatedSearchQuery, setUpdatedSearchQuery] = useState('');
   const [refreshSearch, setRefreshSearch] = useState(false);
   const [latestSearches, setLatestSearches] = useState(() => {
     // getting stored value
     const saved =
       localStorage.getItem('searchHistory') === null
-        ? localStorage.setItem('searchHistory', JSON.stringify(' '))
+        ? localStorage.setItem('searchHistory', JSON.stringify('cute'))
         : localStorage.getItem('searchHistory');
     const initialValue = JSON.parse(saved);
-    return initialValue || '';
+    return initialValue || 'cute';
   });
+  const [popularTags, setPopularTags] = useState([]);
+  const [firstReload, setFirstReload] = useState(true);
+
+  const smallScreen = useMediaQuery(useTheme().breakpoints.down('sm'));
 
   // Save new query
   const handleChange = (e) => {
-    setSearchQuery(e.target.value);
+    setSearchQuery(e.target.value.toLowerCase().replace(/\s/g, ''));
   };
 
   // Refresh MediaTable with new query
@@ -41,31 +52,89 @@ const Search = () => {
     searchQuery === '' ? setRefreshSearch(false) : setRefreshSearch(true);
   };
 
+  if (localStorage.getItem('searchHistory') === ' ') {
+    console.log('yes');
+  }
+
   useEffect(() => {
-    console.log('refresh');
-    // only allow three max searches
-    // loop through localstorage to check if its the same search keyword
-    // if (localStorage.getItem('searchHistory') === null) {
-    const oldQuery = JSON.parse(localStorage.getItem('searchHistory')).match(
-      /\S+/g
-    );
+    const oldQuery = JSON.parse(localStorage.getItem('searchHistory'))
+      .match(/[^,]+/g)
+      .filter(Boolean);
 
-    if (!localStorage.getItem('searchHistory') === null) {
-      // if new keyword hasn't already been searched, add it into search histoty
-      if (!oldQuery.includes(searchQuery)) {
-        console.log('yesy');
-        const newQuery =
-          JSON.parse(localStorage.getItem('searchHistory')) + ' ' + searchQuery;
-        localStorage.setItem('searchHistory', JSON.stringify(newQuery));
-
-        setLatestSearches(newQuery);
+    // TODO: even if same keyword has been searched, move it to latest
+    // if new keyword hasn't already been searched, add it into search history
+    if (!oldQuery.includes(searchQuery)) {
+      // if theres three searches already, delete the oldest
+      if (oldQuery.length > 3) {
+        oldQuery.shift();
       }
-    } else {
-      localStorage.setItem('searchHistory', JSON.stringify(searchQuery));
-    }
 
-    // }
+      const newQuery = oldQuery + ',' + searchQuery;
+      localStorage.setItem('searchHistory', JSON.stringify(newQuery));
+
+      setLatestSearches(newQuery.match(/[^,]+/g).filter(Boolean));
+    }
   }, [updatedSearchQuery]);
+
+  const updateSearchHistory = () => {
+    const oldQuery = JSON.parse(localStorage.getItem('searchHistory')).match(/[^,]+/g);
+
+    // TODO: even if same keyword has been searched, move it to latest
+    // if new keyword hasn't already been searched, add it into search history
+    if (!oldQuery.includes(searchQuery)) {
+      // if theres three searches already, delete the oldest
+      if (oldQuery.length > 3) {
+        oldQuery.shift();
+      }
+
+      const newQuery = oldQuery + ',' + searchQuery;
+      localStorage.setItem('searchHistory', JSON.stringify(newQuery));
+
+      setLatestSearches(newQuery.match(/[^,]+/g).filter(Boolean));
+    }
+  };
+
+  /*
+  const fetchTags = async () => {
+    try {
+      const tagInfo = await useTag().getTagsByFileId(file.file_id);
+      const filteredTags = tagInfo.filter((tag) => tag.tag !== appId);
+      // setOriginalTags(filteredTags);
+      setPopularTags(
+        filteredTags.map((tag) => tag.tag.replace(appId + '_', '') + ' ')
+      );
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchTags();
+  }, []);
+
+  console.log(popularTags);
+  */
+
+  const renderSearchHistory = () => {
+    return (
+      <List
+        container
+        direction="column"
+        justifyContent="center"
+        sx={{width: smallScreen ? '100%' : 'auto'}}
+      >
+        {latestSearches
+          .slice(0)
+          .reverse()
+          .map((item) => (
+            <ListItemButton key={item}>
+              <ListItemText primary={item} />
+              <KeyboardArrowRightIcon color="#7047A6" />
+            </ListItemButton>
+          ))}
+      </List>
+    );
+  };
 
   return (
     <>
@@ -93,20 +162,28 @@ const Search = () => {
           <SearchIcon color="#7047A6" />
         </Button>
       </Grid>
-      <Grid
-        container
-        direction="row"
-        justifyContent="center"
-        alignItems="stretch"
-        sx={{pt: '100px'}}
-      >
-        <Typography component="h2" variant="h2" sx={{mb: 2}}>
-          Latest
-        </Typography>
-        <Typography component="p" variant="body1">
-          {latestSearches}
-        </Typography>
-      </Grid>
+      <Container maxwidth="lg">
+        <Grid
+          container
+          direction="row"
+          justifyContent="space-evenly"
+          alignItems="stretch"
+          sx={{pt: '50px'}}
+        >
+          <Grid item sx={{backgroundColor: 'green'}}>
+            <Typography component="h2" variant="h2">
+              Latest searches
+            </Typography>
+            {firstReload && renderSearchHistory()}
+          </Grid>
+          <Grid item sx={{backgroundColor: 'green'}}>
+            <Typography component="h2" variant="h2">
+              Popular searches
+            </Typography>
+          </Grid>
+        </Grid>
+      </Container>
+
       <Grid sx={{mt: '50px', mb: '100px'}}>
         {refreshSearch && <MediaTable searchQuery={updatedSearchQuery} />}
       </Grid>
