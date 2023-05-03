@@ -34,7 +34,7 @@ const MediaTable = ({
   const {refreshPage} = useContext(MediaContext);
   const theme = useTheme();
   const smallScreen = useMediaQuery(theme.breakpoints.down('sm'));
-  const [selectedOption, setSelectedOption] = useState('file_id');
+  const [selectedOption, setSelectedOption] = useState('time_added');
   const [arrayLength, setArrayLength] = useState(0);
 
   const [style, setStyle] = useState(true);
@@ -58,7 +58,7 @@ const MediaTable = ({
   const handleChange = (event) => {
     const value = event.target.value;
     if (value === 1) {
-      setSelectedOption('file_id');
+      setSelectedOption('time_added');
     } else if (value === 2) {
       setSelectedOption('likes');
     } else if (value === 3) {
@@ -70,75 +70,94 @@ const MediaTable = ({
 
   return (
     <>
-      <Grid sx={{py: 3}}>
-        <Container>
-          <Box display="flex" justifyContent="space-around" alignItems="center">
-            <Typography
-              sx={{
-                fontSize: {xs: '1.2rem', sm: '1.5rem'},
-                textAlign: 'center',
-              }}
-              component="h2"
-              variant="h2"
+      <Container sx={{py: 5}}>
+        <Box display="flex" justifyContent="space-around" alignItems="center">
+          <Typography
+            sx={{
+              fontSize: {xs: '1.2rem', sm: '1.5rem'},
+              textAlign: 'center',
+            }}
+            component="h2"
+            variant="h2"
+          >
+            {/* chooses correct text for post counts based on page */}
+            {(myFilesOnly || targetUserFilesOnly) &&
+              `${arrayLength} ${arrayLength === 1 ? 'post' : 'posts'}`}
+            {myFavouritesOnly &&
+              `${arrayLength} ${
+                arrayLength === 1 ? 'Liked post' : 'Liked posts'
+              }`}
+            {!myFilesOnly &&
+              !targetUserFilesOnly &&
+              !myFavouritesOnly &&
+              'Discover cats'}
+          </Typography>
+          <FormControl
+            sx={{
+              width: '180px',
+              textAlign: 'center',
+            }}
+          >
+            <InputLabel id="select-label">Sort</InputLabel>
+            <Select
+              defaultValue={1}
+              onChange={handleChange}
+              labelId="select-label"
+              id="sort-select"
+              label="Sort"
+              size="small"
             >
-              {(myFilesOnly || targetUserFilesOnly) &&
-                `${arrayLength} ${arrayLength === 1 ? 'post' : 'posts'}`}
-              {myFavouritesOnly &&
-                `${arrayLength} ${
-                  arrayLength === 1 ? 'Liked post' : 'Liked posts'
-                }`}
-              {!myFilesOnly &&
-                !targetUserFilesOnly &&
-                !myFavouritesOnly &&
-                'Discover cats'}
-            </Typography>
-
-            <FormControl
-              sx={{
-                width: '180px',
-                textAlign: 'center',
-              }}
-            >
-              <InputLabel id="select-label">Sort</InputLabel>
-              <Select
-                defaultValue={1}
-                onChange={handleChange}
-                labelId="select-label"
-                id="sort-select"
-                label="Sort"
-                size="small"
-              >
-                <MenuItem value={1}>Newest</MenuItem>
-                <MenuItem value={2}>Most liked</MenuItem>
-                <MenuItem value={3}>Top rated</MenuItem>
-                <MenuItem value={4}>Most commented</MenuItem>
-              </Select>
-            </FormControl>
-          </Box>
-        </Container>
-      </Grid>
-      <Container maxWidth="lg" sx={{padding: smallScreen ? 0 : 'auto'}}>
+              <MenuItem value={1}>Newest</MenuItem>
+              <MenuItem value={2}>Most liked</MenuItem>
+              <MenuItem value={3}>Top rated</MenuItem>
+              <MenuItem value={4}>Most commented</MenuItem>
+            </Select>
+          </FormControl>
+        </Box>
+      </Container>
+      <Container
+        maxWidth="lg"
+        sx={{
+          padding: smallScreen ? 0 : 'auto',
+          alignItems: 'center',
+          flexDirection: 'column',
+          display: 'flex',
+        }}
+      >
         <Grid
           container
           direction="row"
           justifyContent="flex-start"
           mb={!style && -1}
-          alignItems="stretch"
           wrap="nowrap"
+          sx={{
+            position: 'sticky',
+            top: smallScreen ? '0px' : '4rem',
+            width: style ? '100%' : '500px',
+            zIndex: 10,
+            backgroundColor: '#FDF7F4 !important',
+          }}
         >
+          {/* chooses correct buttons to change view based on list/grid */}
           {style === true ? (
             <IconButton
               aria-label="window"
               onClick={changeToGrid}
               component={NavLink}
-              sx={{width: smallScreen ? '50%' : '150px'}}
+              sx={{
+                width: 'stretch',
+                maxWidth: {xs: '50%', sm: '150px'},
+              }}
             >
               <WindowIcon />
             </IconButton>
           ) : (
             <IconButton
               onClick={changeToGrid}
-              sx={{width: smallScreen ? '50%' : '150px'}}
+              sx={{
+                width: 'stretch',
+                maxWidth: {xs: '50%', sm: '150px'},
+              }}
             >
               <WindowIcon />
             </IconButton>
@@ -148,20 +167,25 @@ const MediaTable = ({
               aria-label="list"
               onClick={changeToList}
               component={NavLink}
-              sx={{width: smallScreen ? '50%' : '150px'}}
+              sx={{
+                width: 'stretch',
+                maxWidth: {xs: '50%', sm: '150px'},
+              }}
             >
               <MenuIcon />
             </IconButton>
           ) : (
             <IconButton
               onClick={changeToList}
-              sx={{width: smallScreen ? '50%' : '150px'}}
+              sx={{
+                width: 'stretch',
+                maxWidth: {xs: '50%', sm: '150px'},
+              }}
             >
               <MenuIcon />
             </IconButton>
           )}
         </Grid>
-
         <Grid
           container
           direction="row-reverse"
@@ -169,7 +193,7 @@ const MediaTable = ({
           maxWidth="lg"
           justifyContent="center"
         >
-          {/* chooses correct css for list/grind */}
+          {/* chooses correct css for list/grid */}
           <ImageList
             cols={!style ? 1 : smallScreen ? 3 : 4}
             gap={!style ? 0 : undefined}
@@ -224,7 +248,7 @@ const MediaTable = ({
                     />
                   );
                 })}
-            {selectedOption === 'file_id' &&
+            {selectedOption === 'time_added' &&
               mediaArray
                 .sort((a, b) => b.file_id - a.file_id)
                 .map((item, index) => {
