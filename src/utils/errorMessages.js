@@ -34,11 +34,7 @@ const uploadErrorMessages = {
 };
 
 const commentErrorMessages = {
-  comment: [
-    'Comment required',
-    'Minimum 1 character',
-    'Maximum 1000 characters',
-  ],
+  comment: ['Comment required', 'Maximum 1000 characters'],
 };
 
 export {

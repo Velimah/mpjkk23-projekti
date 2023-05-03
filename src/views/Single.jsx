@@ -208,6 +208,7 @@ const Single = () => {
         setToastSnackbar({severity: 'success', message: commentInfo.message});
         setToastSnackbarOpen(true);
         setRefreshComments(!refreshComments);
+        inputs.comment = '';
       }
     } catch (error) {
       setToastSnackbar({

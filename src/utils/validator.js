@@ -29,7 +29,7 @@ const uploadValidators = {
 };
 
 const commentValidators = {
-  comment: ['required', 'minStringLength:1', 'maxStringLength: 1000'],
+  comment: ['required', 'maxStringLength: 1000'],
 };
 
 export {
