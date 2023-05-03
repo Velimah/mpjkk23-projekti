@@ -58,7 +58,7 @@ const MobileNavigation = () => {
               </Fab>
             )}
           <Paper
-            sx={{position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 5}}
+            sx={{position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 50}}
             elevation={4}
           >
             <BottomNavigation showLabels as="nav">

@@ -94,11 +94,21 @@ const Upload = () => {
         console.log(tagResult);
       }
 
-      setToastSnackbar({severity: 'success', message: uploadResult.message});
-      setToastSnackbarOpen(true);
-
       // Navigate back to home
-      navigate('/');
+      if (file.type.includes('video')) {
+        setTimeout(() => {
+          setToastSnackbar({
+            severity: 'success',
+            message: uploadResult.message,
+          });
+          setToastSnackbarOpen(true);
+          navigate('/');
+        }, 2000);
+      } else {
+        setToastSnackbar({severity: 'success', message: uploadResult.message});
+        setToastSnackbarOpen(true);
+        navigate('/');
+      }
     } catch (error) {
       setUpload(false);
       setToastSnackbar({
