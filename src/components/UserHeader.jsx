@@ -20,7 +20,7 @@ import {MediaContext} from '../contexts/MediaContext';
 import {useComment, useMedia, useTag, useUser} from '../hooks/ApiHooks';
 import {appId, mediaUrl, profilePlaceholder} from '../utils/variables';
 import {formatTime} from '../utils/UnitConversions';
-import {Link} from 'react-router-dom';
+import {Link, useLocation, useNavigate} from 'react-router-dom';
 import AlertDialog from './AlertDialog';
 
 const UserHeader = ({
@@ -43,6 +43,9 @@ const UserHeader = ({
   const {deleteComment} = useComment();
   const {deleteMedia} = useMedia();
 
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const [userInfo, setUserInfo] = useState('');
   const [anchorEl, setAnchorEl] = useState(null);
   const [deleteFileDialogOpen, setDeleteFileDialogOpen] = useState(false);
@@ -62,6 +65,7 @@ const UserHeader = ({
         setToastSnackbar({severity: 'success', message: deleteResult.message});
         setToastSnackbarOpen(true);
         setRefreshPage(!refreshPage);
+        if (location.pathname === '/single') navigate('/');
       }
     } catch (error) {
       setToastSnackbar({

@@ -598,7 +598,7 @@ const Single = () => {
               Show more comments
             </Button>
           )}
-          <ValidatorForm onSubmit={handleSubmit} novalidate>
+          <ValidatorForm onSubmit={handleSubmit}>
             <Grid
               container
               alignItems="flex-start"
