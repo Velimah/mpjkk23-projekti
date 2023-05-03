@@ -97,7 +97,9 @@ const MobileNavigation = () => {
                   icon={<LoginRounded />}
                   component={Link}
                   to="/login"
-                  className={location.pathname === '/' ? 'Mui-selected' : ''}
+                  className={
+                    location.pathname === '/login' ? 'Mui-selected' : ''
+                  }
                 />
               )}
             </BottomNavigation>

@@ -20,7 +20,7 @@ import {MediaContext} from '../contexts/MediaContext';
 import {useComment, useMedia, useTag, useUser} from '../hooks/ApiHooks';
 import {appId, mediaUrl, profilePlaceholder} from '../utils/variables';
 import {formatTime} from '../utils/UnitConversions';
-import {Link, useNavigate} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import AlertDialog from './AlertDialog';
 
 const UserHeader = ({
@@ -53,8 +53,6 @@ const UserHeader = ({
 
   const postSettingsOpen = Boolean(anchorEl);
 
-  const navigate = useNavigate();
-
   const doDeleteFile = async () => {
     setDeleteFileDialogOpen(false);
     try {
@@ -68,7 +66,7 @@ const UserHeader = ({
     } catch (error) {
       setToastSnackbar({
         severity: 'error',
-        message: 'Something went wrong - Please try again later.',
+        message: 'Something went wrong - Please try again later',
       });
       setToastSnackbarOpen(true);
       console.error(error);
@@ -123,7 +121,7 @@ const UserHeader = ({
     } catch (error) {
       setToastSnackbar({
         severity: 'error',
-        message: 'Something went wrong - Please try again later.',
+        message: 'Something went wrong - Please try again later',
       });
       setToastSnackbarOpen(true);
       console.error(error.message);
@@ -235,6 +233,7 @@ const UserHeader = ({
             <MenuItem
               onClick={() => {
                 setDeleteFileDialogOpen(true);
+                handleMenuClose();
               }}
             >
               <ListItemIcon>

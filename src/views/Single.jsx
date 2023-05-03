@@ -61,7 +61,6 @@ const Single = () => {
   const {getTagsByFileId} = useTag();
 
   const {state} = useLocation();
-  console.log(state);
 
   // checks for targetUser and if null gets targetUser information from localstorage
   const [data, setData] = useState(() => {
@@ -156,13 +155,18 @@ const Single = () => {
         const fileId = {file_id: data.file_id};
         await postFavourite(fileId, token);
         setRefreshLikes(true);
+        setToastSnackbar({
+          severity: 'success',
+          message: 'Like added',
+        });
+        setToastSnackbarOpen(true);
       } else {
         setLikeFailedDialogOpen(true);
       }
     } catch (error) {
       setToastSnackbar({
         severity: 'error',
-        message: 'Something went wrong - Please try again later.',
+        message: 'Something went wrong - Please try again later',
       });
       setToastSnackbarOpen(true);
       console.error(error.message);
@@ -179,11 +183,16 @@ const Single = () => {
       if (token) {
         await deleteFavourite(data.file_id, token);
         setRefreshLikes(false);
+        setToastSnackbar({
+          severity: 'success',
+          message: 'Like removed',
+        });
+        setToastSnackbarOpen(true);
       }
     } catch (error) {
       setToastSnackbar({
         severity: 'error',
-        message: 'Something went wrong - Please try again later.',
+        message: 'Something went wrong - Please try again later',
       });
       setToastSnackbarOpen(true);
       console.error(error.message);
@@ -203,7 +212,7 @@ const Single = () => {
     } catch (error) {
       setToastSnackbar({
         severity: 'error',
-        message: 'Something went wrong - Please try again later.',
+        message: 'Something went wrong - Please try again later',
       });
       setToastSnackbarOpen(true);
       console.error(error.message);
@@ -231,13 +240,18 @@ const Single = () => {
         const ratingInfo = await postRating(data2, token);
         console.log(ratingInfo);
         setRefreshRating(!refreshRating);
+        setToastSnackbar({
+          severity: 'success',
+          message: 'Rating added',
+        });
+        setToastSnackbarOpen(true);
       } else {
         setRatingFailedDialogOpen(true);
       }
     } catch (error) {
       setToastSnackbar({
         severity: 'error',
-        message: 'Something went wrong - Please try again later.',
+        message: 'Something went wrong - Please try again later',
       });
       setToastSnackbarOpen(true);
       console.error(error.message);
@@ -251,11 +265,16 @@ const Single = () => {
         const ratingInfo = await deleteRating(data.file_id, token);
         console.log(ratingInfo);
         setRefreshRating(!refreshRating);
+        setToastSnackbar({
+          severity: 'success',
+          message: 'Rating removed',
+        });
+        setToastSnackbarOpen(true);
       }
     } catch (error) {
       setToastSnackbar({
         severity: 'error',
-        message: 'Something went wrong - Please try again later.',
+        message: 'Something went wrong - Please try again later',
       });
       setToastSnackbarOpen(true);
       console.error(error.message);
@@ -357,16 +376,11 @@ const Single = () => {
         <Grid
           container
           direction="row"
-          alignItems="center"
-          justifyContent="center"
-          sx={{
-            justifyContent: 'flex-start',
-            alignContent: 'flex-start',
-            alignItems: 'flex-start',
-          }}
+          alignItems="flex-start"
+          justifyContent="space-around"
         >
           {mediumScreen ? (
-            <Grid item xs={5} align="center">
+            <Grid item align="center">
               <IconButton
                 sx={{m: 'auto', borderRadius: '2rem'}}
                 aria-label="favoriteIcon"
@@ -390,7 +404,7 @@ const Single = () => {
               </Typography>
             </Grid>
           ) : (
-            <Grid item xs={5} align="center">
+            <Grid item align="center">
               <IconButton
                 aria-label="favoriteIcon"
                 onClick={refreshLikes ? deleteLike : doLike}
@@ -432,7 +446,7 @@ const Single = () => {
             </Grid>
           )}
 
-          <Grid item xs={7} align="center">
+          <Grid item align="center">
             {refreshRating ? (
               <>
                 <IconButton
@@ -520,7 +534,6 @@ const Single = () => {
                 </Typography>
               </>
             )}
-
             <AlertDialog
               content={'You need to be logged in to add a like.'}
               dialogOpen={likeFailedDialogOpen}
@@ -565,20 +578,18 @@ const Single = () => {
               No comments added.
             </Typography>
           )}
-          {commentArray
-            .map((item, index) => {
-              if (index < showComments) {
-                return (
-                  <CommentRow
-                    key={index}
-                    file={item}
-                    refreshData={refreshComments}
-                    setRefreshData={setRefreshComments}
-                  />
-                );
-              }
-            })
-            .reverse()}
+          {[...commentArray].reverse().map((item, index) => {
+            if (index < showComments) {
+              return (
+                <CommentRow
+                  key={item.comment_id}
+                  file={item}
+                  refreshData={refreshComments}
+                  setRefreshData={setRefreshComments}
+                />
+              );
+            }
+          })}
           {commentCount > showComments && (
             <Button
               sx={{width: '100%', my: 1}}
@@ -587,7 +598,7 @@ const Single = () => {
               Show more comments
             </Button>
           )}
-          <ValidatorForm onSubmit={handleSubmit}>
+          <ValidatorForm onSubmit={handleSubmit} novalidate>
             <Grid
               container
               alignItems="flex-start"

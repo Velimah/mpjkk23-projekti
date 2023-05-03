@@ -92,6 +92,7 @@ const MediaTable = ({
                 !myFavouritesOnly &&
                 'Discover cats'}
             </Typography>
+
             <FormControl
               sx={{
                 width: '180px',
