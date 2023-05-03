@@ -11,7 +11,7 @@ import {
   MenuItem,
   Box,
 } from '@mui/material';
-import {useMedia} from '../hooks/ApiHooks';
+import {useMedia, useTag} from '../hooks/ApiHooks';
 import MediaRow from './MediaRow';
 import PropTypes from 'prop-types';
 import {useContext, useEffect, useState} from 'react';
@@ -20,16 +20,19 @@ import MenuIcon from '@mui/icons-material/Menu';
 import {NavLink} from 'react-router-dom';
 import {useTheme} from '@mui/material/styles';
 import {MediaContext} from '../contexts/MediaContext';
+import {appId} from '../utils/variables';
 
 const MediaTable = ({
   myFilesOnly = false,
   targetUserFilesOnly = false,
   myFavouritesOnly = false,
+  searchQuery,
 }) => {
   const {mediaArray, deleteMedia, getMedia} = useMedia(
     myFilesOnly,
     targetUserFilesOnly,
-    myFavouritesOnly
+    myFavouritesOnly,
+    searchQuery
   );
   const {refreshPage} = useContext(MediaContext);
   const theme = useTheme();
@@ -43,9 +46,11 @@ const MediaTable = ({
     getMedia();
   }, [refreshPage]);
 
+  // }, [searchQuery]);
+
   useEffect(() => {
     setArrayLength(mediaArray.length);
-  }, [mediaArray]);
+  }, []);
 
   const changeToGrid = () => {
     setStyle(true);
@@ -330,6 +335,7 @@ MediaTable.propTypes = {
   myFilesOnly: PropTypes.bool,
   targetUserFilesOnly: PropTypes.bool,
   myFavouritesOnly: PropTypes.bool,
+  searchQuery: PropTypes.string,
 };
 
 export default MediaTable;
