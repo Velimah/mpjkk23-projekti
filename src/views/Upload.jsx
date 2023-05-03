@@ -13,7 +13,7 @@ import {
   CircularProgress,
 } from '@mui/material';
 import useForm from '../hooks/FormHooks';
-import {useEffect, useRef, useState} from 'react';
+import {useContext, useEffect, useRef, useState} from 'react';
 import {useMedia, useTag} from '../hooks/ApiHooks';
 import {useNavigate} from 'react-router-dom';
 import {appId, filePlaceholder} from '../utils/variables';
@@ -21,21 +21,27 @@ import {ValidatorForm, TextValidator} from 'react-material-ui-form-validator';
 import {uploadErrorMessages} from '../utils/errorMessages';
 import {uploadValidators} from '../utils/validator';
 import AlertDialog from '../components/AlertDialog';
+import {MediaContext} from '../contexts/MediaContext';
 
 const Upload = () => {
+  const {setToastSnackbar, setToastSnackbarOpen} = useContext(MediaContext);
+  const {postMedia} = useMedia();
+  const {postTag} = useTag();
+
   const [file, setFile] = useState(null);
   const [tags, setTags] = useState([]);
   const [fileError, setFileError] = useState({isError: false, message: ''});
-  const [dialogOpen, setDialogOpen] = useState(false);
+  const [cancelUploadDialogOpen, setCancelUploadDialogOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState(filePlaceholder);
   const [upload, setUpload] = useState(false);
-  const {postMedia} = useMedia();
-  const {postTag} = useTag();
+
   const navigate = useNavigate();
   const videoRef = useRef();
+
   const extraSmallScreen = useMediaQuery((theme) =>
     theme.breakpoints.down('sm')
   );
+
   const initValues = {
     title: 'Cat post',
     description: '',
@@ -75,7 +81,10 @@ const Upload = () => {
       // Add tags that user inputted
       tagsTmp = tagsTmp.concat(
         tags.map((tag) => {
-          return {file_id: uploadResult.file_id, tag: appId + '_' + tag};
+          return {
+            file_id: uploadResult.file_id,
+            tag: appId + '_' + tag.toLowerCase(),
+          };
         })
       );
       // Loop postTags
@@ -83,11 +92,19 @@ const Upload = () => {
         const tagResult = await postTag(tag, token);
         console.log(tagResult);
       }
+
+      setToastSnackbar({severity: 'success', message: uploadResult.message});
+      setToastSnackbarOpen(true);
+
       // Navigate back to home
-      navigate('/home');
+      navigate('/');
     } catch (error) {
       setUpload(false);
-      alert('Something went wrong.');
+      setToastSnackbar({
+        severity: 'error',
+        message: 'Something went wrong - Please try again later',
+      });
+      setToastSnackbarOpen(true);
       console.error(error.message);
     }
   };
@@ -144,12 +161,14 @@ const Upload = () => {
   }, [selectedFile]);
 
   const doTagDelete = (tagToDelete) => () => {
-    const newTags = tags.filter((tag) => tag !== tagToDelete);
+    const newTags = tags.filter(
+      (tag) => tag.toLowerCase() !== tagToDelete.toLowerCase()
+    );
     setTags(newTags);
   };
 
-  const handleDialogYes = () => {
-    setDialogOpen(false);
+  const handleCancelModify = () => {
+    setCancelUploadDialogOpen(false);
     navigate(-1);
   };
 
@@ -324,12 +343,12 @@ const Upload = () => {
                   )}
                 />
                 <Box sx={tags.length > 0 ? {mb: 4} : {mb: 0}}>
-                  {tags.map((tag) => (
+                  {tags.map((tag, index) => (
                     <Chip
                       variant="outlined"
                       color="primary"
-                      key={tag}
-                      label={tag}
+                      key={index}
+                      label={tag.toLowerCase()}
                       onDelete={doTagDelete(tag)}
                       sx={{mr: 1, mt: 1}}
                     />
@@ -341,6 +360,7 @@ const Upload = () => {
                   type="submit"
                   sx={{mb: 2}}
                   disabled={upload}
+                  size="large"
                 >
                   {upload ? 'Uploading...' : 'Upload'}
                   {upload && (
@@ -355,8 +375,9 @@ const Upload = () => {
                 <Button
                   variant="outlined"
                   fullWidth
-                  onClick={() => setDialogOpen(true)}
+                  onClick={() => setCancelUploadDialogOpen(true)}
                   disabled={upload}
+                  size="large"
                 >
                   Cancel
                 </Button>
@@ -366,11 +387,11 @@ const Upload = () => {
         </Paper>
       </ValidatorForm>
       <AlertDialog
-        title={'Are you sure you want to cancel creating a new post?'}
-        content={'All your work will be lost.'}
-        dialogOpen={dialogOpen}
-        setDialogOpen={setDialogOpen}
-        functionToDo={handleDialogYes}
+        title={'Are you sure you want to cancel adding a new post?'}
+        content={'All your work will be lost permanently.'}
+        dialogOpen={cancelUploadDialogOpen}
+        setDialogOpen={setCancelUploadDialogOpen}
+        functionToDo={handleCancelModify}
       />
     </Container>
   );

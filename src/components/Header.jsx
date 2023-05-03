@@ -7,7 +7,6 @@ import {
   Container,
   Toolbar,
   Box,
-  Typography,
   useMediaQuery,
   Avatar,
   Tooltip,
@@ -41,7 +40,14 @@ const Header = () => {
         setProfilePic(profilePicture);
       }
     } catch (error) {
-      console.error(error.message);
+      if (error.message === 'Tag not found') {
+        setProfilePic({
+          filename: profilePlaceholder,
+        });
+        return;
+      } else {
+        console.error(error.message);
+      }
     }
   };
 
@@ -54,6 +60,7 @@ const Header = () => {
       elevation={extraSmallScreen ? 0 : 6}
       position={extraSmallScreen ? 'absolute' : 'sticky'}
       color={extraSmallScreen ? 'transparent' : 'white'}
+      sx={{borderRadius: 0}}
     >
       <Container maxWidth="lg">
         <Toolbar sx={{justifyContent: {xs: 'center'}}} disableGutters>
@@ -67,32 +74,47 @@ const Header = () => {
                 cursor: 'pointer',
               }}
               alt="OnlyCats logo"
-              onClick={() => navigate('/home')}
+              onClick={() => {
+                if (location.pathname === '/') {
+                  window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth',
+                  });
+                } else {
+                  navigate('/');
+                }
+              }}
             />
-            <Typography
+            <Box
               variant="h1"
-              noWrap
-              component={Link}
-              to="/home"
+              onClick={() => {
+                if (location.pathname === '/') {
+                  window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth',
+                  });
+                } else {
+                  navigate('/');
+                }
+              }}
               sx={{
                 mr: 2,
+                fontWeight: 600,
+                fontSize: '1.5rem',
                 display: {xs: 'flex', sm: 'none', md: 'flex'},
-                color: 'inherit',
-                textDecoration: 'none',
+                cursor: 'pointer',
               }}
             >
               OnlyCats
-            </Typography>
+            </Box>
           </Box>
           <Box sx={{flexGrow: 1, display: {xs: 'none', sm: 'flex'}}}>
             <Box as="nav" sx={{flexGrow: 1}}>
               <Button
-                color={
-                  location.pathname === '/home' ? 'primary' : 'blackMedium'
-                }
-                sx={{mr: 1}}
+                color={location.pathname === '/' ? 'primary' : 'blackMedium'}
+                sx={{mr: 1, fontWeight: 600}}
                 component={Link}
-                to="/home"
+                to="/"
               >
                 Home
               </Button>
@@ -100,7 +122,7 @@ const Header = () => {
                 color={
                   location.pathname === '/search' ? 'primary' : 'blackMedium'
                 }
-                sx={{mr: 1}}
+                sx={{mr: 1, fontWeight: 600}}
                 component={Link}
                 to="/search"
               >
@@ -111,7 +133,7 @@ const Header = () => {
                   color={
                     location.pathname === '/liked' ? 'primary' : 'blackMedium'
                   }
-                  sx={{mr: 1}}
+                  sx={{mr: 1, fontWeight: 600}}
                   component={Link}
                   to="/liked"
                 >
@@ -131,6 +153,7 @@ const Header = () => {
                       p: '3px',
                       mr: 1,
                       backgroundColor: '#E3A7B6',
+                      boxShadow: 'rgba(149, 157, 165, 1) 0px 2px 6px',
                     }}
                   >
                     <PersonRounded />
@@ -142,7 +165,10 @@ const Header = () => {
                     aria-label="Profile"
                     component={Link}
                     to="/profile"
-                    sx={{mr: 1}}
+                    sx={{
+                      mr: 1,
+                      boxShadow: 'rgba(149, 157, 165, 1) 0px 2px 6px',
+                    }}
                   >
                     <PersonRounded />
                   </Avatar>
@@ -153,7 +179,7 @@ const Header = () => {
               </>
             ) : (
               <>
-                <Button variant="contained" component={Link} to="/">
+                <Button variant="contained" component={Link} to="/login">
                   Login
                 </Button>
               </>

@@ -6,15 +6,18 @@ const formatTime = (timestamp) => {
   const elapsedSeconds = Math.floor(elapsedMilliseconds / 1000);
 
   if (elapsedSeconds < 60) {
-    return elapsedSeconds + 's';
+    const pluralOrNot = elapsedSeconds > 1 ? ' seconds' : ' second';
+    return elapsedSeconds + pluralOrNot;
   }
   const elapsedMinutes = Math.floor(elapsedSeconds / 60);
   if (elapsedMinutes < 60) {
-    return elapsedMinutes + 'm';
+    const pluralOrNot = elapsedMinutes > 1 ? ' minutes' : ' minute';
+    return elapsedMinutes + pluralOrNot;
   }
   const elapsedHours = Math.floor(elapsedMinutes / 60);
   if (elapsedHours < 24) {
-    return elapsedHours + 'h';
+    const pluralOrNot = elapsedHours > 1 ? ' hours' : ' hour';
+    return elapsedHours + pluralOrNot;
   }
   const options = {day: 'numeric', month: 'short'};
   return date.toLocaleDateString('en-US', options);

@@ -9,15 +9,17 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  Box,
 } from '@mui/material';
 import {useMedia, useTag} from '../hooks/ApiHooks';
 import MediaRow from './MediaRow';
 import PropTypes from 'prop-types';
-import {useEffect, useState} from 'react';
+import {useContext, useEffect, useState} from 'react';
 import WindowIcon from '@mui/icons-material/Window';
 import MenuIcon from '@mui/icons-material/Menu';
 import {NavLink} from 'react-router-dom';
 import {useTheme} from '@mui/material/styles';
+import {MediaContext} from '../contexts/MediaContext';
 import {appId} from '../utils/variables';
 
 const MediaTable = ({
@@ -32,18 +34,23 @@ const MediaTable = ({
     myFavouritesOnly,
     searchQuery
   );
+  const {refreshPage} = useContext(MediaContext);
+  const theme = useTheme();
+  const smallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+  const [selectedOption, setSelectedOption] = useState('file_id');
+  const [arrayLength, setArrayLength] = useState(0);
+
+  const [style, setStyle] = useState(true);
 
   useEffect(() => {
     getMedia();
-  }, [searchQuery]);
+  }, [refreshPage]);
 
-  const [arrayLength, setArrayLength] = useState(0);
+  // }, [searchQuery]);
+
   useEffect(() => {
     setArrayLength(mediaArray.length);
   }, []);
-
-  const [style, setStyle] = useState(true);
-  const [selectedOption, setSelectedOption] = useState('file_id');
 
   const changeToGrid = () => {
     setStyle(true);
@@ -53,9 +60,6 @@ const MediaTable = ({
     setStyle(false);
   };
 
-  const theme = useTheme();
-  const smallScreen = useMediaQuery(theme.breakpoints.down('sm'));
-
   const handleChange = (event) => {
     const value = event.target.value;
     if (value === 1) {
@@ -64,44 +68,81 @@ const MediaTable = ({
       setSelectedOption('likes');
     } else if (value === 3) {
       setSelectedOption('rating');
+    } else if (value === 4) {
+      setSelectedOption('comments');
     }
   };
 
   return (
     <>
-      <Grid sx={{mt: 3, mb: 3}}>
-        <Container maxWidth="lg">
-          <Grid
-            container
-            direction="row"
+      <Grid sx={{py: 3}}>
+        <Container>
+          <Box
+            display="flex"
             justifyContent="space-between"
             alignItems="center"
           >
             {myFilesOnly || targetUserFilesOnly ? (
-              <Typography component="h2" variant="h2" sx={{mb: 2}}>
+              <Typography
+                sx={{
+                  fontSize: {xs: '1.2rem', sm: '1.5rem'},
+                }}
+                component="h2"
+                variant="h2"
+              >
                 {arrayLength} {arrayLength === 1 ? 'post' : 'posts'}
               </Typography>
             ) : null}
-            {!myFilesOnly && !targetUserFilesOnly ? (
-              <Typography component="h2" variant="h2" sx={{mb: 2}}>
+            {myFavouritesOnly ? (
+              <Typography
+                sx={{
+                  fontSize: {
+                    xs: '1.2rem',
+                    sm: '1.5rem',
+                  },
+                }}
+                component="h2"
+                variant="h2"
+              >
+                {`Liked posts (${arrayLength})`}
+              </Typography>
+            ) : null}
+            {!myFilesOnly && !targetUserFilesOnly && !myFavouritesOnly ? (
+              <Typography
+                sx={{
+                  fontSize: {
+                    xs: '1.2rem',
+                    sm: '1.5rem',
+                  },
+                }}
+                component="h2"
+                variant="h2"
+              >
                 Discover cats
               </Typography>
             ) : null}
-            <FormControl sx={{width: 150}}>
+            <FormControl
+              sx={{
+                width: '180px',
+                textAlign: 'center',
+              }}
+            >
               <InputLabel id="select-label">Sort</InputLabel>
               <Select
                 defaultValue={1}
                 onChange={handleChange}
                 labelId="select-label"
-                id="select"
+                id="sort-select"
                 label="Sort"
+                size="small"
               >
                 <MenuItem value={1}>Newest</MenuItem>
                 <MenuItem value={2}>Most liked</MenuItem>
                 <MenuItem value={3}>Top rated</MenuItem>
+                <MenuItem value={4}>Most commented</MenuItem>
               </Select>
             </FormControl>
-          </Grid>
+          </Box>
         </Container>
       </Grid>
       <Container maxWidth="lg" sx={{padding: smallScreen ? 0 : 'auto'}}>
@@ -109,6 +150,7 @@ const MediaTable = ({
           container
           direction="row"
           justifyContent="flex-start"
+          mb={!style && -1}
           alignItems="stretch"
           wrap="nowrap"
         >
@@ -157,11 +199,21 @@ const MediaTable = ({
         >
           {/* * LIST STYLE * */}
           {style === false ? (
-            <ImageList
-              cols={1}
-              gap={0}
-              sx={{width: smallScreen ? '100%' : '500px'}}
-            >
+            <ImageList cols={1} gap={0} sx={{width: {sx: '100%', sm: '500px'}}}>
+              {selectedOption === 'comments' &&
+                [...mediaArray]
+                  .sort((a, b) => b.comments.length - a.comments.length)
+                  .map((item, index) => {
+                    return (
+                      <MediaRow
+                        key={index}
+                        file={item}
+                        deleteMedia={deleteMedia}
+                        style={style}
+                        mediaArray={mediaArray}
+                      />
+                    );
+                  })}
               {selectedOption === 'rating' &&
                 [...mediaArray]
                   .sort((a, b) => b.averageRating - a.averageRating)
@@ -172,6 +224,7 @@ const MediaTable = ({
                         file={item}
                         deleteMedia={deleteMedia}
                         style={style}
+                        mediaArray={mediaArray}
                       />
                     );
                   })}
@@ -185,6 +238,7 @@ const MediaTable = ({
                         file={item}
                         deleteMedia={deleteMedia}
                         style={style}
+                        mediaArray={mediaArray}
                       />
                     );
                   })}
@@ -198,6 +252,7 @@ const MediaTable = ({
                         file={item}
                         deleteMedia={deleteMedia}
                         style={style}
+                        mediaArray={mediaArray}
                       />
                     );
                   })}
@@ -207,16 +262,25 @@ const MediaTable = ({
             <ImageList
               sx={{
                 width: '100%',
-                height: '100%',
                 objectFit: 'contain',
               }}
               cols={smallScreen ? 3 : 4}
-              rowHeight={smallScreen ? 100 : 300}
-              gap={5}
-              container
               direction="row"
-              alignItems="stretch"
             >
+              {selectedOption === 'comments' &&
+                [...mediaArray]
+                  .sort((a, b) => b.comments.length - a.comments.length)
+                  .map((item, index) => {
+                    return (
+                      <MediaRow
+                        key={index}
+                        file={item}
+                        deleteMedia={deleteMedia}
+                        style={style}
+                        mediaArray={mediaArray}
+                      />
+                    );
+                  })}
               {selectedOption === 'rating' &&
                 [...mediaArray]
                   .sort((a, b) => b.averageRating - a.averageRating)
@@ -227,6 +291,7 @@ const MediaTable = ({
                         file={item}
                         deleteMedia={deleteMedia}
                         style={style}
+                        mediaArray={mediaArray}
                       />
                     );
                   })}
@@ -240,6 +305,7 @@ const MediaTable = ({
                         file={item}
                         deleteMedia={deleteMedia}
                         style={style}
+                        mediaArray={mediaArray}
                       />
                     );
                   })}
@@ -253,6 +319,7 @@ const MediaTable = ({
                         file={item}
                         deleteMedia={deleteMedia}
                         style={style}
+                        mediaArray={mediaArray}
                       />
                     );
                   })}

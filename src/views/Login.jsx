@@ -1,10 +1,19 @@
 import LoginForm from '../components/LoginForm';
 import RegisterForm from '../components/RegisterForm';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {Button, Grid, Typography, Container} from '@mui/material';
+import {useLocation} from 'react-router-dom';
 
 const Login = () => {
   const [formToggle, setFormToggle] = useState(true);
+  const {state} = useLocation();
+  const register = state;
+
+  useEffect(() => {
+    if (register) {
+      setFormToggle(!register);
+    }
+  }, []);
 
   const toggle = () => {
     setFormToggle(!formToggle);
@@ -20,7 +29,10 @@ const Login = () => {
         minHeight: {sm: 'calc(100vh - 4rem)'},
       }}
     >
-      <Container maxWidth="lg" sx={{display: 'flex', justifyContent: 'center'}}>
+      <Container
+        maxWidth="lg"
+        sx={{display: 'flex', justifyContent: 'center', px: {xs: 4, sm: 0}}}
+      >
         <Grid
           item
           xs={5}
@@ -42,7 +54,7 @@ const Login = () => {
             borderRadius: {xs: 0, sm: '25px'},
             backgroundColor: '#FDF7F4',
             boxShadow: {xs: 0, sm: 3},
-            p: {xs: 0, sm: '2rem'},
+            p: {xs: 0, sm: 4},
             m: {xs: '8rem 0', sm: '0 1rem'},
             maxWidth: {sm: '480px'},
           }}

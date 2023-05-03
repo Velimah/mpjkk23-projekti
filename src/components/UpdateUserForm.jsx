@@ -1,13 +1,15 @@
 import useForm from '../hooks/FormHooks';
 import {useUser} from '../hooks/ApiHooks';
-import {Button, Grid} from '@mui/material';
+import {Box, Button, Typography} from '@mui/material';
 import {ValidatorForm, TextValidator} from 'react-material-ui-form-validator';
 import {updateUserErrorMessages} from '../utils/errorMessages';
 import {updateUserValidators} from '../utils/validator';
-import {useEffect} from 'react';
+import {useContext, useEffect} from 'react';
+import {MediaContext} from '../contexts/MediaContext';
 
 const UpdateUserForm = () => {
   const {putUser, getCheckUser} = useUser();
+  const {setToastSnackbar, setToastSnackbarOpen} = useContext(MediaContext);
 
   const initValues = {
     username: '',
@@ -35,10 +37,11 @@ const UpdateUserForm = () => {
         delete withoutConfirm.full_name;
       }
       const userResult = await putUser(withoutConfirm, token);
-
-      alert(userResult.message);
-    } catch (e) {
-      alert(e.message);
+      setToastSnackbar({severity: 'success', message: userResult.message});
+      setToastSnackbarOpen(true);
+    } catch (error) {
+      setToastSnackbar({severity: 'error', message: error.message});
+      setToastSnackbarOpen(true);
     }
   };
 
@@ -55,8 +58,8 @@ const UpdateUserForm = () => {
       if (value === '') return true;
       try {
         return await getCheckUser(inputs.username);
-      } catch (e) {
-        alert(e.message);
+      } catch (error) {
+        console.error(error.message);
       }
     });
     ValidatorForm.addValidationRule('isEmptyOrMin5', (value) => {
@@ -72,7 +75,21 @@ const UpdateUserForm = () => {
 
   return (
     <>
-      <Grid container direction={'column'} sx={{maxWidth: 'sm', mt: 5}}>
+      <Box
+        sx={{
+          width: '100%',
+          pl: {xs: 3, sm: 1, md: 3},
+          pr: {xs: 3, sm: 0},
+          mt: {xs: 0, sm: 2, md: 5},
+        }}
+      >
+        <Typography
+          component="p"
+          variant="body1"
+          sx={{textAlign: 'center', fontSize: '0.9rem'}}
+        >
+          Fill the fields that you want to update
+        </Typography>
         <ValidatorForm onSubmit={handleSubmit} noValidate>
           <TextValidator
             fullWidth
@@ -127,16 +144,11 @@ const UpdateUserForm = () => {
             validators={updateUserValidators.fullName}
             errorMessages={updateUserErrorMessages.fullName}
           />
-          <Button
-            fullWidth
-            variant="contained"
-            sx={{mt: 1, mb: 1}}
-            type="submit"
-          >
+          <Button fullWidth variant="contained" sx={{mt: 1}} type="submit">
             Update user info
           </Button>
         </ValidatorForm>
-      </Grid>
+      </Box>
     </>
   );
 };

@@ -10,7 +10,8 @@ import {InputAdornment, IconButton, Button} from '@mui/material';
 import {Visibility, VisibilityOff} from '@mui/icons-material';
 
 const LoginForm = () => {
-  const {setUser} = useContext(MediaContext);
+  const {setUser, setToastSnackbar, setToastSnackbarOpen} =
+    useContext(MediaContext);
   const {postLogin} = useAuthentication();
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
@@ -25,9 +26,13 @@ const LoginForm = () => {
       const loginResult = await postLogin(inputs);
       localStorage.setItem('token', loginResult.token);
       setUser(loginResult.user);
-      navigate('/home');
-    } catch (e) {
-      console.error(e.message);
+      setToastSnackbar({severity: 'success', message: loginResult.message});
+      setToastSnackbarOpen(true);
+      navigate('/');
+    } catch (error) {
+      setToastSnackbar({severity: 'error', message: error.message});
+      setToastSnackbarOpen(true);
+      console.error(error.message);
     }
   };
 
@@ -80,7 +85,13 @@ const LoginForm = () => {
           }}
         />
 
-        <Button fullWidth variant="contained" type="submit" sx={{mt: 1}}>
+        <Button
+          fullWidth
+          variant="contained"
+          type="submit"
+          sx={{mt: 1}}
+          size="large"
+        >
           Login
         </Button>
       </ValidatorForm>

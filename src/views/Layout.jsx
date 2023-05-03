@@ -6,6 +6,7 @@ import {createTheme, CssBaseline, ThemeProvider} from '@mui/material';
 import {themeOptions} from '../theme/themeOptions';
 import MobileNavigation from '../components/MobileNavigation';
 import Header from '../components/Header';
+import ToastSnackbar from '../components/ToastSnackbar';
 
 const Layout = () => {
   const {setUser} = useContext(MediaContext);
@@ -16,15 +17,20 @@ const Layout = () => {
   const getUserInfo = async () => {
     const userToken = localStorage.getItem('token');
     if (userToken) {
-      const userData = await getUserByToken(userToken);
-      if (userData) {
-        setUser(userData);
-        const target = location.pathname === '/' ? '/home' : location.pathname;
-        navigate(target);
-        return;
+      try {
+        const userData = await getUserByToken(userToken);
+        if (userData) {
+          setUser(userData);
+          const target =
+            location.pathname === '/login' ? '/' : location.pathname;
+          navigate(target);
+          return;
+        }
+      } catch (error) {
+        console.error(error.message);
+        navigate('/logout');
       }
     }
-    navigate('/home');
   };
 
   useEffect(() => {
@@ -39,6 +45,7 @@ const Layout = () => {
       <Header />
       <MobileNavigation />
       <main>
+        <ToastSnackbar />
         <Outlet />
       </main>
     </ThemeProvider>

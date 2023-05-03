@@ -1,8 +1,21 @@
-import {Avatar, Box, Button, Rating, Typography} from '@mui/material';
+import {
+  Avatar,
+  Box,
+  Button,
+  Container,
+  Rating,
+  Typography,
+} from '@mui/material';
 import {useContext} from 'react';
 import {MediaContext} from '../contexts/MediaContext';
 import {useState, useEffect} from 'react';
-import {useMedia, useRating, useTag} from '../hooks/ApiHooks';
+import {
+  useComment,
+  useFavourite,
+  useMedia,
+  useRating,
+  useTag,
+} from '../hooks/ApiHooks';
 import {
   appId,
   filePlaceholder,
@@ -11,23 +24,18 @@ import {
 } from '../utils/variables';
 import {useNavigate} from 'react-router-dom';
 import MediaTable from '../components/MediaTable';
+import AlertDialog from '../components/AlertDialog';
 
 const Profile = () => {
   const {user, setUser} = useContext(MediaContext);
   const {getTag} = useTag();
+  const {getRatingsById, deleteRating, getAllRatings} = useRating();
+  const {getAllMediaByCurrentUser, deleteMedia} = useMedia();
+  const {deleteComment, getCommentsByUser} = useComment();
+  const {deleteFavourite, getUsersFavouritesByToken} = useFavourite();
   const navigate = useNavigate();
-  const {getRatingsById} = useRating();
-  const {getAllMediaByCurrentUser} = useMedia();
 
-  const [userData, setData] = useState(() => {
-    return user ?? JSON.parse(window.localStorage.getItem('user'));
-  });
-
-  useEffect(() => {
-    window.localStorage.setItem('user', JSON.stringify(userData));
-    setUser(userData);
-  }, [setData]);
-
+  // useStates
   const [profilePic, setProfilePic] = useState({
     filename: profilePlaceholder,
   });
@@ -39,6 +47,23 @@ const Profile = () => {
   );
   const [rating, setRating] = useState(0);
   const [ratingCount, setRatingCount] = useState(0);
+  const [deleteAllInformationDialogOpen, setDeleteAllInformationDialogOpen] =
+    useState(false);
+
+  // checks for user and if null gets user information from localstorage
+  const [userData, setData] = useState(() => {
+    return user ?? JSON.parse(window.localStorage.getItem('user'));
+  });
+
+  // when UserData changes, saves UserData to localstorage and updates UserData
+  useEffect(() => {
+    window.localStorage.setItem('user', JSON.stringify(userData));
+    setUser(userData);
+  }, [setData]);
+
+  const sleep = (ms) => {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  };
 
   const fetchProfilePicture = async () => {
     try {
@@ -49,7 +74,11 @@ const Profile = () => {
       profilePicture.filename = mediaUrl + profilePicture.filename;
       setProfilePic(profilePicture);
     } catch (error) {
-      console.error(error.message);
+      if (error.message === 'Tag not found') {
+        return;
+      } else {
+        console.error(error.message);
+      }
     }
   };
 
@@ -62,7 +91,11 @@ const Profile = () => {
       backgroundPicture.filename = mediaUrl + backgroundPicture.filename;
       setBackgroundPic(backgroundPicture);
     } catch (error) {
-      console.error(error.message);
+      if (error.message === 'Tag not found') {
+        return;
+      } else {
+        console.error(error.message);
+      }
     }
   };
 
@@ -74,12 +107,12 @@ const Profile = () => {
       const profileText = profilePictures.pop();
       setprofileDescription(profileText.description);
     } catch (error) {
-      console.error(error.message);
+      if (error.message === 'Tag not found') {
+        return;
+      } else {
+        console.error(error.message);
+      }
     }
-  };
-
-  const sleep = (ms) => {
-    return new Promise((resolve) => setTimeout(resolve, ms));
   };
 
   const fetchAllRatings = async () => {
@@ -89,7 +122,7 @@ const Profile = () => {
       let sum = 0;
       let count = 0;
       for (const file of mediaInfo) {
-        await sleep(100);
+        await sleep(20);
         const ratings = await getRatingsById(file.file_id);
         if (ratings.length !== 0) {
           for (const obj of ratings) {
@@ -99,8 +132,48 @@ const Profile = () => {
         }
       }
       setRatingCount(count);
-      const average = sum / count;
+      let average = sum / count;
+      if (isNaN(average)) {
+        average = 0;
+      }
       setRating(average);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const deleteAllInformation = async () => {
+    setDeleteAllInformationDialogOpen(false);
+    try {
+      const token = localStorage.getItem('token');
+
+      const likesInfo = await getUsersFavouritesByToken(token);
+      for (const file of likesInfo) {
+        await sleep(5);
+        const deleteLikesInfo = await deleteFavourite(file.file_id, token);
+        console.log('deleteLikesInfo', deleteLikesInfo);
+      }
+      const commentsInfo = await getCommentsByUser(token);
+      for (const file of commentsInfo) {
+        await sleep(5);
+        const deleteCommentsInfo = await deleteComment(file.comment_id, token);
+        console.log('deleteCommentsInfo', deleteCommentsInfo);
+      }
+
+      const ratingsInfo = await getAllRatings(token);
+      for (const file of ratingsInfo) {
+        await sleep(5);
+        const deleteRatingsInfo = await deleteRating(file.file_id, token);
+        console.log('deleteRatingsInfo', deleteRatingsInfo);
+      }
+
+      const mediaInfo = await getAllMediaByCurrentUser(token);
+      for (const file of mediaInfo) {
+        await sleep(20);
+        const deleteFileInfo = await deleteMedia(file.file_id, token);
+        console.log('deleteMedia', deleteFileInfo);
+      }
+      navigate(0);
     } catch (error) {
       console.log(error.message);
     }
@@ -111,18 +184,17 @@ const Profile = () => {
     fetchBackgroundPicture();
     fetchProfileDescription();
     fetchAllRatings();
-  }, [user]);
+  }, [userData]);
 
   return (
     <>
-      <Box sx={{maxWidth: '1200px', margin: 'auto', pt: {xs: 8, sm: 1, md: 1}}}>
+      <Container maxWidth="lg" sx={{p: {xs: '6rem 0', sm: '3rem 3rem'}}}>
         <Avatar
           src={backgroundPic.filename}
           alt="Logo"
           sx={{
-            borderRadius: 0,
+            borderRadius: {xs: 0, sm: '2rem'},
             boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px',
-            maxWidth: '1200px',
             width: '100%',
             height: {xs: '150px', md: '300px'},
             maxHeight: '300px',
@@ -137,11 +209,10 @@ const Profile = () => {
             borderColor: '#FFFFFF',
             borderWidth: '3px',
             position: 'relative',
-            height: {xs: '150px', sm: '150px', md: '200px'},
-            width: {xs: '150px', sm: '150px', md: '200px'},
-            top: {xs: '-75px', sm: '-75px', md: '-100px'},
-            left: {xs: '0', sm: '50px', md: '50px'},
-            margin: {xs: 'auto', sm: 'initial'},
+            height: {xs: '125px', sm: '150px', md: '200px'},
+            width: {xs: '125px', sm: '150px', md: '200px'},
+            top: {xs: '-100px', sm: '-125px', md: '-150px'},
+            left: {xs: '25px', sm: '50px', md: '50px'},
           }}
         />
         <Box
@@ -151,19 +222,19 @@ const Profile = () => {
             maxWidth: '1000px',
             width: '100%',
             margin: 'auto',
-            mt: {xs: -8, md: -23},
+            mt: {xs: -12, sm: -17, md: -23},
             flexDirection: {xs: 'row', sm: 'row'},
           }}
         >
           <Box
             display="flex"
             flexDirection="column"
-            textAlign="center"
+            textAlign="start"
             sx={{
-              px: {xs: 2, md: 6},
+              px: {xs: 3, md: 6},
               py: {xs: 1, md: 1},
               justifyContent: {xs: 'center', sm: 'center'},
-              alignItems: {xs: 'center', sm: 'flex-start'},
+              alignItems: {xs: 'flex-start', sm: 'flex-start'},
             }}
           >
             <Typography component="p" variant="h1" sx={{mt: 1}}>
@@ -178,21 +249,20 @@ const Profile = () => {
               name="read-only"
               size="large"
               precision={0.5}
-              value={rating.toFixed(2)}
+              value={Number(rating.toFixed(2))}
               readOnly
-              sx={{mt: 1}}
+              sx={{mt: 1, color: '#7047A6', mr: 0.5, fontSize: '1.8rem'}}
             />
             <Typography component="legend">
               {rating.toFixed(2)} ({ratingCount} ratings)
             </Typography>
           </Box>
-
           <Box
             display="flex"
             flexDirection="column"
             justifyContent="center"
             sx={{
-              px: {xs: 2, sm: 2},
+              px: {xs: 3, sm: 2},
               pl: {xs: 0, sm: 2},
               py: {xs: 1, md: 1},
               width: {xs: '200px'},
@@ -206,7 +276,24 @@ const Profile = () => {
               }}
               onClick={() => navigate('/profile/update')}
             >
-              Edit Profile
+              Update
+            </Button>
+            <Button
+              variant="contained"
+              sx={{
+                mt: 2,
+                mr: {
+                  xs: 0,
+                  sm: 0,
+                  backgroundColor: 'red',
+                  '&:hover': {
+                    backgroundColor: 'FireBrick',
+                  },
+                },
+              }}
+              onClick={() => setDeleteAllInformationDialogOpen(true)}
+            >
+              Delete Data
             </Button>
             <Button
               variant="outlined"
@@ -215,6 +302,15 @@ const Profile = () => {
             >
               Logout
             </Button>
+            <AlertDialog
+              title={'Are you sure you want to delete all your information?'}
+              content={
+                'This will delete all your posts, added likes and ratings and comments, and they will be lost permanently.'
+              }
+              functionToDo={deleteAllInformation}
+              dialogOpen={deleteAllInformationDialogOpen}
+              setDialogOpen={setDeleteAllInformationDialogOpen}
+            />
           </Box>
         </Box>
         <Box display="flex" flexDirection="column" justifyContent="center">
@@ -222,22 +318,17 @@ const Profile = () => {
             component="p"
             variant="body3"
             alignSelf="center"
-            sx={{maxWidth: '700px', p: 4, pl: {xs: 4, md: 10}}}
+            sx={{
+              maxWidth: '700px',
+              p: {xs: 3, md: 3},
+              fontSize: {xs: '1rem', md: '1.2rem'},
+            }}
           >
             {profileDescription}
           </Typography>
         </Box>
-      </Box>
-      <MediaTable myFilesOnly={true} />
-      <Box display="flex" width="100%" justifyContent="center">
-        <Button
-          variant="contained"
-          sx={{m: 5, width: '200px'}}
-          onClick={() => navigate('/home')}
-        >
-          Back
-        </Button>
-      </Box>
+        <MediaTable myFilesOnly={true} />
+      </Container>
     </>
   );
 };

@@ -91,8 +91,8 @@ const themeOptions = {
         root: {
           fontFamily: 'Nunito',
           borderRadius: 25,
-          paddingTop: 10,
-          paddingBottom: 10,
+          paddingTop: 8,
+          paddingBottom: 8,
         },
       },
     },
@@ -129,6 +129,34 @@ const themeOptions = {
       styleOverrides: {
         root: {
           margin: 0,
+        },
+      },
+    },
+    MuiAlert: {
+      styleOverrides: {
+        root: {
+          borderRadius: 12.5,
+        },
+      },
+    },
+    MuiDialog: {
+      styleOverrides: {
+        paper: {
+          borderRadius: 12.5,
+        },
+      },
+    },
+    MuiSelect: {
+      styleOverrides: {
+        root: {
+          borderRadius: 25,
+        },
+      },
+    },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {
+          borderRadius: 12.5,
         },
       },
     },
