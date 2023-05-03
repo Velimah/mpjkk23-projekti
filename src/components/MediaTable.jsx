@@ -72,50 +72,27 @@ const MediaTable = ({
     <>
       <Grid sx={{py: 3}}>
         <Container>
-          <Box
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            {myFilesOnly || targetUserFilesOnly ? (
-              <Typography
-                sx={{
-                  fontSize: {xs: '1.2rem', sm: '1.5rem'},
-                }}
-                component="h2"
-                variant="h2"
-              >
-                {arrayLength} {arrayLength === 1 ? 'post' : 'posts'}
-              </Typography>
-            ) : null}
-            {myFavouritesOnly ? (
-              <Typography
-                sx={{
-                  fontSize: {
-                    xs: '1.2rem',
-                    sm: '1.5rem',
-                  },
-                }}
-                component="h2"
-                variant="h2"
-              >
-                {`Liked posts (${arrayLength})`}
-              </Typography>
-            ) : null}
-            {!myFilesOnly && !targetUserFilesOnly && !myFavouritesOnly ? (
-              <Typography
-                sx={{
-                  fontSize: {
-                    xs: '1.2rem',
-                    sm: '1.5rem',
-                  },
-                }}
-                component="h2"
-                variant="h2"
-              >
-                Discover cats
-              </Typography>
-            ) : null}
+          <Box display="flex" justifyContent="space-around" alignItems="center">
+            <Typography
+              sx={{
+                fontSize: {xs: '1.2rem', sm: '1.5rem'},
+                textAlign: 'center',
+              }}
+              component="h2"
+              variant="h2"
+            >
+              {(myFilesOnly || targetUserFilesOnly) &&
+                `${arrayLength} ${arrayLength === 1 ? 'post' : 'posts'}`}
+              {myFavouritesOnly &&
+                `${arrayLength} ${
+                  arrayLength === 1 ? 'Liked post' : 'Liked posts'
+                }`}
+              {!myFilesOnly &&
+                !targetUserFilesOnly &&
+                !myFavouritesOnly &&
+                'Discover cats'}
+            </Typography>
+
             <FormControl
               sx={{
                 width: '180px',
@@ -192,134 +169,76 @@ const MediaTable = ({
           maxWidth="lg"
           justifyContent="center"
         >
-          {/* * LIST STYLE * */}
-          {style === false ? (
-            <ImageList cols={1} gap={0} sx={{width: {sx: '100%', sm: '500px'}}}>
-              {selectedOption === 'comments' &&
-                [...mediaArray]
-                  .sort((a, b) => b.comments.length - a.comments.length)
-                  .map((item, index) => {
-                    return (
-                      <MediaRow
-                        key={index}
-                        file={item}
-                        deleteMedia={deleteMedia}
-                        style={style}
-                        mediaArray={mediaArray}
-                      />
-                    );
-                  })}
-              {selectedOption === 'rating' &&
-                [...mediaArray]
-                  .sort((a, b) => b.averageRating - a.averageRating)
-                  .map((item, index) => {
-                    return (
-                      <MediaRow
-                        key={index}
-                        file={item}
-                        deleteMedia={deleteMedia}
-                        style={style}
-                        mediaArray={mediaArray}
-                      />
-                    );
-                  })}
-              {selectedOption === 'likes' &&
-                [...mediaArray]
-                  .sort((a, b) => b.likes.length - a.likes.length)
-                  .map((item, index) => {
-                    return (
-                      <MediaRow
-                        key={index}
-                        file={item}
-                        deleteMedia={deleteMedia}
-                        style={style}
-                        mediaArray={mediaArray}
-                      />
-                    );
-                  })}
-              {selectedOption === 'file_id' &&
-                [...mediaArray]
-                  .sort((a, b) => b.file_id - a.file_id)
-                  .map((item, index) => {
-                    return (
-                      <MediaRow
-                        key={index}
-                        file={item}
-                        deleteMedia={deleteMedia}
-                        style={style}
-                        mediaArray={mediaArray}
-                      />
-                    );
-                  })}
-            </ImageList>
-          ) : (
-            /* * GRID STYLE * */
-            <ImageList
-              sx={{
-                width: '100%',
-                objectFit: 'contain',
-              }}
-              cols={smallScreen ? 3 : 4}
-              direction="row"
-            >
-              {selectedOption === 'comments' &&
-                [...mediaArray]
-                  .sort((a, b) => b.comments.length - a.comments.length)
-                  .map((item, index) => {
-                    return (
-                      <MediaRow
-                        key={index}
-                        file={item}
-                        deleteMedia={deleteMedia}
-                        style={style}
-                        mediaArray={mediaArray}
-                      />
-                    );
-                  })}
-              {selectedOption === 'rating' &&
-                [...mediaArray]
-                  .sort((a, b) => b.averageRating - a.averageRating)
-                  .map((item, index) => {
-                    return (
-                      <MediaRow
-                        key={index}
-                        file={item}
-                        deleteMedia={deleteMedia}
-                        style={style}
-                        mediaArray={mediaArray}
-                      />
-                    );
-                  })}
-              {selectedOption === 'likes' &&
-                [...mediaArray]
-                  .sort((a, b) => b.likes.length - a.likes.length)
-                  .map((item, index) => {
-                    return (
-                      <MediaRow
-                        key={index}
-                        file={item}
-                        deleteMedia={deleteMedia}
-                        style={style}
-                        mediaArray={mediaArray}
-                      />
-                    );
-                  })}
-              {selectedOption === 'file_id' &&
-                [...mediaArray]
-                  .sort((a, b) => b.file_id - a.file_id)
-                  .map((item, index) => {
-                    return (
-                      <MediaRow
-                        key={index}
-                        file={item}
-                        deleteMedia={deleteMedia}
-                        style={style}
-                        mediaArray={mediaArray}
-                      />
-                    );
-                  })}
-            </ImageList>
-          )}
+          {/* chooses correct css for list/grind */}
+          <ImageList
+            cols={!style ? 1 : smallScreen ? 3 : 4}
+            gap={!style ? 0 : undefined}
+            direction={style ? 'row' : undefined}
+            sx={{
+              width: !style
+                ? {sx: '100%', sm: '500px'}
+                : {sx: '100%', sm: '100%'},
+              objectFit: !style ? 'contain' : undefined,
+            }}
+          >
+            {/* chooses correct sort based on select input */}
+            {selectedOption === 'comments' &&
+              mediaArray
+                .sort((a, b) => b.comments.length - a.comments.length)
+                .map((item, index) => {
+                  return (
+                    <MediaRow
+                      key={index}
+                      file={item}
+                      deleteMedia={deleteMedia}
+                      style={style}
+                      mediaArray={mediaArray}
+                    />
+                  );
+                })}
+            {selectedOption === 'rating' &&
+              mediaArray
+                .sort((a, b) => b.averageRating - a.averageRating)
+                .map((item, index) => {
+                  return (
+                    <MediaRow
+                      key={index}
+                      file={item}
+                      deleteMedia={deleteMedia}
+                      style={style}
+                      mediaArray={mediaArray}
+                    />
+                  );
+                })}
+            {selectedOption === 'likes' &&
+              mediaArray
+                .sort((a, b) => b.likes.length - a.likes.length)
+                .map((item, index) => {
+                  return (
+                    <MediaRow
+                      key={index}
+                      file={item}
+                      deleteMedia={deleteMedia}
+                      style={style}
+                      mediaArray={mediaArray}
+                    />
+                  );
+                })}
+            {selectedOption === 'file_id' &&
+              mediaArray
+                .sort((a, b) => b.file_id - a.file_id)
+                .map((item, index) => {
+                  return (
+                    <MediaRow
+                      key={index}
+                      file={item}
+                      deleteMedia={deleteMedia}
+                      style={style}
+                      mediaArray={mediaArray}
+                    />
+                  );
+                })}
+          </ImageList>
         </Grid>
       </Container>
     </>
