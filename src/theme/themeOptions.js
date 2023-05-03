@@ -146,6 +146,20 @@ const themeOptions = {
         },
       },
     },
+    MuiSelect: {
+      styleOverrides: {
+        root: {
+          borderRadius: 25,
+        },
+      },
+    },
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          borderRadius: 12.5,
+        },
+      },
+    },
   },
 };
 
