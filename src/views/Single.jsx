@@ -509,20 +509,18 @@ const Single = () => {
               No comments added.
             </Typography>
           )}
-          {commentArray
-            .map((item, index) => {
-              if (index < showComments) {
-                return (
-                  <CommentRow
-                    key={index}
-                    file={item}
-                    refreshData={refreshComments}
-                    setRefreshData={setRefreshComments}
-                  />
-                );
-              }
-            })
-            .reverse()}
+          {[...commentArray].reverse().map((item, index) => {
+            if (index < showComments) {
+              return (
+                <CommentRow
+                  key={item.comment_id}
+                  file={item}
+                  refreshData={refreshComments}
+                  setRefreshData={setRefreshComments}
+                />
+              );
+            }
+          })}
           {commentCount > showComments && (
             <Button
               sx={{width: '100%', my: 1}}
