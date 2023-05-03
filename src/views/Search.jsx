@@ -28,15 +28,26 @@ const Search = () => {
   const [updatedSearchQuery, setUpdatedSearchQuery] = useState('');
   const [refreshSearch, setRefreshSearch] = useState(false);
   const [latestSearches, setLatestSearches] = useState(() => {
+    /*
     // getting stored value
     const saved =
       localStorage.getItem('searchHistory') === null
-        ? localStorage.setItem('searchHistory', JSON.stringify('cute, tabby'))
+        ? localStorage.setItem('searchHistory', JSON.stringify(''))
         : localStorage.getItem('searchHistory');
     const initialValue = JSON.parse(saved);
-    return initialValue || 'cute, tabby';
+
+    return '';*/
   });
   // const [popularTags, setPopularTags] = useState([]);
+
+  const [testiData, setTestiDataData] = useState(() => {
+    return JSON.parse(window.localStorage.getItem('searchTesti')) || ':(';
+  });
+
+  useEffect(() => {
+    window.localStorage.setItem('searchTesti', JSON.stringify(testiData));
+    setTestiDataData(testiData);
+  }, [testiData]);
 
   const smallScreen = useMediaQuery(useTheme().breakpoints.down('sm'));
 
@@ -47,16 +58,13 @@ const Search = () => {
 
   // Refresh MediaTable with new query
   const handleClick = () => {
+    setTestiDataData(searchQuery);
     setUpdatedSearchQuery(searchQuery);
     searchQuery === '' ? setRefreshSearch(false) : setRefreshSearch(true);
   };
 
-  if (localStorage.getItem('searchHistory') === ' ') {
-    console.log('yes');
-  }
-
   useEffect(() => {
-    const oldQuery = JSON.parse(localStorage.getItem('searchHistory'))
+    const oldQuery = JSON.parse(localStorage.getItem('searchTesti'))
       .match(/[^,]+/g)
       .filter(Boolean);
 
@@ -69,7 +77,7 @@ const Search = () => {
       }
 
       const newQuery = oldQuery + ',' + searchQuery;
-      localStorage.setItem('searchHistory', JSON.stringify(newQuery));
+      localStorage.setItem('searchTesti', JSON.stringify(newQuery));
 
       setLatestSearches(newQuery.match(/[^,]+/g).filter(Boolean));
     }
@@ -122,7 +130,7 @@ const Search = () => {
         justifyContent="center"
         sx={{width: smallScreen ? '100%' : 'auto'}}
       >
-        {latestSearches
+        {[testiData]
           .slice(0)
           .reverse()
           .map((item) => (
@@ -173,7 +181,7 @@ const Search = () => {
             <Typography component="h2" variant="h2">
               Latest searches
             </Typography>
-            {refreshSearch && renderSearchHistory()}
+            {renderSearchHistory()}
           </Grid>
           <Grid item sx={{backgroundColor: 'green'}}>
             <Typography component="h2" variant="h2">
