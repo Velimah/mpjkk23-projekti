@@ -562,6 +562,9 @@ const Single = () => {
               <Grid item xs={true}>
                 <TextValidator
                   fullWidth
+                  multiline
+                  minRows={1}
+                  maxRows={4}
                   name="comment"
                   placeholder="Write a comment..."
                   label="Comment"
