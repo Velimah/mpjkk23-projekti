@@ -92,7 +92,6 @@ const MediaTable = ({
                 !myFavouritesOnly &&
                 'Discover cats'}
             </Typography>
-
             <FormControl
               sx={{
                 width: '180px',
@@ -161,7 +160,6 @@ const MediaTable = ({
             </IconButton>
           )}
         </Grid>
-
         <Grid
           container
           direction="row-reverse"

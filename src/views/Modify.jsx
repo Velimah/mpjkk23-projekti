@@ -154,7 +154,7 @@ const Modify = () => {
 
   const handleCancelModify = () => {
     setCancelModifyDialogOpen(false);
-    navigate('/home');
+    navigate('/');
   };
 
   const {inputs, handleSubmit, handleInputChange} = useForm(
