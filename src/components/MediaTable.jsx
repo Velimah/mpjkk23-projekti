@@ -81,8 +81,6 @@ const MediaTable = ({
               <Typography
                 sx={{
                   fontSize: {xs: '1.2rem', sm: '1.5rem'},
-                  width: '150px',
-                  textAlign: 'center',
                 }}
                 component="h2"
                 variant="h2"
@@ -96,8 +94,6 @@ const MediaTable = ({
                   fontSize: {
                     xs: '1.2rem',
                     sm: '1.5rem',
-                    width: '150px',
-                    textAlign: 'center',
                   },
                 }}
                 component="h2"
@@ -112,7 +108,6 @@ const MediaTable = ({
                   fontSize: {
                     xs: '1.2rem',
                     sm: '1.5rem',
-                    width: '150px',
                   },
                 }}
                 component="h2"
