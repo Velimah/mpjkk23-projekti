@@ -94,7 +94,7 @@ const Home = () => {
                 variant="contained"
                 size="large"
                 component={Link}
-                to={user ? '/upload' : '/'}
+                to={user ? '/upload' : '/login'}
                 state={true}
                 sx={{mb: 1}}
               >

@@ -145,7 +145,7 @@ const Modify = () => {
     } catch (error) {
       setToastSnackbar({
         severity: 'error',
-        message: 'Something went wrong - Please try again later.',
+        message: 'Something went wrong - Please try again later',
       });
       setToastSnackbarOpen(true);
       console.error(error.message);

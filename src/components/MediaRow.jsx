@@ -30,7 +30,8 @@ const MediaRow = ({file, style, mediaArray}) => {
   const mediumScreen = useMediaQuery(theme.breakpoints.down('md'));
   const description = JSON.parse(file.description);
 
-  const {user, setTargetUser} = useContext(MediaContext);
+  const {user, setTargetUser, setToastSnackbar, setToastSnackbarOpen} =
+    useContext(MediaContext);
   const {postFavourite, deleteFavourite, getFavourites} = useFavourite();
   const {postRating, deleteRating, getRatingsById} = useRating();
 
@@ -89,6 +90,11 @@ const MediaRow = ({file, style, mediaArray}) => {
       setLikesBoolean(true);
       fetchLikes();
       console.log('liked', liked);
+      setToastSnackbar({
+        severity: 'success',
+        message: 'Like added',
+      });
+      setToastSnackbarOpen(true);
     } catch (error) {
       console.log(error.message);
     }
@@ -101,6 +107,11 @@ const MediaRow = ({file, style, mediaArray}) => {
       setLikesBoolean(false);
       fetchLikes();
       console.log('unliked', notliked);
+      setToastSnackbar({
+        severity: 'success',
+        message: 'Like removed',
+      });
+      setToastSnackbarOpen(true);
     } catch (error) {
       console.log(error.message);
     }
@@ -146,6 +157,11 @@ const MediaRow = ({file, style, mediaArray}) => {
       console.log('rated', ratingInfo);
       setRatingBoolean(!ratingBoolean);
       fetchRatingsUpdate();
+      setToastSnackbar({
+        severity: 'success',
+        message: 'Rating added',
+      });
+      setToastSnackbarOpen(true);
     } catch (error) {
       console.log(error.message);
     }
@@ -158,6 +174,11 @@ const MediaRow = ({file, style, mediaArray}) => {
       console.log('unrated', ratingInfo);
       setRatingBoolean(!ratingBoolean);
       fetchRatingsUpdate();
+      setToastSnackbar({
+        severity: 'success',
+        message: 'Rating removed',
+      });
+      setToastSnackbarOpen(true);
     } catch (error) {
       console.log(error.message);
     }
