@@ -250,6 +250,7 @@ const MediaRow = ({file, style, mediaArray}) => {
                 width: '100%',
                 aspectRatio: '1 / 1',
                 objectFit: 'cover',
+                display: 'block',
                 borderRadius: 12,
                 filter: `brightness(${allData.filters.brightness}%)
                        contrast(${allData.filters.contrast}%)
@@ -274,8 +275,8 @@ const MediaRow = ({file, style, mediaArray}) => {
                 icon={<PlayCircleOutlineRounded />}
                 sx={{
                   position: 'absolute',
-                  bottom: '16px',
-                  left: '8px',
+                  bottom: '12px',
+                  left: '12px',
                   boxShadow: 3,
                 }}
               />
@@ -298,6 +299,7 @@ const MediaRow = ({file, style, mediaArray}) => {
                 width: '100%',
                 aspectRatio: '1 / 1',
                 objectFit: 'cover',
+                display: 'block',
                 filter: `brightness(${allData.filters.brightness}%)
                        contrast(${allData.filters.contrast}%)
                        saturate(${allData.filters.saturation}%)
