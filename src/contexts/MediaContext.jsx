@@ -8,6 +8,7 @@ const MediaProvider = ({children}) => {
   const [targetUser, setTargetUser] = useState(null);
   const [toastSnackbar, setToastSnackbar] = useState(null);
   const [toastSnackbarOpen, setToastSnackbarOpen] = useState(null);
+  const [refreshPage, setRefreshPage] = useState(false);
 
   return (
     <MediaContext.Provider
@@ -20,6 +21,8 @@ const MediaProvider = ({children}) => {
         setToastSnackbar,
         toastSnackbarOpen,
         setToastSnackbarOpen,
+        refreshPage,
+        setRefreshPage,
       }}
     >
       {children}

@@ -29,10 +29,13 @@ import {
 } from '@mui/icons-material';
 import UserHeader from '../components/UserHeader';
 import AlertDialog from '../components/AlertDialog';
+import {useTheme} from '@emotion/react';
 
 const Single = () => {
   const {user, setToastSnackbar, setToastSnackbarOpen} =
     useContext(MediaContext);
+  const theme = useTheme();
+  const mediumScreen = useMediaQuery(theme.breakpoints.down('md'));
 
   const [likes, setLikes] = useState(0);
   const [rating, setRating] = useState(0);
@@ -271,7 +274,10 @@ const Single = () => {
           setRefreshRating(true);
         }
       });
-      const averageRating = sum / ratingInfo.length;
+      let averageRating = sum / ratingInfo.length;
+      if (isNaN(averageRating)) {
+        averageRating = 0;
+      }
       setRating(averageRating);
     } catch (error) {
       console.error(error.message);
@@ -305,7 +311,7 @@ const Single = () => {
           startIcon={<ChevronLeftRounded />}
           size="small"
           component={Link}
-          to="/home"
+          to="/"
           sx={{mb: 2}}
         >
           Go back
@@ -353,45 +359,79 @@ const Single = () => {
           direction="row"
           alignItems="center"
           justifyContent="center"
+          sx={{
+            justifyContent: 'flex-start',
+            alignContent: 'flex-start',
+            alignItems: 'flex-start',
+          }}
         >
-          <Grid item xs={5} align="center">
-            <IconButton
-              aria-label="favoriteIcon"
-              onClick={refreshLikes ? deleteLike : doLike}
-              onMouseOver={handleMouseOverLikes}
-              onMouseOut={handleMouseOutLikes}
-              variant="contained"
-              sx={{m: 'auto', borderRadius: '2rem'}}
-            >
-              {refreshLikes ? (
-                showTextLikes ? (
+          {mediumScreen ? (
+            <Grid item xs={5} align="center">
+              <IconButton
+                sx={{m: 'auto', borderRadius: '2rem'}}
+                aria-label="favoriteIcon"
+                onClick={() => {
+                  if (user) {
+                    refreshLikes ? deleteLike() : doLike();
+                  }
+                }}
+                variant="contained"
+              >
+                {refreshLikes || !user ? (
+                  <FavoriteRounded sx={{color: '#7047A6', fontSize: '2rem'}} />
+                ) : (
                   <FavoriteBorderRounded
                     sx={{color: '#7047A6', fontSize: '2rem'}}
                   />
-                ) : (
+                )}
+              </IconButton>
+              <Typography component="p" variant="caption">
+                {likes} {likes === 1 ? 'like' : 'likes'}
+              </Typography>
+            </Grid>
+          ) : (
+            <Grid item xs={5} align="center">
+              <IconButton
+                aria-label="favoriteIcon"
+                onClick={refreshLikes ? deleteLike : doLike}
+                onMouseOver={handleMouseOverLikes}
+                onMouseOut={handleMouseOutLikes}
+                variant="contained"
+                sx={{m: 'auto', borderRadius: '2rem'}}
+              >
+                {refreshLikes ? (
+                  showTextLikes ? (
+                    <FavoriteBorderRounded
+                      sx={{color: '#7047A6', fontSize: '2rem'}}
+                    />
+                  ) : (
+                    <FavoriteRounded
+                      sx={{color: '#7047A6', fontSize: '2rem'}}
+                    />
+                  )
+                ) : showTextLikes ? (
                   <FavoriteRounded sx={{color: '#7047A6', fontSize: '2rem'}} />
-                )
-              ) : showTextLikes ? (
-                <FavoriteRounded sx={{color: '#7047A6', fontSize: '2rem'}} />
-              ) : (
-                <FavoriteBorderRounded
-                  sx={{color: '#7047A6', fontSize: '2rem'}}
-                />
-              )}
-            </IconButton>
-            <Typography component="p" variant="caption">
-              {refreshLikes
-                ? showTextLikes
-                  ? 'Unlike'
-                  : ''
-                : showTextLikes
-                ? 'Add like'
-                : ''}
-              {!showTextLikes
-                ? `${likes} ${likes === 1 ? 'like' : 'likes'}`
-                : null}
-            </Typography>
-          </Grid>
+                ) : (
+                  <FavoriteBorderRounded
+                    sx={{color: '#7047A6', fontSize: '2rem'}}
+                  />
+                )}
+              </IconButton>
+              <Typography component="p" variant="caption">
+                {refreshLikes
+                  ? showTextLikes
+                    ? 'Unlike'
+                    : ''
+                  : showTextLikes
+                  ? 'Add a like'
+                  : ''}
+                {!showTextLikes
+                  ? `${likes} ${likes === 1 ? 'like' : 'likes'}`
+                  : null}
+              </Typography>
+            </Grid>
+          )}
+
           <Grid item xs={7} align="center">
             {refreshRating ? (
               <>
@@ -409,17 +449,26 @@ const Single = () => {
                     value={parseInt(rating.toFixed(1))}
                     readOnly
                     icon={
-                      <StarRounded sx={{color: '#7047A6', fontSize: '2rem'}} />
+                      <StarRounded
+                        sx={{color: '#7047A6', fontSize: '2.1rem'}}
+                      />
                     }
                     emptyIcon={
                       <StarBorderRounded
-                        sx={{color: '#7047A6', fontSize: '2rem'}}
+                        sx={{color: '#7047A6', fontSize: '2.1rem'}}
                       />
                     }
                   />
                 </IconButton>
                 <Typography sx={{ml: 1}} component="p" variant="caption">
-                  {showTextRating
+                  {mediumScreen && 'Click stars to remove rating'}
+                </Typography>
+                <Typography sx={{ml: 1}} component="p" variant="caption">
+                  {mediumScreen
+                    ? `${rating.toFixed(1)} (${ratingCount} ${
+                        ratingCount === 1 ? 'rating' : 'ratings'
+                      })`
+                    : showTextRating
                     ? 'Remove rating'
                     : `${rating.toFixed(1)} (${ratingCount} ${
                         ratingCount === 1 ? 'rating' : 'ratings'
@@ -432,6 +481,7 @@ const Single = () => {
                   onClick={() => deleteRating}
                   onMouseOver={handleMouseOverRating}
                   onMouseOut={handleMouseOutRating}
+                  sx={{m: 'auto', borderRadius: '2rem'}}
                 >
                   <Rating
                     defaultValue={parseInt(rating.toFixed(1))}
@@ -443,35 +493,41 @@ const Single = () => {
                       doRating(newValue);
                     }}
                     icon={
-                      <StarRounded sx={{color: '#7047A6', fontSize: '2rem'}} />
+                      <StarRounded
+                        sx={{color: '#7047A6', fontSize: '2.1rem'}}
+                      />
                     }
                     emptyIcon={
                       <StarBorderRounded
-                        sx={{color: '#7047A6', fontSize: '2rem'}}
+                        sx={{color: '#7047A6', fontSize: '2.1rem'}}
                       />
                     }
                   />
                 </IconButton>
-                {ratingCount ? (
-                  <Typography sx={{ml: 1}} component="p" variant="caption">
-                    {rating.toFixed(1)} ({ratingCount}
-                    {ratingCount > 1 ? ' ratings' : ' rating'})
-                  </Typography>
-                ) : (
-                  <Typography sx={{ml: 1}} component="p" variant="caption">
-                    No ratings yet
-                  </Typography>
-                )}
+                <Typography sx={{ml: 1}} component="p" variant="caption">
+                  {mediumScreen && 'Click stars to add a rating'}
+                </Typography>
+                <Typography sx={{ml: 1}} component="p" variant="caption">
+                  {mediumScreen
+                    ? `${rating.toFixed(1)} (${ratingCount} ${
+                        ratingCount === 1 ? 'rating' : 'ratings'
+                      })`
+                    : showTextRating
+                    ? 'Add a rating'
+                    : `${rating.toFixed(1)} (${ratingCount} ${
+                        ratingCount === 1 ? 'rating' : 'ratings'
+                      })`}
+                </Typography>
               </>
             )}
 
             <AlertDialog
-              content={'You need to be logged in to add like.'}
+              content={'You need to be logged in to add a like.'}
               dialogOpen={likeFailedDialogOpen}
               setDialogOpen={setLikeFailedDialogOpen}
             />
             <AlertDialog
-              content={'You need to be logged in to add rating.'}
+              content={'You need to be logged in to add a rating.'}
               dialogOpen={ratingFailedDialogOpen}
               setDialogOpen={setRatingFailedDialogOpen}
             />
@@ -551,7 +607,7 @@ const Single = () => {
                   validators={commentValidators.comment}
                   errorMessages={commentErrorMessages.comment}
                   disabled={!user}
-                  helperText={!user && 'You need to login to add comment.'}
+                  helperText={!user && 'You need to login to add a comment.'}
                 />
               </Grid>
               <Grid item xs="auto">

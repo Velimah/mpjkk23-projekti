@@ -14,11 +14,12 @@ import {
 import {useMedia} from '../hooks/ApiHooks';
 import MediaRow from './MediaRow';
 import PropTypes from 'prop-types';
-import {useEffect, useState} from 'react';
+import {useContext, useEffect, useState} from 'react';
 import WindowIcon from '@mui/icons-material/Window';
 import MenuIcon from '@mui/icons-material/Menu';
 import {NavLink} from 'react-router-dom';
 import {useTheme} from '@mui/material/styles';
+import {MediaContext} from '../contexts/MediaContext';
 
 const MediaTable = ({
   myFilesOnly = false,
@@ -30,6 +31,7 @@ const MediaTable = ({
     targetUserFilesOnly,
     myFavouritesOnly
   );
+  const {refreshPage} = useContext(MediaContext);
   const theme = useTheme();
   const smallScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const [selectedOption, setSelectedOption] = useState('file_id');
@@ -39,7 +41,7 @@ const MediaTable = ({
 
   useEffect(() => {
     getMedia();
-  }, []);
+  }, [refreshPage]);
 
   useEffect(() => {
     setArrayLength(mediaArray.length);
@@ -119,7 +121,12 @@ const MediaTable = ({
                 Discover cats
               </Typography>
             ) : null}
-            <FormControl sx={{width: {xs: '124px', textAlign: 'center'}}}>
+            <FormControl
+              sx={{
+                width: '180px',
+                textAlign: 'center',
+              }}
+            >
               <InputLabel id="select-label">Sort</InputLabel>
               <Select
                 defaultValue={1}
@@ -143,7 +150,7 @@ const MediaTable = ({
           container
           direction="row"
           justifyContent="flex-start"
-          mb={style && 1}
+          mb={!style && -1}
           alignItems="stretch"
           wrap="nowrap"
         >

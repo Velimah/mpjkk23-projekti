@@ -22,7 +22,7 @@ const Layout = () => {
         if (userData) {
           setUser(userData);
           const target =
-            location.pathname === '/' ? '/home' : location.pathname;
+            location.pathname === '/login' ? '/' : location.pathname;
           navigate(target);
           return;
         }

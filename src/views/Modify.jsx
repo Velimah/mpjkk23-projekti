@@ -28,7 +28,7 @@ const Modify = () => {
   const {setToastSnackbar, setToastSnackbarOpen} = useContext(MediaContext);
   const {state} = useLocation();
 
-  if (state === null) navigate('/home');
+  if (state === null) navigate('/');
 
   const file = state.file;
 
@@ -141,7 +141,7 @@ const Modify = () => {
 
       setToastSnackbar({severity: 'success', message: modifyResult.message});
       setToastSnackbarOpen(true);
-      navigate('/home');
+      navigate('/');
     } catch (error) {
       setToastSnackbar({
         severity: 'error',
