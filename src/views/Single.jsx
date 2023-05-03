@@ -61,7 +61,6 @@ const Single = () => {
   const {getTagsByFileId} = useTag();
 
   const {state} = useLocation();
-  console.log(state);
 
   // checks for targetUser and if null gets targetUser information from localstorage
   const [data, setData] = useState(() => {

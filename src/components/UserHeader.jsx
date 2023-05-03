@@ -20,7 +20,7 @@ import {MediaContext} from '../contexts/MediaContext';
 import {useComment, useMedia, useTag, useUser} from '../hooks/ApiHooks';
 import {appId, mediaUrl, profilePlaceholder} from '../utils/variables';
 import {formatTime} from '../utils/UnitConversions';
-import {Link, useNavigate} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import AlertDialog from './AlertDialog';
 
 const UserHeader = ({
@@ -52,8 +52,6 @@ const UserHeader = ({
   });
 
   const postSettingsOpen = Boolean(anchorEl);
-
-  const navigate = useNavigate();
 
   const doDeleteFile = async () => {
     setDeleteFileDialogOpen(false);
@@ -235,6 +233,7 @@ const UserHeader = ({
             <MenuItem
               onClick={() => {
                 setDeleteFileDialogOpen(true);
+                handleMenuClose();
               }}
             >
               <ListItemIcon>
