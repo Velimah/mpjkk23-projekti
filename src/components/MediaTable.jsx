@@ -133,7 +133,7 @@ const MediaTable = ({
           sx={{
             position: 'sticky',
             top: smallScreen ? '0px' : '4rem',
-            width: style ? '100%' : '500px',
+            maxWidth: {xs: '100%', sm: !style ? '500px' : '100%'},
             zIndex: 10,
             backgroundColor: '#FDF7F4 !important',
           }}
