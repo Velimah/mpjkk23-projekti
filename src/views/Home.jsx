@@ -172,7 +172,7 @@ const Home = () => {
         </Box>
       </Box>
 
-      <Grid sx={{mt: '50px', mb: '100px'}}>
+      <Grid sx={{mt: '3rem', mb: '3rem'}}>
         <MediaTable />
       </Grid>
     </>

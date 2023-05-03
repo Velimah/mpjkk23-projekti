@@ -75,7 +75,7 @@ const Header = () => {
               }}
               alt="OnlyCats logo"
               onClick={() => {
-                if (location.pathname === '/') {
+                if (location.pathname === '/' && !extraSmallScreen) {
                   window.scrollTo({
                     top: 0,
                     behavior: 'smooth',
@@ -88,7 +88,7 @@ const Header = () => {
             <Box
               variant="h1"
               onClick={() => {
-                if (location.pathname === '/') {
+                if (location.pathname === '/' && !extraSmallScreen) {
                   window.scrollTo({
                     top: 0,
                     behavior: 'smooth',

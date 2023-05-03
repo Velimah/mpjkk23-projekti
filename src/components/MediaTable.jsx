@@ -70,7 +70,7 @@ const MediaTable = ({
 
   return (
     <>
-      <Container sx={{py: 5}}>
+      <Container sx={{mb: 5}}>
         <Box display="flex" justifyContent="space-around" alignItems="center">
           <Typography
             sx={{
@@ -195,8 +195,8 @@ const MediaTable = ({
         >
           {/* chooses correct css for list/grid */}
           <ImageList
+            gap={smallScreen ? 3 : 4}
             cols={!style ? 1 : smallScreen ? 3 : 4}
-            gap={!style ? 0 : undefined}
             direction={style ? 'row' : undefined}
             sx={{
               width: !style
