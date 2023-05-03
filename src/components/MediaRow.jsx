@@ -326,9 +326,7 @@ const MediaRow = ({file, style, mediaArray}) => {
                     )}
                     {/* * MobileLikes show different text based on logged status * */}
                     <Typography component="p" variant="body1">
-                      {user && (likesBoolean ? 'Unlike' : 'Like')}{' '}
-                      {!user && `${likes} ${likes === 1 ? 'like' : 'likes'}`}
-                      {user && `(${likes} ${likes === 1 ? 'like' : 'likes'})`}
+                      {likes} {likes === 1 ? 'like' : 'likes'}
                     </Typography>
                   </IconButton>
                 </Grid>
@@ -367,7 +365,6 @@ const MediaRow = ({file, style, mediaArray}) => {
                         sx={{color: '#7047A6', mr: 1, fontSize: '1.6rem'}}
                       />
                     )}
-                    {/* * MobileLikes show different text based on logged status and hover * */}
                     <Typography component="p" variant="body1">
                       {user &&
                         (likesBoolean
@@ -389,27 +386,19 @@ const MediaRow = ({file, style, mediaArray}) => {
                 <Grid item>
                   <Box>
                     <IconButton sx={{borderRadius: '2rem'}}>
-                      {/* * MobileRating check if there are ratings * */}
                       {ratingCount ? (
-                        <>
-                          <StarRounded
-                            sx={{color: '#7047A6', mr: 0.5, fontSize: '1.8rem'}}
-                          />
-                          <Typography component="p" variant="body1">
-                            {Number(rating?.toFixed(1))} ({ratingCount}{' '}
-                            {ratingCount > 1 ? 'ratings' : 'rating'})
-                          </Typography>
-                        </>
+                        <StarRounded
+                          sx={{color: '#7047A6', mr: 0.5, fontSize: '1.8rem'}}
+                        />
                       ) : (
-                        <>
-                          <StarBorderRounded
-                            sx={{color: '#7047A6', mr: 0.5, fontSize: '1.8rem'}}
-                          />
-                          <Typography component="p" variant="body1">
-                            No ratings
-                          </Typography>
-                        </>
+                        <StarBorderRounded
+                          sx={{color: '#7047A6', mr: 0.5, fontSize: '1.8rem'}}
+                        />
                       )}
+                      <Typography component="p" variant="body1">
+                        {Number(rating?.toFixed(1))} ({ratingCount}{' '}
+                        {ratingCount !== 1 ? 'ratings' : 'rating'})
+                      </Typography>
                     </IconButton>
                   </Box>
                 </Grid>

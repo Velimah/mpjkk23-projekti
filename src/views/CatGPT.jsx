@@ -218,7 +218,7 @@ const CatGPT = () => {
               alignItems="center"
               textAlign="center"
               sx={{
-                height: {xs: '78vh', sm: '78vh', md: '77vh'},
+                height: {xs: '73vh', sm: '77vh', md: '77vh'},
                 width: '100%',
                 maxWidth: '1000px',
                 flexWrap: 'nowrap',
