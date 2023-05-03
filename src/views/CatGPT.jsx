@@ -130,13 +130,14 @@ const CatGPT = () => {
         <Typography
           component="h1"
           variant={!currentTitle ? 'h1' : 'h2'}
-          sx={{textAlign: 'center', mb: 3}}
+          sx={{textAlign: 'center', mt: {xs: 2, sm: 2}, mb: {xs: 2, sm: 3}}}
         >
           {!currentTitle ? 'Cat-GPT' : currentTitle}
         </Typography>
         <Paper
           sx={{
             p: {xs: 0, sm: '1rem', md: '1.5rem'},
+            px: {xs: 2, sm: 2},
             borderRadius: '1.5rem',
             bgcolor: {xs: 'transparent', sm: '#FFFFFF'},
             boxShadow: {
@@ -243,13 +244,11 @@ const CatGPT = () => {
                   {currentChat?.map((chat, index) => (
                     <ListItem
                       sx={{
-                        backgroundColor:
-                          chat.role === 'assistant' ? '#F4DCE1' : '#F4DCE1',
-                        px: 3,
-                        py: 2,
+                        backgroundColor: '#E3A7B6',
+                        px: 2,
                         mt: 2,
                         alignItems: 'start',
-                        borderRadius: {xs: 0, sm: '0.5rem'},
+                        borderRadius: '1.25rem',
                         display: {xs: 'block'},
                       }}
                       key={index}

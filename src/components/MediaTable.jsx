@@ -34,7 +34,7 @@ const MediaTable = ({
   const {refreshPage} = useContext(MediaContext);
   const theme = useTheme();
   const smallScreen = useMediaQuery(theme.breakpoints.down('sm'));
-  const [selectedOption, setSelectedOption] = useState('file_id');
+  const [selectedOption, setSelectedOption] = useState('time_added');
   const [arrayLength, setArrayLength] = useState(0);
 
   const [style, setStyle] = useState(true);
@@ -58,7 +58,7 @@ const MediaTable = ({
   const handleChange = (event) => {
     const value = event.target.value;
     if (value === 1) {
-      setSelectedOption('file_id');
+      setSelectedOption('time_added');
     } else if (value === 2) {
       setSelectedOption('likes');
     } else if (value === 3) {
@@ -81,6 +81,7 @@ const MediaTable = ({
               component="h2"
               variant="h2"
             >
+              {/* chooses correct text for post counts based on page */}
               {(myFilesOnly || targetUserFilesOnly) &&
                 `${arrayLength} ${arrayLength === 1 ? 'post' : 'posts'}`}
               {myFavouritesOnly &&
@@ -125,6 +126,7 @@ const MediaTable = ({
           alignItems="stretch"
           wrap="nowrap"
         >
+          {/* chooses correct buttons to change view based on list/grid */}
           {style === true ? (
             <IconButton
               aria-label="window"
@@ -167,7 +169,7 @@ const MediaTable = ({
           maxWidth="lg"
           justifyContent="center"
         >
-          {/* chooses correct css for list/grind */}
+          {/* chooses correct css for list/grid */}
           <ImageList
             cols={!style ? 1 : smallScreen ? 3 : 4}
             gap={!style ? 0 : undefined}
@@ -222,7 +224,7 @@ const MediaTable = ({
                     />
                   );
                 })}
-            {selectedOption === 'file_id' &&
+            {selectedOption === 'time_added' &&
               mediaArray
                 .sort((a, b) => b.file_id - a.file_id)
                 .map((item, index) => {
