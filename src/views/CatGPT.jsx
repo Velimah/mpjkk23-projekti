@@ -244,7 +244,7 @@ const CatGPT = () => {
                   {currentChat?.map((chat, index) => (
                     <ListItem
                       sx={{
-                        backgroundColor: '#E3A7B6',
+                        backgroundColor: '#F4DCE1',
                         px: 2,
                         mt: 2,
                         alignItems: 'start',

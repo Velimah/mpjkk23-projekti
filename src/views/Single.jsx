@@ -562,7 +562,13 @@ const Single = () => {
                     color="primary"
                     key={index}
                     label={tag.tag.replace(appId + '_', '') + ' '}
-                    sx={{mr: 1, mt: 1}}
+                    sx={{
+                      mr: 1,
+                      mt: 1,
+                      '&:hover': {
+                        backgroundColor: 'rgba(35, 32, 32, 0.04)',
+                      },
+                    }}
                   />
                 );
               }

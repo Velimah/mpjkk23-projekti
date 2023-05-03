@@ -70,61 +70,73 @@ const MediaTable = ({
 
   return (
     <>
-      <Grid sx={{py: 3}}>
-        <Container>
-          <Box display="flex" justifyContent="space-around" alignItems="center">
-            <Typography
-              sx={{
-                fontSize: {xs: '1.2rem', sm: '1.5rem'},
-                textAlign: 'center',
-              }}
-              component="h2"
-              variant="h2"
+      <Container sx={{py: 5}}>
+        <Box display="flex" justifyContent="space-around" alignItems="center">
+          <Typography
+            sx={{
+              fontSize: {xs: '1.2rem', sm: '1.5rem'},
+              textAlign: 'center',
+            }}
+            component="h2"
+            variant="h2"
+          >
+            {/* chooses correct text for post counts based on page */}
+            {(myFilesOnly || targetUserFilesOnly) &&
+              `${arrayLength} ${arrayLength === 1 ? 'post' : 'posts'}`}
+            {myFavouritesOnly &&
+              `${arrayLength} ${
+                arrayLength === 1 ? 'Liked post' : 'Liked posts'
+              }`}
+            {!myFilesOnly &&
+              !targetUserFilesOnly &&
+              !myFavouritesOnly &&
+              'Discover cats'}
+          </Typography>
+          <FormControl
+            sx={{
+              width: '180px',
+              textAlign: 'center',
+            }}
+          >
+            <InputLabel id="select-label">Sort</InputLabel>
+            <Select
+              defaultValue={1}
+              onChange={handleChange}
+              labelId="select-label"
+              id="sort-select"
+              label="Sort"
+              size="small"
             >
-              {/* chooses correct text for post counts based on page */}
-              {(myFilesOnly || targetUserFilesOnly) &&
-                `${arrayLength} ${arrayLength === 1 ? 'post' : 'posts'}`}
-              {myFavouritesOnly &&
-                `${arrayLength} ${
-                  arrayLength === 1 ? 'Liked post' : 'Liked posts'
-                }`}
-              {!myFilesOnly &&
-                !targetUserFilesOnly &&
-                !myFavouritesOnly &&
-                'Discover cats'}
-            </Typography>
-            <FormControl
-              sx={{
-                width: '180px',
-                textAlign: 'center',
-              }}
-            >
-              <InputLabel id="select-label">Sort</InputLabel>
-              <Select
-                defaultValue={1}
-                onChange={handleChange}
-                labelId="select-label"
-                id="sort-select"
-                label="Sort"
-                size="small"
-              >
-                <MenuItem value={1}>Newest</MenuItem>
-                <MenuItem value={2}>Most liked</MenuItem>
-                <MenuItem value={3}>Top rated</MenuItem>
-                <MenuItem value={4}>Most commented</MenuItem>
-              </Select>
-            </FormControl>
-          </Box>
-        </Container>
-      </Grid>
-      <Container maxWidth="lg" sx={{padding: smallScreen ? 0 : 'auto'}}>
+              <MenuItem value={1}>Newest</MenuItem>
+              <MenuItem value={2}>Most liked</MenuItem>
+              <MenuItem value={3}>Top rated</MenuItem>
+              <MenuItem value={4}>Most commented</MenuItem>
+            </Select>
+          </FormControl>
+        </Box>
+      </Container>
+      <Container
+        maxWidth="lg"
+        sx={{
+          padding: smallScreen ? 0 : 'auto',
+          alignItems: 'center',
+          flexDirection: 'column',
+          display: 'flex',
+        }}
+      >
         <Grid
           container
           direction="row"
           justifyContent="flex-start"
           mb={!style && -1}
-          alignItems="stretch"
           wrap="nowrap"
+          sx={{
+            position: 'sticky',
+            top: smallScreen ? '0px' : '4rem',
+            width: style ? '100%' : '500px',
+            zIndex: 10,
+            backgroundColor: '#FDF7F4 !important',
+          }}
         >
           {/* chooses correct buttons to change view based on list/grid */}
           {style === true ? (
@@ -132,14 +144,20 @@ const MediaTable = ({
               aria-label="window"
               onClick={changeToGrid}
               component={NavLink}
-              sx={{width: smallScreen ? '50%' : '150px'}}
+              sx={{
+                width: 'stretch',
+                maxWidth: {xs: '50%', sm: '150px'},
+              }}
             >
               <WindowIcon />
             </IconButton>
           ) : (
             <IconButton
               onClick={changeToGrid}
-              sx={{width: smallScreen ? '50%' : '150px'}}
+              sx={{
+                width: 'stretch',
+                maxWidth: {xs: '50%', sm: '150px'},
+              }}
             >
               <WindowIcon />
             </IconButton>
@@ -149,14 +167,20 @@ const MediaTable = ({
               aria-label="list"
               onClick={changeToList}
               component={NavLink}
-              sx={{width: smallScreen ? '50%' : '150px'}}
+              sx={{
+                width: 'stretch',
+                maxWidth: {xs: '50%', sm: '150px'},
+              }}
             >
               <MenuIcon />
             </IconButton>
           ) : (
             <IconButton
               onClick={changeToList}
-              sx={{width: smallScreen ? '50%' : '150px'}}
+              sx={{
+                width: 'stretch',
+                maxWidth: {xs: '50%', sm: '150px'},
+              }}
             >
               <MenuIcon />
             </IconButton>

@@ -215,6 +215,12 @@ const UserHeader = ({
               aria-controls={postSettingsOpen ? 'post-menu' : undefined}
               aria-haspopup="true"
               aria-expanded={postSettingsOpen ? 'true' : undefined}
+              sx={{
+                borderRadius: '2rem',
+                '&:hover': {
+                  color: '#7047A6',
+                },
+              }}
             >
               <MoreVertRounded />
             </IconButton>
@@ -228,7 +234,16 @@ const UserHeader = ({
               'aria-labelledby': 'basic-button',
             }}
           >
-            <MenuItem component={Link} to="/modify" state={{file}}>
+            <MenuItem
+              component={Link}
+              to="/modify"
+              state={{file}}
+              sx={{
+                '&:hover': {
+                  color: '#7047A6',
+                },
+              }}
+            >
               <ListItemIcon>
                 <ModeEditRounded fontSize="small" />
               </ListItemIcon>
@@ -238,6 +253,11 @@ const UserHeader = ({
               onClick={() => {
                 setDeleteFileDialogOpen(true);
                 handleMenuClose();
+              }}
+              sx={{
+                '&:hover': {
+                  color: '#7047A6',
+                },
               }}
             >
               <ListItemIcon>

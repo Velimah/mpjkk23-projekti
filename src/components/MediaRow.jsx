@@ -58,6 +58,7 @@ const MediaRow = ({file, style, mediaArray}) => {
   }
 
   const fetchLikesInitial = () => {
+    console.log('fetching likes', file.likes.length);
     setLikes(file.likes.length);
     if (user) {
       file.likes.forEach((like) => {
@@ -214,7 +215,7 @@ const MediaRow = ({file, style, mediaArray}) => {
       component="div"
       sx={{
         my: style ? 0 : 1,
-        mx: style ? 0 : {sx: 0, md: 1},
+        mx: style ? 0 : {sx: 0, sm: 1},
         backgroundColor: style ? 'transparent' : '#FFFFFF',
         borderRadius: style ? 0 : 3,
       }}

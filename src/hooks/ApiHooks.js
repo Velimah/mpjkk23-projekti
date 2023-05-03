@@ -77,9 +77,9 @@ const useMedia = (
       );
 
       for (const file of filesWithThumbnail) {
-        file.likes = [{}];
-        file.ratings = [{}];
-        file.comments = [{}];
+        file.likes = [];
+        file.ratings = [];
+        file.comments = [];
         file.averageRating = 0;
       }
       setMediaArray(filesWithThumbnail);
