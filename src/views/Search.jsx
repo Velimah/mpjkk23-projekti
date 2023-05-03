@@ -31,13 +31,12 @@ const Search = () => {
     // getting stored value
     const saved =
       localStorage.getItem('searchHistory') === null
-        ? localStorage.setItem('searchHistory', JSON.stringify('cute'))
+        ? localStorage.setItem('searchHistory', JSON.stringify('cute, tabby'))
         : localStorage.getItem('searchHistory');
     const initialValue = JSON.parse(saved);
-    return initialValue || 'cute';
+    return initialValue || 'cute, tabby';
   });
-  const [popularTags, setPopularTags] = useState([]);
-  const [firstReload, setFirstReload] = useState(true);
+  // const [popularTags, setPopularTags] = useState([]);
 
   const smallScreen = useMediaQuery(useTheme().breakpoints.down('sm'));
 
@@ -174,7 +173,7 @@ const Search = () => {
             <Typography component="h2" variant="h2">
               Latest searches
             </Typography>
-            {firstReload && renderSearchHistory()}
+            {refreshSearch && renderSearchHistory()}
           </Grid>
           <Grid item sx={{backgroundColor: 'green'}}>
             <Typography component="h2" variant="h2">
