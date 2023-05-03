@@ -207,12 +207,13 @@ const UserProfiles = () => {
             }}
           >
             <Typography component="p" variant="h1" sx={{mt: 1}}>
-              {targetUserData.full_name
-                ? targetUserData.full_name
-                : 'Has not set a full name'}
+              {user &&
+                (targetUserData.full_name
+                  ? targetUserData.full_name
+                  : 'Has not set a full name')}
             </Typography>
             <Typography component="p" variant="body4" sx={{mt: 1}}>
-              {'@' + targetUserData.username}
+              {user && '@' + targetUserData.username}
             </Typography>
             <Rating
               name="read-only"
