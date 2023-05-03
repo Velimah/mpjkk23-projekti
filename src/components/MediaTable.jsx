@@ -11,7 +11,7 @@ import {
   MenuItem,
   Box,
 } from '@mui/material';
-import {useMedia, useTag} from '../hooks/ApiHooks';
+import {useMedia} from '../hooks/ApiHooks';
 import MediaRow from './MediaRow';
 import PropTypes from 'prop-types';
 import {useContext, useEffect, useState} from 'react';
@@ -20,7 +20,6 @@ import MenuIcon from '@mui/icons-material/Menu';
 import {NavLink} from 'react-router-dom';
 import {useTheme} from '@mui/material/styles';
 import {MediaContext} from '../contexts/MediaContext';
-import {appId} from '../utils/variables';
 
 const MediaTable = ({
   myFilesOnly = false,
@@ -44,9 +43,7 @@ const MediaTable = ({
 
   useEffect(() => {
     getMedia();
-  }, [refreshPage]);
-
-  // }, [searchQuery]);
+  }, [refreshPage || searchQuery]);
 
   useEffect(() => {
     setArrayLength(mediaArray.length);

@@ -20,34 +20,30 @@ import {searchValidators} from '../utils/validator';
 import {searchErrorMessages} from '../utils/errorMessages';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import {useTheme} from '@emotion/react';
-import {useTag} from '../hooks/ApiHooks';
+import {useMedia, useTag} from '../hooks/ApiHooks';
 import {appId} from '../utils/variables';
 
 const Search = () => {
+  const {getTagsByFileId} = useTag();
+  const {mediaArray, getMedia} = useMedia();
+
   const [searchQuery, setSearchQuery] = useState('');
   const [updatedSearchQuery, setUpdatedSearchQuery] = useState('');
   const [refreshSearch, setRefreshSearch] = useState(false);
+
+  const [allTags, setAllTags] = useState([]);
+
   const [latestSearches, setLatestSearches] = useState(() => {
-    /*
-    // getting stored value
-    const saved =
-      localStorage.getItem('searchHistory') === null
-        ? localStorage.setItem('searchHistory', JSON.stringify(''))
-        : localStorage.getItem('searchHistory');
-    const initialValue = JSON.parse(saved);
-
-    return '';*/
-  });
-  // const [popularTags, setPopularTags] = useState([]);
-
-  const [testiData, setTestiDataData] = useState(() => {
-    return JSON.parse(window.localStorage.getItem('searchTesti')) || ':(';
+    return JSON.parse(window.localStorage.getItem('searchHistory')) || '';
   });
 
   useEffect(() => {
-    window.localStorage.setItem('searchTesti', JSON.stringify(testiData));
-    setTestiDataData(testiData);
-  }, [testiData]);
+    window.localStorage.setItem(
+      'searchHistory',
+      JSON.stringify(latestSearches)
+    );
+    setLatestSearches(latestSearches);
+  }, [latestSearches]);
 
   const smallScreen = useMediaQuery(useTheme().breakpoints.down('sm'));
 
@@ -58,90 +54,89 @@ const Search = () => {
 
   // Refresh MediaTable with new query
   const handleClick = () => {
-    setTestiDataData(searchQuery);
+    latestSearches === ''
+      ? setLatestSearches(searchQuery)
+      : updateSearchHistory();
+
     setUpdatedSearchQuery(searchQuery);
     searchQuery === '' ? setRefreshSearch(false) : setRefreshSearch(true);
   };
 
-  useEffect(() => {
-    const oldQuery = JSON.parse(localStorage.getItem('searchTesti'))
-      .match(/[^,]+/g)
-      .filter(Boolean);
-
-    // TODO: even if same keyword has been searched, move it to latest
-    // if new keyword hasn't already been searched, add it into search history
-    if (!oldQuery.includes(searchQuery)) {
-      // if theres three searches already, delete the oldest
-      if (oldQuery.length > 3) {
-        oldQuery.shift();
-      }
-
-      const newQuery = oldQuery + ',' + searchQuery;
-      localStorage.setItem('searchTesti', JSON.stringify(newQuery));
-
-      setLatestSearches(newQuery.match(/[^,]+/g).filter(Boolean));
-    }
-  }, [updatedSearchQuery]);
-
   const updateSearchHistory = () => {
-    const oldQuery = JSON.parse(localStorage.getItem('searchHistory')).match(/[^,]+/g);
+    const oldQuery = JSON.parse(localStorage.getItem('searchHistory'));
 
     // TODO: even if same keyword has been searched, move it to latest
-    // if new keyword hasn't already been searched, add it into search history
+    // if theres a new keyword, add it to search list
     if (!oldQuery.includes(searchQuery)) {
-      // if theres three searches already, delete the oldest
-      if (oldQuery.length > 3) {
-        oldQuery.shift();
+      // if theres 4 searches already, delete the oldest
+      const oldQuerySplit = oldQuery.split(',');
+      if (oldQuerySplit.length > 3) {
+        oldQuerySplit.shift();
+        setLatestSearches(oldQuerySplit.toString() + ',' + searchQuery);
+      } else {
+        setLatestSearches(oldQuery + ',' + searchQuery);
       }
-
-      const newQuery = oldQuery + ',' + searchQuery;
-      localStorage.setItem('searchHistory', JSON.stringify(newQuery));
-
-      setLatestSearches(newQuery.match(/[^,]+/g).filter(Boolean));
     }
   };
 
-  /*
+  const renderSearchHistory = () => {
+    // if search history is null, dont render list
+    if (latestSearches === '') {
+      return;
+    }
+    const splitLatestSearches = latestSearches.split(',').reverse();
+    return (
+      <List
+        container
+        direction="column"
+        justifyContent="center"
+        sx={{
+          width: smallScreen ? '100%' : 'auto',
+          columns: smallScreen ? 1 : 2,
+        }}
+      >
+        {splitLatestSearches.map((item) => (
+          <ListItemButton key={item}>
+            <KeyboardArrowRightIcon color="#7047A6" />
+            <ListItemText primary={item} />
+          </ListItemButton>
+        ))}
+      </List>
+    );
+  };
+
   const fetchTags = async () => {
     try {
-      const tagInfo = await useTag().getTagsByFileId(file.file_id);
-      const filteredTags = tagInfo.filter((tag) => tag.tag !== appId);
-      // setOriginalTags(filteredTags);
-      setPopularTags(
+      const tagArray = [];
+      // const tagInfo = await getTagsByFileId(files.file_id);
+      // const filteredTags = tagInfo.filter((tag) => tag.tag !== appId);
+      for (const file of mediaArray) {
+        const tagInfo = await getTagsByFileId(file.file_id);
+        const filteredTags = tagInfo.filter((tag) => tag.tag !== appId);
+
+        for (const test of filteredTags) {
+          // console.log(test.tag);
+          tagArray.push(test.tag.replace(appId), '');
+        }
+        // if (!filteredTags.length === 0) {
+          // tagArray.push(filteredTags);
+        // }
+      }
+      console.log(tagArray);
+      /*
+      setAllTags(
         filteredTags.map((tag) => tag.tag.replace(appId + '_', '') + ' ')
       );
+      */
     } catch (error) {
       console.log(error.message);
     }
   };
 
   useEffect(() => {
+    getMedia();
     fetchTags();
   }, []);
-
-  console.log(popularTags);
-  */
-
-  const renderSearchHistory = () => {
-    return (
-      <List
-        container
-        direction="column"
-        justifyContent="center"
-        sx={{width: smallScreen ? '100%' : 'auto'}}
-      >
-        {[testiData]
-          .slice(0)
-          .reverse()
-          .map((item) => (
-            <ListItemButton key={item}>
-              <ListItemText primary={item} />
-              <KeyboardArrowRightIcon color="#7047A6" />
-            </ListItemButton>
-          ))}
-      </List>
-    );
-  };
 
   return (
     <>
@@ -187,6 +182,7 @@ const Search = () => {
             <Typography component="h2" variant="h2">
               Popular searches
             </Typography>
+            {allTags}
           </Grid>
         </Grid>
       </Container>
