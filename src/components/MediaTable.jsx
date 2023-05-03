@@ -188,7 +188,7 @@ const MediaTable = ({
                 .map((item, index) => {
                   return (
                     <MediaRow
-                      key={index}
+                      key={item.file_id}
                       file={item}
                       deleteMedia={deleteMedia}
                       style={style}
@@ -202,7 +202,7 @@ const MediaTable = ({
                 .map((item, index) => {
                   return (
                     <MediaRow
-                      key={index}
+                      key={item.file_id}
                       file={item}
                       deleteMedia={deleteMedia}
                       style={style}
@@ -216,7 +216,7 @@ const MediaTable = ({
                 .map((item, index) => {
                   return (
                     <MediaRow
-                      key={index}
+                      key={item.file_id}
                       file={item}
                       deleteMedia={deleteMedia}
                       style={style}
@@ -230,7 +230,7 @@ const MediaTable = ({
                 .map((item, index) => {
                   return (
                     <MediaRow
-                      key={index}
+                      key={item.file_id}
                       file={item}
                       deleteMedia={deleteMedia}
                       style={style}
