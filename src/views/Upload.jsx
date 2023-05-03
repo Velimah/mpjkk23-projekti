@@ -97,7 +97,7 @@ const Upload = () => {
       setToastSnackbarOpen(true);
 
       // Navigate back to home
-      navigate('/home');
+      navigate('/');
     } catch (error) {
       setUpload(false);
       setToastSnackbar({
