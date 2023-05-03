@@ -22,6 +22,7 @@ import {uploadErrorMessages} from '../utils/errorMessages';
 import {uploadValidators} from '../utils/validator';
 import AlertDialog from '../components/AlertDialog';
 import {MediaContext} from '../contexts/MediaContext';
+import {AddAPhotoRounded} from '@mui/icons-material';
 
 const Upload = () => {
   const {setToastSnackbar, setToastSnackbarOpen} = useContext(MediaContext);
@@ -204,53 +205,123 @@ const Upload = () => {
         >
           <Grid container columnSpacing={5} alignItems="start">
             <Grid item xs={12} md={7}>
-              {file && file.type.includes('video') ? (
-                <video
-                  controls
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    borderRadius: extraSmallScreen ? 0 : '1.25rem',
-                    aspectRatio: '1 / 1',
-                    objectFit: 'cover',
-                  }}
-                  ref={videoRef}
-                >
-                  <source src={selectedFile} type={file.type}></source>
-                </video>
+              {!file ? (
+                <Box>
+                  <input
+                    id="big-file-input"
+                    type="file"
+                    onChange={handleFileChange}
+                    name="file"
+                    accept="image/*,video/*"
+                    hidden
+                  />
+                  <label
+                    id="addFile"
+                    htmlFor="file"
+                    onClick={() => {
+                      document.getElementById('big-file-input').click();
+                    }}
+                    style={{
+                      backgroundColor: '#E1EDD0',
+                      width: '100%',
+                      height: '100%',
+                      borderRadius: extraSmallScreen ? 0 : '1.25rem',
+                      aspectRatio: '1 / 1',
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      flexDirection: 'column',
+                      gap: '0.5rem',
+                      cursor: 'pointer',
+                    }}
+                    tabIndex={0}
+                  >
+                    <AddAPhotoRounded
+                      sx={{fontSize: '3.5rem', color: '#4D683D'}}
+                    />
+                    <Button color="black">Browse files to upload</Button>
+                  </label>
+                </Box>
               ) : (
-                <img
-                  src={selectedFile}
-                  alt="Selected file's preview"
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    borderRadius: extraSmallScreen ? 0 : '1.25rem',
-                    aspectRatio: '1 / 1',
-                    objectFit: 'cover',
-                    filter: `brightness(${filterInputs.brightness}%)
+                <>
+                  {file && file.type.includes('video') ? (
+                    <video
+                      controls
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        borderRadius: extraSmallScreen ? 0 : '1.25rem',
+                        aspectRatio: '1 / 1',
+                        objectFit: 'cover',
+                      }}
+                      ref={videoRef}
+                    >
+                      <source src={selectedFile} type={file.type}></source>
+                    </video>
+                  ) : (
+                    <img
+                      src={selectedFile}
+                      alt="Selected file's preview"
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        borderRadius: extraSmallScreen ? 0 : '1.25rem',
+                        aspectRatio: '1 / 1',
+                        objectFit: 'cover',
+                        filter: `brightness(${filterInputs.brightness}%)
                    contrast(${filterInputs.contrast}%)
                    saturate(${filterInputs.saturation}%)
                    sepia(${filterInputs.sepia}%)`,
-                  }}
-                />
+                      }}
+                    />
+                  )}
+                </>
               )}
-
               <Box sx={{px: {xs: 4, sm: 0}}}>
-                <TextField
-                  sx={selectedFile !== filePlaceholder ? {my: 3} : {mt: 3}}
-                  fullWidth
-                  onChange={handleFileChange}
-                  type="file"
-                  name="file"
-                  accept="image/*,video/*"
-                  error={fileError.isError}
-                  helperText={
-                    fileError.isError
-                      ? fileError.message
-                      : 'Maximum filesize is 45 MB for video and 5 MB for image files'
-                  }
-                />
+                {file && (
+                  <TextField
+                    sx={
+                      file && file.type.includes('image')
+                        ? {mt: 3, mb: 2}
+                        : {mt: 3, mb: 0}
+                    }
+                    fullWidth
+                    type="text"
+                    value={file ? file.name : ''}
+                    placeholder="Browse files..."
+                    onClick={() => {
+                      document.getElementById('file-input').click();
+                    }}
+                    error={fileError.isError}
+                    helperText={
+                      fileError.isError
+                        ? fileError.message
+                        : 'Maximum filesize is 45 MB for video and 5 MB for image files'
+                    }
+                    InputProps={{
+                      readOnly: true,
+                      startAdornment: (
+                        <Button
+                          variant="contained"
+                          color="secondary"
+                          component="label"
+                          size="small"
+                          sx={{mr: 1}}
+                        >
+                          <AddAPhotoRounded />
+                          <input
+                            id="file-input"
+                            type="file"
+                            hidden
+                            onChange={handleFileChange}
+                            name="file"
+                            accept="image/*,video/*"
+                          />
+                        </Button>
+                      ),
+                    }}
+                  />
+                )}
                 {selectedFile !== filePlaceholder &&
                   file.type.includes('image') && (
                     <>
