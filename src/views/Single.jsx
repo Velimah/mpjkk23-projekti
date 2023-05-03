@@ -9,7 +9,7 @@ import {
   useMediaQuery,
   Chip,
 } from '@mui/material';
-import {Link, useLocation, useNavigate} from 'react-router-dom';
+import {Link, useLocation} from 'react-router-dom';
 import {mediaUrl, appId} from '../utils/variables';
 import {useFavourite, useComment, useRating, useTag} from '../hooks/ApiHooks';
 import {useContext, useEffect, useState} from 'react';
@@ -52,14 +52,13 @@ const Single = () => {
     theme.breakpoints.down('sm')
   );
 
-  const navigate = useNavigate();
-
   const {getFavourites, postFavourite, deleteFavourite} = useFavourite();
   const {postComment, getCommentsById} = useComment();
   const {postRating, deleteRating, getRatingsById} = useRating();
   const {getTagsByFileId} = useTag();
 
   const {state} = useLocation();
+  console.log(state);
 
   // checks for targetUser and if null gets targetUser information from localstorage
   const [data, setData] = useState(() => {
@@ -302,36 +301,16 @@ const Single = () => {
   return (
     <>
       <Container maxWidth="sm" sx={{mt: {xs: 8, sm: 3}, px: {xs: 4, sm: 0}}}>
-        {user ? (
-          <>
-            <Button
-              startIcon={<ChevronLeftRounded />}
-              size="small"
-              component={Link}
-              onClick={() => navigate(-1)}
-              sx={{mb: 2}}
-            >
-              Go back
-            </Button>
-            <UserHeader file={data} postSettings={true} />
-          </>
-        ) : (
-          <Grid container alignItems="center" sx={{my: 1}}>
-            <Grid item xs={8}>
-              <Button
-                startIcon={<ChevronLeftRounded />}
-                size="small"
-                component={Link}
-                onClick={() => navigate(-1)}
-              >
-                Go back
-              </Button>
-            </Grid>
-            <Grid item xs={true}>
-              <UserHeader file={data} postSettings={true} />
-            </Grid>
-          </Grid>
-        )}
+        <Button
+          startIcon={<ChevronLeftRounded />}
+          size="small"
+          component={Link}
+          to="/home"
+          sx={{mb: 2}}
+        >
+          Go back
+        </Button>
+        <UserHeader file={data} postSettings={true} />
       </Container>
       <Container maxWidth="sm" sx={{p: {xs: 0}}}>
         {componentType === 'img' && (
@@ -563,6 +542,9 @@ const Single = () => {
               <Grid item xs={true}>
                 <TextValidator
                   fullWidth
+                  multiline
+                  minRows={1}
+                  maxRows={4}
                   name="comment"
                   placeholder="Write a comment..."
                   label="Comment"

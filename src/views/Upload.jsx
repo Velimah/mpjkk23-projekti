@@ -81,7 +81,10 @@ const Upload = () => {
       // Add tags that user inputted
       tagsTmp = tagsTmp.concat(
         tags.map((tag) => {
-          return {file_id: uploadResult.file_id, tag: appId + '_' + tag};
+          return {
+            file_id: uploadResult.file_id,
+            tag: appId + '_' + tag.toLowerCase(),
+          };
         })
       );
       // Loop postTags
@@ -158,7 +161,9 @@ const Upload = () => {
   }, [selectedFile]);
 
   const doTagDelete = (tagToDelete) => () => {
-    const newTags = tags.filter((tag) => tag !== tagToDelete);
+    const newTags = tags.filter(
+      (tag) => tag.toLowerCase() !== tagToDelete.toLowerCase()
+    );
     setTags(newTags);
   };
 
@@ -338,12 +343,12 @@ const Upload = () => {
                   )}
                 />
                 <Box sx={tags.length > 0 ? {mb: 4} : {mb: 0}}>
-                  {tags.map((tag) => (
+                  {tags.map((tag, index) => (
                     <Chip
                       variant="outlined"
                       color="primary"
-                      key={tag}
-                      label={tag}
+                      key={index}
+                      label={tag.toLowerCase()}
                       onDelete={doTagDelete(tag)}
                       sx={{mr: 1, mt: 1}}
                     />
@@ -382,8 +387,8 @@ const Upload = () => {
         </Paper>
       </ValidatorForm>
       <AlertDialog
-        title={'Are you sure you want to cancel creating a new post?'}
-        content={'All your work will be lost.'}
+        title={'Are you sure you want to cancel adding a new post?'}
+        content={'All your work will be lost permanently.'}
         dialogOpen={cancelUploadDialogOpen}
         setDialogOpen={setCancelUploadDialogOpen}
         functionToDo={handleCancelModify}

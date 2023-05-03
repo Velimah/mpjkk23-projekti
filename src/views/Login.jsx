@@ -1,10 +1,19 @@
 import LoginForm from '../components/LoginForm';
 import RegisterForm from '../components/RegisterForm';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {Button, Grid, Typography, Container} from '@mui/material';
+import {useLocation} from 'react-router-dom';
 
 const Login = () => {
   const [formToggle, setFormToggle] = useState(true);
+  const {state} = useLocation();
+  const register = state;
+
+  useEffect(() => {
+    if (register) {
+      setFormToggle(!register);
+    }
+  }, []);
 
   const toggle = () => {
     setFormToggle(!formToggle);

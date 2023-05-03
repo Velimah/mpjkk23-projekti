@@ -95,6 +95,7 @@ const Home = () => {
                 size="large"
                 component={Link}
                 to={user ? '/upload' : '/'}
+                state={true}
                 sx={{mb: 1}}
               >
                 {user ? 'Add post' : 'Register'}

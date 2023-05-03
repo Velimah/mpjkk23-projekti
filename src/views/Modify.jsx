@@ -141,7 +141,7 @@ const Modify = () => {
 
       setToastSnackbar({severity: 'success', message: modifyResult.message});
       setToastSnackbarOpen(true);
-      navigate('/single', {state: file});
+      navigate('/home');
     } catch (error) {
       setToastSnackbar({
         severity: 'error',
@@ -154,7 +154,8 @@ const Modify = () => {
 
   const handleCancelModify = () => {
     setCancelModifyDialogOpen(false);
-    navigate('/single', {state: file});
+    console.log(navigate(-1));
+    navigate(-1);
   };
 
   const {inputs, handleSubmit, handleInputChange} = useForm(

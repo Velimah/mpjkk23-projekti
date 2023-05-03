@@ -36,7 +36,8 @@ const MobileNavigation = () => {
       {extraSmallScreen && (
         <>
           {(location.pathname === '/home' ||
-            location.pathname === '/profile') &&
+            location.pathname === '/profile' ||
+            location.pathname === '/liked') &&
             user && (
               <Fab
                 color="secondary"

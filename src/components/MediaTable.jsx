@@ -122,11 +122,10 @@ const MediaTable = ({
             <FormControl sx={{width: {xs: '124px', textAlign: 'center'}}}>
               <InputLabel id="select-label">Sort</InputLabel>
               <Select
-                sx={{borderRadius: '100%'}}
                 defaultValue={1}
                 onChange={handleChange}
                 labelId="select-label"
-                id="select"
+                id="sort-select"
                 label="Sort"
                 size="small"
               >
