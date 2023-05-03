@@ -75,26 +75,26 @@ const Header = () => {
               }}
               alt="OnlyCats logo"
               onClick={() => {
-                if (location.pathname === '/home') {
+                if (location.pathname === '/') {
                   window.scrollTo({
                     top: 0,
                     behavior: 'smooth',
                   });
                 } else {
-                  navigate('/home');
+                  navigate('/');
                 }
               }}
             />
             <Box
               variant="h1"
               onClick={() => {
-                if (location.pathname === '/home') {
+                if (location.pathname === '/') {
                   window.scrollTo({
                     top: 0,
                     behavior: 'smooth',
                   });
                 } else {
-                  navigate('/home');
+                  navigate('/');
                 }
               }}
               sx={{
@@ -111,12 +111,10 @@ const Header = () => {
           <Box sx={{flexGrow: 1, display: {xs: 'none', sm: 'flex'}}}>
             <Box as="nav" sx={{flexGrow: 1}}>
               <Button
-                color={
-                  location.pathname === '/home' ? 'primary' : 'blackMedium'
-                }
+                color={location.pathname === '/' ? 'primary' : 'blackMedium'}
                 sx={{mr: 1, fontWeight: 600}}
                 component={Link}
-                to="/home"
+                to="/"
               >
                 Home
               </Button>
@@ -181,7 +179,7 @@ const Header = () => {
               </>
             ) : (
               <>
-                <Button variant="contained" component={Link} to="/">
+                <Button variant="contained" component={Link} to="/login">
                   Login
                 </Button>
               </>

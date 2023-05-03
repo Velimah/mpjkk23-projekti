@@ -35,7 +35,7 @@ const MobileNavigation = () => {
     <>
       {extraSmallScreen && (
         <>
-          {(location.pathname === '/home' ||
+          {(location.pathname === '/' ||
             location.pathname === '/profile' ||
             location.pathname === '/liked') &&
             user && (
@@ -66,8 +66,8 @@ const MobileNavigation = () => {
                 label="Home"
                 icon={<HomeRounded />}
                 component={Link}
-                to="/home"
-                className={location.pathname === '/home' ? 'Mui-selected' : ''}
+                to="/"
+                className={location.pathname === '/' ? 'Mui-selected' : ''}
               />
               <BottomNavigationAction
                 label="Search"
@@ -96,7 +96,7 @@ const MobileNavigation = () => {
                   label="Login"
                   icon={<LoginRounded />}
                   component={Link}
-                  to="/"
+                  to="/login"
                   className={location.pathname === '/' ? 'Mui-selected' : ''}
                 />
               )}

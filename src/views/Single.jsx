@@ -311,7 +311,7 @@ const Single = () => {
           startIcon={<ChevronLeftRounded />}
           size="small"
           component={Link}
-          to="/home"
+          to="/"
           sx={{mb: 2}}
         >
           Go back

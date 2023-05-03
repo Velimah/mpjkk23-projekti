@@ -30,8 +30,14 @@ const UserHeader = ({
   refreshData = false,
   setRefreshData = null,
 }) => {
-  const {user, setTargetUser, setToastSnackbar, setToastSnackbarOpen} =
-    useContext(MediaContext);
+  const {
+    user,
+    setTargetUser,
+    setToastSnackbar,
+    setToastSnackbarOpen,
+    refreshPage,
+    setRefreshPage,
+  } = useContext(MediaContext);
   const {getUser} = useUser();
   const {getTag} = useTag();
   const {deleteComment} = useComment();
@@ -57,7 +63,7 @@ const UserHeader = ({
         const deleteResult = await deleteMedia(file.file_id, token);
         setToastSnackbar({severity: 'success', message: deleteResult.message});
         setToastSnackbarOpen(true);
-        navigate('/home');
+        setRefreshPage(!refreshPage);
       }
     } catch (error) {
       setToastSnackbar({

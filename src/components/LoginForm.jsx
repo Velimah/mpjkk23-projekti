@@ -28,7 +28,7 @@ const LoginForm = () => {
       setUser(loginResult.user);
       setToastSnackbar({severity: 'success', message: loginResult.message});
       setToastSnackbarOpen(true);
-      navigate('/home');
+      navigate('/');
     } catch (error) {
       setToastSnackbar({severity: 'error', message: error.message});
       setToastSnackbarOpen(true);

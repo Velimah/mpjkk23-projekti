@@ -108,7 +108,7 @@ const Home = () => {
                   sx={{fontWeight: 600}}
                   variant="text"
                   component={Link}
-                  to="/"
+                  to="/login"
                 >
                   Log in
                 </Button>
