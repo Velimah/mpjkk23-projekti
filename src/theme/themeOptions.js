@@ -141,7 +141,7 @@ const themeOptions = {
     },
     MuiDialog: {
       styleOverrides: {
-        root: {
+        paper: {
           borderRadius: 12.5,
         },
       },
@@ -153,7 +153,7 @@ const themeOptions = {
         },
       },
     },
-    MuiTextField: {
+    MuiOutlinedInput: {
       styleOverrides: {
         root: {
           borderRadius: 12.5,

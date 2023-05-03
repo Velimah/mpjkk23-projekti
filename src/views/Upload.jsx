@@ -387,8 +387,8 @@ const Upload = () => {
         </Paper>
       </ValidatorForm>
       <AlertDialog
-        title={'Are you sure you want to cancel creating a new post?'}
-        content={'All your work will be lost.'}
+        title={'Are you sure you want to cancel adding a new post?'}
+        content={'All your work will be lost permanently.'}
         dialogOpen={cancelUploadDialogOpen}
         setDialogOpen={setCancelUploadDialogOpen}
         functionToDo={handleCancelModify}
