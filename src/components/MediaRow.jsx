@@ -215,8 +215,8 @@ const MediaRow = ({file, style, mediaArray}) => {
       >
         {/* LISTING style user profile */}
         {!style && (
-          <Box sx={user ? {mt: 2, mx: 3} : {my: 2, mx: 3}}>
-            <UserHeader file={file} postSettings={true}></UserHeader>
+          <Box sx={{mt: 2, mx: 3}}>
+            <UserHeader file={file} postSettings={true} />
           </Box>
         )}
         {/* * GRID STYLE * */}
