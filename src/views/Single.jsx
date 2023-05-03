@@ -301,36 +301,16 @@ const Single = () => {
   return (
     <>
       <Container maxWidth="sm" sx={{mt: {xs: 8, sm: 3}, px: {xs: 4, sm: 0}}}>
-        {user ? (
-          <>
-            <Button
-              startIcon={<ChevronLeftRounded />}
-              size="small"
-              component={Link}
-              to="/home"
-              sx={{mb: 2}}
-            >
-              Go back
-            </Button>
-            <UserHeader file={data} postSettings={true} />
-          </>
-        ) : (
-          <Grid container alignItems="center" sx={{my: 1}}>
-            <Grid item xs={8}>
-              <Button
-                startIcon={<ChevronLeftRounded />}
-                size="small"
-                component={Link}
-                to="/home"
-              >
-                Go back
-              </Button>
-            </Grid>
-            <Grid item xs={true}>
-              <UserHeader file={data} postSettings={true} />
-            </Grid>
-          </Grid>
-        )}
+        <Button
+          startIcon={<ChevronLeftRounded />}
+          size="small"
+          component={Link}
+          to="/home"
+          sx={{mb: 2}}
+        >
+          Go back
+        </Button>
+        <UserHeader file={data} postSettings={true} />
       </Container>
       <Container maxWidth="sm" sx={{p: {xs: 0}}}>
         {componentType === 'img' && (

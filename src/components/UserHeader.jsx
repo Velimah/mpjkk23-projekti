@@ -13,7 +13,6 @@ import {
 } from '@mui/material';
 import {
   DeleteRounded,
-  FiberManualRecord,
   ModeEditRounded,
   MoreVertRounded,
 } from '@mui/icons-material';
@@ -137,50 +136,41 @@ const UserHeader = ({
     <Stack
       direction="row"
       alignItems="center"
-      justifyContent={user ? 'space-between' : 'flex-end'}
-      sx={user && {mb: 2}}
+      justifyContent="space-between"
+      sx={{mb: 2}}
     >
-      {user ? (
-        <Stack direction="row" alignItems="center" spacing={1}>
-          <Stack
-            direction="row"
-            alignItems="center"
-            spacing={1}
-            component={Link}
-            to={
-              user && file.user_id === user.user_id
-                ? '/profile'
-                : '/userprofiles'
-            }
-            state={{file}}
-            onClick={() => {
-              setTargetUser(file);
-            }}
-            aria-label="Link to user's profile"
-            sx={{
-              color: 'inherit',
-              textDecoration: 'none',
-            }}
-          >
-            <Avatar
-              src={profilePic.filename}
-              alt="User's profile picture"
-              sx={{width: 45, height: 45, boxShadow: 3}}
-            />
+      <Stack direction="row" alignItems="center" spacing={1}>
+        <Stack
+          direction="row"
+          alignItems="center"
+          spacing={1}
+          component={Link}
+          to={
+            user && file.user_id === user.user_id ? '/profile' : '/userprofiles'
+          }
+          state={{file}}
+          onClick={() => {
+            setTargetUser(file);
+          }}
+          aria-label="Link to user's profile"
+          sx={{
+            color: 'inherit',
+            textDecoration: 'none',
+          }}
+        >
+          <Avatar
+            src={profilePic.filename}
+            alt="User's profile picture"
+            sx={{width: 45, height: 45, boxShadow: 3}}
+          />
+          {user && (
             <Typography component="span" variant="h6">
               {userInfo.username}
             </Typography>
-          </Stack>
-          <FiberManualRecord
-            sx={{
-              fontSize: '0.25rem',
-            }}
-          />
-          <Chip label={formatTime(file.time_added)} size="small" />
+          )}
         </Stack>
-      ) : (
         <Chip label={formatTime(file.time_added)} size="small" />
-      )}
+      </Stack>
       {comment && user && file.user_id === user.user_id && (
         <>
           <Tooltip title="Delete comment">
