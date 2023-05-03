@@ -29,7 +29,7 @@ const Home = () => {
         return;
       }
       const media = await getAllMediaById(userData.user_id);
-      media.length > 15 ? setHasPictures(true) : setHasPictures(false);
+      media.length > 1 ? setHasPictures(true) : setHasPictures(false);
     } catch (error) {
       console.error(error.message);
     }
@@ -117,6 +117,61 @@ const Home = () => {
           </Box>
         </Grid>
       </Grid>
+
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        sx={{
+          pt: {xs: '4rem', sm: '2rem'},
+          pb: '2rem',
+          backgroundColor: '#E3A7B6',
+          flexDirection: {xs: 'column', sm: 'column'},
+          display: hasPictures ? {xs: 'flex', sm: 'flex'} : 'none',
+        }}
+      >
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          sx={{flexDirection: {xs: 'column-reverse', sm: 'row'}}}
+        >
+          <Box
+            sx={{
+              maxWidth: '200px',
+              px: {xs: 0, sm: '1rem'},
+            }}
+          >
+            <img
+              src={'onlycats_illustration1.png'}
+              alt={'Cat illustration'}
+              loading="lazy"
+              width="100%"
+            />
+          </Box>
+          <Typography
+            component="h1"
+            variant="h1"
+            sx={{
+              display: {xs: 'none', sm: 'block'},
+              fontSize: '3rem',
+              px: {xs: 0, sm: '1rem'},
+            }}
+          >
+            OnlyCats
+          </Typography>
+        </Box>
+        <Box>
+          <Typography
+            component="h2"
+            variant="h6"
+            sx={{fontSize: {xs: '1rem', sm: '1.2rem'}}}
+          >
+            Share and discover cat photos and videos
+          </Typography>
+        </Box>
+      </Box>
+
       <Grid sx={{mt: '50px', mb: '100px'}}>
         <MediaTable />
       </Grid>
