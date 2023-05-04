@@ -205,7 +205,7 @@ const Home = () => {
         </Box>
       </Box>
 
-      <Grid component="section" sx={{pt: '3rem', mb: '3rem'}} ref={discover}>
+      <Grid component="section" sx={{pt: '3rem', mb: '3.5rem'}} ref={discover}>
         <MediaTable />
       </Grid>
     </>
