@@ -47,9 +47,7 @@ const Profile = () => {
   const [profilePic, setProfilePic] = useState({
     filename: profilePlaceholder,
   });
-  const [backgroundPic, setBackgroundPic] = useState({
-    filename: filePlaceholder,
-  });
+  const [backgroundPic, setBackgroundPic] = useState(filePlaceholder);
   const [profileDescription, setprofileDescription] = useState(
     'No profile text yet!'
   );
@@ -83,6 +81,9 @@ const Profile = () => {
       setProfilePic(profilePicture);
     } catch (error) {
       if (error.message === 'Tag not found') {
+        setProfilePic({
+          filename: profilePlaceholder,
+        });
         return;
       } else {
         console.error(error.message);
@@ -100,6 +101,9 @@ const Profile = () => {
       setBackgroundPic(backgroundPicture);
     } catch (error) {
       if (error.message === 'Tag not found') {
+        setBackgroundPic({
+          filename: filePlaceholder,
+        });
         return;
       } else {
         console.error(error.message);
@@ -202,7 +206,7 @@ const Profile = () => {
     fetchBackgroundPicture();
     fetchProfileDescription();
     fetchAllRatings();
-  }, [userData]);
+  }, [userData, refreshPage]);
 
   return (
     <>
