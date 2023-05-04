@@ -8,8 +8,9 @@ import {useContext, useEffect, useState} from 'react';
 import {MediaContext} from '../contexts/MediaContext';
 
 const UpdateUserForm = () => {
-  const {putUser, getCheckUser} = useUser();
-  const {setToastSnackbar, setToastSnackbarOpen} = useContext(MediaContext);
+  const {putUser, getCheckUser, getUserByToken} = useUser();
+  const {setToastSnackbar, setToastSnackbarOpen, setUser} =
+    useContext(MediaContext);
   const [messageSent, setMessageSent] = useState(false);
 
   const initValues = {
@@ -39,6 +40,11 @@ const UpdateUserForm = () => {
         delete withoutConfirm.full_name;
       }
       const userResult = await putUser(withoutConfirm, token);
+      const userToken = localStorage.getItem('token');
+      if (userToken) {
+        const userData = await getUserByToken(userToken);
+        setUser(userData);
+      }
       setMessageSent(false);
       setToastSnackbar({severity: 'success', message: userResult.message});
       setToastSnackbarOpen(true);

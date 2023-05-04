@@ -519,7 +519,7 @@ const MediaRow = ({file, style, mediaArray}) => {
                             <Rating
                               name="simple-controlled"
                               size="large"
-                              value={Number(rating?.toFixed(1))}
+                              value={rating}
                               precision={1}
                               onChange={(event, newValue) => {
                                 event.stopPropagation();

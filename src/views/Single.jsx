@@ -489,7 +489,7 @@ const Single = () => {
                     defaultValue={parseInt(rating.toFixed(1))}
                     name="simple-controlled"
                     size="large"
-                    value={parseInt(rating.toFixed(1))}
+                    value={rating}
                     precision={1}
                     onChange={(event, newValue) => {
                       doRating(newValue);

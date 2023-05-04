@@ -44,11 +44,7 @@ const MediaTable = ({
 
   useEffect(() => {
     getMedia();
-  }, []);
-
-  useEffect(() => {
-    getMedia();
-  }, [refreshPage, searchQuery]);
+  }, [searchQuery, refreshPage]);
 
   const changeToGrid = () => {
     setStyle(true);

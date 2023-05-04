@@ -91,6 +91,7 @@ const useMedia = (
         file.averageRating = 0;
       }
       setMediaArray(filesWithThumbnail);
+      await sleep(100);
       addLikesRatingsCommentsToGetMedia(filesWithThumbnail);
     } catch (error) {
       console.error(error.message);
@@ -100,24 +101,15 @@ const useMedia = (
   // fetches and adds likes, ratings and comments for all wanted media files
   const addLikesRatingsCommentsToGetMedia = async (filesWithThumbnail) => {
     try {
-      // likes
+      const updatedMediaArray = [];
       for (const file of filesWithThumbnail) {
-        await sleep(5);
-        const likes = await doFetch(
-          baseUrl + 'favourites/file/' + file.file_id
-        );
-        file.likes = likes;
-      }
-      // ratings
-      for (const file of filesWithThumbnail) {
-        await sleep(5);
-        const fetchOptions = {
-          method: 'GET',
-        };
-        const ratings = await doFetch(
-          baseUrl + 'ratings/file/' + file.file_id,
-          fetchOptions
-        );
+        await sleep(10);
+        const fetchOptions = {method: 'GET'};
+        const [likes, ratings, comments] = await Promise.all([
+          doFetch(baseUrl + 'favourites/file/' + file.file_id, fetchOptions),
+          doFetch(baseUrl + 'ratings/file/' + file.file_id, fetchOptions),
+          doFetch(baseUrl + 'comments/file/' + file.file_id, fetchOptions),
+        ]);
         // sums the ratings and count average rating
         let sum = 0;
         ratings.forEach((r) => {
@@ -128,24 +120,17 @@ const useMedia = (
         if (isNaN(averageRating)) {
           averageRating = 0;
         }
-        file.ratings = ratings;
-        file.averageRating = averageRating;
-      }
-      // comments
-      for (const file of filesWithThumbnail) {
-        await sleep(5);
-        const fetchOptions = {
-          method: 'GET',
+        const updatedFile = {
+          ...file,
+          likes: likes,
+          ratings: ratings,
+          comments: comments,
+          averageRating: averageRating,
         };
-        const comments = await doFetch(
-          baseUrl + 'comments/file/' + file.file_id,
-          fetchOptions
-        );
-        file.comments = comments;
+        updatedMediaArray.push(updatedFile);
       }
-      // updates(remakes) mediaArray with likes, ratings and comments
-      setMediaArray([...filesWithThumbnail]);
-      console.log('getMediaFetch', filesWithThumbnail);
+      console.log('getMediaFetch', updatedMediaArray);
+      setMediaArray([...updatedMediaArray]);
     } catch (error) {
       console.error(error.message);
     }

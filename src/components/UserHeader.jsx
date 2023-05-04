@@ -79,12 +79,14 @@ const UserHeader = ({
 
   const fetchProfilePicture = async () => {
     try {
-      const profilePictures = await getTag(
-        appId + '_profilepicture_' + file.user_id
-      );
-      const profilePicture = profilePictures.pop();
-      profilePicture.filename = mediaUrl + profilePicture.filename;
-      setProfilePic(profilePicture);
+      if (user) {
+        const profilePictures = await getTag(
+          appId + '_profilepicture_' + file.user_id
+        );
+        const profilePicture = profilePictures.pop();
+        profilePicture.filename = mediaUrl + profilePicture.filename;
+        setProfilePic(profilePicture);
+      }
     } catch (error) {
       console.error(error.message);
     }
