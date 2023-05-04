@@ -12,6 +12,8 @@ import {
   Paper,
 } from '@mui/material';
 import {MediaContext} from '../contexts/MediaContext';
+import {ChevronLeftRounded} from '@mui/icons-material';
+import {Link} from 'react-router-dom';
 
 const CatGPT = () => {
   const {user} = useContext(MediaContext);
@@ -364,17 +366,18 @@ const CatGPT = () => {
             </Grid>
           </Grid>
         </Paper>
-        {/*
+
         <Box display="flex" width="100%" justifyContent="center">
           <Button
-            variant="contained"
-            sx={{mt: 4, mb: {xs: 9, sm: 0}, width: '200px'}}
-            onClick={() => navigate('/profile')}
+            startIcon={<ChevronLeftRounded />}
+            size="small"
+            component={Link}
+            to="/profile"
+            sx={{my: 2}}
           >
-            Back
+            Go back
           </Button>
         </Box>
-        */}
       </Container>
     </>
   );

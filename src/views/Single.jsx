@@ -327,15 +327,6 @@ const Single = () => {
   return (
     <>
       <Container maxWidth="sm" sx={{mt: {xs: 8, sm: 3}, px: {xs: 3, sm: 0}}}>
-        <Button
-          startIcon={<ChevronLeftRounded />}
-          size="small"
-          component={Link}
-          to="/"
-          sx={{mb: 2}}
-        >
-          Go back
-        </Button>
         <UserHeader file={data} postSettings={true} />
       </Container>
       <Container maxWidth="sm" sx={{p: {xs: 0}}}>

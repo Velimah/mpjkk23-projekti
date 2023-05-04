@@ -17,7 +17,7 @@ import {appId, mediaUrl, profilePlaceholder} from '../utils/variables';
 import {useNavigate} from 'react-router-dom';
 
 const Header = () => {
-  const {user, refreshHeader} = useContext(MediaContext);
+  const {user, refreshHeader, refreshPage} = useContext(MediaContext);
   const extraSmallScreen = useMediaQuery((theme) =>
     theme.breakpoints.down('sm')
   );
@@ -53,7 +53,7 @@ const Header = () => {
 
   useEffect(() => {
     fetchProfilePicture();
-  }, [user, refreshHeader]);
+  }, [user, refreshHeader, refreshPage]);
 
   return (
     <AppBar

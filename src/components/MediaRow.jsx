@@ -70,7 +70,11 @@ const MediaRow = ({file, style, mediaArray}) => {
     }
   };
 
-  const fetchLikes = async () => {
+  useEffect(() => {
+    fetchLikesUpdate();
+  }, [likesBoolean]);
+
+  const fetchLikesUpdate = async () => {
     try {
       const likeInfo = await getFavourites(file.file_id);
       setLikes(likeInfo.length);
@@ -90,7 +94,6 @@ const MediaRow = ({file, style, mediaArray}) => {
       const fileId = {file_id: file.file_id};
       const liked = await postFavourite(fileId, token);
       setLikesBoolean(true);
-      fetchLikes();
       console.log('liked', liked);
       setToastSnackbar({
         severity: 'success',
@@ -107,7 +110,6 @@ const MediaRow = ({file, style, mediaArray}) => {
       const token = localStorage.getItem('token');
       const notliked = await deleteFavourite(file.file_id, token);
       setLikesBoolean(false);
-      fetchLikes();
       console.log('unliked', notliked);
       setToastSnackbar({
         severity: 'success',
@@ -130,6 +132,10 @@ const MediaRow = ({file, style, mediaArray}) => {
       });
     }
   };
+
+  useEffect(() => {
+    fetchRatingsUpdate();
+  }, [ratingBoolean]);
 
   const fetchRatingsUpdate = async () => {
     try {
@@ -158,7 +164,6 @@ const MediaRow = ({file, style, mediaArray}) => {
       const ratingInfo = await postRating(data2, token);
       console.log('rated', ratingInfo);
       setRatingBoolean(!ratingBoolean);
-      fetchRatingsUpdate();
       setToastSnackbar({
         severity: 'success',
         message: 'Rating added',
@@ -175,7 +180,6 @@ const MediaRow = ({file, style, mediaArray}) => {
       const ratingInfo = await deleteRating(file.file_id, token);
       console.log('unrated', ratingInfo);
       setRatingBoolean(!ratingBoolean);
-      fetchRatingsUpdate();
       setToastSnackbar({
         severity: 'success',
         message: 'Rating removed',
