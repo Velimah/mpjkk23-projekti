@@ -28,7 +28,14 @@ import AlertDialog from '../components/AlertDialog';
 import {StarOutlineRounded, StarRounded} from '@mui/icons-material';
 
 const Profile = () => {
-  const {user, setUser, refreshPage, setRefreshPage} = useContext(MediaContext);
+  const {
+    user,
+    setUser,
+    refreshPage,
+    setRefreshPage,
+    setToastSnackbar,
+    setToastSnackbarOpen,
+  } = useContext(MediaContext);
   const {getTag} = useTag();
   const {getRatingsById, deleteRating, getAllRatings} = useRating();
   const {getAllMediaByCurrentUser, deleteMedia} = useMedia();
@@ -170,13 +177,23 @@ const Profile = () => {
 
       const mediaInfo = await getAllMediaByCurrentUser(token);
       for (const file of mediaInfo) {
-        await sleep(20);
+        await sleep(5);
         const deleteFileInfo = await deleteMedia(file.file_id, token);
         console.log('deleteMedia', deleteFileInfo);
       }
       setRefreshPage(!refreshPage);
+      setToastSnackbar({
+        severity: 'success',
+        message: 'All information deleted',
+      });
+      setToastSnackbarOpen(true);
     } catch (error) {
       console.log(error.message);
+      setToastSnackbar({
+        severity: 'error',
+        message: 'Deleting information failed',
+      });
+      setToastSnackbarOpen(true);
     }
   };
 
