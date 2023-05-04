@@ -25,6 +25,7 @@ import {
 import {useNavigate} from 'react-router-dom';
 import MediaTable from '../components/MediaTable';
 import AlertDialog from '../components/AlertDialog';
+import {StarOutlineRounded, StarRounded} from '@mui/icons-material';
 
 const Profile = () => {
   const {
@@ -205,15 +206,15 @@ const Profile = () => {
 
   return (
     <>
-      <Container maxWidth="lg" sx={{p: {xs: '5rem 0', sm: '3rem 3rem'}}}>
+      <Container maxWidth="lg" sx={{pt: {xs: 7, sm: '3rem'}, px: 0}}>
         <Avatar
           src={backgroundPic.filename}
           alt="Logo"
           sx={{
             borderRadius: {xs: 0, sm: '2rem'},
-            boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px',
+            boxShadow: 3,
             width: '100%',
-            height: {xs: '150px', md: '300px'},
+            height: {xs: '200px', md: '300px'},
             maxHeight: '300px',
           }}
         />
@@ -221,45 +222,34 @@ const Profile = () => {
           src={profilePic.filename}
           alt="Logo"
           sx={{
-            boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px',
+            boxShadow: 3,
             borderStyle: 'solid',
             borderColor: '#FFFFFF',
-            borderWidth: '3px',
+            borderWidth: '2px',
             position: 'relative',
-            height: {xs: '125px', sm: '150px', md: '200px'},
-            width: {xs: '125px', sm: '150px', md: '200px'},
-            top: {xs: '-100px', sm: '-125px', md: '-150px'},
-            left: {xs: '25px', sm: '50px', md: '50px'},
+            height: {xs: '100px', sm: '125px', md: '150px'},
+            width: {xs: '100px', sm: '125px', md: '150px'},
+            top: {xs: '-60px', sm: '-64px', md: '-80px'},
+            left: '20px',
           }}
         />
         <Box
           display="flex"
-          justifyContent="center"
+          justifyContent="space-between"
           sx={{
-            maxWidth: '1000px',
             width: '100%',
-            margin: 'auto',
-            mt: {xs: -12, sm: -17, md: -23},
+            mt: {xs: '-48px', sm: '-56px', md: '-56px'},
+            px: 3,
             flexDirection: {xs: 'row', sm: 'row'},
           }}
         >
-          <Box
-            display="flex"
-            flexDirection="column"
-            textAlign="start"
-            sx={{
-              px: {xs: 3, md: 6},
-              py: {xs: 1, md: 1},
-              justifyContent: {xs: 'center', sm: 'center'},
-              alignItems: {xs: 'flex-start', sm: 'flex-start'},
-            }}
-          >
-            <Typography component="p" variant="h1" sx={{mt: 1}}>
+          <Box display="flex" flexDirection="column" textAlign="start">
+            <Typography component="h1" variant="h1">
               {userData.full_name
                 ? userData.full_name
-                : 'Has not set a full name'}
+                : 'You have not set a full name'}
             </Typography>
-            <Typography component="p" variant="body4" sx={{mt: 1}}>
+            <Typography component="p" variant="body1" sx={{mt: 0.5}}>
               {'@' + userData.username}
             </Typography>
             <Rating
@@ -267,10 +257,12 @@ const Profile = () => {
               size="large"
               precision={0.5}
               value={Number(rating.toFixed(2))}
+              icon={<StarRounded sx={{fontSize: '1.8rem'}} />}
+              emptyIcon={<StarOutlineRounded sx={{fontSize: '1.8rem'}} />}
               readOnly
-              sx={{mt: 1, color: '#7047A6', mr: 0.5, fontSize: '1.8rem'}}
+              sx={{mt: 1, color: '#7047A6', ml: -0.5}}
             />
-            <Typography component="legend">
+            <Typography component="legend" variant="caption">
               {rating.toFixed(2)} ({ratingCount} ratings)
             </Typography>
           </Box>
@@ -279,16 +271,13 @@ const Profile = () => {
             flexDirection="column"
             justifyContent="center"
             sx={{
-              px: {xs: 3, sm: 2},
-              pl: {xs: 0, sm: 2},
-              py: {xs: 1, md: 1},
-              width: {xs: '200px'},
+              width: '124px',
             }}
           >
             <Button
               variant="contained"
+              size="small"
               sx={{
-                mt: 2,
                 mr: {xs: 0, sm: 0},
               }}
               onClick={() => navigate('/profile/update')}
@@ -297,15 +286,13 @@ const Profile = () => {
             </Button>
             <Button
               variant="contained"
+              color="error"
+              size="small"
               sx={{
                 mt: 2,
                 mr: {
                   xs: 0,
                   sm: 0,
-                  backgroundColor: 'red',
-                  '&:hover': {
-                    backgroundColor: 'FireBrick',
-                  },
                 },
               }}
               onClick={() => setDeleteAllInformationDialogOpen(true)}
@@ -314,6 +301,7 @@ const Profile = () => {
             </Button>
             <Button
               variant="outlined"
+              size="small"
               sx={{mt: 2, mr: {xs: 0, sm: 0}}}
               onClick={() => navigate('/logout')}
             >
@@ -333,17 +321,18 @@ const Profile = () => {
         <Box display="flex" flexDirection="column" justifyContent="center">
           <Typography
             component="p"
-            variant="body3"
-            alignSelf="center"
+            variant="body1"
             sx={{
-              maxWidth: '700px',
-              p: {xs: 3, md: 3},
-              fontSize: {xs: '1rem', md: '1.2rem'},
+              px: 3,
+              pt: 2,
+              pb: 6,
             }}
           >
             {profileDescription}
           </Typography>
         </Box>
+      </Container>
+      <Container sx={{px: 0, pb: {xs: '3.5rem'}}}>
         <MediaTable myFilesOnly={true} />
       </Container>
     </>

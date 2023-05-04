@@ -208,6 +208,7 @@ const Single = () => {
         setToastSnackbar({severity: 'success', message: commentInfo.message});
         setToastSnackbarOpen(true);
         setRefreshComments(!refreshComments);
+        inputs.comment = '';
       }
     } catch (error) {
       setToastSnackbar({
@@ -325,7 +326,7 @@ const Single = () => {
 
   return (
     <>
-      <Container maxWidth="sm" sx={{mt: {xs: 8, sm: 3}, px: {xs: 4, sm: 0}}}>
+      <Container maxWidth="sm" sx={{mt: {xs: 8, sm: 3}, px: {xs: 3, sm: 0}}}>
         <Button
           startIcon={<ChevronLeftRounded />}
           size="small"
@@ -369,10 +370,7 @@ const Single = () => {
           </video>
         )}
       </Container>
-      <Container
-        maxWidth="sm"
-        sx={{mb: {xs: 10, sm: 2}, px: {xs: 4, sm: 0}, pb: {sm: 6}}}
-      >
+      <Container maxWidth="sm" sx={{mb: {xs: 10, sm: 7}, px: {xs: 3, sm: 0}}}>
         <Grid
           container
           direction="row"

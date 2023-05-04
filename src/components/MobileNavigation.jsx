@@ -47,8 +47,8 @@ const MobileNavigation = () => {
                 style={{
                   margin: 0,
                   top: 'auto',
-                  right: '1rem',
-                  bottom: 72,
+                  right: 24,
+                  bottom: 80,
                   left: 'auto',
                   position: 'fixed',
                 }}
@@ -58,7 +58,7 @@ const MobileNavigation = () => {
               </Fab>
             )}
           <Paper
-            sx={{position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 5}}
+            sx={{position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 50}}
             elevation={4}
           >
             <BottomNavigation showLabels as="nav">
