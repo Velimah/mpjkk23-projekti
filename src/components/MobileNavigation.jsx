@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {Link, useLocation} from 'react-router-dom';
 import {MediaContext} from '../contexts/MediaContext';
 import {
@@ -26,10 +26,31 @@ const loggedNavLinks = [
 
 const MobileNavigation = () => {
   const {user} = useContext(MediaContext);
+
   const location = useLocation();
   const extraSmallScreen = useMediaQuery((theme) =>
     theme.breakpoints.down('sm')
   );
+
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    setVisible(false);
+    window.addEventListener('scroll', listenToScroll);
+    return () => window.removeEventListener('scroll', listenToScroll);
+  }, []);
+
+  const listenToScroll = () => {
+    const heightToShowFrom = 200;
+    const winScroll =
+      document.body.scrollTop || document.documentElement.scrollTop;
+
+    if (winScroll < heightToShowFrom) {
+      setVisible(false);
+    } else {
+      setVisible(true);
+    }
+  };
 
   return (
     <>
@@ -51,6 +72,7 @@ const MobileNavigation = () => {
                   bottom: 80,
                   left: 'auto',
                   position: 'fixed',
+                  display: location.pathname === '/' && !visible && 'none',
                 }}
               >
                 <AddRounded sx={{mr: 1}} />

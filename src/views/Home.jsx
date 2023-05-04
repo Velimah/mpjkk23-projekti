@@ -13,12 +13,12 @@ const Home = () => {
 
   const [hasPictures, setHasPictures] = useState(false);
 
+  const discoverSection = useRef();
+
   // checks for user and if null gets user information from localstorage
   const [userData, setData] = useState(() => {
     return user ?? JSON.parse(window.localStorage.getItem('user'));
   });
-
-  const discover = useRef();
 
   // when userData changes, saves userData to localstorage and updates userData
   useEffect(() => {
@@ -147,7 +147,9 @@ const Home = () => {
                   aria-label="Go to Discover cats"
                   size="large"
                   onClick={() => {
-                    discover.current.scrollIntoView({behavior: 'smooth'});
+                    discoverSection.current.scrollIntoView({
+                      behavior: 'smooth',
+                    });
                   }}
                 >
                   <KeyboardArrowDownRounded />
@@ -213,7 +215,11 @@ const Home = () => {
         </Box>
       </Box>
 
-      <Grid component="section" sx={{pt: '3rem', mb: '3.5rem'}} ref={discover}>
+      <Grid
+        component="section"
+        sx={{pt: '3rem', mb: '3.5rem'}}
+        ref={discoverSection}
+      >
         <MediaTable />
       </Grid>
     </>
