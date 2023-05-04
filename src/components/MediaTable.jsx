@@ -26,6 +26,7 @@ const MediaTable = ({
   targetUserFilesOnly = false,
   myFavouritesOnly = false,
   searchQuery,
+  searchOnly = false,
 }) => {
   const {mediaArray, deleteMedia, getMedia} = useMedia(
     myFilesOnly,
@@ -37,17 +38,12 @@ const MediaTable = ({
   const theme = useTheme();
   const smallScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const [selectedOption, setSelectedOption] = useState('time_added');
-  const [arrayLength, setArrayLength] = useState(0);
 
   const [style, setStyle] = useState(true);
 
   useEffect(() => {
     getMedia();
-  }, [refreshPage || searchQuery]);
-
-  useEffect(() => {
-    setArrayLength(mediaArray.length);
-  }, []);
+  }, [refreshPage, searchQuery]);
 
   const changeToGrid = () => {
     setStyle(true);
@@ -83,10 +79,20 @@ const MediaTable = ({
             variant="h2"
           >
             {/* chooses correct text for post counts based on page */}
-            {myFilesOnly || targetUserFilesOnly || myFavouritesOnly
-              ? `${arrayLength} ${arrayLength === 1 ? 'post' : 'posts'}`
-              : 'Discover cats'}
+            {myFilesOnly || targetUserFilesOnly || myFavouritesOnly ? (
+              <>
+                {mediaArray.length} {mediaArray.length === 1 ? 'post' : 'posts'}
+              </>
+            ) : searchOnly ? (
+              <>
+                {mediaArray.length}{' '}
+                {mediaArray.length === 1 ? 'result' : 'results'}
+              </>
+            ) : (
+              'Discover cats'
+            )}
           </Typography>
+
           <FormControl
             sx={{
               width: '180px',
@@ -268,6 +274,7 @@ MediaTable.propTypes = {
   targetUserFilesOnly: PropTypes.bool,
   myFavouritesOnly: PropTypes.bool,
   searchQuery: PropTypes.string,
+  searchOnly: PropTypes.bool,
 };
 
 export default MediaTable;

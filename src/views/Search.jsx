@@ -250,7 +250,7 @@ const Search = () => {
       </Container>
 
       <Grid sx={{mt: '50px', mb: '100px'}}>
-        <MediaTable searchQuery={updatedSearchQuery} />
+        <MediaTable searchQuery={updatedSearchQuery} searchOnly={true} />
       </Grid>
     </>
   );
