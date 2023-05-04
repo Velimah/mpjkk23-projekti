@@ -37,6 +37,10 @@ const commentErrorMessages = {
   comment: ['Comment required', 'Maximum 1000 characters'],
 };
 
+const searchErrorMessages = {
+  search: ['Use only one word with only characters from the alphabet'],
+};
+
 export {
   registerErrorMessages,
   updateUserErrorMessages,
@@ -44,4 +48,5 @@ export {
   uploadErrorMessages,
   commentErrorMessages,
   updateProfilePictureErrorMessages,
+  searchErrorMessages,
 };

@@ -25,11 +25,13 @@ const MediaTable = ({
   myFilesOnly = false,
   targetUserFilesOnly = false,
   myFavouritesOnly = false,
+  searchQuery,
 }) => {
   const {mediaArray, deleteMedia, getMedia} = useMedia(
     myFilesOnly,
     targetUserFilesOnly,
-    myFavouritesOnly
+    myFavouritesOnly,
+    searchQuery
   );
   const {refreshPage} = useContext(MediaContext);
   const theme = useTheme();
@@ -41,11 +43,11 @@ const MediaTable = ({
 
   useEffect(() => {
     getMedia();
-  }, [refreshPage]);
+  }, [refreshPage || searchQuery]);
 
   useEffect(() => {
     setArrayLength(mediaArray.length);
-  }, [mediaArray]);
+  }, []);
 
   const changeToGrid = () => {
     setStyle(true);
@@ -275,6 +277,7 @@ MediaTable.propTypes = {
   myFilesOnly: PropTypes.bool,
   targetUserFilesOnly: PropTypes.bool,
   myFavouritesOnly: PropTypes.bool,
+  searchQuery: PropTypes.string,
 };
 
 export default MediaTable;
