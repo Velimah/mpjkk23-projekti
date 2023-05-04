@@ -1,4 +1,4 @@
-import {Avatar, Box, Button, InputLabel} from '@mui/material';
+import {Avatar, Box, Button, InputLabel, useMediaQuery} from '@mui/material';
 import useForm from '../hooks/FormHooks';
 import {useContext, useEffect, useState} from 'react';
 import {useMedia, useTag} from '../hooks/ApiHooks';
@@ -8,12 +8,15 @@ import {MediaContext} from '../contexts/MediaContext';
 import {updateProfilePictureValidators} from '../utils/validator';
 import {updateProfilePictureErrorMessages} from '../utils/errorMessages';
 import {AddAPhoto} from '@mui/icons-material';
+import {useTheme} from '@emotion/react';
 
 const UploadProfilePicture = () => {
   const {user, setToastSnackbar, setToastSnackbarOpen} =
     useContext(MediaContext);
   const {getTag, postTag} = useTag();
   const {postMedia} = useMedia();
+  const theme = useTheme();
+  const smallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
   const [file, setFile] = useState(null);
   const [selectedImage, setSelectedImage] = useState(
@@ -177,7 +180,7 @@ const UploadProfilePicture = () => {
             <TextValidator
               fullWidth
               multiline
-              rows={6}
+              rows={smallScreen ? 2 : 4}
               margin="dense"
               name="description"
               label="Profile description"

@@ -289,7 +289,7 @@ const CatGPT = () => {
                   alignItems="center"
                   width="100%"
                   sx={{
-                    px: {xs: 4, sm: 0},
+                    px: {xs: 1, sm: 0},
                     pt: 3,
                     display: {xs: 'block', md: 'flex'},
                   }}

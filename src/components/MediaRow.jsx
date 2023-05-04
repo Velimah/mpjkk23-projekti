@@ -58,7 +58,6 @@ const MediaRow = ({file, style, mediaArray}) => {
   }
 
   const fetchLikesInitial = () => {
-    console.log('fetching likes', file.likes.length);
     setLikes(file.likes.length);
     if (user) {
       file.likes.forEach((like) => {

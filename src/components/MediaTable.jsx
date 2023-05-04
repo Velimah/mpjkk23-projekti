@@ -81,16 +81,9 @@ const MediaTable = ({
             variant="h2"
           >
             {/* chooses correct text for post counts based on page */}
-            {(myFilesOnly || targetUserFilesOnly) &&
-              `${arrayLength} ${arrayLength === 1 ? 'post' : 'posts'}`}
-            {myFavouritesOnly &&
-              `${arrayLength} ${
-                arrayLength === 1 ? 'Liked post' : 'Liked posts'
-              }`}
-            {!myFilesOnly &&
-              !targetUserFilesOnly &&
-              !myFavouritesOnly &&
-              'Discover cats'}
+            {myFilesOnly || targetUserFilesOnly || myFavouritesOnly
+              ? `${arrayLength} ${arrayLength === 1 ? 'post' : 'posts'}`
+              : 'Discover cats'}
           </Typography>
           <FormControl
             sx={{
@@ -197,7 +190,6 @@ const MediaTable = ({
           <ImageList
             gap={smallScreen ? 3 : 4}
             cols={!style ? 1 : smallScreen ? 3 : 4}
-            direction={style ? 'row' : undefined}
             sx={{
               width: !style
                 ? {sx: '100%', sm: '500px'}
