@@ -70,12 +70,21 @@ const MediaTable = ({
 
   return (
     <>
-      <Container sx={{mb: 5}}>
-        <Box display="flex" justifyContent="space-around" alignItems="center">
+      <Container sx={{mb: 3, px: {xs: 3, sm: 'auto'}}}>
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+          sx={{
+            maxWidth: {xs: '100%', sm: !style ? '500px' : '100%'},
+            mx: 'auto',
+          }}
+        >
           <Typography
             sx={{
               fontSize: {xs: '1.2rem', sm: '1.5rem'},
               textAlign: 'center',
+              mx: style ? 0 : {xs: 0, sm: 1},
             }}
             component="h2"
             variant="h2"
@@ -87,8 +96,9 @@ const MediaTable = ({
           </Typography>
           <FormControl
             sx={{
-              width: '180px',
+              width: {xs: '140px', sm: '180px'},
               textAlign: 'center',
+              mx: style ? 0 : {xs: 0, sm: 1},
             }}
           >
             <InputLabel id="select-label">Sort</InputLabel>
@@ -201,7 +211,7 @@ const MediaTable = ({
             {selectedOption === 'comments' &&
               mediaArray
                 .sort((a, b) => b.comments.length - a.comments.length)
-                .map((item, index) => {
+                .map((item) => {
                   return (
                     <MediaRow
                       key={item.file_id}
@@ -215,7 +225,7 @@ const MediaTable = ({
             {selectedOption === 'rating' &&
               mediaArray
                 .sort((a, b) => b.averageRating - a.averageRating)
-                .map((item, index) => {
+                .map((item) => {
                   return (
                     <MediaRow
                       key={item.file_id}
@@ -229,7 +239,7 @@ const MediaTable = ({
             {selectedOption === 'likes' &&
               mediaArray
                 .sort((a, b) => b.likes.length - a.likes.length)
-                .map((item, index) => {
+                .map((item) => {
                   return (
                     <MediaRow
                       key={item.file_id}
@@ -243,7 +253,7 @@ const MediaTable = ({
             {selectedOption === 'time_added' &&
               mediaArray
                 .sort((a, b) => b.file_id - a.file_id)
-                .map((item, index) => {
+                .map((item) => {
                   return (
                     <MediaRow
                       key={item.file_id}

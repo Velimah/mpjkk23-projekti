@@ -216,11 +216,11 @@ const MediaRow = ({file, style, mediaArray}) => {
       component="div"
       sx={{
         my: style ? 0 : 1,
-        mx: style ? 0 : {sx: 0, sm: 1},
+        mx: style ? 0 : {xs: 0, sm: 1},
         backgroundColor: style ? 'transparent' : '#FFFFFF',
-        borderRadius: style ? 0 : 3,
+        borderRadius: style ? 0 : {xs: 0, sm: 3},
+        boxShadow: style ? 0 : 3,
       }}
-      elevation={style ? 0 : 4}
     >
       <ImageListItem
         component={style ? Link : undefined}
@@ -331,11 +331,11 @@ const MediaRow = ({file, style, mediaArray}) => {
           </Box>
         )}
         {!style && (
-          <Grid sx={{p: 2, py: 1}}>
+          <Grid sx={{px: 2, py: 2}}>
             <Grid
               container
               direction="row"
-              justifyContent="space-around"
+              justifyContent="space-between"
               alignItems="center"
             >
               <Grid item>

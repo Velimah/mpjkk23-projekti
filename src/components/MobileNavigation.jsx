@@ -47,8 +47,8 @@ const MobileNavigation = () => {
                 style={{
                   margin: 0,
                   top: 'auto',
-                  right: '1rem',
-                  bottom: 72,
+                  right: 24,
+                  bottom: 80,
                   left: 'auto',
                   position: 'fixed',
                 }}

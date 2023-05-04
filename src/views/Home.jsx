@@ -1,10 +1,11 @@
-import {Grid, Button, Typography} from '@mui/material';
+import {Grid, Button, Typography, Container, IconButton} from '@mui/material';
 import {Box} from '@mui/system';
 import MediaTable from '../components/MediaTable';
 import {Link} from 'react-router-dom';
-import {useContext, useEffect, useState} from 'react';
+import {useContext, useEffect, useRef, useState} from 'react';
 import {MediaContext} from '../contexts/MediaContext';
 import {useMedia} from '../hooks/ApiHooks';
+import {KeyboardArrowDownRounded} from '@mui/icons-material';
 
 const Home = () => {
   const {user, setUser} = useContext(MediaContext);
@@ -16,6 +17,8 @@ const Home = () => {
   const [userData, setData] = useState(() => {
     return user ?? JSON.parse(window.localStorage.getItem('user'));
   });
+
+  const discover = useRef();
 
   // when userData changes, saves userData to localstorage and updates userData
   useEffect(() => {
@@ -41,83 +44,111 @@ const Home = () => {
 
   return (
     <>
-      <Grid
-        container
-        component="section"
-        columnSpacing={{xs: 1, sm: 2, md: 3}}
-        direction="row"
-        justifyContent="center"
-        alignItems="center"
+      <Box
         sx={{
-          py: '60px',
+          pt: {xs: '4rem', sm: '2rem'},
+          pb: '1rem',
           backgroundColor: '#E3A7B6',
           display: hasPictures ? 'none' : 'flex',
         }}
       >
-        <Grid item xs={5}>
-          <Box sx={{maxWidth: '31.25rem'}}>
-            <img
-              src={'onlycats_illustration1.png'}
-              alt={'Cat illustration'}
-              loading="lazy"
-              width="100%"
-            />
-          </Box>
-        </Grid>
-        <Grid item>
-          <Box
-            sx={{
-              borderRadius: '25px',
-              backgroundColor: '#FDF7F4',
-              boxShadow: 3,
-              p: 4,
-              m: '0 1rem',
-              maxWidth: '22rem',
-            }}
+        <Container
+          component="section"
+          maxWidth="lg"
+          sx={{px: {xs: 3, sm: 'auto'}}}
+        >
+          <Grid
+            container
+            columnSpacing={{xs: 1, sm: 2, md: 3}}
+            direction="row"
+            justifyContent="center"
+            alignItems="center"
           >
-            <Typography
-              component="h1"
-              variant="h1"
-              textAlign="center"
-              sx={{mb: 5}}
-            >
-              {user
-                ? 'Ready to show off your cat friend?'
-                : 'Share and discover cat photos and videos on OnlyCats.'}
-            </Typography>
-            <Typography component="p" textAlign="center" sx={{mb: 5}}>
-              {user
-                ? 'Share your favorite cat moments with our community of cat lovers by uploading photos and videos.'
-                : 'Join our community and connect with fellow cat lovers.'}
-            </Typography>
-            <Box textAlign="center">
-              <Button
-                variant="contained"
-                size="large"
-                component={Link}
-                to={user ? '/upload' : '/login'}
-                state={true}
-                sx={{mb: 1}}
+            <Grid item xs={5} md={5}>
+              <Box sx={{mx: 'auto'}}>
+                <img
+                  src={'onlycats_illustration1.png'}
+                  alt={'Cat illustration'}
+                  loading="lazy"
+                  width="100%"
+                />
+              </Box>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Box
+                sx={{
+                  borderRadius: '25px',
+                  backgroundColor: '#FDF7F4',
+                  boxShadow: 3,
+                  p: 3.5,
+                  mx: 'auto',
+                  maxWidth: '22rem',
+                }}
               >
-                {user ? 'Add post' : 'Register'}
-              </Button>
-            </Box>
-            {!user && (
-              <Typography component="p" textAlign="center">
-                Already have an account?{' '}
-                <Button
-                  sx={{fontWeight: 600}}
-                  variant="text"
-                  component={Link}
-                  to="/login"
+                <Typography
+                  component="h1"
+                  variant="h1"
+                  textAlign="center"
+                  sx={{mb: 3.5}}
                 >
-                  Log in
-                </Button>
-              </Typography>
-            )}
-          </Box>
-        </Grid>
-      </Grid>
+                  {user
+                    ? 'Ready to show off your cat friend?'
+                    : 'Share and discover cat photos and videos.'}
+                </Typography>
+                <Typography component="p" textAlign="center" sx={{mb: 3.5}}>
+                  {user
+                    ? 'Share your favorite cat moments with our community of cat lovers by uploading photos and videos.'
+                    : 'Join our community and connect with fellow cat lovers.'}
+                </Typography>
+                <Box textAlign="center">
+                  <Button
+                    variant="contained"
+                    size="large"
+                    component={Link}
+                    to={user ? '/upload' : '/login'}
+                    state={true}
+                    sx={{mb: 1}}
+                  >
+                    {user ? 'Add post' : 'Register'}
+                  </Button>
+                </Box>
+                {!user && (
+                  <Typography component="p" textAlign="center">
+                    Already have an account?{' '}
+                    <Button
+                      sx={{fontWeight: 600}}
+                      variant="text"
+                      component={Link}
+                      to="/login"
+                    >
+                      Log in
+                    </Button>
+                  </Typography>
+                )}
+              </Box>
+              <Box textAlign="center" sx={{display: {xs: 'block', md: 'none'}}}>
+                <Typography
+                  component="p"
+                  variant="body2"
+                  textAlign="center"
+                  sx={{mt: 3.5}}
+                >
+                  Or start discovering cats!
+                </Typography>
+                <IconButton
+                  aria-label="Go to Discover cats"
+                  size="large"
+                  onClick={() => {
+                    discover.current.scrollIntoView({behavior: 'smooth'});
+                  }}
+                >
+                  <KeyboardArrowDownRounded />
+                </IconButton>
+              </Box>
+            </Grid>
+          </Grid>
+        </Container>
+      </Box>
 
       <Box
         display="flex"
@@ -126,6 +157,7 @@ const Home = () => {
         sx={{
           pt: {xs: '4rem', sm: '2rem'},
           pb: '2rem',
+          px: {xs: 3, sm: 'auto'},
           backgroundColor: '#E3A7B6',
           flexDirection: {xs: 'column', sm: 'column'},
           display: hasPictures ? {xs: 'flex', sm: 'flex'} : 'none',
@@ -173,7 +205,7 @@ const Home = () => {
         </Box>
       </Box>
 
-      <Grid component="section" sx={{mt: '3rem', mb: '3rem'}}>
+      <Grid component="section" sx={{pt: '3rem', mb: '3rem'}} ref={discover}>
         <MediaTable />
       </Grid>
     </>

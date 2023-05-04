@@ -221,7 +221,7 @@ const Modify = () => {
               )}
 
               {file.media_type === 'image' && (
-                <Box sx={{px: {xs: 4, sm: 0}, mt: 3}}>
+                <Box sx={{px: {xs: 3, sm: 0}, mt: 3}}>
                   <Typography component="p" variant="subtitle2">
                     Brightness:
                   </Typography>
@@ -274,7 +274,7 @@ const Modify = () => {
               )}
             </Grid>
             <Grid item xs={12} md={5}>
-              <Box sx={{px: {xs: 4, sm: 0}}}>
+              <Box sx={{px: {xs: 3, sm: 0}}}>
                 <TextValidator
                   sx={{mb: 4, mt: {xs: 4, md: 0}}}
                   fullWidth
