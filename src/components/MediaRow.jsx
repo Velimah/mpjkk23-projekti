@@ -8,6 +8,7 @@ import {
   useMediaQuery,
   Rating,
   Paper,
+  Chip,
 } from '@mui/material';
 import PropTypes from 'prop-types';
 import {Link} from 'react-router-dom';
@@ -20,6 +21,7 @@ import {
   FavoriteBorderRounded,
   FavoriteRounded,
   MessageRounded,
+  PlayCircleOutlineRounded,
   StarBorderRounded,
   StarRounded,
 } from '@mui/icons-material';
@@ -214,11 +216,11 @@ const MediaRow = ({file, style, mediaArray}) => {
       component="div"
       sx={{
         my: style ? 0 : 1,
-        mx: style ? 0 : {sx: 0, sm: 1},
+        mx: style ? 0 : {xs: 0, sm: 1},
         backgroundColor: style ? 'transparent' : '#FFFFFF',
-        borderRadius: style ? 0 : 3,
+        borderRadius: style ? 0 : {xs: 0, sm: 3},
+        boxShadow: style ? 0 : 3,
       }}
-      elevation={style ? 0 : 4}
     >
       <ImageListItem
         component={style ? Link : undefined}
@@ -242,27 +244,44 @@ const MediaRow = ({file, style, mediaArray}) => {
         )}
         {/* * GRID STYLE * */}
         {style === true ? (
-          <img
-            style={{
-              width: '100%',
-              aspectRatio: '1 / 1',
-              objectFit: 'cover',
-              borderRadius: 12,
-              filter: `brightness(${allData.filters.brightness}%)
+          <Box sx={{position: 'relative'}}>
+            <img
+              style={{
+                width: '100%',
+                aspectRatio: '1 / 1',
+                objectFit: 'cover',
+                display: 'block',
+                borderRadius: 12,
+                filter: `brightness(${allData.filters.brightness}%)
                        contrast(${allData.filters.contrast}%)
                        saturate(${allData.filters.saturation}%)
                        sepia(${allData.filters.sepia}%)`,
-            }}
-            src={
-              file.media_type === 'audio'
-                ? 'onlycats_logo.png'
-                : file.mime_type === 'image/webp' ||
-                  file.mime_type === 'image/avif'
-                ? mediaUrl + file.filename
-                : mediaUrl + file.thumbnails.w320
-            }
-            alt={file.title}
-          />
+              }}
+              src={
+                file.media_type === 'audio'
+                  ? 'onlycats_logo.png'
+                  : file.mime_type === 'image/webp' ||
+                    file.mime_type === 'image/avif'
+                  ? mediaUrl + file.filename
+                  : mediaUrl + file.thumbnails.w320
+              }
+              alt={file.title}
+            />
+            {file.media_type === 'video' && (
+              <Chip
+                label="Video"
+                color="secondary"
+                size="small"
+                icon={<PlayCircleOutlineRounded />}
+                sx={{
+                  position: 'absolute',
+                  bottom: '12px',
+                  left: '12px',
+                  boxShadow: 3,
+                }}
+              />
+            )}
+          </Box>
         ) : (
           /* * LISTING STYLE * */
           <Box
@@ -272,6 +291,7 @@ const MediaRow = ({file, style, mediaArray}) => {
             }}
             state={{file}}
             to="/single"
+            sx={{position: 'relative'}}
           >
             <img
               style={{
@@ -279,6 +299,7 @@ const MediaRow = ({file, style, mediaArray}) => {
                 width: '100%',
                 aspectRatio: '1 / 1',
                 objectFit: 'cover',
+                display: 'block',
                 filter: `brightness(${allData.filters.brightness}%)
                        contrast(${allData.filters.contrast}%)
                        saturate(${allData.filters.saturation}%)
@@ -294,14 +315,27 @@ const MediaRow = ({file, style, mediaArray}) => {
               }
               alt={file.title}
             />
+            {file.media_type === 'video' && (
+              <Chip
+                label="Video"
+                color="secondary"
+                icon={<PlayCircleOutlineRounded />}
+                sx={{
+                  position: 'absolute',
+                  bottom: '16px',
+                  left: '16px',
+                  boxShadow: 3,
+                }}
+              />
+            )}
           </Box>
         )}
         {!style && (
-          <Grid sx={{p: 2, py: 1}}>
+          <Grid sx={{px: 2, py: 2}}>
             <Grid
               container
               direction="row"
-              justifyContent="space-around"
+              justifyContent="space-between"
               alignItems="center"
             >
               <Grid item>

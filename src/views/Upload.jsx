@@ -94,11 +94,21 @@ const Upload = () => {
         console.log(tagResult);
       }
 
-      setToastSnackbar({severity: 'success', message: uploadResult.message});
-      setToastSnackbarOpen(true);
-
       // Navigate back to home
-      navigate('/');
+      if (file.type.includes('video')) {
+        setTimeout(() => {
+          setToastSnackbar({
+            severity: 'success',
+            message: uploadResult.message,
+          });
+          setToastSnackbarOpen(true);
+          navigate('/');
+        }, 2000);
+      } else {
+        setToastSnackbar({severity: 'success', message: uploadResult.message});
+        setToastSnackbarOpen(true);
+        navigate('/');
+      }
     } catch (error) {
       setUpload(false);
       setToastSnackbar({
@@ -277,7 +287,7 @@ const Upload = () => {
                   )}
                 </>
               )}
-              <Box sx={{px: {xs: 4, sm: 0}}}>
+              <Box sx={{px: {xs: 3, sm: 0}}}>
                 {file && (
                   <TextField
                     sx={
@@ -378,7 +388,7 @@ const Upload = () => {
               </Box>
             </Grid>
             <Grid item xs={12} md={5}>
-              <Box sx={{px: {xs: 4, sm: 0}}}>
+              <Box sx={{px: {xs: 3, sm: 0}}}>
                 <TextValidator
                   sx={{mb: 4, mt: {xs: 4, md: 0}}}
                   fullWidth

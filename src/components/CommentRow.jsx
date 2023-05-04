@@ -9,7 +9,6 @@ const CommentRow = ({file, refreshData, setRefreshData}) => {
       sx={{
         p: 2,
         my: 2,
-        mx: {xs: -2, sm: 0},
         backgroundColor: '#F4DCE1',
         borderRadius: '1.25rem',
       }}

@@ -31,7 +31,7 @@ const Login = () => {
     >
       <Container
         maxWidth="lg"
-        sx={{display: 'flex', justifyContent: 'center', px: {xs: 4, sm: 0}}}
+        sx={{display: 'flex', justifyContent: 'center', px: {xs: 3, sm: 0}}}
       >
         <Grid
           item
