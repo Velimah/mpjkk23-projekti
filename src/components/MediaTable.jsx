@@ -32,6 +32,7 @@ const MediaTable = ({
     myFilesOnly,
     targetUserFilesOnly,
     myFavouritesOnly,
+    searchOnly,
     searchQuery
   );
   const {refreshPage} = useContext(MediaContext);
@@ -92,7 +93,7 @@ const MediaTable = ({
               <>
                 {mediaArray.length} {mediaArray.length === 1 ? 'post' : 'posts'}
               </>
-            ) : searchOnly ? (
+            ) : searchQuery ? (
               <>
                 {mediaArray.length}{' '}
                 {mediaArray.length === 1 ? 'result' : 'results'}

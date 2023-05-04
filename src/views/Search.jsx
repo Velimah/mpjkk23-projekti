@@ -2,42 +2,41 @@ import {
   Grid,
   TextField,
   Container,
-  InputAdornment,
   Button,
   Typography,
   List,
   ListItem,
-  ListItemText,
-  Icon,
-  ListItemButton,
   useMediaQuery,
   Chip,
 } from '@mui/material';
 import PropTypes from 'prop-types';
 import {useState, useEffect, useContext} from 'react';
 import MediaTable from '../components/MediaTable';
-import SearchIcon from '@mui/icons-material/Search';
 import {searchValidators} from '../utils/validator';
 import {searchErrorMessages} from '../utils/errorMessages';
 import {useTheme} from '@emotion/react';
 import {useMedia, useTag} from '../hooks/ApiHooks';
 import {appId} from '../utils/variables';
 import {MediaContext} from '../contexts/MediaContext';
+import {useLocation} from 'react-router-dom';
+import {SearchRounded} from '@mui/icons-material';
 
 const Search = () => {
-  const {user, setUser} = useContext(MediaContext);
+  const {user} = useContext(MediaContext);
   const {getTagsByFileId} = useTag();
   const {mediaArray, getMedia} = useMedia();
+  const {state} = useLocation();
 
   const [searchQuery, setSearchQuery] = useState('');
   const [updatedSearchQuery, setUpdatedSearchQuery] = useState('');
-  const [refreshSearch, setRefreshSearch] = useState(false);
+  // const [refreshSearch, setRefreshSearch] = useState(false);
 
   const [allTags, setAllTags] = useState([]);
 
   const [fetchOk, setFetchOk] = useState(false);
 
   useEffect(() => {
+    state && setSearchQuery(state);
     getMedia();
   }, []);
 
@@ -72,6 +71,10 @@ const Search = () => {
   const handleClickTag = (tag) => {
     setSearchQuery(tag);
   };
+
+  useEffect(() => {
+    handleClick();
+  }, [searchQuery]);
 
   const updateSearchHistory = () => {
     const oldQuery = JSON.parse(localStorage.getItem('searchHistory'));
@@ -208,18 +211,16 @@ const Search = () => {
         <TextField
           id="filled-search"
           label="Search by keyword"
+          placeholder="Search by keyword"
           type="search"
           variant="outlined"
           validators={searchValidators.search}
           errorMessages={searchErrorMessages.search}
-          InputProps={{
-            startAdornment: <InputAdornment position="start">#</InputAdornment>,
-          }}
           onChange={handleChange}
           value={searchQuery}
         />
-        <Button aria-label="search" onClick={handleClick}>
-          <SearchIcon color="#7047A6" />
+        <Button variant="contained" aria-label="search" onClick={handleClick}>
+          <SearchRounded />
         </Button>
       </Grid>
       <Container maxwidth="lg">
@@ -233,7 +234,7 @@ const Search = () => {
         >
           <Grid item>
             <Typography component="h2" variant="h2" align="center">
-              Latest searches
+              Your Latest searches
             </Typography>
             {renderSearchHistory()}
           </Grid>
@@ -241,7 +242,7 @@ const Search = () => {
           {user ? (
             <Grid item sx={{pt: smallScreen ? '40px' : ''}}>
               <Typography component="h2" variant="h2" align="center">
-                Popular searches
+                Popular keywords
               </Typography>
               {fetchOk && renderPopularSearches()}
             </Grid>
@@ -249,7 +250,7 @@ const Search = () => {
         </Grid>
       </Container>
 
-      <Grid sx={{mt: '50px', mb: '100px'}}>
+      <Grid sx={{mt: '3rem', mb: '3.5rem'}}>
         <MediaTable searchQuery={updatedSearchQuery} searchOnly={true} />
       </Grid>
     </>
