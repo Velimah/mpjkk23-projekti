@@ -33,6 +33,7 @@ const UploadProfilePicture = () => {
   const [file, setFile] = useState(null);
   const [selectedImage, setSelectedImage] = useState(profilePlaceholder);
   const [description, setDescription] = useState('');
+  const [messageSent, setMessageSent] = useState(false);
 
   const initValues = {
     description: description,
@@ -64,6 +65,7 @@ const UploadProfilePicture = () => {
 
   const doUpload = async () => {
     try {
+      setMessageSent(true);
       const data = new FormData();
 
       data.append('file', file);
@@ -82,6 +84,7 @@ const UploadProfilePicture = () => {
         },
         token
       );
+      setMessageSent(false);
       setRefreshHeader(!refreshHeader);
       setToastSnackbar({
         severity: 'success',
@@ -89,6 +92,7 @@ const UploadProfilePicture = () => {
       });
       setToastSnackbarOpen(true);
     } catch (error) {
+      setMessageSent(false);
       setToastSnackbar({
         severity: 'error',
         message: 'Something went wrong - Please try again later',
@@ -203,8 +207,21 @@ const UploadProfilePicture = () => {
               validators={updateProfilePictureValidators.description}
               errorMessages={updateProfilePictureErrorMessages.description}
             />
-            <Button sx={{mt: 1}} variant="contained" fullWidth type="submit">
-              Update Avatar and Description
+            <Button
+              fullWidth
+              sx={{
+                backgroundColor: messageSent ? '#ACCC7F' : '',
+                color: messageSent ? '#000000' : '',
+                '&:hover': {
+                  backgroundColor: messageSent ? '#8FB361' : '',
+                  color: messageSent ? '#000000' : '',
+                },
+                mt: 1,
+              }}
+              variant="contained"
+              type="submit"
+            >
+              Update avatar and description
             </Button>
           </Box>
         </Box>

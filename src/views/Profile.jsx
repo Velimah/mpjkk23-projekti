@@ -47,7 +47,9 @@ const Profile = () => {
   const [profilePic, setProfilePic] = useState({
     filename: profilePlaceholder,
   });
-  const [backgroundPic, setBackgroundPic] = useState(filePlaceholder);
+  const [backgroundPic, setBackgroundPic] = useState({
+    filename: filePlaceholder,
+  });
   const [profileDescription, setprofileDescription] = useState(
     'No profile text yet!'
   );

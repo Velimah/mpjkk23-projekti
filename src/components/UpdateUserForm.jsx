@@ -4,12 +4,13 @@ import {Box, Button, Typography} from '@mui/material';
 import {ValidatorForm, TextValidator} from 'react-material-ui-form-validator';
 import {updateUserErrorMessages} from '../utils/errorMessages';
 import {updateUserValidators} from '../utils/validator';
-import {useContext, useEffect} from 'react';
+import {useContext, useEffect, useState} from 'react';
 import {MediaContext} from '../contexts/MediaContext';
 
 const UpdateUserForm = () => {
   const {putUser, getCheckUser} = useUser();
   const {setToastSnackbar, setToastSnackbarOpen} = useContext(MediaContext);
+  const [messageSent, setMessageSent] = useState(false);
 
   const initValues = {
     username: '',
@@ -21,6 +22,7 @@ const UpdateUserForm = () => {
 
   const DoModify = async () => {
     try {
+      setMessageSent(true);
       const token = localStorage.getItem('token');
       const withoutConfirm = {...inputs};
       delete withoutConfirm.confirm;
@@ -37,9 +39,11 @@ const UpdateUserForm = () => {
         delete withoutConfirm.full_name;
       }
       const userResult = await putUser(withoutConfirm, token);
+      setMessageSent(false);
       setToastSnackbar({severity: 'success', message: userResult.message});
       setToastSnackbarOpen(true);
     } catch (error) {
+      setMessageSent(false);
       setToastSnackbar({severity: 'error', message: error.message});
       setToastSnackbarOpen(true);
     }
@@ -144,7 +148,20 @@ const UpdateUserForm = () => {
             validators={updateUserValidators.fullName}
             errorMessages={updateUserErrorMessages.fullName}
           />
-          <Button fullWidth variant="contained" sx={{mt: 1}} type="submit">
+          <Button
+            fullWidth
+            type="submit"
+            sx={{
+              backgroundColor: messageSent ? '#ACCC7F' : '',
+              color: messageSent ? '#000000' : '',
+              '&:hover': {
+                backgroundColor: messageSent ? '#8FB361' : '',
+                color: messageSent ? '#000000' : '',
+              },
+              mt: 1,
+            }}
+            variant="contained"
+          >
             Update user info
           </Button>
         </ValidatorForm>

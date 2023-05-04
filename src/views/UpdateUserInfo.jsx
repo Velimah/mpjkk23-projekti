@@ -11,7 +11,7 @@ import {MediaContext} from '../contexts/MediaContext';
 import UpdateUserForm from '../components/UpdateUserForm';
 import UploadProfilePicture from '../components/UploadProfilePicture';
 import UploadProfileBackgroundPicture from '../components/UploadProfileBackgroundPicture';
-import {Link, useNavigate} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import {ChevronLeftRounded} from '@mui/icons-material';
 
 const UpdateUserInfo = () => {
@@ -20,7 +20,6 @@ const UpdateUserInfo = () => {
   const extraSmallScreen = useMediaQuery((theme) =>
     theme.breakpoints.down('sm')
   );
-  const navigate = useNavigate();
 
   return (
     <>

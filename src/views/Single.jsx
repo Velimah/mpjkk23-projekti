@@ -20,7 +20,6 @@ import useForm from '../hooks/FormHooks';
 import {commentErrorMessages} from '../utils/errorMessages';
 import {commentValidators} from '../utils/validator';
 import {
-  ChevronLeftRounded,
   FavoriteBorderRounded,
   FavoriteRounded,
   SendRounded,
