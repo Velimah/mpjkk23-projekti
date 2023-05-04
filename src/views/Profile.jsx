@@ -27,7 +27,7 @@ import MediaTable from '../components/MediaTable';
 import AlertDialog from '../components/AlertDialog';
 
 const Profile = () => {
-  const {user, setUser} = useContext(MediaContext);
+  const {user, setUser, refreshPage, setRefreshPage} = useContext(MediaContext);
   const {getTag} = useTag();
   const {getRatingsById, deleteRating, getAllRatings} = useRating();
   const {getAllMediaByCurrentUser, deleteMedia} = useMedia();
@@ -173,7 +173,7 @@ const Profile = () => {
         const deleteFileInfo = await deleteMedia(file.file_id, token);
         console.log('deleteMedia', deleteFileInfo);
       }
-      navigate(0);
+      setRefreshPage(!refreshPage);
     } catch (error) {
       console.log(error.message);
     }
@@ -188,7 +188,7 @@ const Profile = () => {
 
   return (
     <>
-      <Container maxWidth="lg" sx={{p: {xs: '6rem 0', sm: '3rem 3rem'}}}>
+      <Container maxWidth="lg" sx={{p: {xs: '5rem 0', sm: '3rem 3rem'}}}>
         <Avatar
           src={backgroundPic.filename}
           alt="Logo"

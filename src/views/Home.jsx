@@ -140,7 +140,7 @@ const Home = () => {
           <Box
             sx={{
               maxWidth: '200px',
-              px: {xs: 0, sm: '1rem'},
+              px: {xs: 0, sm: '0.5rem'},
             }}
           >
             <img
@@ -156,7 +156,7 @@ const Home = () => {
             sx={{
               display: {xs: 'none', sm: 'block'},
               fontSize: '3rem',
-              px: {xs: 0, sm: '1rem'},
+              px: {xs: 0, sm: '0.5rem'},
             }}
           >
             OnlyCats
@@ -166,14 +166,14 @@ const Home = () => {
           <Typography
             component="h2"
             variant="h6"
-            sx={{fontSize: {xs: '1rem', sm: '1.2rem'}}}
+            sx={{fontSize: {xs: '1rem', sm: '1.3rem', textAlign: 'center'}}}
           >
             Share and discover cat photos and videos
           </Typography>
         </Box>
       </Box>
 
-      <Grid component="section" sx={{mt: 5, mb: 7}}>
+      <Grid component="section" sx={{mt: '3rem', mb: '3rem'}}>
         <MediaTable />
       </Grid>
     </>
