@@ -15,6 +15,7 @@ const UploadProfileBackgroundPicture = () => {
 
   const [file, setFile] = useState(null);
   const [selectedImage, setSelectedImage] = useState(filePlaceholder);
+  const [messageSent, setMessageSent] = useState(false);
   const fetchBackgroundPicture = async () => {
     try {
       if (user) {
@@ -40,6 +41,7 @@ const UploadProfileBackgroundPicture = () => {
 
   const doUpload = async () => {
     try {
+      setMessageSent(true);
       const data = new FormData();
       data.append('title', 'Profile Picture');
       data.append('file', file);
@@ -54,12 +56,14 @@ const UploadProfileBackgroundPicture = () => {
       );
       console.log(uploadResult);
       console.log(tagResult);
+      setMessageSent(false);
       setToastSnackbar({
         severity: 'success',
         message: 'Background picture successfully',
       });
       setToastSnackbarOpen(true);
     } catch (error) {
+      setMessageSent(false);
       setToastSnackbar({
         severity: 'error',
         message: 'Something went wrong - Please try again later',
@@ -133,8 +137,20 @@ const UploadProfileBackgroundPicture = () => {
               name="file"
               accept="image/*, video/*, audio/*"
             />
-            <Button sx={{ml: 1}} variant="contained" type="submit">
-              Update
+            <Button
+              type="submit"
+              sx={{
+                backgroundColor: messageSent ? '#ACCC7F' : '',
+                color: messageSent ? '#000000' : '',
+                '&:hover': {
+                  backgroundColor: messageSent ? '#8FB361' : '',
+                  color: messageSent ? '#000000' : '',
+                },
+                ml: 1,
+              }}
+              variant="contained"
+            >
+              {messageSent ? 'Submitted!' : 'Update'}
             </Button>
           </Box>
         </ValidatorForm>

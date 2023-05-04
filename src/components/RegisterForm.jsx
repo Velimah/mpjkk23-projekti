@@ -13,6 +13,7 @@ const RegisterForm = ({toggle}) => {
   const {postUser, getCheckUser} = useUser();
   const {setToastSnackbar, setToastSnackbarOpen} = useContext(MediaContext);
   const [showPassword, setShowPassword] = useState(false);
+  const [messageSent, setMessageSent] = useState(false);
 
   const initValues = {
     username: '',
@@ -24,17 +25,20 @@ const RegisterForm = ({toggle}) => {
 
   const doRegister = async () => {
     try {
+      setMessageSent(true);
       const withoutConfirm = {...inputs};
       delete withoutConfirm.confirm;
       const userResult = await postUser(withoutConfirm);
       setToastSnackbar({severity: 'success', message: userResult.message});
       setToastSnackbarOpen(true);
+      setMessageSent(false);
       toggle();
     } catch (error) {
       setToastSnackbar({
         severity: 'error',
         message: error.message,
       });
+      setMessageSent(false);
       setToastSnackbarOpen(true);
       console.error(error.message);
     }
@@ -158,12 +162,20 @@ const RegisterForm = ({toggle}) => {
         />
         <Button
           fullWidth
+          sx={{
+            backgroundColor: messageSent ? '#ACCC7F' : '',
+            color: messageSent ? '#000000' : '',
+            '&:hover': {
+              backgroundColor: messageSent ? '#8FB361' : '',
+              color: messageSent ? '#000000' : '',
+            },
+            mt: 1,
+          }}
           variant="contained"
-          sx={{mt: 1}}
           type="submit"
           size="large"
         >
-          Register
+          {messageSent ? 'Submitted!' : 'Register'}
         </Button>
       </ValidatorForm>
     </>
