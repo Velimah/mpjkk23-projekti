@@ -32,6 +32,10 @@ const commentValidators = {
   comment: ['required', 'minStringLength:1', 'maxStringLength: 1000'],
 };
 
+const searchValidators = {
+  search: ['isEmptyOrMin2', 'matchRegexp:^[a-z-äöå]+$'],
+};
+
 export {
   registerValidators,
   updateUserValidators,
@@ -39,4 +43,5 @@ export {
   uploadValidators,
   commentValidators,
   updateProfilePictureValidators,
+  searchValidators,
 };
