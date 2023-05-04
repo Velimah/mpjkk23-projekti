@@ -3,8 +3,13 @@ import {Navigate} from 'react-router-dom';
 import {MediaContext} from '../contexts/MediaContext';
 
 const Logout = () => {
-  const {setUser, setToastSnackbar, setToastSnackbarOpen, unauthorizedUser} =
-    useContext(MediaContext);
+  const {
+    setUser,
+    setToastSnackbar,
+    setToastSnackbarOpen,
+    unauthorizedUser,
+    setUnauthorizedUser,
+  } = useContext(MediaContext);
 
   useEffect(() => {
     setUser(null);
@@ -24,8 +29,10 @@ const Logout = () => {
   }, []);
 
   if (unauthorizedUser) {
+    setUnauthorizedUser(false);
     return <Navigate to="/login" />;
   } else {
+    setUnauthorizedUser(false);
     return <Navigate to="/" />;
   }
 };
