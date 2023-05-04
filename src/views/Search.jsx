@@ -12,8 +12,8 @@ import {
 import PropTypes from 'prop-types';
 import {useState, useEffect, useContext} from 'react';
 import MediaTable from '../components/MediaTable';
-import {searchValidators} from '../utils/validator';
-import {searchErrorMessages} from '../utils/errorMessages';
+// import {searchValidators} from '../utils/validator';
+// import {searchErrorMessages} from '../utils/errorMessages';
 import {useTheme} from '@emotion/react';
 import {useMedia, useTag} from '../hooks/ApiHooks';
 import {appId} from '../utils/variables';
@@ -30,9 +30,7 @@ const Search = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [updatedSearchQuery, setUpdatedSearchQuery] = useState('');
   // const [refreshSearch, setRefreshSearch] = useState(false);
-
   const [allTags, setAllTags] = useState([]);
-
   const [fetchOk, setFetchOk] = useState(false);
 
   useEffect(() => {
@@ -104,28 +102,26 @@ const Search = () => {
     }
     return (
       <List
-        container
-        direction="column"
-        justifyContent="center"
-        alignItems="center"
         sx={{
-          width: smallScreen ? '100%' : 'auto',
-          display: 'grid',
-          gridTemplateColumns: 'repeat(2, 1fr)',
+          display: 'flex',
+          gap: '0.5rem',
+          flexWrap: 'wrap',
+          justifyContent: 'center',
+          mt: 2,
         }}
       >
         {latestSearches
           .split(',')
           .reverse()
           .map((item) => (
-            <ListItem key={item} justifyContent="center" sx={{p: 0}}>
+            <ListItem key={item} sx={{p: 0, width: 'auto'}}>
               <Chip
                 variant="outlined"
                 color="primary"
                 key={item}
                 label={item}
                 onClick={() => handleClickTag(item)}
-                sx={{mr: 1, mt: 1}}
+                size="small"
               />
             </ListItem>
           ))}
@@ -136,25 +132,25 @@ const Search = () => {
   const renderPopularSearches = () => {
     return (
       <List
-        container
         sx={{
-          width: smallScreen ? '100%' : 'auto',
-          display: 'grid',
-          gridTemplateColumns: 'repeat(2, 1fr)',
-          justifyItems: 'center',
+          display: 'flex',
+          gap: '0.5rem',
+          flexWrap: 'wrap',
+          justifyContent: 'center',
+          mt: 2,
         }}
       >
         {tagDuplicateCount(allTags)
           .slice(0, 4)
           .map((item) => (
-            <ListItem key={item} justifyContent="center" sx={{p: 0}}>
+            <ListItem key={item} sx={{p: 0, width: 'auto'}}>
               <Chip
                 variant="outlined"
                 color="primary"
                 key={item}
                 label={item}
                 onClick={() => handleClickTag(item)}
-                sx={{mr: 1, mt: 1}}
+                size="small"
               />
             </ListItem>
           ))}
@@ -201,53 +197,70 @@ const Search = () => {
 
   return (
     <>
-      <Grid
-        container
-        direction="row"
-        justifyContent="center"
-        alignItems="stretch"
-        sx={{pt: '100px'}}
-      >
-        <TextField
-          id="filled-search"
-          label="Search by keyword"
-          placeholder="Search by keyword"
-          type="search"
-          variant="outlined"
-          validators={searchValidators.search}
-          errorMessages={searchErrorMessages.search}
-          onChange={handleChange}
-          value={searchQuery}
-        />
-        <Button variant="contained" aria-label="search" onClick={handleClick}>
-          <SearchRounded />
-        </Button>
-      </Grid>
-      <Container maxwidth="lg">
+      <Container maxWidth="sm">
         <Grid
           container
-          direction={smallScreen ? 'column' : 'row'}
-          alignContent="center"
-          justifyContent="space-evenly"
-          alignItems="stretch"
-          sx={{pt: '50px'}}
+          direction="row"
+          justifyContent="center"
+          alignItems="flex-start"
+          spacing={2}
+          sx={{pt: '100px', position: 'sticky'}}
         >
-          <Grid item>
-            <Typography component="h2" variant="h2" align="center">
-              Your Latest searches
-            </Typography>
-            {renderSearchHistory()}
+          <Grid item xs={true}>
+            <TextField
+              fullWidth
+              id="filled-search"
+              label="Search by keyword"
+              placeholder="Search by keyword"
+              type="search"
+              variant="outlined"
+              // validators={searchValidators.search}
+              // errorMessages={searchErrorMessages.search}
+              onChange={handleChange}
+              value={searchQuery}
+            />
           </Grid>
-          {/* if not logged in, don't show this */}
-          {user ? (
-            <Grid item sx={{pt: smallScreen ? '40px' : ''}}>
-              <Typography component="h2" variant="h2" align="center">
-                Popular keywords
-              </Typography>
-              {fetchOk && renderPopularSearches()}
-            </Grid>
-          ) : null}
+          <Grid item xs="auto">
+            <Button
+              variant="contained"
+              aria-label="Search"
+              onClick={handleClick}
+              sx={{
+                borderRadius: '0.75rem',
+                minWidth: '56px',
+                width: '56px',
+                py: '16px',
+              }}
+              size="large"
+            >
+              <SearchRounded />
+            </Button>
+          </Grid>
         </Grid>
+        {searchQuery === '' && (
+          <Grid
+            container
+            direction={smallScreen ? 'column' : 'row'}
+            spacing={4}
+            sx={{pt: '2rem'}}
+          >
+            <Grid item xs={6}>
+              <Typography component="h2" variant="h3" align="center">
+                Your latest searches
+              </Typography>
+              {renderSearchHistory()}
+            </Grid>
+            {/* if not logged in, don't show this */}
+            {user ? (
+              <Grid item xs={6}>
+                <Typography component="h2" variant="h3" align="center">
+                  Popular keywords
+                </Typography>
+                {fetchOk && renderPopularSearches()}
+              </Grid>
+            ) : null}
+          </Grid>
+        )}
       </Container>
 
       <Grid sx={{mt: '3rem', mb: '3.5rem'}}>

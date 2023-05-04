@@ -44,6 +44,10 @@ const MediaTable = ({
 
   useEffect(() => {
     getMedia();
+  }, []);
+
+  useEffect(() => {
+    getMedia();
   }, [refreshPage, searchQuery]);
 
   const changeToGrid = () => {
@@ -93,7 +97,7 @@ const MediaTable = ({
               <>
                 {mediaArray.length} {mediaArray.length === 1 ? 'post' : 'posts'}
               </>
-            ) : searchQuery ? (
+            ) : searchOnly ? (
               <>
                 {mediaArray.length}{' '}
                 {mediaArray.length === 1 ? 'result' : 'results'}
