@@ -2,7 +2,7 @@ import {Avatar, Box, Button, InputLabel} from '@mui/material';
 import useForm from '../hooks/FormHooks';
 import {useContext, useState, useEffect} from 'react';
 import {useMedia, useTag} from '../hooks/ApiHooks';
-import {appId, mediaUrl} from '../utils/variables';
+import {appId, filePlaceholder, mediaUrl} from '../utils/variables';
 import {ValidatorForm, TextValidator} from 'react-material-ui-form-validator';
 import {MediaContext} from '../contexts/MediaContext';
 import {AddAPhoto} from '@mui/icons-material';
@@ -14,10 +14,7 @@ const UploadProfileBackgroundPicture = () => {
   const {postTag, getTag} = useTag();
 
   const [file, setFile] = useState(null);
-  const [selectedImage, setSelectedImage] = useState(
-    'https://placehold.co/300x300?text=Choose-Background Picture'
-  );
-
+  const [selectedImage, setSelectedImage] = useState(filePlaceholder);
   const fetchBackgroundPicture = async () => {
     try {
       if (user) {
