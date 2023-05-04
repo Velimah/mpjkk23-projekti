@@ -19,6 +19,7 @@ const useMedia = (
   myFilesOnly = false,
   targetUserFilesOnly = false,
   myFavouritesOnly = false,
+  searchOnly = false,
   searchQuery
 ) => {
   const [mediaArray, setMediaArray] = useState([]);
@@ -72,7 +73,7 @@ const useMedia = (
           });
         });
       }
-      if (searchQuery) {
+      if (searchOnly) {
         files = await useTag().getTag(appId + '_' + searchQuery);
       }
 

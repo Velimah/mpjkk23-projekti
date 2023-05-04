@@ -32,6 +32,7 @@ const MediaTable = ({
     myFilesOnly,
     targetUserFilesOnly,
     myFavouritesOnly,
+    searchOnly,
     searchQuery
   );
   const {refreshPage} = useContext(MediaContext);
@@ -40,6 +41,10 @@ const MediaTable = ({
   const [selectedOption, setSelectedOption] = useState('time_added');
 
   const [style, setStyle] = useState(true);
+
+  useEffect(() => {
+    getMedia();
+  }, []);
 
   useEffect(() => {
     getMedia();
