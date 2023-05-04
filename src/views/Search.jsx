@@ -257,7 +257,7 @@ const Search = () => {
             container
             direction={smallScreen ? 'column' : 'row'}
             spacing={4}
-            sx={{pt: '2rem'}}
+            sx={{pt: '2rem', justifyContent: !user && 'center'}}
           >
             <Grid item xs={6}>
               <Typography component="h2" variant="h3" align="center">
