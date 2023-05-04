@@ -11,19 +11,21 @@ import {
   Icon,
   ListItemButton,
   useMediaQuery,
+  Chip,
 } from '@mui/material';
 import PropTypes from 'prop-types';
-import {useState, useEffect} from 'react';
+import {useState, useEffect, useContext} from 'react';
 import MediaTable from '../components/MediaTable';
 import SearchIcon from '@mui/icons-material/Search';
 import {searchValidators} from '../utils/validator';
 import {searchErrorMessages} from '../utils/errorMessages';
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import {useTheme} from '@emotion/react';
 import {useMedia, useTag} from '../hooks/ApiHooks';
 import {appId} from '../utils/variables';
+import {MediaContext} from '../contexts/MediaContext';
 
 const Search = () => {
+  const {user, setUser} = useContext(MediaContext);
   const {getTagsByFileId} = useTag();
   const {mediaArray, getMedia} = useMedia();
 
@@ -49,7 +51,7 @@ const Search = () => {
 
   // Save new query
   const handleChange = (e) => {
-    setSearchQuery(e.target.value.toLowerCase().replace(/\s/g, ''));
+    setSearchQuery(e.target.value.toLowerCase().replace(/[^\wäöåÄÖÅ]/g, ''));
   };
 
   // Refresh MediaTable with new query
@@ -59,7 +61,10 @@ const Search = () => {
       : updateSearchHistory();
 
     setUpdatedSearchQuery(searchQuery);
-    searchQuery === '' ? setRefreshSearch(false) : setRefreshSearch(true);
+  };
+
+  const handleClickTag = (tag) => {
+    setSearchQuery(tag);
   };
 
   const updateSearchHistory = () => {
@@ -82,52 +87,100 @@ const Search = () => {
   const renderSearchHistory = () => {
     // if search history is null, dont render list
     if (latestSearches === '') {
-      return;
+      return (
+        <Typography component="p" variant="body1">
+          You don't have any searches
+        </Typography>
+      );
     }
-    const splitLatestSearches = latestSearches.split(',').reverse();
     return (
       <List
         container
         direction="column"
         justifyContent="center"
+        alignItems="center"
         sx={{
           width: smallScreen ? '100%' : 'auto',
-          columns: smallScreen ? 1 : 2,
+          display: 'grid',
+          gridTemplateColumns: 'repeat(2, 1fr)',
         }}
       >
-        {splitLatestSearches.map((item) => (
-          <ListItemButton key={item}>
-            <KeyboardArrowRightIcon color="#7047A6" />
-            <ListItemText primary={item} />
-          </ListItemButton>
-        ))}
+        {latestSearches
+          .split(',')
+          .reverse()
+          .map((item) => (
+            <ListItem key={item} justifyContent="center" sx={{p: 0}}>
+              <Chip
+                variant="outlined"
+                color="primary"
+                key={item}
+                label={item}
+                onClick={() => handleClickTag(item)}
+                sx={{mr: 1, mt: 1}}
+              />
+            </ListItem>
+          ))}
       </List>
     );
   };
 
+  const renderPopularSearches = () => {
+    return (
+      <List
+        container
+        sx={{
+          width: smallScreen ? '100%' : 'auto',
+          display: 'grid',
+          gridTemplateColumns: 'repeat(2, 1fr)',
+          justifyItems: 'center',
+        }}
+      >
+        {tagDuplicateCount(allTags)
+          .slice(0, 4)
+          .map((item) => (
+            <ListItem key={item} justifyContent="center" sx={{p: 0}}>
+              <Chip
+                variant="outlined"
+                color="primary"
+                key={item}
+                label={item}
+                onClick={handleChange(item)}
+                sx={{mr: 1, mt: 1}}
+              />
+            </ListItem>
+          ))}
+      </List>
+    );
+  };
+
+  // count all tags and sort them
+  const tagDuplicateCount = (tagArray) => {
+    const countTags = tagArray.reduce((counts, string) => {
+      counts[string] = (counts[string] || 0) + 1;
+      return counts;
+    }, {});
+
+    // sort the strings by their occurrence count (in descending order)
+    const sortedStrings = Object.keys(countTags).sort(
+      (a, b) => countTags[b] - countTags[a]
+    );
+
+    // return the sorted strings and their occurrence counts
+    return sortedStrings.map((item) => `${item} (${countTags[item]})`);
+  };
+
+  /*
   const fetchTags = async () => {
     try {
       const tagArray = [];
-      // const tagInfo = await getTagsByFileId(files.file_id);
-      // const filteredTags = tagInfo.filter((tag) => tag.tag !== appId);
       for (const file of mediaArray) {
         const tagInfo = await getTagsByFileId(file.file_id);
         const filteredTags = tagInfo.filter((tag) => tag.tag !== appId);
-
         for (const test of filteredTags) {
-          // console.log(test.tag);
-          tagArray.push(test.tag.replace(appId), '');
+          tagArray.push(test.tag.split('_')[1]);
         }
-        // if (!filteredTags.length === 0) {
-          // tagArray.push(filteredTags);
-        // }
       }
-      console.log(tagArray);
-      /*
-      setAllTags(
-        filteredTags.map((tag) => tag.tag.replace(appId + '_', '') + ' ')
-      );
-      */
+      setAllTags(tagArray);
     } catch (error) {
       console.log(error.message);
     }
@@ -137,6 +190,7 @@ const Search = () => {
     getMedia();
     fetchTags();
   }, []);
+  */
 
   return (
     <>
@@ -167,28 +221,32 @@ const Search = () => {
       <Container maxwidth="lg">
         <Grid
           container
-          direction="row"
+          direction={smallScreen ? 'column' : 'row'}
+          alignContent="center"
           justifyContent="space-evenly"
           alignItems="stretch"
           sx={{pt: '50px'}}
         >
-          <Grid item sx={{backgroundColor: 'green'}}>
-            <Typography component="h2" variant="h2">
+          <Grid item>
+            <Typography component="h2" variant="h2" align="center">
               Latest searches
             </Typography>
             {renderSearchHistory()}
           </Grid>
-          <Grid item sx={{backgroundColor: 'green'}}>
-            <Typography component="h2" variant="h2">
-              Popular searches
-            </Typography>
-            {allTags}
-          </Grid>
+          {/* if not logged in, don't show this */}
+          {user ? (
+            <Grid item sx={{pt: smallScreen ? '40px' : ''}}>
+              <Typography component="h2" variant="h2" align="center">
+                Popular searches
+              </Typography>
+              {renderPopularSearches()}
+            </Grid>
+          ) : null}
         </Grid>
       </Container>
 
       <Grid sx={{mt: '50px', mb: '100px'}}>
-        {refreshSearch && <MediaTable searchQuery={updatedSearchQuery} />}
+        <MediaTable searchQuery={updatedSearchQuery} />
       </Grid>
     </>
   );
