@@ -39,7 +39,7 @@ const ProtectedRoute = ({children}) => {
     }
   };
 
-  // when use status is checked, returns children if user is authenticated, otherwise redirects to logout
+  // when user status is checked, returns children if user is authenticated, otherwise redirects to logout
   if (loaded) {
     if (isAuthenticated) {
       return children;

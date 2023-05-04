@@ -25,7 +25,7 @@ const UpdateUserInfo = () => {
     <>
       {user && (
         <>
-          <Container maxWidth="lg" sx={{p: {xs: '6rem 0', sm: '3rem 3rem'}}}>
+          <Container maxWidth="lg" sx={{p: {xs: '5rem 0', sm: '3rem 3rem'}}}>
             <Typography
               component="h1"
               variant="h1"

@@ -151,7 +151,6 @@ const UserHeader = ({
         <Stack
           direction="row"
           alignItems="center"
-          spacing={1}
           component={Link}
           to={
             user && file.user_id === user.user_id ? '/profile' : '/userprofiles'
@@ -169,15 +168,19 @@ const UserHeader = ({
           <Avatar
             src={profilePic.filename}
             alt="User's profile picture"
-            sx={{width: 45, height: 45, boxShadow: 3}}
+            sx={{width: 45, height: 45, boxShadow: 3, mr: '0.75rem'}}
           />
           {user && (
-            <Typography component="span" variant="h6">
+            <Typography component="span" variant="h6" sx={{mr: '0.5rem'}}>
               {userInfo.username}
             </Typography>
           )}
         </Stack>
-        <Chip label={formatTime(file.time_added)} size="small" />
+        <Chip
+          label={formatTime(file.time_added)}
+          size="small"
+          sx={{py: '0.7rem'}}
+        />
       </Stack>
       {comment && user && file.user_id === user.user_id && (
         <>

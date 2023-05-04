@@ -53,6 +53,7 @@ const useMedia = (
     try {
       let files = await useTag().getTag(appId);
 
+      // booleans for choosing wanterd media files
       if (myFilesOnly) {
         files = files.filter((file) => file.user_id === userData.user_id);
       }
@@ -76,6 +77,7 @@ const useMedia = (
         })
       );
 
+      // placeholder for likes, ratings and comments to prevent errors when rendering without waiting for all fetches to finish
       for (const file of filesWithThumbnail) {
         file.likes = [];
         file.ratings = [];
@@ -89,8 +91,10 @@ const useMedia = (
     }
   };
 
+  // fetches and adds likes, ratings and comments for all wanted media files
   const addLikesRatingsCommentsToGetMedia = async (filesWithThumbnail) => {
     try {
+      // likes
       for (const file of filesWithThumbnail) {
         await sleep(5);
         const likes = await doFetch(
@@ -98,7 +102,7 @@ const useMedia = (
         );
         file.likes = likes;
       }
-
+      // ratings
       for (const file of filesWithThumbnail) {
         await sleep(5);
         const fetchOptions = {
@@ -108,18 +112,20 @@ const useMedia = (
           baseUrl + 'ratings/file/' + file.file_id,
           fetchOptions
         );
+        // sums the ratings and count average rating
         let sum = 0;
         ratings.forEach((r) => {
           sum += r.rating;
         });
         let averageRating = sum / ratings.length;
+        // sets average rating to 0 if there are no ratings
         if (isNaN(averageRating)) {
           averageRating = 0;
         }
         file.ratings = ratings;
         file.averageRating = averageRating;
       }
-
+      // comments
       for (const file of filesWithThumbnail) {
         await sleep(5);
         const fetchOptions = {
@@ -131,6 +137,7 @@ const useMedia = (
         );
         file.comments = comments;
       }
+      // updates(remakes) mediaArray with likes, ratings and comments
       setMediaArray([...filesWithThumbnail]);
       console.log('getMediaFetch', filesWithThumbnail);
     } catch (error) {
