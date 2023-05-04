@@ -9,6 +9,7 @@ const MediaProvider = ({children}) => {
   const [toastSnackbar, setToastSnackbar] = useState(null);
   const [toastSnackbarOpen, setToastSnackbarOpen] = useState(null);
   const [refreshPage, setRefreshPage] = useState(false);
+  const [refreshHeader, setRefreshHeader] = useState(false);
   const [unauthorizedUser, setUnauthorizedUser] = useState(false);
 
   return (
@@ -24,6 +25,8 @@ const MediaProvider = ({children}) => {
         setToastSnackbarOpen,
         refreshPage,
         setRefreshPage,
+        refreshHeader,
+        setRefreshHeader,
         unauthorizedUser,
         setUnauthorizedUser,
       }}

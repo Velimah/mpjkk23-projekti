@@ -54,7 +54,7 @@ const useMedia = (
     try {
       let files = await useTag().getTag(appId);
 
-      // booleans for choosing wanterd media files
+      // booleans for choosing wanted media files
       if (myFilesOnly) {
         files = files.filter((file) => file.user_id === userData.user_id);
       }
@@ -75,6 +75,7 @@ const useMedia = (
       if (searchQuery) {
         files = await useTag().getTag(appId + '_' + searchQuery);
       }
+
       const filesWithThumbnail = await Promise.all(
         files.map(async (file) => {
           return await doFetch(baseUrl + 'media/' + file.file_id);

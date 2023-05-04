@@ -32,7 +32,10 @@ const Home = () => {
         return;
       }
       const media = await getAllMediaById(userData.user_id);
-      media.length > 1 ? setHasPictures(true) : setHasPictures(false);
+      // filters out profile pictures
+      const filtered = media.filter((file) => file.title !== 'Profile Picture');
+      // if you have added a post, shows a smaller introbanner
+      filtered.length > 0 ? setHasPictures(true) : setHasPictures(false);
     } catch (error) {
       console.error(error.message);
     }

@@ -1,8 +1,15 @@
-import {Avatar, Box, Button, InputLabel, useMediaQuery} from '@mui/material';
+import {
+  Avatar,
+  Box,
+  Button,
+  InputLabel,
+  Typography,
+  useMediaQuery,
+} from '@mui/material';
 import useForm from '../hooks/FormHooks';
 import {useContext, useEffect, useState} from 'react';
 import {useMedia, useTag} from '../hooks/ApiHooks';
-import {appId, mediaUrl} from '../utils/variables';
+import {appId, mediaUrl, profilePlaceholder} from '../utils/variables';
 import {ValidatorForm, TextValidator} from 'react-material-ui-form-validator';
 import {MediaContext} from '../contexts/MediaContext';
 import {updateProfilePictureValidators} from '../utils/validator';
@@ -11,17 +18,20 @@ import {AddAPhoto} from '@mui/icons-material';
 import {useTheme} from '@emotion/react';
 
 const UploadProfilePicture = () => {
-  const {user, setToastSnackbar, setToastSnackbarOpen} =
-    useContext(MediaContext);
+  const {
+    user,
+    setToastSnackbar,
+    setToastSnackbarOpen,
+    refreshHeader,
+    setRefreshHeader,
+  } = useContext(MediaContext);
   const {getTag, postTag} = useTag();
   const {postMedia} = useMedia();
   const theme = useTheme();
   const smallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
   const [file, setFile] = useState(null);
-  const [selectedImage, setSelectedImage] = useState(
-    'https://placehold.co/300x300?text=Choose-Profile Picture'
-  );
+  const [selectedImage, setSelectedImage] = useState(profilePlaceholder);
   const [description, setDescription] = useState('');
 
   const initValues = {
@@ -55,6 +65,7 @@ const UploadProfilePicture = () => {
   const doUpload = async () => {
     try {
       const data = new FormData();
+
       data.append('file', file);
       data.append('title', 'Profile Picture');
       if (inputs.description === '') {
@@ -64,14 +75,14 @@ const UploadProfilePicture = () => {
       }
       const token = localStorage.getItem('token');
       const uploadResult = await postMedia(data, token);
-      const tagResult = await postTag(
+      await postTag(
         {
           file_id: uploadResult.file_id,
           tag: appId + '_profilepicture_' + user.user_id,
         },
         token
       );
-      console.log(tagResult);
+      setRefreshHeader(!refreshHeader);
       setToastSnackbar({
         severity: 'success',
         message: 'Profile picture updated successfully',
@@ -177,6 +188,9 @@ const UploadProfilePicture = () => {
               top: {xs: '-120px', sm: '-150px', md: '-180px'},
             }}
           >
+            <Typography sx={{textAlign: 'center', fontSize: '0.9rem'}}>
+              Avatar required, description updates if filled
+            </Typography>
             <TextValidator
               fullWidth
               multiline
