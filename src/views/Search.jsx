@@ -35,6 +35,12 @@ const Search = () => {
 
   const [allTags, setAllTags] = useState([]);
 
+  const [fetchOk, setFetchOk] = useState(false);
+
+  useEffect(() => {
+    getMedia();
+  }, []);
+
   const [latestSearches, setLatestSearches] = useState(() => {
     return JSON.parse(window.localStorage.getItem('searchHistory')) || '';
   });
@@ -144,7 +150,7 @@ const Search = () => {
                 color="primary"
                 key={item}
                 label={item}
-                onClick={handleChange(item)}
+                onClick={() => handleClickTag(item)}
                 sx={{mr: 1, mt: 1}}
               />
             </ListItem>
@@ -153,7 +159,7 @@ const Search = () => {
     );
   };
 
-  // count all tags and sort them
+  // count all tags and return them sorted
   const tagDuplicateCount = (tagArray) => {
     const countTags = tagArray.reduce((counts, string) => {
       counts[string] = (counts[string] || 0) + 1;
@@ -166,10 +172,9 @@ const Search = () => {
     );
 
     // return the sorted strings and their occurrence counts
-    return sortedStrings.map((item) => `${item} (${countTags[item]})`);
+    return sortedStrings.map((item) => `${item}`);
   };
 
-  /*
   const fetchTags = async () => {
     try {
       const tagArray = [];
@@ -181,16 +186,15 @@ const Search = () => {
         }
       }
       setAllTags(tagArray);
+      setFetchOk(true);
     } catch (error) {
       console.log(error.message);
     }
   };
 
   useEffect(() => {
-    getMedia();
     fetchTags();
-  }, []);
-  */
+  }, [mediaArray]);
 
   return (
     <>
@@ -239,7 +243,7 @@ const Search = () => {
               <Typography component="h2" variant="h2" align="center">
                 Popular searches
               </Typography>
-              {renderPopularSearches()}
+              {fetchOk && renderPopularSearches()}
             </Grid>
           ) : null}
         </Grid>
