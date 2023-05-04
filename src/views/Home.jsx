@@ -13,12 +13,12 @@ const Home = () => {
 
   const [hasPictures, setHasPictures] = useState(false);
 
+  const discoverSection = useRef();
+
   // checks for user and if null gets user information from localstorage
   const [userData, setData] = useState(() => {
     return user ?? JSON.parse(window.localStorage.getItem('user'));
   });
-
-  const discover = useRef();
 
   // when userData changes, saves userData to localstorage and updates userData
   useEffect(() => {
@@ -92,13 +92,18 @@ const Home = () => {
                   component="h1"
                   variant="h1"
                   textAlign="center"
-                  sx={{mb: 3.5}}
+                  sx={{mb: 3.5, fontSize: {xs: '1.6rem', sm: '1.8rem'}}}
                 >
                   {user
                     ? 'Ready to show off your cat friend?'
                     : 'Share and discover cat photos and videos.'}
                 </Typography>
-                <Typography component="p" textAlign="center" sx={{mb: 3.5}}>
+                <Typography
+                  component="p"
+                  variant="body1"
+                  textAlign="center"
+                  sx={{mb: 3.5}}
+                >
                   {user
                     ? 'Share your favorite cat moments with our community of cat lovers by uploading photos and videos.'
                     : 'Join our community and connect with fellow cat lovers.'}
@@ -116,7 +121,7 @@ const Home = () => {
                   </Button>
                 </Box>
                 {!user && (
-                  <Typography component="p" textAlign="center">
+                  <Typography component="p" variant="body1" textAlign="center">
                     Already have an account?{' '}
                     <Button
                       sx={{fontWeight: 600}}
@@ -142,7 +147,9 @@ const Home = () => {
                   aria-label="Go to Discover cats"
                   size="large"
                   onClick={() => {
-                    discover.current.scrollIntoView({behavior: 'smooth'});
+                    discoverSection.current.scrollIntoView({
+                      behavior: 'smooth',
+                    });
                   }}
                 >
                   <KeyboardArrowDownRounded />
@@ -208,7 +215,11 @@ const Home = () => {
         </Box>
       </Box>
 
-      <Grid component="section" sx={{pt: '3rem', mb: '3.5rem'}} ref={discover}>
+      <Grid
+        component="section"
+        sx={{pt: '3rem', mb: '3.5rem'}}
+        ref={discoverSection}
+      >
         <MediaTable />
       </Grid>
     </>

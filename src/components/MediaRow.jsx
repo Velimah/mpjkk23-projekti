@@ -79,7 +79,7 @@ const MediaRow = ({file, style, mediaArray}) => {
       const likeInfo = await getFavourites(file.file_id);
       setLikes(likeInfo.length);
       likeInfo.forEach((like) => {
-        if (like.user_id === user.user_id) {
+        if (user && like.user_id === user.user_id) {
           setLikesBoolean(true);
         }
       });

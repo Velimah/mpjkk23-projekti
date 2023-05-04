@@ -20,12 +20,14 @@ import {appId} from '../utils/variables';
 import {MediaContext} from '../contexts/MediaContext';
 import {useLocation} from 'react-router-dom';
 import {SearchRounded} from '@mui/icons-material';
+import ToastSnackbar from '../components/ToastSnackbar';
 
 const Search = () => {
   const {user} = useContext(MediaContext);
   const {getTagsByFileId} = useTag();
   const {mediaArray, getMedia} = useMedia();
   const {state} = useLocation();
+  const {setToastSnackbar, setToastSnackbarOpen} = useContext(MediaContext);
 
   const [searchQuery, setSearchQuery] = useState('');
   const [updatedSearchQuery, setUpdatedSearchQuery] = useState('');
@@ -63,6 +65,14 @@ const Search = () => {
       ? setLatestSearches(searchQuery)
       : updateSearchHistory();
 
+    // check if tag doesn't exists, tell it to user
+    if (!allTags.includes(searchQuery) && searchQuery.length > 0) {
+      searchQuery === 'dog'
+        ? setToastSnackbar({severity: 'error', message: 'NO DOGS ALLOWED! >:('})
+        : setToastSnackbar({severity: 'error', message: 'Keyword not found'});
+      setToastSnackbarOpen(true);
+    }
+
     setUpdatedSearchQuery(searchQuery);
   };
 
@@ -72,21 +82,21 @@ const Search = () => {
 
   useEffect(() => {
     handleClick();
-  }, [searchQuery]);
+  }, [updatedSearchQuery]);
 
   const updateSearchHistory = () => {
     const oldQuery = JSON.parse(localStorage.getItem('searchHistory'));
 
     // TODO: even if same keyword has been searched, move it to latest
     // if theres a new keyword, add it to search list
-    if (!oldQuery.includes(searchQuery)) {
+    if (!oldQuery.includes(updatedSearchQuery)) {
       // if theres 4 searches already, delete the oldest
       const oldQuerySplit = oldQuery.split(',');
       if (oldQuerySplit.length > 3) {
         oldQuerySplit.shift();
-        setLatestSearches(oldQuerySplit.toString() + ',' + searchQuery);
+        setLatestSearches(oldQuerySplit.toString() + ',' + updatedSearchQuery);
       } else {
-        setLatestSearches(oldQuery + ',' + searchQuery);
+        setLatestSearches(oldQuery + ',' + updatedSearchQuery);
       }
     }
   };
@@ -95,7 +105,12 @@ const Search = () => {
     // if search history is null, dont render list
     if (latestSearches === '') {
       return (
-        <Typography component="p" variant="body1">
+        <Typography
+          component="p"
+          variant="body1"
+          align="center"
+          paddingTop="25px"
+        >
           You don't have any searches
         </Typography>
       );
@@ -262,7 +277,6 @@ const Search = () => {
           </Grid>
         )}
       </Container>
-
       <Grid sx={{mt: '3rem', mb: '3.5rem'}}>
         <MediaTable searchQuery={updatedSearchQuery} searchOnly={true} />
       </Grid>
