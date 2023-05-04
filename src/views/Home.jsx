@@ -43,6 +43,7 @@ const Home = () => {
     <>
       <Grid
         container
+        component="section"
         columnSpacing={{xs: 1, sm: 2, md: 3}}
         direction="row"
         justifyContent="center"
@@ -54,7 +55,7 @@ const Home = () => {
         }}
       >
         <Grid item xs={5}>
-          <Box sx={{maxWidth: '500px'}}>
+          <Box sx={{maxWidth: '31.25rem'}}>
             <img
               src={'onlycats_illustration1.png'}
               alt={'Cat illustration'}
@@ -172,7 +173,7 @@ const Home = () => {
         </Box>
       </Box>
 
-      <Grid sx={{mt: '50px', mb: '100px'}}>
+      <Grid component="section" sx={{mt: 5, mb: 7}}>
         <MediaTable />
       </Grid>
     </>

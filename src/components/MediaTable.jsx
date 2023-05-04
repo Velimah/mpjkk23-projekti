@@ -70,7 +70,7 @@ const MediaTable = ({
 
   return (
     <>
-      <Container sx={{py: 5}}>
+      <Container sx={{pb: 2}}>
         <Box display="flex" justifyContent="space-around" alignItems="center">
           <Typography
             sx={{
