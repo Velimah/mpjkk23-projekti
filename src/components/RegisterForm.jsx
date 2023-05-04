@@ -175,7 +175,7 @@ const RegisterForm = ({toggle}) => {
           type="submit"
           size="large"
         >
-          {messageSent ? 'Submitted!' : 'Register'}
+          Register
         </Button>
       </ValidatorForm>
     </>

@@ -221,7 +221,7 @@ const UploadProfilePicture = () => {
               variant="contained"
               type="submit"
             >
-              {messageSent ? 'Submitted!' : 'Update avatar and description'}
+              Update avatar and description
             </Button>
           </Box>
         </Box>

@@ -150,7 +150,7 @@ const UploadProfileBackgroundPicture = () => {
               }}
               variant="contained"
             >
-              {messageSent ? 'Submitted!' : 'Update'}
+              Update
             </Button>
           </Box>
         </ValidatorForm>

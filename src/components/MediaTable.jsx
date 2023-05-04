@@ -100,13 +100,7 @@ const MediaTable = ({
             ) : searchOnly ? (
               <>
                 {mediaArray.length}{' '}
-                {searchQuery
-                  ? mediaArray.length === 1
-                    ? 'result'
-                    : 'results'
-                  : mediaArray.length === 1
-                  ? 'post'
-                  : 'posts'}
+                {mediaArray.length === 1 ? 'result' : 'results'}
               </>
             ) : (
               'Discover cats'

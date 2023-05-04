@@ -162,7 +162,7 @@ const UpdateUserForm = () => {
             }}
             variant="contained"
           >
-            {messageSent ? 'Submitted!' : 'Update user info'}
+            Update user info
           </Button>
         </ValidatorForm>
       </Box>
