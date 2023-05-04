@@ -211,12 +211,10 @@ const UserProfiles = () => {
                 ? targetUserData.full_name
                   ? targetUserData.full_name
                   : 'Has not set a full name'
-                : 'Register to see full name'}
+                : 'Log in to view user details'}
             </Typography>
             <Typography component="p" variant="body4" sx={{mt: 1}}>
-              {user
-                ? '@' + targetUserData.username
-                : 'Register to see username'}
+              {user && '@' + targetUserData.username}
             </Typography>
             <Rating
               name="read-only"

@@ -1,13 +1,15 @@
 import PropTypes from 'prop-types';
-import {useEffect, useState} from 'react';
+import {useContext, useEffect, useState} from 'react';
 import {Navigate} from 'react-router-dom';
 import {useUser} from '../hooks/ApiHooks';
+import {MediaContext} from '../contexts/MediaContext';
 
 const {getUserByToken} = useUser();
 
 const ProtectedRoute = ({children}) => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
   const [loaded, setLoaded] = useState(false);
+  const {setUnauthorizedUser} = useContext(MediaContext);
 
   // runs when a protected route is loaded, checks if user is authenticated and sets state to run Auth check
   useEffect(() => {
@@ -44,7 +46,7 @@ const ProtectedRoute = ({children}) => {
     if (isAuthenticated) {
       return children;
     } else {
-      console.log('Unauthorized! Purrmission denied!');
+      setUnauthorizedUser(true);
       return <Navigate to="/logout" replace />;
     }
   }
