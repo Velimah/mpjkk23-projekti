@@ -152,7 +152,10 @@ const MediaRow = ({file, style, mediaArray}) => {
           }
         });
       }
-      const averageRating = sum / ratingInfo.length;
+      let averageRating = sum / ratingInfo.length;
+      if (isNaN(averageRating)) {
+        averageRating = 0;
+      }
       setRating(averageRating);
     } catch (error) {
       console.log(error.message);

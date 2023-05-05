@@ -20,7 +20,6 @@ import {appId} from '../utils/variables';
 import {MediaContext} from '../contexts/MediaContext';
 import {useLocation} from 'react-router-dom';
 import {SearchRounded} from '@mui/icons-material';
-import ToastSnackbar from '../components/ToastSnackbar';
 
 const Search = () => {
   const {user} = useContext(MediaContext);

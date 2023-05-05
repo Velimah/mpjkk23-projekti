@@ -13,7 +13,9 @@ const Logout = () => {
 
   useEffect(() => {
     setUser(null);
-    localStorage.clear();
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    localStorage.removeItem('targetUser');
     if (unauthorizedUser) {
       setToastSnackbar({
         severity: 'error',
