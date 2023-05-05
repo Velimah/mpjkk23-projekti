@@ -225,11 +225,7 @@ const UserProfiles = () => {
           <Typography
             component="p"
             variant="body1"
-            sx={{
-              px: 3,
-              pt: 2,
-              pb: 6,
-            }}
+            sx={{maxWidth: 'sm', py: 4, px: {xs: 3, sm: 3}}}
           >
             {profileDescription}
           </Typography>

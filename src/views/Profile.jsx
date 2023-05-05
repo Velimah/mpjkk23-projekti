@@ -243,9 +243,11 @@ const Profile = () => {
           display="flex"
           justifyContent="space-between"
           sx={{
+            maxWidth: 'lg',
             width: '100%',
             mt: {xs: '-48px', sm: '-56px', md: '-56px'},
-            px: 3,
+            px: 4,
+            pt: 0,
             flexDirection: {xs: 'row', sm: 'row'},
           }}
         >
@@ -324,15 +326,17 @@ const Profile = () => {
             />
           </Box>
         </Box>
-        <Box display="flex" flexDirection="column" justifyContent="center">
+        <Box
+          display="flex"
+          flexDirection="column"
+          justifyContent="flex-start"
+          alignItems="flex-start"
+          sx={{}}
+        >
           <Typography
             component="p"
             variant="body1"
-            sx={{
-              px: 3,
-              pt: 2,
-              pb: 6,
-            }}
+            sx={{maxWidth: 'sm', pb: 4, pt: {xs: 6, md: 2}, px: 4}}
           >
             {profileDescription}
           </Typography>
