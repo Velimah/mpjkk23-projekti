@@ -41,7 +41,7 @@ const MobileNavigation = () => {
   }, []);
 
   const listenToScroll = () => {
-    const heightToShowFrom = 200;
+    const heightToShowFrom = 150;
     const winScroll =
       document.body.scrollTop || document.documentElement.scrollTop;
 

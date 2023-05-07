@@ -35,7 +35,12 @@ const Search = () => {
   const [fetchOk, setFetchOk] = useState(false);
 
   useEffect(() => {
-    state && setSearchQuery(state);
+    if (state) {
+      setSearchQuery(state);
+      setTimeout(() => {
+        setUpdatedSearchQuery(state);
+      }, 200);
+    }
     getMedia();
   }, []);
 
@@ -77,11 +82,8 @@ const Search = () => {
 
   const handleClickTag = (tag) => {
     setSearchQuery(tag);
+    setUpdatedSearchQuery(tag);
   };
-
-  useEffect(() => {
-    handleClick();
-  }, [updatedSearchQuery]);
 
   const updateSearchHistory = () => {
     const oldQuery = JSON.parse(localStorage.getItem('searchHistory'));
@@ -251,7 +253,7 @@ const Search = () => {
             </Button>
           </Grid>
         </Grid>
-        {searchQuery === '' && (
+        {!searchQuery && (
           <Grid
             container
             direction={smallScreen ? 'column' : 'row'}
@@ -265,14 +267,14 @@ const Search = () => {
               {renderSearchHistory()}
             </Grid>
             {/* if not logged in, don't show this */}
-            {user ? (
+            {user && (
               <Grid item xs={6}>
                 <Typography component="h2" variant="h3" align="center">
                   Popular keywords
                 </Typography>
                 {fetchOk && renderPopularSearches()}
               </Grid>
-            ) : null}
+            )}
           </Grid>
         )}
       </Container>

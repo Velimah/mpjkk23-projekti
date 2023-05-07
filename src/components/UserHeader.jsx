@@ -149,7 +149,13 @@ const UserHeader = ({
       justifyContent="space-between"
       sx={{mb: 2}}
     >
-      <Stack direction="row" alignItems="center" spacing={1}>
+      <Stack
+        direction="row"
+        alignItems="center"
+        justifyContent="space-between"
+        spacing={1}
+        flexGrow={1}
+      >
         <Stack
           direction="row"
           alignItems="center"
@@ -178,11 +184,7 @@ const UserHeader = ({
             </Typography>
           )}
         </Stack>
-        <Chip
-          label={formatTime(file.time_added)}
-          size="small"
-          sx={{py: '0.7rem'}}
-        />
+        <Chip label={formatTime(file.time_added)} size="small" />
       </Stack>
       {comment && user && file.user_id === user.user_id && (
         <>
