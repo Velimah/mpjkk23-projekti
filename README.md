@@ -13,3 +13,4 @@ Open [https://users.metropolia.fi/~velimah/mediapalvelut_projekti/](https://user
 ### Fixes after 05/05/2023
 
 - Do search immediately when clicking keyword chip in single post or in search page
+- Rearranged elements in single page, added more space for description text

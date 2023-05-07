@@ -361,11 +361,47 @@ const Single = () => {
         )}
       </Container>
       <Container maxWidth="sm" sx={{mb: {xs: 10, sm: 7}, px: {xs: 3, sm: 0}}}>
+        <Box sx={{mt: 3, mb: 4}}>
+          <Typography component="p" variant="body2">
+            {allData.desc}
+          </Typography>
+        </Box>
+        {tagArray.length > 1 && (
+          <Box sx={{my: 4, display: 'flex', gap: '0.5rem'}}>
+            {tagArray.map((tag, index) => {
+              if (tag.tag !== appId) {
+                return (
+                  <Chip
+                    component={Link}
+                    to="/search"
+                    state={tag.tag.replace(appId + '_', '')}
+                    variant="outlined"
+                    color="primary"
+                    key={index}
+                    label={tag.tag.replace(appId + '_', '')}
+                    sx={{
+                      '&:hover': {
+                        backgroundColor: 'rgba(35, 32, 32, 0.04)',
+                      },
+                      cursor: 'pointer',
+                    }}
+                  />
+                );
+              }
+            })}
+          </Box>
+        )}
         <Grid
           container
           direction="row"
           alignItems="flex-start"
           justifyContent="space-around"
+          sx={{
+            backgroundColor: 'rgba(0, 0, 0, 0.088)',
+            borderRadius: '1.25rem',
+            padding: 1,
+            my: 4,
+          }}
         >
           {mediumScreen ? (
             <Grid item align="center">
@@ -380,10 +416,12 @@ const Single = () => {
                 variant="contained"
               >
                 {refreshLikes || !user ? (
-                  <FavoriteRounded sx={{color: '#7047A6', fontSize: '2rem'}} />
+                  <FavoriteRounded
+                    sx={{color: '#7047A6', fontSize: '1.75rem'}}
+                  />
                 ) : (
                   <FavoriteBorderRounded
-                    sx={{color: '#7047A6', fontSize: '2rem'}}
+                    sx={{color: '#7047A6', fontSize: '1.75rem'}}
                   />
                 )}
               </IconButton>
@@ -404,18 +442,20 @@ const Single = () => {
                 {refreshLikes ? (
                   showTextLikes ? (
                     <FavoriteBorderRounded
-                      sx={{color: '#7047A6', fontSize: '2rem'}}
+                      sx={{color: '#7047A6', fontSize: '1.75rem'}}
                     />
                   ) : (
                     <FavoriteRounded
-                      sx={{color: '#7047A6', fontSize: '2rem'}}
+                      sx={{color: '#7047A6', fontSize: '1.75rem'}}
                     />
                   )
                 ) : showTextLikes ? (
-                  <FavoriteRounded sx={{color: '#7047A6', fontSize: '2rem'}} />
+                  <FavoriteRounded
+                    sx={{color: '#7047A6', fontSize: '1.75rem'}}
+                  />
                 ) : (
                   <FavoriteBorderRounded
-                    sx={{color: '#7047A6', fontSize: '2rem'}}
+                    sx={{color: '#7047A6', fontSize: '1.75rem'}}
                   />
                 )}
               </IconButton>
@@ -452,12 +492,12 @@ const Single = () => {
                     readOnly
                     icon={
                       <StarRounded
-                        sx={{color: '#7047A6', fontSize: '2.1rem'}}
+                        sx={{color: '#7047A6', fontSize: '1.75rem'}}
                       />
                     }
                     emptyIcon={
                       <StarBorderRounded
-                        sx={{color: '#7047A6', fontSize: '2.1rem'}}
+                        sx={{color: '#7047A6', fontSize: '1.75rem'}}
                       />
                     }
                   />
@@ -496,12 +536,12 @@ const Single = () => {
                     }}
                     icon={
                       <StarRounded
-                        sx={{color: '#7047A6', fontSize: '2.1rem'}}
+                        sx={{color: '#7047A6', fontSize: '1.75rem'}}
                       />
                     }
                     emptyIcon={
                       <StarBorderRounded
-                        sx={{color: '#7047A6', fontSize: '2.1rem'}}
+                        sx={{color: '#7047A6', fontSize: '1.75rem'}}
                       />
                     }
                   />
@@ -534,39 +574,6 @@ const Single = () => {
             />
           </Grid>
         </Grid>
-        <Box sx={{my: 3}}>
-          <Typography component="p" variant="body1">
-            {allData.desc}
-          </Typography>
-        </Box>
-        {/* TODO: Link to search page */}
-        {tagArray.length > 1 && (
-          <Box sx={{my: 3}}>
-            {tagArray.map((tag, index) => {
-              if (tag.tag !== appId) {
-                return (
-                  <Chip
-                    component={Link}
-                    to="/search"
-                    state={tag.tag.replace(appId + '_', '')}
-                    variant="outlined"
-                    color="primary"
-                    key={index}
-                    label={tag.tag.replace(appId + '_', '')}
-                    sx={{
-                      mr: 1,
-                      mt: 1,
-                      '&:hover': {
-                        backgroundColor: 'rgba(35, 32, 32, 0.04)',
-                      },
-                      cursor: 'pointer',
-                    }}
-                  />
-                );
-              }
-            })}
-          </Box>
-        )}
         <Box sx={{my: 3}}>
           <Typography component="h2" variant="h4" sx={{mb: 3}}>
             Comments ({commentCount})
