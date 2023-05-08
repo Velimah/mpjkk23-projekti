@@ -9,13 +9,7 @@ import {
 import {useContext} from 'react';
 import {MediaContext} from '../contexts/MediaContext';
 import {useState, useEffect} from 'react';
-import {
-  useComment,
-  useFavourite,
-  useMedia,
-  useRating,
-  useTag,
-} from '../hooks/ApiHooks';
+import {useMedia, useRating, useTag} from '../hooks/ApiHooks';
 import {
   appId,
   filePlaceholder,
@@ -24,23 +18,13 @@ import {
 } from '../utils/variables';
 import {useNavigate} from 'react-router-dom';
 import MediaTable from '../components/MediaTable';
-import AlertDialog from '../components/AlertDialog';
 import {StarOutlineRounded, StarRounded} from '@mui/icons-material';
 
 const Profile = () => {
-  const {
-    user,
-    setUser,
-    refreshPage,
-    setRefreshPage,
-    setToastSnackbar,
-    setToastSnackbarOpen,
-  } = useContext(MediaContext);
+  const {user, setUser, refreshPage} = useContext(MediaContext);
   const {getTag} = useTag();
-  const {getRatingsById, deleteRating, getAllRatings} = useRating();
-  const {getAllMediaByCurrentUser, deleteMedia} = useMedia();
-  const {deleteComment, getCommentsByUser} = useComment();
-  const {deleteFavourite, getUsersFavouritesByToken} = useFavourite();
+  const {getRatingsById} = useRating();
+  const {getAllMediaByCurrentUser} = useMedia();
   const navigate = useNavigate();
 
   // useStates
@@ -55,8 +39,6 @@ const Profile = () => {
   );
   const [rating, setRating] = useState(0);
   const [ratingCount, setRatingCount] = useState(0);
-  const [deleteAllInformationDialogOpen, setDeleteAllInformationDialogOpen] =
-    useState(false);
 
   // checks for user and if null gets user information from localstorage
   const [userData, setData] = useState(() => {
@@ -156,53 +138,6 @@ const Profile = () => {
     }
   };
 
-  const deleteAllInformation = async () => {
-    setDeleteAllInformationDialogOpen(false);
-    try {
-      const token = localStorage.getItem('token');
-
-      const likesInfo = await getUsersFavouritesByToken(token);
-      for (const file of likesInfo) {
-        await sleep(5);
-        const deleteLikesInfo = await deleteFavourite(file.file_id, token);
-        console.log('deleteLikesInfo', deleteLikesInfo);
-      }
-      const commentsInfo = await getCommentsByUser(token);
-      for (const file of commentsInfo) {
-        await sleep(5);
-        const deleteCommentsInfo = await deleteComment(file.comment_id, token);
-        console.log('deleteCommentsInfo', deleteCommentsInfo);
-      }
-
-      const ratingsInfo = await getAllRatings(token);
-      for (const file of ratingsInfo) {
-        await sleep(5);
-        const deleteRatingsInfo = await deleteRating(file.file_id, token);
-        console.log('deleteRatingsInfo', deleteRatingsInfo);
-      }
-
-      const mediaInfo = await getAllMediaByCurrentUser(token);
-      for (const file of mediaInfo) {
-        await sleep(5);
-        const deleteFileInfo = await deleteMedia(file.file_id, token);
-        console.log('deleteMedia', deleteFileInfo);
-      }
-      setRefreshPage(!refreshPage);
-      setToastSnackbar({
-        severity: 'success',
-        message: 'All information deleted',
-      });
-      setToastSnackbarOpen(true);
-    } catch (error) {
-      console.log(error.message);
-      setToastSnackbar({
-        severity: 'error',
-        message: 'Deleting information failed',
-      });
-      setToastSnackbarOpen(true);
-    }
-  };
-
   useEffect(() => {
     fetchProfilePicture();
     fetchBackgroundPicture();
@@ -247,7 +182,7 @@ const Profile = () => {
             width: '100%',
             mt: {xs: '-48px', sm: '-56px', md: '-56px'},
             px: 4,
-            pt: 0,
+            pt: {xs: 2, md: 0},
             flexDirection: {xs: 'row', sm: 'row'},
           }}
         >
@@ -277,7 +212,7 @@ const Profile = () => {
           <Box
             display="flex"
             flexDirection="column"
-            justifyContent="center"
+            justifyContent="flex-start"
             sx={{
               width: '124px',
             }}
@@ -290,22 +225,7 @@ const Profile = () => {
               }}
               onClick={() => navigate('/profile/update')}
             >
-              Update
-            </Button>
-            <Button
-              variant="contained"
-              color="error"
-              size="small"
-              sx={{
-                mt: 2,
-                mr: {
-                  xs: 0,
-                  sm: 0,
-                },
-              }}
-              onClick={() => setDeleteAllInformationDialogOpen(true)}
-            >
-              Delete Data
+              Settings
             </Button>
             <Button
               variant="outlined"
@@ -315,15 +235,6 @@ const Profile = () => {
             >
               Logout
             </Button>
-            <AlertDialog
-              title={'Are you sure you want to delete all your information?'}
-              content={
-                'This will delete all your posts, added likes and ratings and comments, and they will be lost permanently.'
-              }
-              functionToDo={deleteAllInformation}
-              dialogOpen={deleteAllInformationDialogOpen}
-              setDialogOpen={setDeleteAllInformationDialogOpen}
-            />
           </Box>
         </Box>
         <Box

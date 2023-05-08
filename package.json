@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build --base /~veerakek/Mediapalvelut_ja_kayttajakokemus/OnlyCats/",
+    "build": "vite build --base /~velimah/mediapalvelut_projekti/",
     "preview": "vite preview"
   },
   "dependencies": {

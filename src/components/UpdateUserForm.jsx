@@ -90,7 +90,7 @@ const UpdateUserForm = () => {
           width: '100%',
           pl: {xs: 3, sm: 1, md: 3},
           pr: {xs: 3, sm: 0},
-          mt: {xs: 0, sm: 2, md: 8},
+          mt: {xs: 4, sm: 2, md: 8},
         }}
       >
         <Typography
@@ -103,6 +103,9 @@ const UpdateUserForm = () => {
         <ValidatorForm onSubmit={handleSubmit} noValidate>
           <TextValidator
             fullWidth
+            inputProps={{
+              autoCapitalize: 'none',
+            }}
             margin="dense"
             name="username"
             label="Username"
@@ -148,6 +151,9 @@ const UpdateUserForm = () => {
             fullWidth
             margin="dense"
             name="full_name"
+            inputProps={{
+              autoCapitalize: 'none',
+            }}
             label="Name"
             onChange={handleInputChange}
             value={inputs.full_name}

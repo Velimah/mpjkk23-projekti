@@ -48,6 +48,9 @@ const LoginForm = () => {
       <ValidatorForm onSubmit={handleSubmit}>
         <TextValidator
           fullWidth
+          inputProps={{
+            autoCapitalize: 'none',
+          }}
           margin="dense"
           name="username"
           placeholder="Username"

@@ -14,3 +14,9 @@ Open [https://users.metropolia.fi/~velimah/mediapalvelut_projekti/](https://user
 
 - Do search immediately when clicking keyword chip in single post or in search page
 - Rearranged elements in single page, added more space for description text
+- Moved detele all button to settings page
+- logout doesn't remove search history from localstorage any more
+- fixed NaN error from average rating when there are no ratings
+- animated progress bar to gpt while waiting for message
+- error popup message if gpt reply fails / times out
+- removed autocapitalize from input fields

@@ -8,7 +8,13 @@ import {
 } from '@mui/material';
 import useForm from '../hooks/FormHooks';
 import {useContext, useEffect, useState} from 'react';
-import {useMedia, useTag} from '../hooks/ApiHooks';
+import {
+  useComment,
+  useFavourite,
+  useMedia,
+  useRating,
+  useTag,
+} from '../hooks/ApiHooks';
 import {appId, mediaUrl, profilePlaceholder} from '../utils/variables';
 import {ValidatorForm, TextValidator} from 'react-material-ui-form-validator';
 import {MediaContext} from '../contexts/MediaContext';
@@ -16,17 +22,25 @@ import {updateProfilePictureValidators} from '../utils/validator';
 import {updateProfilePictureErrorMessages} from '../utils/errorMessages';
 import {AddAPhoto} from '@mui/icons-material';
 import {useTheme} from '@emotion/react';
+import AlertDialog from '../components/AlertDialog';
 
 const UploadProfilePicture = () => {
   const {
     user,
-    setToastSnackbar,
-    setToastSnackbarOpen,
     refreshHeader,
     setRefreshHeader,
+    setRefreshPage,
+    refreshPage,
+    setToastSnackbar,
+    setToastSnackbarOpen,
   } = useContext(MediaContext);
   const {getTag, postTag} = useTag();
   const {postMedia} = useMedia();
+  const {deleteRating, getAllRatings} = useRating();
+  const {getAllMediaByCurrentUser, deleteMedia} = useMedia();
+  const {deleteComment, getCommentsByUser} = useComment();
+  const {deleteFavourite, getUsersFavouritesByToken} = useFavourite();
+
   const theme = useTheme();
   const smallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -34,9 +48,15 @@ const UploadProfilePicture = () => {
   const [selectedImage, setSelectedImage] = useState(profilePlaceholder);
   const [description, setDescription] = useState('');
   const [messageSent, setMessageSent] = useState(false);
+  const [deleteAllInformationDialogOpen, setDeleteAllInformationDialogOpen] =
+    useState(false);
 
   const initValues = {
     description: description,
+  };
+
+  const sleep = (ms) => {
+    return new Promise((resolve) => setTimeout(resolve, ms));
   };
 
   const fetchProfilePicture = async () => {
@@ -61,7 +81,7 @@ const UploadProfilePicture = () => {
 
   useEffect(() => {
     fetchProfilePicture();
-  }, [user]);
+  }, [user, refreshPage]);
 
   const doUpload = async () => {
     try {
@@ -99,6 +119,53 @@ const UploadProfilePicture = () => {
       });
       setToastSnackbarOpen(true);
       console.error(error.message);
+    }
+  };
+
+  const deleteAllInformation = async () => {
+    setDeleteAllInformationDialogOpen(false);
+    try {
+      const token = localStorage.getItem('token');
+
+      const likesInfo = await getUsersFavouritesByToken(token);
+      for (const file of likesInfo) {
+        await sleep(5);
+        const deleteLikesInfo = await deleteFavourite(file.file_id, token);
+        console.log('deleteLikesInfo', deleteLikesInfo);
+      }
+      const commentsInfo = await getCommentsByUser(token);
+      for (const file of commentsInfo) {
+        await sleep(5);
+        const deleteCommentsInfo = await deleteComment(file.comment_id, token);
+        console.log('deleteCommentsInfo', deleteCommentsInfo);
+      }
+
+      const ratingsInfo = await getAllRatings(token);
+      for (const file of ratingsInfo) {
+        await sleep(5);
+        const deleteRatingsInfo = await deleteRating(file.file_id, token);
+        console.log('deleteRatingsInfo', deleteRatingsInfo);
+      }
+
+      const mediaInfo = await getAllMediaByCurrentUser(token);
+      for (const file of mediaInfo) {
+        await sleep(5);
+        const deleteFileInfo = await deleteMedia(file.file_id, token);
+        console.log('deleteMedia', deleteFileInfo);
+      }
+      setRefreshPage(!refreshPage);
+      setToastSnackbar({
+        severity: 'success',
+        message: 'All information deleted',
+      });
+      setToastSnackbarOpen(true);
+    } catch (error) {
+      console.log(error.message);
+      setToastSnackbar({
+        severity: 'error',
+        message: 'Deleting information failed',
+      });
+      setToastSnackbarOpen(true);
     }
   };
 
@@ -192,7 +259,11 @@ const UploadProfilePicture = () => {
               top: {xs: '-120px', sm: '-150px', md: '-180px'},
             }}
           >
-            <Typography sx={{textAlign: 'center', fontSize: '0.9rem'}}>
+            <Typography
+              component="p"
+              variant="body1"
+              sx={{textAlign: 'center', fontSize: '0.9rem'}}
+            >
               Avatar required, description updates if filled
             </Typography>
             <TextValidator
@@ -226,6 +297,45 @@ const UploadProfilePicture = () => {
           </Box>
         </Box>
       </ValidatorForm>
+      <Box
+        sx={{
+          border: '1px solid grey',
+          borderRadius: '1.25rem',
+          backgroundColor: '#F4DCE1',
+          position: 'relative',
+          top: {xs: '-80px', sm: '-110px', md: '-140px'},
+          height: '100%',
+          py: 2,
+          px: 2,
+        }}
+      >
+        <Typography
+          component="p"
+          variant="body1"
+          sx={{mb: 2, textAlign: 'center'}}
+        >
+          Danger Zone
+        </Typography>
+        <Button
+          fullWidth
+          variant="contained"
+          color="error"
+          size="small"
+          sx={{mb: 0}}
+          onClick={() => setDeleteAllInformationDialogOpen(true)}
+        >
+          Delete All Information
+        </Button>
+        <AlertDialog
+          title={'Are you sure you want to delete all your information?'}
+          content={
+            'This will delete all your posts, added likes and ratings and comments, and they will be lost permanently.'
+          }
+          functionToDo={deleteAllInformation}
+          dialogOpen={deleteAllInformationDialogOpen}
+          setDialogOpen={setDeleteAllInformationDialogOpen}
+        />
+      </Box>
     </Box>
   );
 };

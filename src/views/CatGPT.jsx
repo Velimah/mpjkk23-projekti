@@ -10,13 +10,15 @@ import {
   Typography,
   Container,
   Paper,
+  LinearProgress,
 } from '@mui/material';
 import {MediaContext} from '../contexts/MediaContext';
 import {ChevronLeftRounded} from '@mui/icons-material';
 import {Link} from 'react-router-dom';
 
 const CatGPT = () => {
-  const {user} = useContext(MediaContext);
+  const {user, setToastSnackbar, setToastSnackbarOpen} =
+    useContext(MediaContext);
 
   // useStates
   const [value, setValue] = useState('');
@@ -74,6 +76,11 @@ const CatGPT = () => {
     } catch (error) {
       console.error(error);
       setMessageSent(false);
+      setToastSnackbar({
+        severity: 'error',
+        message: 'Request failed/timed out',
+      });
+      setToastSnackbarOpen(true);
     }
   };
 
@@ -221,7 +228,7 @@ const CatGPT = () => {
               alignItems="center"
               textAlign="center"
               sx={{
-                height: {xs: '73vh', sm: '77vh', md: '77vh'},
+                height: {xs: '70vh', sm: '77vh', md: '77vh'},
                 width: '100%',
                 maxWidth: '1000px',
                 flexWrap: 'nowrap',
@@ -248,6 +255,7 @@ const CatGPT = () => {
                       sx={{
                         backgroundColor: '#F4DCE1',
                         px: 2,
+                        py: 2,
                         mt: 2,
                         alignItems: 'start',
                         borderRadius: '1.25rem',
@@ -285,6 +293,7 @@ const CatGPT = () => {
               </List>
 
               <Box display="flex" flexDirection="column" width="100%">
+                {messageSent && <LinearProgress sx={{p: '0.1rem', mt: 1}} />}
                 <Box
                   display="flex"
                   justifyContent="center"
@@ -372,7 +381,7 @@ const CatGPT = () => {
             startIcon={<ChevronLeftRounded />}
             size="small"
             component={Link}
-            to="/profile"
+            to="/"
             sx={{my: 2}}
           >
             Go back
