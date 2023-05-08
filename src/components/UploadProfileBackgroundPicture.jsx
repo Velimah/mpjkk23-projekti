@@ -8,7 +8,7 @@ import {MediaContext} from '../contexts/MediaContext';
 import {AddAPhoto} from '@mui/icons-material';
 
 const UploadProfileBackgroundPicture = () => {
-  const {user, setToastSnackbar, setToastSnackbarOpen} =
+  const {user, setToastSnackbar, setToastSnackbarOpen, refreshPage} =
     useContext(MediaContext);
   const {postMedia} = useMedia();
   const {postTag, getTag} = useTag();
@@ -37,7 +37,7 @@ const UploadProfileBackgroundPicture = () => {
 
   useEffect(() => {
     fetchBackgroundPicture();
-  }, [user]);
+  }, [user, refreshPage]);
 
   const doUpload = async () => {
     try {

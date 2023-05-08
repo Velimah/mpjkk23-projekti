@@ -76,6 +76,9 @@ const RegisterForm = ({toggle}) => {
           margin="dense"
           name="full_name"
           placeholder="Name"
+          inputProps={{
+            autoCapitalize: 'none',
+          }}
           label="Name"
           onChange={handleInputChange}
           value={inputs.full_name}
@@ -86,6 +89,9 @@ const RegisterForm = ({toggle}) => {
         <TextValidator
           fullWidth
           margin="dense"
+          inputProps={{
+            autoCapitalize: 'none',
+          }}
           name="username"
           placeholder="Username"
           label="Username"

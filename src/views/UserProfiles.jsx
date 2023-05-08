@@ -192,6 +192,7 @@ const UserProfiles = () => {
             width: '100%',
             mt: {xs: '-48px', sm: '-56px', md: '-56px'},
             px: 3,
+            pt: {xs: 2, md: 0},
             flexDirection: {xs: 'row', sm: 'row'},
           }}
         >
