@@ -18,4 +18,5 @@ Open [https://users.metropolia.fi/~velimah/mediapalvelut_projekti/](https://user
 - logout doesn't remove search history from localstorage any more
 - fixed NaN error from average rating when there are no ratings
 - animated progress bar to gpt while waiting for message
+- error popup message if gpt reply fails / times out
 - removed autocapitalize from input fields
