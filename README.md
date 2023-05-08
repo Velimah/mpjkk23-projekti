@@ -19,4 +19,4 @@ Open [https://users.metropolia.fi/~velimah/mediapalvelut_projekti/](https://user
 - Fixed NaN error from average rating when there are no ratings
 - Animated progress bar to gpt while waiting for message
 - Error popup message if gpt reply fails / times out
-- Eemoved autocapitalize from input fields
+- Removed autocapitalize from input fields
